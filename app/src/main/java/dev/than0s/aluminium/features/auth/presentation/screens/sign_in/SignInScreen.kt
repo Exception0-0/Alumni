@@ -23,7 +23,7 @@ import dev.than0s.mydiary.ui.textSize
 @Composable
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
-    openScreen: (String) -> Unit,
+    popAndOpen: (String) -> Unit,
     restartApp: () -> Unit
 ) {
     SignInScreenContent(
@@ -31,7 +31,7 @@ fun SignInScreen(
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onSignInClick = viewModel::onSignInClick,
-        openScreen = openScreen,
+        popAndOpen = popAndOpen,
         restartApp = restartApp
     )
 }
@@ -42,7 +42,7 @@ private fun SignInScreenContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSignInClick: (() -> Unit) -> Unit,
-    openScreen: (String) -> Unit,
+    popAndOpen: (String) -> Unit,
     restartApp: () -> Unit
 ) {
     Surface {
@@ -83,7 +83,7 @@ private fun SignInScreenContent(
             Text(
                 text = "Don't have any account?",
                 modifier = Modifier.clickable {
-                    openScreen(Screen.SignUpScreen.route)
+                    popAndOpen(Screen.SignUpScreen.route)
                 }
             )
 
