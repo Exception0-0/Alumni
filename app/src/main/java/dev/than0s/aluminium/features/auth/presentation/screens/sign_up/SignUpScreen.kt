@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.auth.presentation.screens.sign_up
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,17 +15,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.than0s.aluminium.Screen
 import dev.than0s.mydiary.core.data_class.EmailAuthParam
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
-fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel()) {
+fun SignUpScreen(
+    viewModel: SignUpViewModel = hiltViewModel(),
+    openScreen: (String) -> Unit,
+    restartApp: () -> Unit
+) {
     SignUpScreenContent(
         param = viewModel.signUpParam.value,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
-        onSignUpClick = viewModel::onSignInClick
+        onSignUpClick = viewModel::onSignInClick,
+        openScreen = openScreen,
+        restartApp = restartApp
     )
 }
 
@@ -33,7 +41,9 @@ private fun SignUpScreenContent(
     param: EmailAuthParam,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpClick: (() -> Unit) -> Unit,
+    openScreen: (String) -> Unit,
+    restartApp: () -> Unit
 ) {
     Surface {
         Column(
@@ -70,9 +80,16 @@ private fun SignUpScreenContent(
                 }
             )
 
+            Text(
+                text = "Already have any account?",
+                modifier = Modifier.clickable {
+                    openScreen(Screen.SignInScreen.route)
+                }
+            )
+
             ElevatedButton(
                 onClick = {
-                    onSignUpClick()
+                    onSignUpClick(restartApp)
                 }
             ) {
                 Text(text = "Sign Up")
@@ -85,5 +102,5 @@ private fun SignUpScreenContent(
 @Preview(showSystemUi = true)
 @Composable
 private fun SignUpScreenPreview() {
-    SignUpScreenContent(EmailAuthParam(), {}, {}, {})
+    SignUpScreenContent(EmailAuthParam(), {}, {}, {}, {}, {})
 }

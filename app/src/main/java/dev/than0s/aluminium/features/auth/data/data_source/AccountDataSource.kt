@@ -11,6 +11,7 @@ import javax.inject.Inject
 interface AccountDataSource {
     val currentUserId: String
     val currentUser: Flow<User>
+    val hasUser: Boolean
     suspend fun signOut()
     suspend fun deleteAccount()
 }
@@ -19,6 +20,9 @@ class FirebaseAccountDataSourceImple @Inject constructor(private val auth: Fireb
     AccountDataSource {
     override val currentUserId: String
         get() = auth.currentUser?.uid.orEmpty()
+
+    override val hasUser: Boolean
+        get() = auth.currentUser != null
 
     override val currentUser: Flow<User>
         get() = callbackFlow {

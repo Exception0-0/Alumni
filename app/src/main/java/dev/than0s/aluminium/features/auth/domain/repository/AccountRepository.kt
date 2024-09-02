@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface AccountRepository {
     val currentUserId: Either<ServerException, String>
     val currentUser: Either<ServerException, Flow<User>>
+    val hasUser: Either<ServerException, Boolean>
     suspend fun signOut(): Either<ServerException, Unit>
     suspend fun deleteAccount(): Either<ServerException, Unit>
 }

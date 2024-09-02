@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.features.auth.domain.use_cases.EmailSignUpUseCase
 import dev.than0s.mydiary.core.data_class.EmailAuthParam
 import kotlinx.coroutines.launch
@@ -22,9 +23,12 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: EmailSignUp
         signUpParam.value = signUpParam.value.copy(password = password)
     }
 
-    fun onSignInClick() {
+    fun onSignInClick(restartApp: () -> Unit) {
         viewModelScope.launch {
-            signUpUseCase.invoke(signUpParam.value)
+            when (val result = signUpUseCase.invoke(signUpParam.value)) {
+                is Either.Left -> TODO("show error message")
+                is Either.Right -> restartApp()
+            }
         }
     }
 

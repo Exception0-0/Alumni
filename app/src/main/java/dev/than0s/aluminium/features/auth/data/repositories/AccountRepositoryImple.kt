@@ -18,6 +18,13 @@ class AccountRepositoryImple @Inject constructor(private val dataSource: Account
             Either.Left(e)
         }
 
+    override val hasUser: Either<ServerException, Boolean>
+        get() = try {
+            Either.Right(dataSource.hasUser)
+        } catch (e: ServerException) {
+            Either.Left(e)
+        }
+
     override val currentUser: Either<ServerException, Flow<User>>
         get() = try {
             Either.Right(dataSource.currentUser)
