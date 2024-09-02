@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.auth.presentation.screens.sign_in
+package dev.than0s.aluminium.features.auth.presentation.screens.sign_up
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,21 +19,21 @@ import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
-fun SignInScreen(viewModel: SignInViewModel = hiltViewModel()) {
-    SignInScreenContent(
-        param = viewModel.signInParam.value,
+fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel()) {
+    SignUpScreenContent(
+        param = viewModel.signUpParam.value,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
-        onSignInClick = viewModel::onSignInClick
+        onSignUpClick = viewModel::onSignInClick
     )
 }
 
 @Composable
-private fun SignInScreenContent(
+private fun SignUpScreenContent(
     param: EmailAuthParam,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onSignInClick: () -> Unit
+    onSignUpClick: () -> Unit
 ) {
     Surface {
         Column(
@@ -45,7 +45,7 @@ private fun SignInScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Sign In",
+                    text = "Sign Up",
                     fontSize = MaterialTheme.textSize.gigantic,
                 )
             }
@@ -72,10 +72,10 @@ private fun SignInScreenContent(
 
             ElevatedButton(
                 onClick = {
-                    onSignInClick()
+                    onSignUpClick()
                 }
             ) {
-                Text(text = "Sign In")
+                Text(text = "Sign Up")
             }
         }
 
@@ -84,6 +84,6 @@ private fun SignInScreenContent(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun SignInScreenPreview() {
-    SignInScreenContent(EmailAuthParam(), {}, {}, {})
+private fun SignUpScreenPreview() {
+    SignUpScreenContent(EmailAuthParam(), {}, {}, {})
 }

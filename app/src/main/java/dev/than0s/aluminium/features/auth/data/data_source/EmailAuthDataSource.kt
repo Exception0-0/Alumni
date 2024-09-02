@@ -12,7 +12,7 @@ interface EmailAuthDataSource {
     suspend fun signUp(email: String, password: String)
 }
 
-class FirebaseEmailAccountDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
+class FirebaseEmailAuthDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
     EmailAuthDataSource {
     override suspend fun signIn(email: String, password: String) {
         try {
