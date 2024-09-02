@@ -20,7 +20,7 @@ private fun SplashScreenContent(
 ) {
     loadAccount { hasUser: Boolean ->
         if (hasUser) {
-            popAndOpen("")
+            popAndOpen(Screen.DemoScreen.route)
         } else {
             popAndOpen(Screen.SignInScreen.route)
         }

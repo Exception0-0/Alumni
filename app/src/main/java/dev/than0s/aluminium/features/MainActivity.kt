@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import dev.than0s.aluminium.Content
 import dev.than0s.aluminium.Screen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_up.SignUpScreen
@@ -60,6 +61,9 @@ private fun NavGraphHost(modifier: Modifier) {
                 openScreen = navController::openScreen,
                 restartApp = navController::restartApp
             )
+        }
+        composable(route = Screen.DemoScreen.route) {
+            Content()
         }
     }
 }

@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.features.auth.data.data_source
 
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import dev.than0s.mydiary.core.error.ServerException
@@ -24,8 +23,7 @@ class FirebaseEmailAuthDataSourceImple @Inject constructor(private val auth: Fir
 
     override suspend fun signUp(email: String, password: String) {
         try {
-            val credential = EmailAuthProvider.getCredential(email, password)
-            auth.currentUser!!.linkWithCredential(credential).await()
+            auth.createUserWithEmailAndPassword(email, password).await()
         } catch (e: FirebaseAuthException) {
             throw ServerException(e.message.toString())
         }
