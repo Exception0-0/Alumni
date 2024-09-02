@@ -1,4 +1,4 @@
-package dev.than0s.aluminium
+package dev.than0s.aluminium.core
 
 sealed class Screen(val route: String) {
     data object SplashScreen : Screen("splash")
