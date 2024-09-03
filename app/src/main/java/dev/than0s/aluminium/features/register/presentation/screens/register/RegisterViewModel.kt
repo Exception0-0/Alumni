@@ -2,27 +2,39 @@ package dev.than0s.aluminium.features.register.presentation.screens.register
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.data_class.RegistrationForm
-import dev.than0s.aluminium.features.auth.domain.use_cases.EmailSignUpUseCase
+import dev.than0s.aluminium.features.register.domain.use_cases.RegistrationUseCase
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val signUpUseCase: EmailSignUpUseCase) :
+class RegisterViewModel @Inject constructor(private val registerUseCase: RegistrationUseCase) :
     ViewModel() {
     val param = mutableStateOf(RegistrationForm())
-    val showDialog = mutableStateOf(false)
+    val categoryDialogState = mutableStateOf(false)
+    val batchDialogState = mutableStateOf(false)
 
     fun onEmailChange(email: String) {
         param.value = param.value.copy(email = email)
     }
 
-    fun onDialogDismiss() {
-        showDialog.value = false
+    fun onCategoryDialogDismiss() {
+        categoryDialogState.value = false
     }
 
     fun onCategoryClick() {
-        showDialog.value = true
+        categoryDialogState.value = true
+    }
+
+    fun onBatchDialogDismiss() {
+        batchDialogState.value = false
+    }
+
+    fun onBatchClick() {
+        batchDialogState.value = true
     }
 
     fun onCategoryChange(category: String) {
@@ -50,11 +62,11 @@ class RegisterViewModel @Inject constructor(private val signUpUseCase: EmailSign
     }
 
     fun onRegisterClick() {
-//        viewModelScope.launch {
-//            when (val result = signUpUseCase.invoke(param.value)) {
-//                is Either.Left -> TODO("show error message")
-//                is Either.Right -> restartApp()
-//            }
-//        }
+        viewModelScope.launch {
+            when (registerUseCase.invoke(param.value)) {
+                is Either.Left -> TODO("show error message")
+                is Either.Right -> print("successfully register")
+            }
+        }
     }
 }

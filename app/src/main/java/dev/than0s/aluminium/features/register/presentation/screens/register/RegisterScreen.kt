@@ -16,46 +16,57 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.data_class.RegistrationForm
+import dev.than0s.aluminium.features.register.presentation.screens.alumni
+import dev.than0s.aluminium.features.register.presentation.screens.staff
+import dev.than0s.aluminium.features.register.presentation.screens.student
 import dev.than0s.mydiary.ui.spacing
 
 @Composable
-fun SignUpScreen(
+fun RegistrationScreen(
     viewModel: RegisterViewModel = hiltViewModel(),
     popAndOpen: (String) -> Unit,
     restartApp: () -> Unit
 ) {
-    SignUpScreenContent(
+    RegistrationScreenContent(
         param = viewModel.param.value,
-        showDialog = viewModel.showDialog.value,
+        categoryDialogState = viewModel.categoryDialogState.value,
+        batchDialogState = viewModel.batchDialogState.value,
         onEmailChange = viewModel::onEmailChange,
         onRegisterClick = viewModel::onRegisterClick,
         popAndOpen = popAndOpen,
         restartApp = restartApp,
-        onDialogDismiss = viewModel::onDialogDismiss,
+        onBatchDialogDismiss = viewModel::onBatchDialogDismiss,
+        onCategoryDialogDismiss = viewModel::onCategoryDialogDismiss,
         onCategoryChange = viewModel::onCategoryChange,
         onIdChange = viewModel::onIdChange,
         onFirstNameChange = viewModel::onFirstNameChange,
         onMiddleNameChange = viewModel::onMiddleNameChange,
         onLastNameChange = viewModel::onLastNameChange,
-        onBatchChange = viewModel::onBatchChange
+        onBatchChange = viewModel::onBatchChange,
+        onCategoryClick = viewModel::onCategoryClick,
+        onBatchClick = viewModel::onBatchClick
     )
 }
 
 @Composable
-private fun SignUpScreenContent(
+private fun RegistrationScreenContent(
     param: RegistrationForm,
-    showDialog: Boolean,
+    categoryDialogState: Boolean,
+    batchDialogState: Boolean,
     onEmailChange: (String) -> Unit,
     onRegisterClick: () -> Unit,
     popAndOpen: (String) -> Unit,
     restartApp: () -> Unit,
-    onDialogDismiss: () -> Unit,
+    onBatchDialogDismiss: () -> Unit,
+    onCategoryDialogDismiss: () -> Unit,
     onCategoryChange: (String) -> Unit,
     onIdChange: (String) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onMiddleNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
-    onBatchChange: (String) -> Unit
+    onBatchChange: (String) -> Unit,
+    onCategoryClick: () -> Unit,
+    onBatchClick: () -> Unit
 ) {
     Surface {
         Column(
@@ -63,11 +74,19 @@ private fun SignUpScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            if (showDialog) {
+            if (categoryDialogState) {
                 Dialog(
-                    onDismissRequest = { onDialogDismiss() },
+                    onDismissRequest = { onCategoryDialogDismiss() },
                 ) {
                     LoadCategoryList()
+                }
+            }
+
+            if (batchDialogState) {
+                Dialog(
+                    onDismissRequest = { onBatchDialogDismiss() },
+                ) {
+                    LoadBatchList()
                 }
             }
 
@@ -79,7 +98,10 @@ private fun SignUpScreenContent(
                 placeholder = {
                     Text(text = "Category")
                 },
-                readOnly = true
+                readOnly = true,
+                modifier = Modifier.clickable {
+                    onCategoryClick()
+                }
             )
 
             TextField(
@@ -140,7 +162,10 @@ private fun SignUpScreenContent(
                 placeholder = {
                     Text(text = "Batch - Year")
                 },
-                readOnly = true
+                readOnly = true,
+                modifier = Modifier.clickable {
+                    onBatchClick()
+                }
             )
 
 
@@ -163,6 +188,11 @@ private fun SignUpScreenContent(
 }
 
 @Composable
+fun LoadBatchList() {
+    TODO("Not yet implemented")
+}
+
+@Composable
 private fun LoadCategoryList() {
     Column {
         Text(text = student)
@@ -173,6 +203,23 @@ private fun LoadCategoryList() {
 
 @Preview(showSystemUi = true)
 @Composable
-private fun SignUpScreenPreview() {
-    SignUpScreenContent(RegistrationForm(), false, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+private fun RegistrationScreenPreview() {
+    RegistrationScreenContent(
+        RegistrationForm(),
+        false,
+        false,
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {})
 }

@@ -3,6 +3,8 @@ package dev.than0s.aluminium.di
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -19,6 +21,11 @@ import dev.than0s.aluminium.features.auth.domain.repository.EmailAuthRepository
 import dev.than0s.aluminium.features.auth.domain.use_cases.AccountSignOutUseCase
 import dev.than0s.aluminium.features.auth.domain.use_cases.EmailSignInUseCase
 import dev.than0s.aluminium.features.auth.domain.use_cases.EmailSignUpUseCase
+import dev.than0s.aluminium.features.register.data.data_source.FirebaseRegisterDataSourceImple
+import dev.than0s.aluminium.features.register.data.data_source.RegisterDataSource
+import dev.than0s.aluminium.features.register.data.repositories.RegistrationRepositoryImple
+import dev.than0s.aluminium.features.register.domain.repository.RegistrationRepository
+import dev.than0s.aluminium.features.register.domain.use_cases.RegistrationUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -34,6 +41,12 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindEmailAuthDataSource(impl: FirebaseEmailAuthDataSourceImple): EmailAuthDataSource
+
+    @Binds
+    abstract fun bindRegistrationRepository(impl: RegistrationRepositoryImple): RegistrationRepository
+
+    @Binds
+    abstract fun bindRegisterDataSource(impl: FirebaseRegisterDataSourceImple): RegisterDataSource
 }
 
 @InstallIn(SingletonComponent::class)
@@ -41,6 +54,9 @@ abstract class AppModule {
 object FirebaseModule {
     @Provides
     fun auth(): FirebaseAuth = Firebase.auth
+
+    @Provides
+    fun store(): FirebaseFirestore = Firebase.firestore
 }
 
 @InstallIn(SingletonComponent::class)
@@ -54,4 +70,7 @@ object UseCases {
 
     @Provides
     fun signUpUseCase(repository: EmailAuthRepository) = EmailSignUpUseCase(repository)
+
+    @Provides
+    fun registerUseCase(repository: RegistrationRepository) = RegistrationUseCase(repository)
 }

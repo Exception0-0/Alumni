@@ -83,7 +83,7 @@ private fun SignInScreenContent(
             Text(
                 text = "Don't have any account?",
                 modifier = Modifier.clickable {
-                    popAndOpen(Screen.SignUpScreen.route)
+                    popAndOpen(Screen.RegistrationScreen.route)
                 }
             )
 
@@ -95,7 +95,6 @@ private fun SignInScreenContent(
                 Text(text = "Sign In")
             }
         }
-
     }
 }
 

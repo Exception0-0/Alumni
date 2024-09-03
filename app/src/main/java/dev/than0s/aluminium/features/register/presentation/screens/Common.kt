@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.register.presentation.screens.register
+package dev.than0s.aluminium.features.register.presentation.screens
 
 const val student = "Student"
 const val staff = "Staff"

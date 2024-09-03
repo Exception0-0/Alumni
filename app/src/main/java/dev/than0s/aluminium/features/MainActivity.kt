@@ -17,8 +17,8 @@ import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.features.auth.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
-import dev.than0s.aluminium.features.register.presentation.screens.register.SignUpScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.splash.SplashScreen
+import dev.than0s.aluminium.features.register.presentation.screens.register.RegistrationScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 
 @AndroidEntryPoint
@@ -57,8 +57,8 @@ private fun NavGraphHost(modifier: Modifier) {
                 restartApp = navController::restartApp
             )
         }
-        composable(route = Screen.SignUpScreen.route) {
-            SignUpScreen(
+        composable(route = Screen.RegistrationScreen.route) {
+            RegistrationScreen(
                 popAndOpen = navController::popAndOpen,
                 restartApp = navController::restartApp
             )
