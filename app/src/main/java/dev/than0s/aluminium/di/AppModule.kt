@@ -26,6 +26,7 @@ import dev.than0s.aluminium.features.register.data.data_source.RegisterDataSourc
 import dev.than0s.aluminium.features.register.data.repositories.RegistrationRepositoryImple
 import dev.than0s.aluminium.features.register.domain.repository.RegistrationRepository
 import dev.than0s.aluminium.features.register.domain.use_cases.RegistrationUseCase
+import dev.than0s.aluminium.features.register.domain.use_cases.RequestsListUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -73,4 +74,7 @@ object UseCases {
 
     @Provides
     fun registerUseCase(repository: RegistrationRepository) = RegistrationUseCase(repository)
+
+    @Provides
+    fun requestsListUseCase(repository: RegistrationRepository) = RequestsListUseCase(repository)
 }

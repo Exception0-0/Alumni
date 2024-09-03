@@ -19,6 +19,7 @@ import dev.than0s.aluminium.features.auth.presentation.screens.profile.ProfileSc
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.splash.SplashScreen
 import dev.than0s.aluminium.features.register.presentation.screens.registration.RegistrationScreen
+import dev.than0s.aluminium.features.register.presentation.screens.registration_requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 
 @AndroidEntryPoint
@@ -43,7 +44,7 @@ private fun NavGraphHost(modifier: Modifier) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route,
+        startDestination = Screen.RegistrationRequestsScreen.route,
         modifier = modifier
     ) {
         composable(route = Screen.SplashScreen.route) {
@@ -69,6 +70,9 @@ private fun NavGraphHost(modifier: Modifier) {
             ProfileScreen(
                 restartApp = navController::restartApp
             )
+        }
+        composable(route = Screen.RegistrationRequestsScreen.route) {
+            RegistrationRequestsScreen()
         }
     }
 }

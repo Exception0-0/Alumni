@@ -49,7 +49,7 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }   
+    }
 
 }
 
@@ -93,6 +93,9 @@ dependencies {
 
     // Hilt navigation
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    //
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
 }
 
 // Allow references to generated code
