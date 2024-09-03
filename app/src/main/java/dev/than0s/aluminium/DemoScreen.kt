@@ -8,7 +8,7 @@ import dev.than0s.mydiary.ui.textSize
 
 @Preview(showSystemUi = true)
 @Composable
-fun Content() {
+fun DemoScreen() {
     Text(
         text = "Hello world",
         fontSize = MaterialTheme.textSize.gigantic

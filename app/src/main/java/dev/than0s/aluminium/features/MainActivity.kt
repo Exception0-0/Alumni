@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.than0s.aluminium.Content
+import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.features.auth.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
@@ -64,7 +64,7 @@ private fun NavGraphHost(modifier: Modifier) {
             )
         }
         composable(route = Screen.DemoScreen.route) {
-            Content()
+            DemoScreen()
         }
         composable(route = Screen.ProfileScreen.route) {
             ProfileScreen(
