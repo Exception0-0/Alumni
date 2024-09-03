@@ -32,7 +32,6 @@ import dev.than0s.mydiary.ui.textSize
 fun RegistrationScreen(
     viewModel: RegisterViewModel = hiltViewModel(),
     popAndOpen: (String) -> Unit,
-    restartApp: () -> Unit
 ) {
     RegistrationScreenContent(
         param = viewModel.param.value,
@@ -41,7 +40,6 @@ fun RegistrationScreen(
         onEmailChange = viewModel::onEmailChange,
         onRegisterClick = viewModel::onRegisterClick,
         popAndOpen = popAndOpen,
-        restartApp = restartApp,
         onBatchDialogDismiss = viewModel::onBatchDialogDismiss,
         onCategoryDialogDismiss = viewModel::onCategoryDialogDismiss,
         onCategoryChange = viewModel::onCategoryChange,
@@ -63,7 +61,6 @@ private fun RegistrationScreenContent(
     onEmailChange: (String) -> Unit,
     onRegisterClick: () -> Unit,
     popAndOpen: (String) -> Unit,
-    restartApp: () -> Unit,
     onBatchDialogDismiss: () -> Unit,
     onCategoryDialogDismiss: () -> Unit,
     onCategoryChange: (String) -> Unit,
@@ -220,7 +217,6 @@ private fun RegistrationScreenPreview() {
         RegistrationForm(),
         false,
         false,
-        {},
         {},
         {},
         {},

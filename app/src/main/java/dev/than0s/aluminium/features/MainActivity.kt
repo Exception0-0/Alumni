@@ -59,8 +59,7 @@ private fun NavGraphHost(modifier: Modifier) {
         }
         composable(route = Screen.RegistrationScreen.route) {
             RegistrationScreen(
-                popAndOpen = navController::popAndOpen,
-                restartApp = navController::restartApp
+                popAndOpen = navController::popAndOpen
             )
         }
         composable(route = Screen.DemoScreen.route) {

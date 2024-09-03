@@ -65,7 +65,7 @@ class RegisterViewModel @Inject constructor(private val registerUseCase: Registr
         viewModelScope.launch {
             when (registerUseCase.invoke(param.value)) {
                 is Either.Left -> TODO("show error message")
-                is Either.Right -> print("successfully register")
+                is Either.Right -> TODO("show registration successfully screen")
             }
         }
     }
