@@ -3,14 +3,14 @@ package dev.than0s.aluminium.features.register.presentation.screens.register
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.than0s.aluminium.core.data_class.RegistrationForm
 import dev.than0s.aluminium.features.auth.domain.use_cases.EmailSignUpUseCase
-import dev.than0s.aluminium.features.register.Param
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(private val signUpUseCase: EmailSignUpUseCase) :
     ViewModel() {
-    val param = mutableStateOf(Param())
+    val param = mutableStateOf(RegistrationForm())
     val showDialog = mutableStateOf(false)
 
     fun onEmailChange(email: String) {

@@ -2,8 +2,8 @@ package dev.than0s.aluminium.features.register.data.repositories
 
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.data_class.Failure
+import dev.than0s.aluminium.core.data_class.RegistrationForm
 import dev.than0s.aluminium.features.register.data.data_source.RegisterDataSource
-import dev.than0s.aluminium.features.register.data.data_source.RegistrationForm
 import dev.than0s.aluminium.features.register.domain.repository.RegistrationRepository
 import dev.than0s.mydiary.core.error.ServerException
 import javax.inject.Inject
