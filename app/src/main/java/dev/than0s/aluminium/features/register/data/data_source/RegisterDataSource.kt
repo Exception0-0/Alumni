@@ -17,7 +17,11 @@ interface RegisterDataSource {
 class FirebaseRegisterDataSourceImple @Inject constructor(private val store: FirebaseFirestore) :
     RegisterDataSource {
     override val requestsList: Flow<List<RegistrationForm>>
-        get() = store.collection(register).dataObjects()
+        get() = try {
+            store.collection(register).dataObjects()
+        } catch (e: FirebaseFirestoreException) {
+            throw ServerException(e.message.toString())
+        }
 
     override suspend fun register(form: RegistrationForm) {
         try {
