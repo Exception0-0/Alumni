@@ -18,7 +18,7 @@ import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.features.auth.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.splash.SplashScreen
-import dev.than0s.aluminium.features.register.presentation.screens.register.RegistrationScreen
+import dev.than0s.aluminium.features.register.presentation.screens.registration.RegistrationScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 
 @AndroidEntryPoint

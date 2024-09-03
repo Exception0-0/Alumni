@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.register.presentation.screens.register
+package dev.than0s.aluminium.features.register.presentation.screens.registration
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
