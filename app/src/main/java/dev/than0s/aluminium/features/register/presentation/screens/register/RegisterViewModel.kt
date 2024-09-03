@@ -1,13 +1,14 @@
-package dev.than0s.aluminium.features.auth.presentation.screens.sign_up
+package dev.than0s.aluminium.features.register.presentation.screens.register
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.features.auth.domain.use_cases.EmailSignUpUseCase
+import dev.than0s.aluminium.features.register.Param
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(private val signUpUseCase: EmailSignUpUseCase) :
+class RegisterViewModel @Inject constructor(private val signUpUseCase: EmailSignUpUseCase) :
     ViewModel() {
     val param = mutableStateOf(Param())
     val showDialog = mutableStateOf(false)

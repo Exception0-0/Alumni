@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.auth.presentation.screens.sign_up
+package dev.than0s.aluminium.features.register
 
 const val student = "Student"
 const val staff = "Staff"

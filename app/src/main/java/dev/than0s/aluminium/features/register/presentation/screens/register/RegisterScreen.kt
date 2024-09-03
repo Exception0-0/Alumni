@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.auth.presentation.screens.sign_up
+package dev.than0s.aluminium.features.register.presentation.screens.register
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,11 +15,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.features.register.Param
+import dev.than0s.aluminium.features.register.alumni
+import dev.than0s.aluminium.features.register.staff
+import dev.than0s.aluminium.features.register.student
 import dev.than0s.mydiary.ui.spacing
 
 @Composable
 fun SignUpScreen(
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: RegisterViewModel = hiltViewModel(),
     popAndOpen: (String) -> Unit,
     restartApp: () -> Unit
 ) {
