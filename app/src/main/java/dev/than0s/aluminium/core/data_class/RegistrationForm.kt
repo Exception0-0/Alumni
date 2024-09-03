@@ -1,7 +1,7 @@
 package dev.than0s.aluminium.core.data_class
 
 data class RegistrationForm(
-    private val approvalStatus: Boolean? = null,
+    val approvalStatus: Boolean? = null,
     val category: String = "",
     val id: String = "",
     val email: String = "",

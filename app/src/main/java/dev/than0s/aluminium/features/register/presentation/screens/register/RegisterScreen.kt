@@ -3,6 +3,11 @@ package dev.than0s.aluminium.features.register.presentation.screens.register
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
@@ -20,6 +26,7 @@ import dev.than0s.aluminium.features.register.presentation.screens.alumni
 import dev.than0s.aluminium.features.register.presentation.screens.staff
 import dev.than0s.aluminium.features.register.presentation.screens.student
 import dev.than0s.mydiary.ui.spacing
+import dev.than0s.mydiary.ui.textSize
 
 @Composable
 fun RegistrationScreen(
@@ -78,7 +85,7 @@ private fun RegistrationScreenContent(
                 Dialog(
                     onDismissRequest = { onCategoryDialogDismiss() },
                 ) {
-                    LoadCategoryList()
+                    LoadList(categoryList, onCategoryChange, onCategoryDialogDismiss)
                 }
             }
 
@@ -86,22 +93,21 @@ private fun RegistrationScreenContent(
                 Dialog(
                     onDismissRequest = { onBatchDialogDismiss() },
                 ) {
-                    LoadBatchList()
+                    LoadList(batchList, onBatchChange, onBatchDialogDismiss)
                 }
             }
 
+
             TextField(
                 value = param.category,
-                onValueChange = { newValue ->
-                    onCategoryChange(newValue)
-                },
+                onValueChange = {},
                 placeholder = {
                     Text(text = "Category")
                 },
-                readOnly = true,
                 modifier = Modifier.clickable {
                     onCategoryClick()
-                }
+                },
+                enabled = false
             )
 
             TextField(
@@ -156,13 +162,11 @@ private fun RegistrationScreenContent(
 
             TextField(
                 value = param.batch,
-                onValueChange = { newValue ->
-                    onBatchChange(newValue)
-                },
+                onValueChange = {},
                 placeholder = {
                     Text(text = "Batch - Year")
                 },
-                readOnly = true,
+                enabled = false,
                 modifier = Modifier.clickable {
                     onBatchClick()
                 }
@@ -170,7 +174,7 @@ private fun RegistrationScreenContent(
 
 
             Text(
-                text = "Already registerd?",
+                text = "Already registered?",
                 modifier = Modifier.clickable {
                     popAndOpen(Screen.SignInScreen.route)
                 }
@@ -188,16 +192,24 @@ private fun RegistrationScreenContent(
 }
 
 @Composable
-fun LoadBatchList() {
-    TODO("Not yet implemented")
-}
-
-@Composable
-private fun LoadCategoryList() {
-    Column {
-        Text(text = student)
-        Text(text = staff)
-        Text(text = alumni)
+private fun LoadList(itemList: List<String>, onClick: (String) -> Unit, onDismiss: () -> Unit) {
+    Card(
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        LazyColumn(modifier = Modifier.padding(MaterialTheme.spacing.large)) {
+            items(items = itemList) { item ->
+                Text(
+                    text = item,
+                    fontSize = MaterialTheme.textSize.extraLarge,
+                    modifier = Modifier
+                        .padding(MaterialTheme.spacing.extraSmall)
+                        .clickable {
+                            onClick(item)
+                            onDismiss()
+                        }
+                )
+            }
+        }
     }
 }
 
@@ -223,3 +235,6 @@ private fun RegistrationScreenPreview() {
         {},
         {})
 }
+
+private val categoryList = listOf(student, staff, alumni)
+private val batchList = listOf("2023", "2022", "2021", "2020")
