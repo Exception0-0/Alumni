@@ -3,6 +3,7 @@ package dev.than0s.aluminium.features.register.data.data_source
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.dataObjects
+import dev.than0s.aluminium.core.data_class.AdminRequest
 import dev.than0s.aluminium.core.data_class.RegistrationForm
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.flow.Flow
@@ -12,24 +13,43 @@ import javax.inject.Inject
 interface RegisterDataSource {
     val requestsList: Flow<List<RegistrationForm>>
     suspend fun register(form: RegistrationForm)
+    suspend fun accepted(request: AdminRequest)
+    suspend fun rejected(request: AdminRequest)
 }
 
 class FirebaseRegisterDataSourceImple @Inject constructor(private val store: FirebaseFirestore) :
     RegisterDataSource {
     override val requestsList: Flow<List<RegistrationForm>>
         get() = try {
-            store.collection(register).dataObjects()
+            store.collection(registrationRequests).dataObjects()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
 
     override suspend fun register(form: RegistrationForm) {
         try {
-            store.collection(register).add(form).await()
+            store.collection(registrationRequests).add(form).await()
+        } catch (e: FirebaseFirestoreException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun accepted(request: AdminRequest) {
+        try {
+            store.collection(acceptedRequests).add(request).await()
+        } catch (e: FirebaseFirestoreException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun rejected(request: AdminRequest) {
+        try {
+            store.collection(acceptedRequests).add(request).await()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
     }
 }
 
-const val register = "register"
+const val registrationRequests = "registration_requests"
+const val acceptedRequests = "admin_requests"
