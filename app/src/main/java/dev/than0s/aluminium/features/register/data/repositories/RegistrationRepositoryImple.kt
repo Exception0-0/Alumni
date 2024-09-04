@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.features.register.data.repositories
 
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.data_class.AdminRequest
 import dev.than0s.aluminium.core.data_class.Failure
 import dev.than0s.aluminium.core.data_class.RegistrationForm
 import dev.than0s.aluminium.features.register.data.data_source.RegisterDataSource
@@ -23,6 +24,24 @@ class RegistrationRepositoryImple @Inject constructor(private val dataSource: Re
     override suspend fun getRequestsList(): Either<Failure, Flow<List<RegistrationForm>>> {
         return try {
             Either.Right(dataSource.requestsList)
+        } catch (e: ServerException) {
+            Either.Left(Failure(e.message))
+        }
+    }
+
+    override suspend fun accepted(status: AdminRequest): Either<Failure, Unit> {
+        return try {
+            dataSource.accepted(status)
+            Either.Right(Unit)
+        } catch (e: ServerException) {
+            Either.Left(Failure(e.message))
+        }
+    }
+
+    override suspend fun rejected(status: AdminRequest): Either<Failure, Unit> {
+        return try {
+            dataSource.rejected(status)
+            Either.Right(Unit)
         } catch (e: ServerException) {
             Either.Left(Failure(e.message))
         }
