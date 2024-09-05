@@ -16,38 +16,52 @@ import dev.than0s.aluminium.core.data_class.RegistrationForm
 fun RegistrationRequestsScreen(viewModel: RequestViewModel = hiltViewModel()) {
     val requestsList = viewModel.requestsList.collectAsStateWithLifecycle(emptyList())
     RegistrationRequestsContent(
-        requestsList = requestsList.value
+        requestsList = requestsList.value,
+        onAcceptedClick = viewModel::onAcceptClick,
+        onRejectedClick = viewModel::onRejectedClick
     )
 }
 
 @Composable
 private fun RegistrationRequestsContent(
-    requestsList: List<RegistrationForm>
+    requestsList: List<RegistrationForm>,
+    onAcceptedClick: (RegistrationForm) -> Unit,
+    onRejectedClick: (RegistrationForm) -> Unit
 ) {
     LazyColumn {
         items(items = requestsList) { request ->
-            RegistrationRequestItem(request)
+            RegistrationRequestItem(request, onAcceptedClick, onRejectedClick)
         }
     }
 }
 
 @Composable
-private fun RegistrationRequestItem(request: RegistrationForm) {
+private fun RegistrationRequestItem(
+    request: RegistrationForm,
+    onAcceptedClick: (RegistrationForm) -> Unit,
+    onRejectedClick: (RegistrationForm) -> Unit
+) {
     ElevatedCard(onClick = { /*TODO*/ }) {
         Text(request.toString())
         Row {
-            ElevatedButton(onClick = {}) {
+            ElevatedButton(onClick = {
+                // todo alert dialog
+                onAcceptedClick(request)
+            }) {
                 Text("Accept")
             }
-            ElevatedButton(onClick = { /*TODO*/ }) {
+            ElevatedButton(onClick = {
+                // todo alert dialog
+                onRejectedClick(request)
+            }) {
                 Text("Reject")
             }
         }
     }
-}   
+}
 
 @Preview(showSystemUi = true)
 @Composable
 private fun RegistrationRequestPreview() {
-    RegistrationRequestsContent(emptyList())
+    RegistrationRequestsContent(emptyList(), {}, {})
 }

@@ -3,7 +3,6 @@ package dev.than0s.aluminium.features.register.data.data_source
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.dataObjects
-import dev.than0s.aluminium.core.data_class.AdminRequest
 import dev.than0s.aluminium.core.data_class.RegistrationForm
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.flow.Flow
@@ -12,9 +11,9 @@ import javax.inject.Inject
 
 interface RegisterDataSource {
     val requestsList: Flow<List<RegistrationForm>>
-    suspend fun register(form: RegistrationForm)
-    suspend fun accepted(request: AdminRequest)
-    suspend fun rejected(request: AdminRequest)
+    suspend fun submit(form: RegistrationForm)
+    suspend fun accept(form: RegistrationForm)
+    suspend fun reject(form: RegistrationForm)
 }
 
 class FirebaseRegisterDataSourceImple @Inject constructor(private val store: FirebaseFirestore) :
@@ -26,7 +25,7 @@ class FirebaseRegisterDataSourceImple @Inject constructor(private val store: Fir
             throw ServerException(e.message.toString())
         }
 
-    override suspend fun register(form: RegistrationForm) {
+    override suspend fun submit(form: RegistrationForm) {
         try {
             store.collection(registrationRequests).add(form).await()
         } catch (e: FirebaseFirestoreException) {
@@ -34,17 +33,17 @@ class FirebaseRegisterDataSourceImple @Inject constructor(private val store: Fir
         }
     }
 
-    override suspend fun accepted(request: AdminRequest) {
+    override suspend fun accept(form: RegistrationForm) {
         try {
-            store.collection(acceptedRequests).add(request).await()
+            store.collection(registrationRequests).document(form.id).set(form).await()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
     }
 
-    override suspend fun rejected(request: AdminRequest) {
+    override suspend fun reject(form: RegistrationForm) {
         try {
-            store.collection(acceptedRequests).add(request).await()
+            store.collection(registrationRequests).document(form.id).set(form).await()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
@@ -52,4 +51,3 @@ class FirebaseRegisterDataSourceImple @Inject constructor(private val store: Fir
 }
 
 const val registrationRequests = "registration_requests"
-const val acceptedRequests = "admin_requests"

@@ -1,7 +1,6 @@
 package dev.than0s.aluminium.features.register.data.repositories
 
 import dev.than0s.aluminium.core.Either
-import dev.than0s.aluminium.core.data_class.AdminRequest
 import dev.than0s.aluminium.core.data_class.Failure
 import dev.than0s.aluminium.core.data_class.RegistrationForm
 import dev.than0s.aluminium.features.register.data.data_source.RegisterDataSource
@@ -12,9 +11,9 @@ import javax.inject.Inject
 
 class RegistrationRepositoryImple @Inject constructor(private val dataSource: RegisterDataSource) :
     RegistrationRepository {
-    override suspend fun register(form: RegistrationForm): Either<Failure, Unit> {
+    override suspend fun submit(form: RegistrationForm): Either<Failure, Unit> {
         return try {
-            dataSource.register(form)
+            dataSource.submit(form)
             Either.Right(Unit)
         } catch (e: ServerException) {
             Either.Left(Failure(e.message))
@@ -29,18 +28,18 @@ class RegistrationRepositoryImple @Inject constructor(private val dataSource: Re
         }
     }
 
-    override suspend fun accepted(status: AdminRequest): Either<Failure, Unit> {
+    override suspend fun accept(status: RegistrationForm): Either<Failure, Unit> {
         return try {
-            dataSource.accepted(status)
+            dataSource.accept(status)
             Either.Right(Unit)
         } catch (e: ServerException) {
             Either.Left(Failure(e.message))
         }
     }
 
-    override suspend fun rejected(status: AdminRequest): Either<Failure, Unit> {
+    override suspend fun reject(status: RegistrationForm): Either<Failure, Unit> {
         return try {
-            dataSource.rejected(status)
+            dataSource.reject(status)
             Either.Right(Unit)
         } catch (e: ServerException) {
             Either.Left(Failure(e.message))
