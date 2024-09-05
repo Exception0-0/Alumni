@@ -20,7 +20,8 @@ class FirebaseRegisterDataSourceImple @Inject constructor(private val store: Fir
     RegisterDataSource {
     override val requestsList: Flow<List<RegistrationForm>>
         get() = try {
-            store.collection(registrationRequests).dataObjects()
+            store.collection(registrationRequests).whereEqualTo("status.approvalStatus", null)
+                .dataObjects()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }

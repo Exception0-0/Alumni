@@ -11,6 +11,6 @@ class RegistrationUseCase @Inject constructor(private val repository: Registrati
     UseCase<RegistrationForm, Unit> {
     override suspend fun invoke(param: RegistrationForm): Either<Failure, Unit> {
         // TODO: add business logic
-        return repository.register(param)
+        return repository.submit(param)
     }
 }
