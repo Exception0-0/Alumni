@@ -55,7 +55,7 @@ fun RegistrationScreen(
         onBatchDialogDismiss = viewModel::onBatchDialogDismiss,
         onCategoryDialogDismiss = viewModel::onCategoryDialogDismiss,
         onCategoryChange = viewModel::onCategoryChange,
-        onIdChange = viewModel::onIdChange,
+        onRollNoChange = viewModel::onRollNoChange,
         onFirstNameChange = viewModel::onFirstNameChange,
         onMiddleNameChange = viewModel::onMiddleNameChange,
         onLastNameChange = viewModel::onLastNameChange,
@@ -76,7 +76,7 @@ private fun RegistrationScreenContent(
     onBatchDialogDismiss: () -> Unit,
     onCategoryDialogDismiss: () -> Unit,
     onCategoryChange: (String) -> Unit,
-    onIdChange: (String) -> Unit,
+    onRollNoChange: (String) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onMiddleNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
@@ -125,9 +125,9 @@ private fun RegistrationScreenContent(
             }
 
             TextField(
-                value = param.id,
+                value = param.rollNo,
                 onValueChange = { newValue ->
-                    onIdChange(newValue)
+                    onRollNoChange(newValue)
                 },
                 placeholder = {
                     Text(text = "Student ID / Staff ID")

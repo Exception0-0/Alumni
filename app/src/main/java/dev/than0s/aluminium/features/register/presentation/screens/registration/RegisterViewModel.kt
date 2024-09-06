@@ -41,7 +41,7 @@ class RegisterViewModel @Inject constructor(private val registerUseCase: Registr
         param.value = param.value.copy(category = category)
     }
 
-    fun onIdChange(id: String) {
+    fun onRollNoChange(id: String) {
         param.value = param.value.copy(id = id)
     }
 

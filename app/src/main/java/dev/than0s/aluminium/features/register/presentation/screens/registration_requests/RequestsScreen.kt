@@ -1,14 +1,23 @@
 package dev.than0s.aluminium.features.register.presentation.screens.registration_requests
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -16,10 +25,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.than0s.aluminium.core.data_class.RegistrationForm
+import dev.than0s.mydiary.ui.elevation
+import dev.than0s.mydiary.ui.spacing
 
 @Composable
 fun RegistrationRequestsScreen(viewModel: RequestViewModel = hiltViewModel()) {
@@ -77,19 +89,38 @@ private fun RegistrationRequestItem(
         )
     }
 
-    ElevatedCard(onClick = { /*TODO*/ }) {
+    ElevatedCard(
+        modifier = Modifier.padding(
+            horizontal = MaterialTheme.spacing.medium,
+            vertical = MaterialTheme.spacing.small
+        )
+    ) {
         Text(request.toString())
-        Row {
-            ElevatedButton(onClick = {
-                showAcceptAlertDialog = true
-            }) {
-                Text("Accept")
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MaterialTheme.spacing.small)
+        ) {
+            FloatingActionButton(
+                onClick = {
+                    showAcceptAlertDialog = true
+                },
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                elevation = FloatingActionButtonDefaults.elevation(MaterialTheme.elevation.none)
+            ) {
+                Icon(Icons.Default.Check, contentDescription = Icons.Default.Check.name)
             }
 
-            ElevatedButton(onClick = {
-                showRejectAlertDialog = true
-            }) {
-                Text("Reject")
+            Spacer(modifier = Modifier.size(MaterialTheme.spacing.medium))
+
+            FloatingActionButton(
+                onClick = {
+                    showRejectAlertDialog = true
+                },
+                elevation = FloatingActionButtonDefaults.elevation(MaterialTheme.elevation.none)
+            ) {
+                Icon(Icons.Default.Clear, contentDescription = Icons.Default.Clear.name)
             }
         }
     }
@@ -145,5 +176,9 @@ const val rejected_text = "You can't undo this action, so be careful with your c
 @Preview(showSystemUi = true)
 @Composable
 private fun RegistrationRequestPreview() {
-    RegistrationRequestsContent(emptyList(), {}, {})
+    RegistrationRequestsContent(listOf(
+        RegistrationForm(),
+        RegistrationForm(),
+        RegistrationForm()
+    ), {}, {})
 }
