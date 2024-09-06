@@ -4,8 +4,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,10 +50,16 @@ private fun SignInScreenContent(
     popAndOpen: (String) -> Unit,
     restartApp: () -> Unit
 ) {
-    Surface {
+    ElevatedCard(
+        modifier = Modifier
+            .padding(MaterialTheme.spacing.large)
+            .fillMaxHeight()
+            .wrapContentHeight(align = Alignment.CenterVertically)
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
             horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(vertical = MaterialTheme.spacing.large)
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
