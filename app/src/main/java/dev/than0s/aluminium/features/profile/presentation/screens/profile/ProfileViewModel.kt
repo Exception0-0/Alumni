@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.auth.presentation.screens.profile
+package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
