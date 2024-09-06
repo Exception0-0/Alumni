@@ -44,7 +44,7 @@ private fun NavGraphHost(modifier: Modifier) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.RegistrationRequestsScreen.route,
+        startDestination = Screen.SplashScreen.route,
         modifier = modifier
     ) {
         composable(route = Screen.SplashScreen.route) {

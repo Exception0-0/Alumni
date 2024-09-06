@@ -14,3 +14,5 @@
 .cxx
 local.properties
 app/google-services.json
+app/src/main/java/dev/than0s/aluminium/server_site/aluminium-firebase-admin-sdk.json
+app/src/main/java/dev/than0s/aluminium/server_site/constant.py
