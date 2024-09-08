@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.auth.data.data_source
+package dev.than0s.aluminium.features.settings.data.data_source
 
 import com.google.firebase.auth.FirebaseAuth
 import dev.than0s.aluminium.core.data_class.User
@@ -9,7 +9,6 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface AccountDataSource {
-    val currentUserId: String
     val currentUser: Flow<User>
     val hasUser: Boolean
     suspend fun signOut()
@@ -18,8 +17,6 @@ interface AccountDataSource {
 
 class FirebaseAccountDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
     AccountDataSource {
-    override val currentUserId: String
-        get() = auth.currentUser?.uid.orEmpty()
 
     override val hasUser: Boolean
         get() = auth.currentUser != null

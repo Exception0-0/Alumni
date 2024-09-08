@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.auth.presentation.screens.splash
+package dev.than0s.aluminium.features.settings.presentation.screens.splash
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

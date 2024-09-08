@@ -1,10 +1,10 @@
-package dev.than0s.aluminium.features.auth.presentation.screens.splash
+package dev.than0s.aluminium.features.settings.presentation.screens.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
-import dev.than0s.aluminium.features.auth.domain.use_cases.AccountHasUserUseCase
+import dev.than0s.aluminium.features.settings.domain.use_cases.AccountHasUserUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

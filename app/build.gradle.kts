@@ -96,6 +96,9 @@ dependencies {
 
     //
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
+
+    // image loading
+    implementation("io.coil-kt:coil-compose:2.7.0")
 }
 
 // Allow references to generated code

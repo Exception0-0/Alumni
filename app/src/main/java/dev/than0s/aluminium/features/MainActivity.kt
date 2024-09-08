@@ -15,9 +15,9 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
+import dev.than0s.aluminium.features.settings.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
-import dev.than0s.aluminium.features.auth.presentation.screens.splash.SplashScreen
+import dev.than0s.aluminium.features.settings.presentation.screens.splash.SplashScreen
 import dev.than0s.aluminium.features.register.presentation.screens.registration.RegistrationScreen
 import dev.than0s.aluminium.features.register.presentation.screens.registration_requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme

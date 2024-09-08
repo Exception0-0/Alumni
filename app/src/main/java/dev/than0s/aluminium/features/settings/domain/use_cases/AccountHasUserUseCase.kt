@@ -1,9 +1,9 @@
-package dev.than0s.aluminium.features.auth.domain.use_cases
+package dev.than0s.aluminium.features.settings.domain.use_cases
 
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.UseCase
 import dev.than0s.aluminium.core.data_class.Failure
-import dev.than0s.aluminium.features.auth.domain.repository.AccountRepository
+import dev.than0s.aluminium.features.settings.domain.repository.AccountRepository
 import javax.inject.Inject
 
 class AccountHasUserUseCase @Inject constructor(private val repository: AccountRepository) :

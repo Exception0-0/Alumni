@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.profile.presentation.screens.profile
+package dev.than0s.aluminium.features.settings.presentation.screens.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
