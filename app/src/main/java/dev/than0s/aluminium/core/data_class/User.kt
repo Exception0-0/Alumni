@@ -1,12 +1,10 @@
 package dev.than0s.aluminium.core.data_class
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.ui.graphics.vector.ImageVector
+import android.net.Uri
 
 data class User(
     val id: String = "",
-    val profileImage: ImageVector = Icons.Default.AccountCircle,
+    val profileImage: Uri = Uri.EMPTY,
     val firstName: String = "",
     val lastName: String = "",
     val bio: String = "",

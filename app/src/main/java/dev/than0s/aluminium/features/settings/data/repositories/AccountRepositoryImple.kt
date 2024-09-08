@@ -18,13 +18,6 @@ class AccountRepositoryImple @Inject constructor(private val dataSource: Account
             Either.Left(e)
         }
 
-    override val currentUser: Either<ServerException, Flow<User>>
-        get() = try {
-            Either.Right(dataSource.currentUser)
-        } catch (e: ServerException) {
-            Either.Left(e)
-        }
-
     override suspend fun signOut(): Either<ServerException, Unit> {
         try {
             dataSource.signOut()

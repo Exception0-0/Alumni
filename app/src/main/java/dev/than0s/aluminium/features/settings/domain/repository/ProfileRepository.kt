@@ -5,8 +5,7 @@ import dev.than0s.aluminium.core.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.flow.Flow
 
-interface AccountRepository {
-    val hasUser: Either<ServerException, Boolean>
-    suspend fun signOut(): Either<ServerException, Unit>
-    suspend fun deleteAccount(): Either<ServerException, Unit>
+interface ProfileRepository {
+    val userProfile: Either<ServerException, Flow<User?>>
+    suspend fun updateProfile(): Either<ServerException, Unit>
 }
