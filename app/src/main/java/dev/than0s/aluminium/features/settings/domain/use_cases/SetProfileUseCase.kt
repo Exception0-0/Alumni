@@ -7,10 +7,10 @@ import dev.than0s.aluminium.core.data_class.User
 import dev.than0s.aluminium.features.settings.domain.repository.ProfileRepository
 import javax.inject.Inject
 
-class ProfileUpdateProfileUseCase @Inject constructor(private val repository: ProfileRepository) :
+class SetProfileUseCase @Inject constructor(private val repository: ProfileRepository) :
     UseCase<User, Unit> {
     override suspend fun invoke(param: User): Either<Failure, Unit> {
-        return when (val result = repository.updateProfile(param)) {
+        return when (val result = repository.setUserProfile(param)) {
             is Either.Left -> Either.Left(Failure(result.value.message))
             is Either.Right -> Either.Right(Unit)
         }

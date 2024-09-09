@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,15 +45,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.data_class.User
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), restartApp: () -> Unit) {
-    viewModel.userFlow.collectAsState(User()).value?.let {
-        viewModel.userProfile = it.copy(profileImage = viewModel.userProfile.profileImage)
-    }
     ProfileScreenContent(
         userProfile = viewModel.userProfile,
         onSignOutClick = viewModel::onSignOutClick,
@@ -76,7 +75,6 @@ private fun ProfileScreenContent(
     onProfileImageChange: (Uri) -> Unit,
     restartApp: () -> Unit,
 ) {
-    println("profile screen content $userProfile")
     var updateProfileDialogState by rememberSaveable { mutableStateOf(false) }
 
     if (updateProfileDialogState) {
@@ -96,28 +94,18 @@ private fun ProfileScreenContent(
     Surface {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(vertical = MaterialTheme.spacing.medium)
 
         ) {
-
-            IconButton(
-                onClick = {
-                    onSignOutClick(restartApp)
-                },
-                modifier = Modifier.align(Alignment.End)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                    contentDescription = Icons.AutoMirrored.Filled.ExitToApp.name
-                )
-            }
 
             AsyncImage(
                 model = userProfile.profileImage,
                 contentDescription = "user profile image",
                 contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.ic_launcher_background),
                 modifier = Modifier
                     .size(128.dp)
                     .clip(CircleShape)
@@ -132,16 +120,33 @@ private fun ProfileScreenContent(
                 modifier = Modifier.width(256.dp),
                 textAlign = TextAlign.Center
             )
-            IconButton(
-                onClick = {
-                    updateProfileDialogState = true
-                },
-                modifier = Modifier.align(Alignment.End)
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = Icons.Default.Edit.name,
-                )
+                Card(
+                    onClick = {
+                        updateProfileDialogState = true
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = Icons.Default.Edit.name,
+                        modifier = Modifier.padding(MaterialTheme.spacing.small)
+                    )
+                }
+
+                Card(
+                    onClick = {
+                        onSignOutClick(restartApp)
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                        contentDescription = Icons.AutoMirrored.Filled.ExitToApp.name,
+                        modifier = Modifier.padding(MaterialTheme.spacing.small)
+                    )
+                }
             }
         }
     }
@@ -157,7 +162,6 @@ fun UpdateProfileDialog(
     onProfileImageChange: (Uri) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    println("update Profile Dialog $userProfile")
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
             image?.let {
@@ -191,7 +195,7 @@ fun UpdateProfileDialog(
                     onValueChange = { newValue ->
                         onFirstNameChange(newValue)
                     },
-                    placeholder = {
+                    label = {
                         Text(text = "First Name")
                     }
                 )
@@ -236,5 +240,10 @@ fun UpdateProfileDialog(
 @Preview(showSystemUi = true)
 @Composable
 private fun ProfileScreenPreview() {
-    ProfileScreenContent(User(id = "0"), {}, {}, {}, {}, {}, {}, {})
+    ProfileScreenContent(User(
+        id = "0",
+        firstName = "Than0s",
+        lastName = "Op",
+        bio = "Hi I'm Than0s"
+    ), {}, {}, {}, {}, {}, {}, {})
 }

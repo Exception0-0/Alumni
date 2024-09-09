@@ -6,6 +6,6 @@ import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
-    val userProfile: Either<ServerException, Flow<User?>>
-    suspend fun updateProfile(profile: User): Either<ServerException, Unit>
+    suspend fun getUserProfile(): Either<ServerException, User?>
+    suspend fun setUserProfile(profile: User): Either<ServerException, Unit>
 }

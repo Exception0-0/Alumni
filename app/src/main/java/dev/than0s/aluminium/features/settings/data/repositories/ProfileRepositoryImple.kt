@@ -10,16 +10,18 @@ import javax.inject.Inject
 
 class ProfileRepositoryImple @Inject constructor(private val source: ProfileDataSource) :
     ProfileRepository {
-    override val userProfile: Either<ServerException, Flow<User?>>
-        get() = try {
-            Either.Right(source.userProfile)
+
+    override suspend fun getUserProfile(): Either<ServerException, User?> {
+        return try {
+            Either.Right(source.getUserProfile())
         } catch (e: ServerException) {
             Either.Left(e)
         }
+    }
 
-    override suspend fun updateProfile(profile: User): Either<ServerException, Unit> {
+    override suspend fun setUserProfile(profile: User): Either<ServerException, Unit> {
         return try {
-            source.updateProfile(profile)
+            source.setUserProfile(profile)
             Either.Right(Unit)
         } catch (e: ServerException) {
             Either.Left(e)

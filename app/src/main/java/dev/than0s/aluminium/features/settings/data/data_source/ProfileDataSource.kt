@@ -11,22 +11,26 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface ProfileDataSource {
-    val userProfile: Flow<User?>
-    suspend fun updateProfile(user: User)
+    suspend fun getUserProfile(): User?
+    suspend fun setUserProfile(user: User)
 }
 
 class FirebaseProfileDataSourceImple @Inject constructor(
     private val auth: FirebaseAuth,
     private val store: FirebaseFirestore
 ) : ProfileDataSource {
-    override val userProfile: Flow<User?>
-        get() = try {
-            store.collection(profile).document(auth.currentUser!!.uid).dataObjects()
+    override suspend fun getUserProfile(): User? {
+        return try {
+            store.collection(profile).document(auth.currentUser!!.uid)
+                .get()
+                .await()
+                .toObject(User::class.java)
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
+    }
 
-    override suspend fun updateProfile(user: User) {
+    override suspend fun setUserProfile(user: User) {
         try {
             store.collection(profile).document(auth.currentUser!!.uid).set(
                 hashMapOf(

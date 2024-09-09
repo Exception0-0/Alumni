@@ -38,8 +38,8 @@ import dev.than0s.aluminium.features.settings.data.repositories.StorageRepositor
 import dev.than0s.aluminium.features.settings.domain.repository.ProfileRepository
 import dev.than0s.aluminium.features.settings.domain.repository.StorageRepository
 import dev.than0s.aluminium.features.settings.domain.use_cases.DownloadProfileImageUseCase
-import dev.than0s.aluminium.features.settings.domain.use_cases.ProfileCurrentUserUseCase
-import dev.than0s.aluminium.features.settings.domain.use_cases.ProfileUpdateProfileUseCase
+import dev.than0s.aluminium.features.settings.domain.use_cases.GetUserUseCase
+import dev.than0s.aluminium.features.settings.domain.use_cases.SetProfileUseCase
 import dev.than0s.aluminium.features.settings.domain.use_cases.UpdateProfileImageUseCase
 
 @Module
@@ -109,10 +109,10 @@ object UseCases {
 
     @Provides
     fun updateProfileUseCase(repository: ProfileRepository) =
-        ProfileUpdateProfileUseCase(repository)
+        SetProfileUseCase(repository)
 
     @Provides
-    fun currentUserUseCase(repository: ProfileRepository) = ProfileCurrentUserUseCase(repository)
+    fun currentUserUseCase(repository: ProfileRepository) = GetUserUseCase(repository)
 
     @Provides
     fun downloadProfileImageUseCase(repository: StorageRepository) =
