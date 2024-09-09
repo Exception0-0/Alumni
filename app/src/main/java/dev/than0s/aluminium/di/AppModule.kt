@@ -30,13 +30,17 @@ import dev.than0s.aluminium.features.register.domain.repository.RegistrationRepo
 import dev.than0s.aluminium.features.register.domain.use_cases.RegistrationUseCase
 import dev.than0s.aluminium.features.register.domain.use_cases.RequestsListUseCase
 import dev.than0s.aluminium.features.settings.data.data_source.FirebaseProfileDataSourceImple
+import dev.than0s.aluminium.features.settings.data.data_source.FirebaseStorageDataSourceImple
 import dev.than0s.aluminium.features.settings.data.data_source.ProfileDataSource
+import dev.than0s.aluminium.features.settings.data.data_source.StorageDataSource
 import dev.than0s.aluminium.features.settings.data.repositories.ProfileRepositoryImple
 import dev.than0s.aluminium.features.settings.data.repositories.StorageRepositoryImple
 import dev.than0s.aluminium.features.settings.domain.repository.ProfileRepository
 import dev.than0s.aluminium.features.settings.domain.repository.StorageRepository
+import dev.than0s.aluminium.features.settings.domain.use_cases.DownloadProfileImageUseCase
 import dev.than0s.aluminium.features.settings.domain.use_cases.ProfileCurrentUserUseCase
 import dev.than0s.aluminium.features.settings.domain.use_cases.ProfileUpdateProfileUseCase
+import dev.than0s.aluminium.features.settings.domain.use_cases.UpdateProfileImageUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -67,6 +71,9 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindStorageRepository(imple: StorageRepositoryImple): StorageRepository
+
+    @Binds
+    abstract fun bindStorageDataSource(imple: FirebaseStorageDataSourceImple): StorageDataSource
 }
 
 @InstallIn(SingletonComponent::class)
@@ -106,4 +113,12 @@ object UseCases {
 
     @Provides
     fun currentUserUseCase(repository: ProfileRepository) = ProfileCurrentUserUseCase(repository)
+
+    @Provides
+    fun downloadProfileImageUseCase(repository: StorageRepository) =
+        DownloadProfileImageUseCase(repository)
+
+    @Provides
+    fun updateProfileImageUseCase(repository: StorageRepository) =
+        UpdateProfileImageUseCase(repository)
 }

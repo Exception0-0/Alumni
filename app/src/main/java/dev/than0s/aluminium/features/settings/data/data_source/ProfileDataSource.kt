@@ -28,7 +28,14 @@ class FirebaseProfileDataSourceImple @Inject constructor(
 
     override suspend fun updateProfile(user: User) {
         try {
-            store.collection(profile).document(auth.currentUser!!.uid).set(user).await()
+            store.collection(profile).document(auth.currentUser!!.uid).set(
+                hashMapOf(
+                    "id" to user.id,
+                    "firstName" to user.firstName,
+                    "lastName" to user.lastName,
+                    "bio" to user.bio,
+                )
+            ).await()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }

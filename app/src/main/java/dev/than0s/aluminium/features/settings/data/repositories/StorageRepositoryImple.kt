@@ -1,20 +1,29 @@
 package dev.than0s.aluminium.features.settings.data.repositories
 
+import android.net.Uri
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.features.settings.data.data_source.StorageDataSource
 import dev.than0s.aluminium.features.settings.domain.repository.StorageRepository
 import dev.than0s.mydiary.core.error.ServerException
-import java.io.InputStream
-import java.net.URL
 import javax.inject.Inject
 
 class StorageRepositoryImple @Inject constructor(
-    private val repository: StorageRepository
+    private val dataSource: StorageDataSource
 ) : StorageRepository {
-    override suspend fun uploadProfileImage(image: InputStream): Either<ServerException, Unit> {
-        TODO("Not yet implemented")
+    override suspend fun setProfileImage(image: Uri): Either<ServerException, Unit> {
+        return try {
+            dataSource.setProfileImage(image)
+            Either.Right(Unit)
+        } catch (e: ServerException) {
+            Either.Left(e)
+        }
     }
 
-    override suspend fun downloadProfileImage(): Either<ServerException, URL> {
-        TODO("Not yet implemented")
+    override suspend fun getProfileImage(): Either<ServerException, Uri> {
+        return try {
+            Either.Right(dataSource.getProfileImage())
+        } catch (e: ServerException) {
+            Either.Left(e)
+        }
     }
 }

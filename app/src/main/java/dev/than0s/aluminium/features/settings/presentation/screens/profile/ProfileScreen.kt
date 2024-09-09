@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.settings.presentation.screens.profile
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,7 +51,7 @@ import dev.than0s.mydiary.ui.textSize
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), restartApp: () -> Unit) {
     viewModel.userFlow.collectAsState(User()).value?.let {
-        viewModel.userProfile = it
+        viewModel.userProfile = it.copy(profileImage = viewModel.userProfile.profileImage)
     }
     ProfileScreenContent(
         userProfile = viewModel.userProfile,
@@ -74,6 +76,7 @@ private fun ProfileScreenContent(
     onProfileImageChange: (Uri) -> Unit,
     restartApp: () -> Unit,
 ) {
+    println("profile screen content $userProfile")
     var updateProfileDialogState by rememberSaveable { mutableStateOf(false) }
 
     if (updateProfileDialogState) {
@@ -130,15 +133,14 @@ private fun ProfileScreenContent(
                 textAlign = TextAlign.Center
             )
             IconButton(
-                onClick = {},
+                onClick = {
+                    updateProfileDialogState = true
+                },
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = Icons.Default.Edit.name,
-                    modifier = Modifier.clickable {
-                        updateProfileDialogState = true
-                    }
                 )
             }
         }
@@ -155,11 +157,11 @@ fun UpdateProfileDialog(
     onProfileImageChange: (Uri) -> Unit,
     onDismiss: () -> Unit,
 ) {
-
+    println("update Profile Dialog $userProfile")
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
-            image?.run {
-                onProfileImageChange(this)
+            image?.let {
+                onProfileImageChange(it)
             }
         }
 
@@ -172,6 +174,7 @@ fun UpdateProfileDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(MaterialTheme.spacing.medium)
             ) {
+
                 AsyncImage(
                     model = userProfile.profileImage,
                     contentDescription = "user profile image",
@@ -233,5 +236,5 @@ fun UpdateProfileDialog(
 @Preview(showSystemUi = true)
 @Composable
 private fun ProfileScreenPreview() {
-    ProfileScreenContent(User(), {}, {}, {}, {}, {}, {}, {})
+    ProfileScreenContent(User(id = "0"), {}, {}, {}, {}, {}, {}, {})
 }
