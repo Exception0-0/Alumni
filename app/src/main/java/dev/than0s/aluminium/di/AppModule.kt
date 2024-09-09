@@ -32,7 +32,9 @@ import dev.than0s.aluminium.features.register.domain.use_cases.RequestsListUseCa
 import dev.than0s.aluminium.features.settings.data.data_source.FirebaseProfileDataSourceImple
 import dev.than0s.aluminium.features.settings.data.data_source.ProfileDataSource
 import dev.than0s.aluminium.features.settings.data.repositories.ProfileRepositoryImple
+import dev.than0s.aluminium.features.settings.data.repositories.StorageRepositoryImple
 import dev.than0s.aluminium.features.settings.domain.repository.ProfileRepository
+import dev.than0s.aluminium.features.settings.domain.repository.StorageRepository
 import dev.than0s.aluminium.features.settings.domain.use_cases.ProfileCurrentUserUseCase
 import dev.than0s.aluminium.features.settings.domain.use_cases.ProfileUpdateProfileUseCase
 
@@ -62,6 +64,9 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindProfileRepository(imple: ProfileRepositoryImple): ProfileRepository
+
+    @Binds
+    abstract fun bindStorageRepository(imple: StorageRepositoryImple): StorageRepository
 }
 
 @InstallIn(SingletonComponent::class)
