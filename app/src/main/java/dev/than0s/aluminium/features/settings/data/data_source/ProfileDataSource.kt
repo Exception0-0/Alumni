@@ -7,11 +7,12 @@ import com.google.firebase.firestore.dataObjects
 import dev.than0s.aluminium.core.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface ProfileDataSource {
     val userProfile: Flow<User?>
-    fun updateProfile(user: User)
+    suspend fun updateProfile(user: User)
 }
 
 class FirebaseProfileDataSourceImple @Inject constructor(
@@ -25,9 +26,9 @@ class FirebaseProfileDataSourceImple @Inject constructor(
             throw ServerException(e.message.toString())
         }
 
-    override fun updateProfile(user: User) {
+    override suspend fun updateProfile(user: User) {
         try {
-            store.collection(profile).document(auth.currentUser!!.uid).set(user)
+            store.collection(profile).document(auth.currentUser!!.uid).set(user).await()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }

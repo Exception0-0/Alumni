@@ -17,7 +17,12 @@ class ProfileRepositoryImple @Inject constructor(private val source: ProfileData
             Either.Left(e)
         }
 
-    override suspend fun updateProfile(): Either<ServerException, Unit> {
-        TODO("Not yet implemented")
+    override suspend fun updateProfile(profile: User): Either<ServerException, Unit> {
+        return try {
+            source.updateProfile(profile)
+            Either.Right(Unit)
+        } catch (e: ServerException) {
+            Either.Left(e)
+        }
     }
 }

@@ -1,10 +1,11 @@
 package dev.than0s.aluminium.core.data_class
 
-import android.net.Uri
+import com.google.firebase.firestore.Exclude
+import java.net.URL
 
 data class User(
     val id: String = "",
-    val profileImage: Uri = Uri.EMPTY,
+    @Exclude val profileImage: URL = URL("https://example.com"),
     val firstName: String = "",
     val lastName: String = "",
     val bio: String = "",

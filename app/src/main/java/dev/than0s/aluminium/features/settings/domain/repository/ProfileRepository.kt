@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
     val userProfile: Either<ServerException, Flow<User?>>
-    suspend fun updateProfile(): Either<ServerException, Unit>
+    suspend fun updateProfile(profile: User): Either<ServerException, Unit>
 }

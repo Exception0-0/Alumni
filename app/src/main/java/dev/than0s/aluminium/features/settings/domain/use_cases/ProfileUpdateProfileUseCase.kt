@@ -10,7 +10,7 @@ import javax.inject.Inject
 class ProfileUpdateProfileUseCase @Inject constructor(private val repository: ProfileRepository) :
     UseCase<User, Unit> {
     override suspend fun invoke(param: User): Either<Failure, Unit> {
-        return when (val result = repository.updateProfile()) {
+        return when (val result = repository.updateProfile(param)) {
             is Either.Left -> Either.Left(Failure(result.value.message))
             is Either.Right -> Either.Right(Unit)
         }

@@ -5,6 +5,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.storage
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -27,6 +29,12 @@ import dev.than0s.aluminium.features.register.data.repositories.RegistrationRepo
 import dev.than0s.aluminium.features.register.domain.repository.RegistrationRepository
 import dev.than0s.aluminium.features.register.domain.use_cases.RegistrationUseCase
 import dev.than0s.aluminium.features.register.domain.use_cases.RequestsListUseCase
+import dev.than0s.aluminium.features.settings.data.data_source.FirebaseProfileDataSourceImple
+import dev.than0s.aluminium.features.settings.data.data_source.ProfileDataSource
+import dev.than0s.aluminium.features.settings.data.repositories.ProfileRepositoryImple
+import dev.than0s.aluminium.features.settings.domain.repository.ProfileRepository
+import dev.than0s.aluminium.features.settings.domain.use_cases.ProfileCurrentUserUseCase
+import dev.than0s.aluminium.features.settings.domain.use_cases.ProfileUpdateProfileUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -48,6 +56,12 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindRegisterDataSource(impl: FirebaseRegisterDataSourceImple): RegisterDataSource
+
+    @Binds
+    abstract fun bindProfileDataSource(impl: FirebaseProfileDataSourceImple): ProfileDataSource
+
+    @Binds
+    abstract fun bindProfileRepository(imple: ProfileRepositoryImple): ProfileRepository
 }
 
 @InstallIn(SingletonComponent::class)
@@ -58,6 +72,9 @@ object FirebaseModule {
 
     @Provides
     fun store(): FirebaseFirestore = Firebase.firestore
+
+    @Provides
+    fun storage(): FirebaseStorage = Firebase.storage
 }
 
 @InstallIn(SingletonComponent::class)
@@ -77,4 +94,11 @@ object UseCases {
 
     @Provides
     fun requestsListUseCase(repository: RegistrationRepository) = RequestsListUseCase(repository)
+
+    @Provides
+    fun updateProfileUseCase(repository: ProfileRepository) =
+        ProfileUpdateProfileUseCase(repository)
+
+    @Provides
+    fun currentUserUseCase(repository: ProfileRepository) = ProfileCurrentUserUseCase(repository)
 }
