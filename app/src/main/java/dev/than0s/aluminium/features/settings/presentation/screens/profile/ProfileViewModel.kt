@@ -34,7 +34,7 @@ class ProfileViewModel @Inject constructor(
             when (val result = profileUseCase.invoke(Unit)) {
                 is Either.Left -> TODO("show error message")
                 is Either.Right -> result.value?.let {
-                    userProfile = it
+                    userProfile = it.copy(profileImage = it.profileImage)
                 }
             }
         }
