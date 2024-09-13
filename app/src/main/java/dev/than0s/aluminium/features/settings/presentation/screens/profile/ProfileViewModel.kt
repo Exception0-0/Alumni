@@ -10,10 +10,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.data_class.User
 import dev.than0s.aluminium.features.settings.domain.use_cases.AccountSignOutUseCase
-import dev.than0s.aluminium.features.settings.domain.use_cases.DownloadProfileImageUseCase
+import dev.than0s.aluminium.features.settings.domain.use_cases.GetProfileImageUseCase
 import dev.than0s.aluminium.features.settings.domain.use_cases.GetUserUseCase
+import dev.than0s.aluminium.features.settings.domain.use_cases.SetProfileImageUseCase
 import dev.than0s.aluminium.features.settings.domain.use_cases.SetProfileUseCase
-import dev.than0s.aluminium.features.settings.domain.use_cases.UpdateProfileImageUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,8 +23,8 @@ class ProfileViewModel @Inject constructor(
     private val signOutUseCase: AccountSignOutUseCase,
     private val profileUseCase: GetUserUseCase,
     private val updateProfileUseCase: SetProfileUseCase,
-    private val updateProfileImageUseCase: UpdateProfileImageUseCase,
-    private val downloadImageUseCase: DownloadProfileImageUseCase
+    private val updateProfileImageUseCase: SetProfileImageUseCase,
+    private val downloadImageUseCase: GetProfileImageUseCase
 ) :
     ViewModel() {
     var userProfile by mutableStateOf(User())

@@ -39,7 +39,6 @@ import dev.than0s.aluminium.features.settings.domain.repository.ProfileRepositor
 import dev.than0s.aluminium.features.settings.domain.repository.StorageRepository
 import dev.than0s.aluminium.features.settings.domain.use_cases.GetUserUseCase
 import dev.than0s.aluminium.features.settings.domain.use_cases.SetProfileUseCase
-import dev.than0s.aluminium.features.settings.domain.use_cases.UpdateProfileImageUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -87,37 +86,3 @@ object FirebaseModule {
     @Provides
     fun storage(): FirebaseStorage = Firebase.storage
 }
-
-//@InstallIn(SingletonComponent::class)
-//@Module
-//object UseCases {
-//    @Provides
-//    fun signInUseCase(repository: EmailAuthRepository) = EmailSignInUseCase(repository)
-//
-//    @Provides
-//    fun signOutUseCase(repository: AccountRepository) = AccountSignOutUseCase(repository)
-//
-//    @Provides
-//    fun signUpUseCase(repository: EmailAuthRepository) = EmailSignUpUseCase(repository)
-//
-//    @Provides
-//    fun registerUseCase(repository: RegistrationRepository) = RegistrationUseCase(repository)
-//
-//    @Provides
-//    fun requestsListUseCase(repository: RegistrationRepository) = RequestsListUseCase(repository)
-//
-//    @Provides
-//    fun updateProfileUseCase(repository: ProfileRepository) =
-//        SetProfileUseCase(repository)
-//
-//    @Provides
-//    fun currentUserUseCase(repository: ProfileRepository) = GetUserUseCase(repository)
-//
-//    @Provides
-//    fun downloadProfileImageUseCase(repository: StorageRepository) =
-//        DownloadProfileImageUseCase(repository)
-//
-//    @Provides
-//    fun updateProfileImageUseCase(repository: StorageRepository) =
-//        UpdateProfileImageUseCase(repository)
-//}
