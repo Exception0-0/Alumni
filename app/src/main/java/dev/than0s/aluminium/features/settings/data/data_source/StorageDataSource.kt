@@ -12,32 +12,29 @@ import java.io.InputStream
 import javax.inject.Inject
 
 interface StorageDataSource {
-    suspend fun getProfileImage(): Uri
-    suspend fun setProfileImage(image: Uri)
+    suspend fun setFile(image: Uri, path: String)
+    suspend fun getFile(path: String): Uri
 }
 
 class FirebaseStorageDataSourceImple @Inject constructor(
-    private val auth: FirebaseAuth,
     private val cloud: FirebaseStorage
 ) : StorageDataSource {
 
-    override suspend fun setProfileImage(image: Uri) {
+    override suspend fun setFile(image: Uri, path: String) {
         try {
-            cloud.reference.child("$profileImages/${auth.currentUser!!.uid}").putFile(image)
+            cloud.reference.child(path).putFile(image)
                 .await()
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }
 
-    override suspend fun getProfileImage(): Uri {
+    override suspend fun getFile(path: String): Uri {
         return try {
-            cloud.reference.child("$profileImages/${auth.currentUser!!.uid}").downloadUrl.await()
+            cloud.reference.child(path).downloadUrl.await()
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }
-
 }
 
-const val profileImages = "profile_images"
