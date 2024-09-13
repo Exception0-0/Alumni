@@ -1,5 +1,9 @@
 package dev.than0s.aluminium.features.settings.presentation.screens.post_upload
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,18 +26,43 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.LoadingButton
+import dev.than0s.aluminium.core.data_class.Post
 import dev.than0s.mydiary.ui.spacing
 
 @Composable
-fun PostUploadScreen() {
-
+fun PostUploadScreen(viewModel: PostUploadViewModel = hiltViewModel()) {
+    PostUploadScreenContent(
+        fileUri = viewModel.fileUri,
+        post = viewModel.post,
+        circularProgressIndicatorState = viewModel.circularProgressIndicatorState,
+        onFileUriChange = viewModel::onFileUriChange,
+        onTitleChange = viewModel::onTitleChange,
+        onDescriptionChange = viewModel::onDescriptionChange,
+        onUploadClick = viewModel::onUploadClick
+    )
 }
 
 @Composable
-private fun PostUploadScreenContent() {
+private fun PostUploadScreenContent(
+    fileUri: Uri,
+    post: Post,
+    circularProgressIndicatorState: Boolean,
+    onFileUriChange: (Uri) -> Unit,
+    onTitleChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onUploadClick: () -> Unit,
+) {
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
+            image?.let {
+                onFileUriChange(it)
+            }
+        }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
@@ -43,34 +72,41 @@ private fun PostUploadScreenContent() {
             .padding(MaterialTheme.spacing.large)
     ) {
         AsyncImage(
-            model = "",
+            model = fileUri,
             placeholder = painterResource(R.drawable.ic_launcher_background),
             contentDescription = "post's image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .height(250.dp)
                 .width(350.dp)
+                .clickable {
+                    launcher.launch("image/*")
+                }
         )
         TextField(
-            value = "",
+            value = post.title,
             label = {
                 Text("Title")
             },
-            onValueChange = {}
+            onValueChange = {
+                onTitleChange(it)
+            }
         )
 
         TextField(
-            value = "",
+            value = post.description,
             label = {
                 Text("Description")
             },
-            onValueChange = {}
+            onValueChange = {
+                onDescriptionChange(it)
+            }
         )
 
         LoadingButton(
             label = "Upload",
-            circularProgressIndicatorState = false,
-            onClick = {},
+            circularProgressIndicatorState = circularProgressIndicatorState,
+            onClick = onUploadClick,
             modifier = Modifier.align(Alignment.End)
         )
     }
@@ -79,5 +115,5 @@ private fun PostUploadScreenContent() {
 @Preview(showSystemUi = true)
 @Composable
 private fun PostUploadScreenPreview() {
-    PostUploadScreenContent()
+    PostUploadScreenContent(Uri.EMPTY, Post(), false, {}, {}, {}, {})
 }
