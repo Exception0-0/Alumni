@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.auth.presentation.screens.sign_in
+package dev.than0s.aluminium.features.auth.presentation.screens.forget_password
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,36 +19,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.features.auth.domain.data_class.EmailAuthParam
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
-fun SignInScreen(
-    viewModel: SignInViewModel = hiltViewModel(),
-    popAndOpen: (String) -> Unit,
-    restartApp: () -> Unit
+fun ForgetPasswordScreen(
+    viewModel: ForgetPasswordViewModel = hiltViewModel(),
+    popScreen: () -> Unit
 ) {
-    SignInScreenContent(
-        param = viewModel.signInParam.value,
-        onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        onSignInClick = {
-            viewModel.onSignInClick(restartApp)
+    ForgetPasswordContent(
+        email = viewModel.email,
+        onForgetPasswordClick = {
+            viewModel.onForgetPasswordClick(popScreen)
         },
-        onForgetPasswordClick = viewModel::onForgetPasswordClick,
-        popAndOpen = popAndOpen,
+        onEmailChange = viewModel::onEmailChange
     )
 }
 
 @Composable
-private fun SignInScreenContent(
-    param: EmailAuthParam,
-    onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    onSignInClick: () -> Unit,
+private fun ForgetPasswordContent(
+    email: String,
     onForgetPasswordClick: () -> Unit,
-    popAndOpen: (String) -> Unit,
+    onEmailChange: (String) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -66,13 +58,13 @@ private fun SignInScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Sign In",
+                    text = "Forget Password",
                     fontSize = MaterialTheme.textSize.gigantic,
                 )
             }
 
             TextField(
-                value = param.email,
+                value = email,
                 onValueChange = { newValue ->
                     onEmailChange(newValue)
                 },
@@ -81,36 +73,12 @@ private fun SignInScreenContent(
                 }
             )
 
-            TextField(
-                value = param.password,
-                onValueChange = { newValue ->
-                    onPasswordChange(newValue)
-                },
-                placeholder = {
-                    Text(text = "Password")
-                }
-            )
-
-            Text(
-                text = "Don't have an account?",
-                modifier = Modifier.clickable {
-                    popAndOpen(Screen.RegistrationScreen.route)
-                }
-            )
-
-            Text(
-                text = "Forget Password?",
-                modifier = Modifier.clickable {
-                    onForgetPasswordClick()
-                }
-            )
-
             ElevatedButton(
                 onClick = {
-                    onSignInClick()
+                    onForgetPasswordClick()
                 }
             ) {
-                Text(text = "Sign In")
+                Text(text = "Forget Password")
             }
         }
     }
@@ -118,6 +86,6 @@ private fun SignInScreenContent(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun SignInScreenPreview() {
-    SignInScreenContent(EmailAuthParam(), {}, {}, {}, {}, {})
+private fun ForgetPasswordPreview() {
+    ForgetPasswordContent("", {}, {})
 }

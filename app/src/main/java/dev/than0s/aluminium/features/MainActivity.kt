@@ -15,11 +15,12 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.features.settings.presentation.screens.profile.ProfileScreen
+import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
-import dev.than0s.aluminium.features.settings.presentation.screens.splash.SplashScreen
-import dev.than0s.aluminium.features.register.presentation.screens.registration.RegistrationScreen
-import dev.than0s.aluminium.features.register.presentation.screens.registration_requests.RegistrationRequestsScreen
+import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
+import dev.than0s.aluminium.features.splash.presentation.splash.SplashScreen
+import dev.than0s.aluminium.features.registration.presentation.screens.registration.RegistrationScreen
+import dev.than0s.aluminium.features.admin.presentation.screen.requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 
 @AndroidEntryPoint
@@ -44,7 +45,7 @@ private fun NavGraphHost(modifier: Modifier) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route,
+        startDestination = Screen.PostUploadScreen.route,
         modifier = modifier
     ) {
         composable(route = Screen.SplashScreen.route) {
@@ -68,17 +69,25 @@ private fun NavGraphHost(modifier: Modifier) {
         }
         composable(route = Screen.ProfileScreen.route) {
             ProfileScreen(
+                openScreen = navController::openScreen,
                 restartApp = navController::restartApp
             )
         }
         composable(route = Screen.RegistrationRequestsScreen.route) {
             RegistrationRequestsScreen()
         }
+        composable(route = Screen.PostUploadScreen.route) {
+            PostUploadScreen(popScreen = navController::popScreen)
+        }
     }
 }
 
 private fun NavHostController.openScreen(screen: String) {
     navigate(screen)
+}
+
+private fun NavHostController.popScreen() {
+    popBackStack()
 }
 
 private fun NavHostController.popAndOpen(screen: String) {

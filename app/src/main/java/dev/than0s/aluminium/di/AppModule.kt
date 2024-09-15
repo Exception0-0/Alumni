@@ -12,66 +12,75 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.than0s.aluminium.features.settings.data.data_source.AccountDataSource
-import dev.than0s.aluminium.features.auth.data.data_source.EmailAuthDataSource
-import dev.than0s.aluminium.features.settings.data.data_source.FirebaseAccountDataSourceImple
-import dev.than0s.aluminium.features.auth.data.data_source.FirebaseEmailAuthDataSourceImple
-import dev.than0s.aluminium.features.settings.data.repositories.AccountRepositoryImple
-import dev.than0s.aluminium.features.auth.data.repositories.EmailAuthRepositoryImple
-import dev.than0s.aluminium.features.settings.domain.repository.AccountRepository
-import dev.than0s.aluminium.features.auth.domain.repository.EmailAuthRepository
-import dev.than0s.aluminium.features.settings.domain.use_cases.AccountSignOutUseCase
-import dev.than0s.aluminium.features.auth.domain.use_cases.EmailSignInUseCase
-import dev.than0s.aluminium.features.auth.domain.use_cases.EmailSignUpUseCase
-import dev.than0s.aluminium.features.register.data.data_source.FirebaseRegisterDataSourceImple
-import dev.than0s.aluminium.features.register.data.data_source.RegisterDataSource
-import dev.than0s.aluminium.features.register.data.repositories.RegistrationRepositoryImple
-import dev.than0s.aluminium.features.register.domain.repository.RegistrationRepository
-import dev.than0s.aluminium.features.register.domain.use_cases.RegistrationUseCase
-import dev.than0s.aluminium.features.register.domain.use_cases.RequestsListUseCase
-import dev.than0s.aluminium.features.settings.data.data_source.FirebaseProfileDataSourceImple
-import dev.than0s.aluminium.features.settings.data.data_source.FirebaseStorageDataSourceImple
-import dev.than0s.aluminium.features.settings.data.data_source.ProfileDataSource
-import dev.than0s.aluminium.features.settings.data.data_source.StorageDataSource
-import dev.than0s.aluminium.features.settings.data.repositories.ProfileRepositoryImple
-import dev.than0s.aluminium.features.settings.data.repositories.StorageRepositoryImple
-import dev.than0s.aluminium.features.settings.domain.repository.ProfileRepository
-import dev.than0s.aluminium.features.settings.domain.repository.StorageRepository
-import dev.than0s.aluminium.features.settings.domain.use_cases.GetUserUseCase
-import dev.than0s.aluminium.features.settings.domain.use_cases.SetProfileUseCase
+import dev.than0s.aluminium.features.admin.data.data_source.RequestDataSource
+import dev.than0s.aluminium.features.admin.data.data_source.RequestDataSourceImple
+import dev.than0s.aluminium.features.admin.data.repostiory.RequestRepositoryImple
+import dev.than0s.aluminium.features.admin.domain.repositories.RequestRepository
+import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSource
+import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSourceImple
+import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSource
+import dev.than0s.aluminium.features.splash.data.data_source.FirebaseAccountDataSourceImple
+import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryImple
+import dev.than0s.aluminium.features.auth.data.repositories.AuthRepositoryImple
+import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
+import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
+import dev.than0s.aluminium.features.post.data.data_source.PostDataSource
+import dev.than0s.aluminium.features.post.data.data_source.PostDataSourceImple
+import dev.than0s.aluminium.features.post.data.repositories.PostRepositoryImple
+import dev.than0s.aluminium.features.post.domain.repository.PostRepository
+import dev.than0s.aluminium.features.registration.data.data_source.FirebaseRegisterDataSourceImple
+import dev.than0s.aluminium.features.registration.data.data_source.RegisterDataSource
+import dev.than0s.aluminium.features.registration.data.repositories.RegistrationRepositoryImple
+import dev.than0s.aluminium.features.registration.domain.repository.RegistrationRepository
+import dev.than0s.aluminium.features.profile.data.data_source.ProfileDataSource
+import dev.than0s.aluminium.features.profile.data.data_source.ProfileDataSourceImple
+import dev.than0s.aluminium.features.profile.data.repositories.ProfileRepositoryImple
+import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
+    // Admin
     @Binds
-    abstract fun bindAccountRepository(impl: AccountRepositoryImple): AccountRepository
+    abstract fun bindRequestDataSource(imple: RequestDataSourceImple): RequestDataSource
 
     @Binds
-    abstract fun bindAccountDataSource(impl: FirebaseAccountDataSourceImple): AccountDataSource
+    abstract fun bindRequestRepository(imple: RequestRepositoryImple): RequestRepository
+
+    // auth
+    @Binds
+    abstract fun bindAuthDataSource(imple: AuthDataSourceImple): AuthDataSource
 
     @Binds
-    abstract fun bindEmailAuthRepository(impl: EmailAuthRepositoryImple): EmailAuthRepository
+    abstract fun bindAuthRepository(imple: AuthRepositoryImple): AuthRepository
+
+    // post
+    @Binds
+    abstract fun bindPostDataSource(imple: PostDataSourceImple): PostDataSource
 
     @Binds
-    abstract fun bindEmailAuthDataSource(impl: FirebaseEmailAuthDataSourceImple): EmailAuthDataSource
+    abstract fun bindPostRepository(imple: PostRepositoryImple): PostRepository
 
+    // profile
     @Binds
-    abstract fun bindRegistrationRepository(impl: RegistrationRepositoryImple): RegistrationRepository
-
-    @Binds
-    abstract fun bindRegisterDataSource(impl: FirebaseRegisterDataSourceImple): RegisterDataSource
-
-    @Binds
-    abstract fun bindProfileDataSource(impl: FirebaseProfileDataSourceImple): ProfileDataSource
+    abstract fun bindProfileDataSource(imple: ProfileDataSourceImple): ProfileDataSource
 
     @Binds
     abstract fun bindProfileRepository(imple: ProfileRepositoryImple): ProfileRepository
 
+    // registration
     @Binds
-    abstract fun bindStorageRepository(imple: StorageRepositoryImple): StorageRepository
+    abstract fun bindRegisterDataSource(imple: FirebaseRegisterDataSourceImple): RegisterDataSource
 
     @Binds
-    abstract fun bindStorageDataSource(imple: FirebaseStorageDataSourceImple): StorageDataSource
+    abstract fun bindRegistrationRepository(imple: RegistrationRepositoryImple): RegistrationRepository
+
+    // splash
+    @Binds
+    abstract fun bindAccountDataSource(imple: FirebaseAccountDataSourceImple): AccountDataSource
+
+    @Binds
+    abstract fun bindAccountRepository(imple: AccountRepositoryImple): AccountRepository
 }
 
 @InstallIn(SingletonComponent::class)
