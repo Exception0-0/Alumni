@@ -29,7 +29,7 @@ class ProfileViewModel @Inject constructor(
     fun loadProfile() {
         viewModelScope.launch {
             when (val result = profileUseCase.invoke(Unit)) {
-                is Either.Left -> TODO("show error message")
+                is Either.Left -> println("load profile failed ${result.value}")
                 is Either.Right -> result.value?.let {
                     userProfile = it
                 }
@@ -40,7 +40,7 @@ class ProfileViewModel @Inject constructor(
     fun onUpdateProfileClick() {
         viewModelScope.launch {
             when (val result = updateProfileUseCase.invoke(userProfile)) {
-                is Either.Left -> TODO("show error message")
+                is Either.Left -> println("profile update failed ${result.value}")
                 is Either.Right -> println("profile update successfully")
             }
         }

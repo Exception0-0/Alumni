@@ -31,8 +31,4 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
             }
         }
     }
-
-    fun onForgetPasswordClick() {
-
-    }
 }

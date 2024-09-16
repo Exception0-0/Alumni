@@ -21,6 +21,7 @@ import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostU
 import dev.than0s.aluminium.features.splash.presentation.splash.SplashScreen
 import dev.than0s.aluminium.features.registration.presentation.screens.registration.RegistrationScreen
 import dev.than0s.aluminium.features.admin.presentation.screen.requests.RegistrationRequestsScreen
+import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 
@@ -56,6 +57,7 @@ private fun NavGraphHost(modifier: Modifier) {
         }
         composable(route = Screen.SignInScreen.route) {
             SignInScreen(
+                openScreen = navController::openScreen,
                 popAndOpen = navController::popAndOpen,
                 restartApp = navController::restartApp
             )
@@ -84,6 +86,11 @@ private fun NavGraphHost(modifier: Modifier) {
         composable(route = Screen.SignOutScreen.route) {
             SignOutScreen(
                 restartApp = navController::restartApp
+            )
+        }
+        composable(route = Screen.ForgotPasswordScreen.route) {
+            ForgetPasswordScreen(
+                popScreen = navController::popScreen
             )
         }
     }

@@ -26,6 +26,7 @@ import dev.than0s.mydiary.ui.textSize
 @Composable
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
+    openScreen: (String) -> Unit,
     popAndOpen: (String) -> Unit,
     restartApp: () -> Unit
 ) {
@@ -36,7 +37,7 @@ fun SignInScreen(
         onSignInClick = {
             viewModel.onSignInClick(restartApp)
         },
-        onForgetPasswordClick = viewModel::onForgetPasswordClick,
+        openScreen = openScreen,
         popAndOpen = popAndOpen,
     )
 }
@@ -47,7 +48,7 @@ private fun SignInScreenContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSignInClick: () -> Unit,
-    onForgetPasswordClick: () -> Unit,
+    openScreen: (String) -> Unit,
     popAndOpen: (String) -> Unit,
 ) {
     ElevatedCard(
@@ -101,7 +102,7 @@ private fun SignInScreenContent(
             Text(
                 text = "Forget Password?",
                 modifier = Modifier.clickable {
-                    onForgetPasswordClick()
+                    openScreen(Screen.ForgotPasswordScreen.route)
                 }
             )
 
