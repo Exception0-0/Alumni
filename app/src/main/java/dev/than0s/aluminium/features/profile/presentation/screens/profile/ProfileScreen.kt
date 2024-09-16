@@ -40,6 +40,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
@@ -48,7 +49,6 @@ import dev.than0s.mydiary.ui.textSize
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     openScreen: (String) -> Unit,
-    restartApp: () -> Unit
 ) {
     ProfileScreenContent(
         userProfile = viewModel.userProfile,
@@ -58,7 +58,6 @@ fun ProfileScreen(
         onLastNameChange = viewModel::onLastNameChange,
         onBioChange = viewModel::onBioChange,
         onProfileImageChange = viewModel::onProfileImageChange,
-        restartApp = restartApp,
     )
 }
 
@@ -71,7 +70,6 @@ private fun ProfileScreenContent(
     onLastNameChange: (String) -> Unit,
     onBioChange: (String) -> Unit,
     onProfileImageChange: (Uri) -> Unit,
-    restartApp: () -> Unit,
 ) {
     var updateProfileDialogState by rememberSaveable { mutableStateOf(false) }
 
@@ -136,7 +134,7 @@ private fun ProfileScreenContent(
 
                 Card(
                     onClick = {
-                        onSignOutClick("")
+                        onSignOutClick(Screen.SignOutScreen.route)
                     },
                 ) {
                     Icon(
@@ -244,5 +242,7 @@ private fun ProfileScreenPreview() {
             firstName = "Than0s",
             lastName = "Op",
             bio = "Hi I'm Than0s"
-        ), {}, {}, {}, {}, {}, {}, {})
+        ),
+        {}, {}, {}, {}, {}, {},
+    )
 }

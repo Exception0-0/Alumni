@@ -21,6 +21,7 @@ import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostU
 import dev.than0s.aluminium.features.splash.presentation.splash.SplashScreen
 import dev.than0s.aluminium.features.registration.presentation.screens.registration.RegistrationScreen
 import dev.than0s.aluminium.features.admin.presentation.screen.requests.RegistrationRequestsScreen
+import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 
 @AndroidEntryPoint
@@ -45,7 +46,7 @@ private fun NavGraphHost(modifier: Modifier) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.PostUploadScreen.route,
+        startDestination = Screen.SplashScreen.route,
         modifier = modifier
     ) {
         composable(route = Screen.SplashScreen.route) {
@@ -70,14 +71,20 @@ private fun NavGraphHost(modifier: Modifier) {
         composable(route = Screen.ProfileScreen.route) {
             ProfileScreen(
                 openScreen = navController::openScreen,
-                restartApp = navController::restartApp
             )
         }
         composable(route = Screen.RegistrationRequestsScreen.route) {
             RegistrationRequestsScreen()
         }
         composable(route = Screen.PostUploadScreen.route) {
-            PostUploadScreen(popScreen = navController::popScreen)
+            PostUploadScreen(
+                popScreen = navController::popScreen
+            )
+        }
+        composable(route = Screen.SignOutScreen.route) {
+            SignOutScreen(
+                restartApp = navController::restartApp
+            )
         }
     }
 }
