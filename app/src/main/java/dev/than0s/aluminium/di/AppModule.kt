@@ -19,7 +19,6 @@ import dev.than0s.aluminium.features.admin.domain.repositories.RequestRepository
 import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSource
 import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSourceImple
 import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSource
-import dev.than0s.aluminium.features.splash.data.data_source.FirebaseAccountDataSourceImple
 import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryImple
 import dev.than0s.aluminium.features.auth.data.repositories.AuthRepositoryImple
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
@@ -28,7 +27,6 @@ import dev.than0s.aluminium.features.post.data.data_source.PostDataSource
 import dev.than0s.aluminium.features.post.data.data_source.PostDataSourceImple
 import dev.than0s.aluminium.features.post.data.repositories.PostRepositoryImple
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
-import dev.than0s.aluminium.features.registration.data.data_source.FirebaseRegisterDataSourceImple
 import dev.than0s.aluminium.features.registration.data.data_source.RegisterDataSource
 import dev.than0s.aluminium.features.registration.data.repositories.RegistrationRepositoryImple
 import dev.than0s.aluminium.features.registration.domain.repository.RegistrationRepository
@@ -36,6 +34,8 @@ import dev.than0s.aluminium.features.profile.data.data_source.ProfileDataSource
 import dev.than0s.aluminium.features.profile.data.data_source.ProfileDataSourceImple
 import dev.than0s.aluminium.features.profile.data.repositories.ProfileRepositoryImple
 import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
+import dev.than0s.aluminium.features.registration.data.data_source.RegisterDataSourceImple
+import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSourceImple
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -70,14 +70,14 @@ abstract class AppModule {
 
     // registration
     @Binds
-    abstract fun bindRegisterDataSource(imple: FirebaseRegisterDataSourceImple): RegisterDataSource
+    abstract fun bindRegisterDataSource(imple: RegisterDataSourceImple): RegisterDataSource
 
     @Binds
     abstract fun bindRegistrationRepository(imple: RegistrationRepositoryImple): RegistrationRepository
 
     // splash
     @Binds
-    abstract fun bindAccountDataSource(imple: FirebaseAccountDataSourceImple): AccountDataSource
+    abstract fun bindAccountDataSource(imple: AccountDataSourceImple): AccountDataSource
 
     @Binds
     abstract fun bindAccountRepository(imple: AccountRepositoryImple): AccountRepository

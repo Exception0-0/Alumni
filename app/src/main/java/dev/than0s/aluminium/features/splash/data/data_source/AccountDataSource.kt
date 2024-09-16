@@ -10,7 +10,7 @@ interface AccountDataSource {
     val hasUser: Boolean
 }
 
-class FirebaseAccountDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
+class AccountDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
     AccountDataSource {
 
     override val hasUser: Boolean

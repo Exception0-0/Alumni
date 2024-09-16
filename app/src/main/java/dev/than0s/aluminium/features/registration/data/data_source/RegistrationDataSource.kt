@@ -11,7 +11,7 @@ interface RegisterDataSource {
     suspend fun submitRegistration(form: RegistrationForm)
 }
 
-class FirebaseRegisterDataSourceImple @Inject constructor(private val store: FirebaseFirestore) :
+class RegisterDataSourceImple @Inject constructor(private val store: FirebaseFirestore) :
     RegisterDataSource {
 
     override suspend fun submitRegistration(form: RegistrationForm) {
