@@ -89,11 +89,10 @@ private fun MyPostScreenContent(
             }
         }
     }
-
 }
 
 @Composable
-fun PostItem(post: Post, onPostDeleteClick: (String) -> Unit) {
+private fun PostItem(post: Post, onPostDeleteClick: (String) -> Unit) {
     var warningState by rememberSaveable { mutableStateOf(false) }
     if (warningState) {
         WarningDialog(
