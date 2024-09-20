@@ -163,7 +163,7 @@ private data class BottomNavigationItem(
     val label: String
 )
 
-private val BottomNavItems = listOf(
+private val BottomNavItemsList = listOf(
     BottomNavigationItem(
         Screen.AllPostScreen.route,
         Icons.Filled.Face,
@@ -182,26 +182,28 @@ private val BottomNavItems = listOf(
 fun BottomNavigationBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    NavigationBar {
-        BottomNavItems.forEach { item ->
-            NavigationBarItem(
-                selected = currentRoute == item.route,
-                onClick = {
-                    navController.popAndOpen(item.route)
-                },
-                icon = {
-                    Icon(
-                        imageVector = if (currentRoute == item.route) {
-                            item.filledIcon
-                        } else {
-                            item.outlinedIcon
-                        },
-                        contentDescription = item.label
-                    )
-                },
-                label = { Text(item.label) }
-            )
+    val isCurrentScreenBottomBar = BottomNavItemsList.any { it.route == currentRoute }
+    if (isCurrentScreenBottomBar) {
+        NavigationBar {
+            BottomNavItemsList.forEach { item ->
+                NavigationBarItem(
+                    selected = currentRoute == item.route,
+                    onClick = {
+                        navController.popAndOpen(item.route)
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = if (currentRoute == item.route) {
+                                item.filledIcon
+                            } else {
+                                item.outlinedIcon
+                            },
+                            contentDescription = item.label
+                        )
+                    },
+                    label = { Text(item.label) }
+                )
+            }
         }
     }
 }

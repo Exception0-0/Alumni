@@ -9,7 +9,7 @@ import dev.than0s.aluminium.core.Screen
 fun SplashScreen(viewModel: SplashViewModel = hiltViewModel(), popAndOpen: (String) -> Unit) {
     viewModel.loadScreen { hasUser: Boolean ->
         if (hasUser) {
-            popAndOpen(Screen.ProfileScreen.route)
+            popAndOpen(Screen.AllPostScreen.route)
         } else {
             popAndOpen(Screen.SignInScreen.route)
         }

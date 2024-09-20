@@ -62,7 +62,6 @@ private fun AllPostsScreenContent(
 
 @Composable
 private fun PostItem(post: Post) {
-
     ElevatedCard(
         elevation = CardDefaults.cardElevation(MaterialTheme.elevation.medium),
         modifier = Modifier
@@ -99,5 +98,13 @@ private fun PostItem(post: Post) {
 @Preview(showSystemUi = true)
 @Composable
 private fun AllPostsScreenPreview() {
-
+    AllPostsScreenContent(
+        postsList = listOf(
+            Post(
+                userId = "",
+                title = "Than0s",
+                description = "hello I'm Than0s don't talk to me"
+            )
+        )
+    )
 }
