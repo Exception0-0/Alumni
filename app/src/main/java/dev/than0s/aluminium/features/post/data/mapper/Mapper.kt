@@ -25,4 +25,5 @@ fun Post.toRawPost() = RawPost(
     userId = userId,
     title = title,
     description = description,
+    timestamp = timestamp
 )

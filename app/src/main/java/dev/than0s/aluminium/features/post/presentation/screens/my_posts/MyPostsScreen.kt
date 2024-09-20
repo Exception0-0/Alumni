@@ -41,7 +41,7 @@ import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
-fun MyPostScreen(viewModel: MyPostViewModel = hiltViewModel(), openScreen: (String) -> Unit) {
+fun MyPostsScreen(viewModel: MyPostViewModel = hiltViewModel(), openScreen: (String) -> Unit) {
     val postsList = viewModel.postsFlow.collectAsState(initial = emptyList())
     MyPostScreenContent(
         postsList = postsList.value,

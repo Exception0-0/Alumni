@@ -37,9 +37,10 @@ class PostUploadViewModel @Inject constructor(
 
     fun onUploadClick(popScreen: () -> Unit) {
         val fileId = System.currentTimeMillis().toString()
+        val postWithID = post.copy(id = fileId)
         viewModelScope.launch {
-            when (val docResult = setPostDocUseCase.invoke(post)) {
-                is Either.Left -> println("error: ${docResult.value}")
+            when (val docResult = setPostDocUseCase.invoke(postWithID)) {
+                is Either.Left -> println("error: ${docResult.value.message}")
                 is Either.Right -> {
                     val postFile = PostFile(
                         uri = post.file,

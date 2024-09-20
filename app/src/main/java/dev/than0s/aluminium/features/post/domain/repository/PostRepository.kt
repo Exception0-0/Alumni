@@ -7,7 +7,7 @@ import dev.than0s.aluminium.features.post.domain.data_class.Post
 import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
-    suspend fun setPost(post: Post): Either<Failure, Unit>
+    suspend fun addPost(post: Post): Either<Failure, Unit>
     suspend fun getPost(id: String): Either<Failure, Post>
     suspend fun setPostFile(uri: Uri, id: String): Either<Failure, Unit>
     suspend fun getPostFile(id: String): Either<Failure, Uri>

@@ -15,7 +15,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface PostDataSource {
-    suspend fun setPost(post: Post)
+    suspend fun addPost(post: Post)
     suspend fun getPost(id: String): Post
     suspend fun setPostFile(file: Uri, id: String)
     suspend fun getPostFile(id: String): Uri
@@ -30,7 +30,7 @@ class PostDataSourceImple @Inject constructor(
 ) :
     PostDataSource {
 
-    override suspend fun setPost(post: Post) {
+    override suspend fun addPost(post: Post) {
         try {
             store.collection(POSTS).document(post.id).set(post.toRawPost()).await()
         } catch (e: FirebaseFirestoreException) {

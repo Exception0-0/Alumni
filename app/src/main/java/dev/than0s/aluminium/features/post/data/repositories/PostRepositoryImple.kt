@@ -12,9 +12,9 @@ import javax.inject.Inject
 class PostRepositoryImple @Inject constructor(private val dataSource: PostDataSource) :
     PostRepository {
 
-    override suspend fun setPost(post: Post): Either<Failure, Unit> {
+    override suspend fun addPost(post: Post): Either<Failure, Unit> {
         try {
-            dataSource.setPost(post)
+            dataSource.addPost(post)
             return Either.Right(Unit)
         } catch (e: Exception) {
             return Either.Left(Failure(e.message.toString()))

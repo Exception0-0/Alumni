@@ -10,6 +10,6 @@ import javax.inject.Inject
 class SetPostDocUseCase @Inject constructor(private val repository: PostRepository) :
     UseCase<Post, Unit> {
     override suspend fun invoke(param: Post): Either<Failure, Unit> {
-        return repository.setPost(param)
+        return repository.addPost(param)
     }
 }

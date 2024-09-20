@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,8 +15,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -52,7 +57,7 @@ fun ProfileScreen(
 ) {
     ProfileScreenContent(
         userProfile = viewModel.userProfile,
-        onSignOutClick = openScreen,
+        openScreen = openScreen,
         onUpdateProfileClick = viewModel::onUpdateProfileClick,
         onFirstNameChange = viewModel::onFirstNameChange,
         onLastNameChange = viewModel::onLastNameChange,
@@ -64,7 +69,7 @@ fun ProfileScreen(
 @Composable
 private fun ProfileScreenContent(
     userProfile: User,
-    onSignOutClick: (String) -> Unit,
+    openScreen: (String) -> Unit,
     onUpdateProfileClick: () -> Unit,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
@@ -134,7 +139,7 @@ private fun ProfileScreenContent(
 
                 Card(
                     onClick = {
-                        onSignOutClick(Screen.SignOutScreen.route)
+                        openScreen(Screen.SignOutScreen.route)
                     },
                 ) {
                     Icon(
@@ -145,6 +150,15 @@ private fun ProfileScreenContent(
                 }
             }
         }
+    }
+    ExtendedFloatingActionButton(
+        onClick = {
+            openScreen(Screen.MyPostsScreen.route)
+        }
+    ) {
+        Icon(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "post add")
+        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
+        Text(text = "My posts")
     }
 }
 

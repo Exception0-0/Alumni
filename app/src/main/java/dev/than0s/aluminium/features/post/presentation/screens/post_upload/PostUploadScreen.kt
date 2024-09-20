@@ -110,5 +110,9 @@ private fun PostUploadScreenContent(
 @Preview(showSystemUi = true)
 @Composable
 private fun PostUploadScreenPreview() {
-    PostUploadScreenContent(Post(), false, {}, {}, {}, {})
+    PostUploadScreenContent(Post(
+        userId = "0",
+        title = "Title",
+        description = "asdfklajsdfkl jkldjfklj adklsj fkjasdklfjasdkj f klasdjfljdfjasdlfjasdjfkldajf kladj",
+    ), false, {}, {}, {}, {})
 }

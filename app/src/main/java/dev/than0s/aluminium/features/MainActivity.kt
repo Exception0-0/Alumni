@@ -23,6 +23,7 @@ import dev.than0s.aluminium.features.registration.presentation.screens.registrat
 import dev.than0s.aluminium.features.admin.presentation.screen.requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
+import dev.than0s.aluminium.features.post.presentation.screens.my_posts.MyPostsScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 
 @AndroidEntryPoint
@@ -91,6 +92,17 @@ private fun NavGraphHost(modifier: Modifier) {
         composable(route = Screen.ForgotPasswordScreen.route) {
             ForgetPasswordScreen(
                 popScreen = navController::popScreen
+            )
+        }
+        composable(route = Screen.PostUploadScreen.route) {
+            PostUploadScreen(
+                popScreen = navController::popScreen
+
+            )
+        }
+        composable(route = Screen.MyPostsScreen.route) {
+            MyPostsScreen(
+                openScreen = navController::openScreen
             )
         }
     }
