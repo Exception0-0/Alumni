@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.than0s.aluminium.core.composable.WarningDialog
 import dev.than0s.aluminium.features.admin.domain.data_class.RequestForm
 import dev.than0s.mydiary.ui.elevation
 import dev.than0s.mydiary.ui.spacing
@@ -66,7 +67,7 @@ private fun RegistrationRequestItem(
     var showRejectAlertDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showAcceptAlertDialog) {
-        CustomAlertDialog(
+        WarningDialog(
             title = accepted_title,
             text = accepted_text,
             onDismissRequest = { showAcceptAlertDialog = false },
@@ -78,7 +79,7 @@ private fun RegistrationRequestItem(
     }
 
     if (showRejectAlertDialog) {
-        CustomAlertDialog(
+        WarningDialog(
             title = rejected_title,
             text = rejected_text,
             onDismissRequest = { showRejectAlertDialog = false },
@@ -126,46 +127,6 @@ private fun RegistrationRequestItem(
     }
 }
 
-@Composable
-private fun CustomAlertDialog(
-    title: String,
-    text: String,
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
-) {
-    AlertDialog(
-        icon = {
-            Icon(Icons.Default.Warning, contentDescription = Icons.Default.Warning.name)
-        },
-        title = {
-            Text(text = title)
-        },
-        text = {
-            Text(text = text)
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
-                }
-            ) {
-                Text("Confirm")
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                }
-            ) {
-                Text("Dismiss")
-            }
-        }
-    )
-}
 
 const val accepted_title = "Do you really want to accept this request?"
 const val accepted_text = "you can't undo this action, so be careful with your choices."

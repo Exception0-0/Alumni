@@ -16,8 +16,10 @@ import javax.inject.Inject
 
 interface PostDataSource {
     suspend fun addPost(post: Post)
+    suspend fun deletePost(id: String)
     suspend fun getPost(id: String): Post
-    suspend fun setPostFile(file: Uri, id: String)
+    suspend fun addPostFile(file: Uri, id: String)
+    suspend fun deletePostFile(id: String)
     suspend fun getPostFile(id: String): Uri
     suspend fun getMyPostFlow(): Flow<List<Post>>
     suspend fun getAllPostFlow(): Flow<List<Post>>
@@ -38,6 +40,14 @@ class PostDataSourceImple @Inject constructor(
         }
     }
 
+    override suspend fun deletePost(id: String) {
+        try {
+            store.collection(POSTS).document(id).delete().await()
+        } catch (e: FirebaseFirestoreException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
     override suspend fun getPost(id: String): Post {
         try {
             return store.collection(POSTS).document(id).get().await().toObject(Post::class.java)!!
@@ -46,7 +56,15 @@ class PostDataSourceImple @Inject constructor(
         }
     }
 
-    override suspend fun setPostFile(file: Uri, id: String) {
+    override suspend fun deletePostFile(id: String) {
+        try {
+            cloud.reference.child("$POSTS/${auth.currentUser!!.uid}/$id").delete().await()
+        } catch (e: FirebaseException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun addPostFile(file: Uri, id: String) {
         try {
             cloud.reference.child("$POSTS/${auth.currentUser!!.uid}/$id").putFile(file)
                 .await()

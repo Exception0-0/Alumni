@@ -10,15 +10,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.PostFile
-import dev.than0s.aluminium.features.post.domain.use_cases.SetPostDocUseCase
-import dev.than0s.aluminium.features.post.domain.use_cases.SetPostFileUseCase
+import dev.than0s.aluminium.features.post.domain.use_cases.AddPostDocUseCase
+import dev.than0s.aluminium.features.post.domain.use_cases.AddPostFileUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostUploadViewModel @Inject constructor(
-    private val setPostFileUseCase: SetPostFileUseCase,
-    private val setPostDocUseCase: SetPostDocUseCase
+    private val setPostFileUseCase: AddPostFileUseCase,
+    private val setPostDocUseCase: AddPostDocUseCase
 ) : ViewModel() {
     var post by mutableStateOf(Post())
     var circularProgressIndicatorState by mutableStateOf(false)

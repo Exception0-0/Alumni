@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.features.post.domain.data_class.Post
+import dev.than0s.aluminium.features.post.domain.use_cases.DeletePostDocUseCase
+import dev.than0s.aluminium.features.post.domain.use_cases.DeletePostFileUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.GetMyPostFlowUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.GetPostFIleUseCase
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +19,8 @@ import javax.inject.Inject
 class MyPostViewModel @Inject constructor(
     private val getPostFlowUseCase: GetMyPostFlowUseCase,
     private val getPostFileUseCase: GetPostFIleUseCase,
+    private val deletePostUseCase: DeletePostDocUseCase,
+    private val deletePostFileUseCase: DeletePostFileUseCase
 ) : ViewModel() {
     var postsFlow: Flow<List<Post>> = emptyFlow()
 
@@ -29,7 +33,7 @@ class MyPostViewModel @Inject constructor(
             when (val result = getPostFlowUseCase.invoke(Unit)) {
                 is Either.Right -> {
                     postsFlow = result.value.map { list ->
-                        list.map { post->
+                        list.map { post ->
                             when (val fileResult = getPostFileUseCase.invoke(post.id)) {
                                 is Either.Right -> {
                                     post.copy(file = fileResult.value)
@@ -48,6 +52,29 @@ class MyPostViewModel @Inject constructor(
                     println("${result.value}")
                 }
             }
+        }
+    }
+
+    fun onPostDeleteClick(id: String) {
+        viewModelScope.launch {
+            when (val docResult = deletePostFileUseCase.invoke(id)) {
+                is Either.Right -> {
+                    when (val fileResult = deletePostUseCase.invoke(id)) {
+                        is Either.Right -> {
+                            println("success")
+                        }
+
+                        is Either.Left -> {
+                            println("error: ${fileResult.value}")
+                        }
+                    }
+                }
+
+                is Either.Left -> {
+                    println("error ${docResult.value.message}")
+                }
+            }
+
         }
     }
 }

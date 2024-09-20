@@ -21,6 +21,15 @@ class PostRepositoryImple @Inject constructor(private val dataSource: PostDataSo
         }
     }
 
+    override suspend fun deletePost(id: String): Either<Failure, Unit> {
+        try {
+            dataSource.deletePost(id)
+            return Either.Right(Unit)
+        } catch (e: Exception) {
+            return Either.Left(Failure(e.message.toString()))
+        }
+    }
+
     override suspend fun getPost(id: String): Either<Failure, Post> {
         return try {
             Either.Right(dataSource.getPost(id))
@@ -29,12 +38,21 @@ class PostRepositoryImple @Inject constructor(private val dataSource: PostDataSo
         }
     }
 
-    override suspend fun setPostFile(uri: Uri, id: String): Either<Failure, Unit> {
+    override suspend fun addPostFile(uri: Uri, id: String): Either<Failure, Unit> {
         return try {
-            dataSource.setPostFile(uri, id);
+            dataSource.addPostFile(uri, id);
             Either.Right(Unit)
         } catch (e: Exception) {
             Either.Left(Failure(e.message.toString()))
+        }
+    }
+
+    override suspend fun deletePostFile(id: String): Either<Failure, Unit> {
+        try {
+            dataSource.deletePostFile(id)
+            return Either.Right(Unit)
+        } catch (e: Exception) {
+            return Either.Left(Failure(e.message.toString()))
         }
     }
 
