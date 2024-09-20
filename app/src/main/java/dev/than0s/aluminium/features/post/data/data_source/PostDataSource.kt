@@ -58,7 +58,7 @@ class PostDataSourceImple @Inject constructor(
 
     override suspend fun deletePostFile(id: String) {
         try {
-            cloud.reference.child("$POSTS/${auth.currentUser!!.uid}/$id").delete().await()
+            cloud.reference.child("$POSTS/$id").delete().await()
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
@@ -66,7 +66,7 @@ class PostDataSourceImple @Inject constructor(
 
     override suspend fun addPostFile(file: Uri, id: String) {
         try {
-            cloud.reference.child("$POSTS/${auth.currentUser!!.uid}/$id").putFile(file)
+            cloud.reference.child("$POSTS/$id").putFile(file)
                 .await()
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
@@ -75,7 +75,7 @@ class PostDataSourceImple @Inject constructor(
 
     override suspend fun getPostFile(id: String): Uri {
         return try {
-            cloud.reference.child("$POSTS/${auth.currentUser!!.uid}/$id").downloadUrl.await()
+            cloud.reference.child("$POSTS/$id").downloadUrl.await()
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }

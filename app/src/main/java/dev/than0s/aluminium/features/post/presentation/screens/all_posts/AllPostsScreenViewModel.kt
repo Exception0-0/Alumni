@@ -36,7 +36,7 @@ class AllPostsScreenViewModel @Inject constructor(
                                 }
 
                                 is Either.Left -> {
-                                    println("error: ${fileResult.value}")
+                                    println("error: ${fileResult.value} id: ${post.id}")
                                     post
                                 }
                             }

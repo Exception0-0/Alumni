@@ -76,6 +76,10 @@ private fun PostItem(post: Post) {
                 .width(360.dp)
         ) {
 
+            UserDetail(
+                userId = post.userId,
+            )
+
             Text(
                 text = post.title,
                 fontWeight = FontWeight.W400,
@@ -93,6 +97,11 @@ private fun PostItem(post: Post) {
             Text(text = post.description)
         }
     }
+}
+
+@Composable
+fun UserDetail(userId: String) {
+
 }
 
 @Preview(showSystemUi = true)
