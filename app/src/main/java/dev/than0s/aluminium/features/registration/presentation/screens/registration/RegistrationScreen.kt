@@ -39,7 +39,7 @@ fun RegistrationScreen(
     popAndOpen: (String) -> Unit,
 ) {
     RegistrationScreenContent(
-        param = viewModel.param.value,
+        param = viewModel.param,
         categoryDialogState = viewModel.categoryDialogState.value,
         batchDialogState = viewModel.batchDialogState.value,
         onEmailChange = viewModel::onEmailChange,

@@ -1,6 +1,8 @@
 package dev.than0s.aluminium.features.registration.presentation.screens.registration
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,12 +15,12 @@ import javax.inject.Inject
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(private val registerUseCase: SubmitRegistrationUseCase) :
     ViewModel() {
-    val param = mutableStateOf(RegistrationForm())
+    var param by mutableStateOf(RegistrationForm())
     val categoryDialogState = mutableStateOf(false)
     val batchDialogState = mutableStateOf(false)
 
     fun onEmailChange(email: String) {
-        param.value = param.value.copy(email = email)
+        param = param.copy(email = email)
     }
 
     fun onCategoryDialogDismiss() {
@@ -38,32 +40,32 @@ class RegistrationViewModel @Inject constructor(private val registerUseCase: Sub
     }
 
     fun onCategoryChange(category: String) {
-        param.value = param.value.copy(category = category)
+        param = param.copy(category = category)
     }
 
-    fun onRollNoChange(id: String) {
-        param.value = param.value.copy(id = id)
+    fun onRollNoChange(rollNo: String) {
+        param = param.copy(rollNo = rollNo)
     }
 
     fun onFirstNameChange(firstName: String) {
-        param.value = param.value.copy(firstName = firstName)
+        param = param.copy(firstName = firstName)
     }
 
     fun onMiddleNameChange(middleName: String) {
-        param.value = param.value.copy(middleName = middleName)
+        param = param.copy(middleName = middleName)
     }
 
     fun onLastNameChange(lastName: String) {
-        param.value = param.value.copy(lastName = lastName)
+        param = param.copy(lastName = lastName)
     }
 
     fun onBatchChange(batch: String) {
-        param.value = param.value.copy(batch = batch)
+        param = param.copy(batch = batch)
     }
 
     fun onRegisterClick() {
         viewModelScope.launch {
-            when (registerUseCase.invoke(param.value)) {
+            when (registerUseCase.invoke(param)) {
                 is Either.Left -> TODO("show error message")
                 is Either.Right -> TODO("show registration successfully screen")
             }
