@@ -5,6 +5,7 @@ import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.error.Failure
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.data.data_source.PostDataSource
+import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -75,6 +76,14 @@ class PostRepositoryImple @Inject constructor(private val dataSource: PostDataSo
     override suspend fun getAllPostFlow(): Either<Failure, Flow<List<Post>>> {
         return try {
             Either.Right(dataSource.getAllPostFlow())
+        } catch (e: Exception) {
+            Either.Left(Failure(e.message.toString()))
+        }
+    }
+
+    override suspend fun getUser(userId: String): Either<Failure, User> {
+        return try {
+            Either.Right(dataSource.getUser(userId))
         } catch (e: Exception) {
             Either.Left(Failure(e.message.toString()))
         }

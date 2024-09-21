@@ -4,6 +4,7 @@ import android.net.Uri
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.error.Failure
 import dev.than0s.aluminium.features.post.domain.data_class.Post
+import dev.than0s.aluminium.features.post.domain.data_class.User
 import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
@@ -15,4 +16,5 @@ interface PostRepository {
     suspend fun getPostFile(id: String): Either<Failure, Uri>
     suspend fun getMyPostFlow(): Either<Failure, Flow<List<Post>>>
     suspend fun getAllPostFlow(): Either<Failure, Flow<List<Post>>>
+    suspend fun getUser(userId: String): Either<Failure,User>
 }

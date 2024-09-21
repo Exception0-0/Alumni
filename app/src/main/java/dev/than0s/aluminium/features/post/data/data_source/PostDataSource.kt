@@ -9,6 +9,7 @@ import com.google.firebase.firestore.dataObjects
 import com.google.firebase.storage.FirebaseStorage
 import dev.than0s.aluminium.features.post.data.mapper.toRawPost
 import dev.than0s.aluminium.features.post.domain.data_class.Post
+import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
@@ -23,6 +24,7 @@ interface PostDataSource {
     suspend fun getPostFile(id: String): Uri
     suspend fun getMyPostFlow(): Flow<List<Post>>
     suspend fun getAllPostFlow(): Flow<List<Post>>
+    suspend fun getUser(userId: String): User
 }
 
 class PostDataSourceImple @Inject constructor(
@@ -97,7 +99,23 @@ class PostDataSourceImple @Inject constructor(
         }
     }
 
+    override suspend fun getUser(userId: String): User {
+        return try {
+            val doc = store.collection(PROFILE).document(userId).get().await()
+            val image = cloud.reference.child("$PROFILE_IMAGE/$userId").downloadUrl.await()
+            User(
+                firstName = doc.getString("firstName")!!,
+                lastName = doc.getString("lastName")!!,
+                profileImage = image
+            )
+        } catch (e: FirebaseException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
     companion object {
         private const val POSTS = "posts"
+        private const val PROFILE = "profile"
+        private const val PROFILE_IMAGE = "profile_images"
     }
 }
