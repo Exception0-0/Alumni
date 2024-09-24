@@ -19,7 +19,7 @@ class AuthDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
     override suspend fun signIn(email: String, password: String) {
         try {
             auth.signInWithEmailAndPassword(email, password).await()
-        } catch (e: FirebaseAuthException) {
+        } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
@@ -27,7 +27,7 @@ class AuthDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
     override suspend fun signUp(email: String, password: String) {
         try {
             auth.createUserWithEmailAndPassword(email, password).await()
-        } catch (e: FirebaseAuthException) {
+        } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
@@ -35,7 +35,7 @@ class AuthDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
     override suspend fun signOut() {
         try {
             auth.signOut()
-        } catch (e: FirebaseAuthException) {
+        } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }

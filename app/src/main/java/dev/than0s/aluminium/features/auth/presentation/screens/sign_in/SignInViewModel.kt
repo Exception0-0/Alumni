@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.auth.domain.use_cases.SignInUseCase
 import dev.than0s.aluminium.features.auth.domain.data_class.EmailAuthParam
 import kotlinx.coroutines.launch
@@ -25,9 +26,15 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
 
     fun onSignInClick(restartApp: () -> Unit) {
         viewModelScope.launch {
-            when (signInUseCase.invoke(signInParam.value)) {
-                is Either.Left -> TODO("show error message")
-                is Either.Right -> restartApp()
+            when (val result = signInUseCase.invoke(signInParam.value)) {
+                is Either.Left -> {
+                    SnackbarController.showSnackbar("Error: ${result.value}")
+                }
+
+                is Either.Right -> {
+                    SnackbarController.showSnackbar("Signed in successfully")
+                    restartApp()
+                }
             }
         }
     }

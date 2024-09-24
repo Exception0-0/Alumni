@@ -15,11 +15,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
@@ -40,9 +43,14 @@ import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutS
 import dev.than0s.aluminium.features.post.presentation.screens.all_posts.AllPostsScreen
 import dev.than0s.aluminium.features.post.presentation.screens.my_posts.MyPostsScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var viewModel: MainActivityViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,6 +58,11 @@ class MainActivity : ComponentActivity() {
             AluminiumTheme {
                 val navController = rememberNavController()
                 Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = viewModel.snackbarHostState
+                        )
+                    },
                     bottomBar = {
                         BottomNavigationBar(
                             navController
