@@ -45,13 +45,14 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.WarningDialog
 import dev.than0s.aluminium.features.post.domain.data_class.Post
+import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.ui.elevation
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
 fun MyPostsScreen(viewModel: MyPostViewModel = hiltViewModel(), openScreen: (String) -> Unit) {
-    val postsList = viewModel.postsFlow.collectAsState(initial = emptyList())
+    val postsList = viewModel.postFlow.collectAsState(initial = emptyList())
     MyPostScreenContent(
         postsList = postsList.value,
         openScreen = openScreen,
@@ -157,7 +158,8 @@ private fun MyPostScreenPreview() {
     MyPostScreenContent(
         listOf(
             Post(
-                userId = "0",
+                id = "",
+                user = User(userId = ""),
                 title = "Title",
                 description = "asdfklajsdfkl jkldjfklj adklsj fkjasdklfjasdkj f klasdjfljdfjasdlfjasdjfkldajf kladj",
                 timestamp = Timestamp.now()

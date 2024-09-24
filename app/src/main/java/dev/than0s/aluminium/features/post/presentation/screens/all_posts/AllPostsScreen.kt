@@ -42,22 +42,18 @@ fun AllPostsScreen(
 ) {
     val postsList = viewModel.postsFlow.collectAsState(initial = emptyList()).value
     AllPostsScreenContent(
-        postsList = postsList,
-        getUser = viewModel::getUser
+        postsList = postsList
     )
 }
 
 @Composable
 private fun AllPostsScreenContent(
     postsList: List<Post>,
-    getUser: (String) -> Flow<User>
 ) {
     LazyColumn {
         items(postsList) { post ->
-//            val user = getUser(post.userId).collectAsState(User()).value
             PostItem(
                 post = post,
-                user = User()
             )
         }
     }
@@ -65,7 +61,7 @@ private fun AllPostsScreenContent(
 
 
 @Composable
-private fun PostItem(post: Post, user: User) {
+private fun PostItem(post: Post) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(MaterialTheme.elevation.medium),
         modifier = Modifier
@@ -81,7 +77,7 @@ private fun PostItem(post: Post, user: User) {
         ) {
 
             UserDetail(
-                user = user
+                user = post.user
             )
 
             Text(
@@ -132,11 +128,11 @@ private fun AllPostsScreenPreview() {
     AllPostsScreenContent(
         postsList = listOf(
             Post(
-                userId = "",
+                id = "",
+                user = User(userId = ""),
                 title = "Than0s",
-                description = "hello I'm Than0s don't talk to me"
+                description = "hello I'm Than0s don't talk to me",
             )
-        ),
-        { emptyFlow() }
+        )
     )
 }

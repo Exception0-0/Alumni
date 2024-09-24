@@ -10,15 +10,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.PostFile
-import dev.than0s.aluminium.features.post.domain.use_cases.AddPostDocUseCase
-import dev.than0s.aluminium.features.post.domain.use_cases.AddPostFileUseCase
+import dev.than0s.aluminium.features.post.domain.use_cases.AddPostUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostUploadViewModel @Inject constructor(
-    private val setPostFileUseCase: AddPostFileUseCase,
-    private val setPostDocUseCase: AddPostDocUseCase
+    private val addPostUserCase: AddPostUseCase
 ) : ViewModel() {
     var post by mutableStateOf(Post())
     var circularProgressIndicatorState by mutableStateOf(false)
@@ -36,22 +34,11 @@ class PostUploadViewModel @Inject constructor(
     }
 
     fun onUploadClick(popScreen: () -> Unit) {
-        val fileId = System.currentTimeMillis().toString()
-        val postWithID = post.copy(id = fileId)
         viewModelScope.launch {
-            when (val docResult = setPostDocUseCase.invoke(postWithID)) {
+            when (val docResult = addPostUserCase.invoke(post)) {
                 is Either.Left -> println("error: ${docResult.value.message}")
                 is Either.Right -> {
-                    val postFile = PostFile(
-                        uri = post.file,
-                        id = fileId
-                    )
-                    when (val fileResult = setPostFileUseCase.invoke(postFile)) {
-                        is Either.Left -> println("error: ${fileResult.value}")
-                        is Either.Right -> {
-                            popScreen()
-                        }
-                    }
+                    popScreen()
                 }
             }
         }

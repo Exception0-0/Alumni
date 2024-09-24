@@ -26,6 +26,7 @@ import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.composable.LoadingButton
 import dev.than0s.aluminium.features.post.domain.data_class.Post
+import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.ui.spacing
 
 @Composable
@@ -111,7 +112,8 @@ private fun PostUploadScreenContent(
 @Composable
 private fun PostUploadScreenPreview() {
     PostUploadScreenContent(Post(
-        userId = "0",
+        id = "",
+        user = User(userId = ""),
         title = "Title",
         description = "asdfklajsdfkl jkldjfklj adklsj fkjasdklfjasdkj f klasdjfljdfjasdlfjasdjfkldajf kladj",
     ), false, {}, {}, {}, {})

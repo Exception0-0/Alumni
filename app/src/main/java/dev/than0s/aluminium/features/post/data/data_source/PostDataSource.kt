@@ -7,8 +7,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.storage.FirebaseStorage
+import dev.than0s.aluminium.features.post.data.mapper.toPost
 import dev.than0s.aluminium.features.post.data.mapper.toRawPost
 import dev.than0s.aluminium.features.post.domain.data_class.Post
+import dev.than0s.aluminium.features.post.domain.data_class.RawPost
 import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.flow.Flow
@@ -18,26 +20,20 @@ import javax.inject.Inject
 interface PostDataSource {
     suspend fun addPost(post: Post)
     suspend fun deletePost(id: String)
-    suspend fun getPost(id: String): Post
-    suspend fun addPostFile(file: Uri, id: String)
-    suspend fun deletePostFile(id: String)
-    suspend fun getPostFile(id: String): Uri
-    suspend fun getMyPostFlow(): Flow<List<Post>>
-    suspend fun getAllPostFlow(): Flow<List<Post>>
-    suspend fun getUser(userId: String): User
+    suspend fun getPostFlow(id: String?): Flow<List<Post>>
 }
 
 class PostDataSourceImple @Inject constructor(
     private val store: FirebaseFirestore,
     private val cloud: FirebaseStorage,
-    private val auth: FirebaseAuth
 ) :
     PostDataSource {
 
     override suspend fun addPost(post: Post) {
         try {
             store.collection(POSTS).document(post.id).set(post.toRawPost()).await()
-        } catch (e: FirebaseFirestoreException) {
+            cloud.reference.child("$POSTS/${post.id}").putFile(post.file).await()
+        } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }
@@ -45,69 +41,43 @@ class PostDataSourceImple @Inject constructor(
     override suspend fun deletePost(id: String) {
         try {
             store.collection(POSTS).document(id).delete().await()
-        } catch (e: FirebaseFirestoreException) {
-            throw ServerException(e.message.toString())
-        }
-    }
-
-    override suspend fun getPost(id: String): Post {
-        try {
-            return store.collection(POSTS).document(id).get().await().toObject(Post::class.java)!!
-        } catch (e: FirebaseFirestoreException) {
-            throw ServerException(e.message.toString())
-        }
-    }
-
-    override suspend fun deletePostFile(id: String) {
-        try {
             cloud.reference.child("$POSTS/$id").delete().await()
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }
 
-    override suspend fun addPostFile(file: Uri, id: String) {
-        try {
-            cloud.reference.child("$POSTS/$id").putFile(file)
-                .await()
+    override suspend fun getPostFlow(id: String?): Flow<List<Post>> {
+        return try {
+            if (id != null) {
+                store.collection(POSTS).whereEqualTo("userId", id).dataObjects<RawPost>()
+                    .toPost(::getUser, ::getFile)
+            } else {
+                store.collection(POSTS).dataObjects<RawPost>().toPost(::getUser, ::getFile)
+            }
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }
 
-    override suspend fun getPostFile(id: String): Uri {
+    private suspend fun getUser(id: String): User {
+        return try {
+            val doc = store.collection(PROFILE).document(id).get().await()
+            val profile = cloud.reference.child("$PROFILE_IMAGE/$id").downloadUrl.await()
+            User(
+                userId = doc.id,
+                firstName = doc.get("firstName").toString(),
+                lastName = doc.get("lastName").toString(),
+                profileImage = profile
+            )
+        } catch (e: FirebaseException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    private suspend fun getFile(id: String): Uri {
         return try {
             cloud.reference.child("$POSTS/$id").downloadUrl.await()
-        } catch (e: FirebaseException) {
-            throw ServerException(e.message.toString())
-        }
-    }
-
-    override suspend fun getMyPostFlow(): Flow<List<Post>> {
-        return try {
-            store.collection(POSTS).whereEqualTo("userId", auth.currentUser!!.uid).dataObjects()
-        } catch (e: FirebaseException) {
-            throw ServerException(e.message.toString())
-        }
-    }
-
-    override suspend fun getAllPostFlow(): Flow<List<Post>> {
-        return try {
-            store.collection(POSTS).dataObjects()
-        } catch (e: FirebaseException) {
-            throw ServerException(e.message.toString())
-        }
-    }
-
-    override suspend fun getUser(userId: String): User {
-        return try {
-            val doc = store.collection(PROFILE).document(userId).get().await()
-            val image = cloud.reference.child("$PROFILE_IMAGE/$userId").downloadUrl.await()
-            User(
-                firstName = doc.getString("firstName")!!,
-                lastName = doc.getString("lastName")!!,
-                profileImage = image
-            )
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
