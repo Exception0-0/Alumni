@@ -9,7 +9,7 @@ data class Comment(
     @DocumentId
     val id: String = System.currentTimeMillis().toString(),
     val postId: String = "",
-    val userId: String = Firebase.auth.currentUser!!.uid,
+    val user: User = User(),
     val message: String = "",
     val timeStamp: Timestamp = Timestamp.now()
 )

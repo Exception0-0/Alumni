@@ -133,7 +133,7 @@ class PostDataSourceImple @Inject constructor(
                 .document(postId)
                 .collection(COMMENTS)
                 .dataObjects<RawComment>()
-                .toComment(postId)
+                .toComment(postId, ::getUser)
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }

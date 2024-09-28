@@ -28,13 +28,16 @@ suspend fun Flow<List<RawPost>>.toPost(
     }
 }
 
-suspend fun Flow<List<RawComment>>.toComment(postId: String): Flow<List<Comment>> {
+suspend fun Flow<List<RawComment>>.toComment(
+    postId: String,
+    getUser: suspend (String) -> User,
+): Flow<List<Comment>> {
     return this.map { list ->
         list.map {
             Comment(
                 id = it.id,
                 postId = postId,
-                userId = it.userId,
+                user = getUser(it.userId),
                 message = it.message,
                 timeStamp = it.timeStamp
             )
@@ -52,7 +55,7 @@ fun Post.toRawPost() = RawPost(
 
 fun Comment.toRawComment() = RawComment(
     id = id,
-    userId = userId,
+    userId = user.userId,
     message = message,
     timeStamp = timeStamp
 )

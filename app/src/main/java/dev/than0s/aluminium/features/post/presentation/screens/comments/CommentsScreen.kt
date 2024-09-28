@@ -18,11 +18,13 @@ import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Send
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -84,7 +86,7 @@ private fun CommentScreenContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(MaterialTheme.spacing.medium)
             ) {
-                TextField(
+                OutlinedTextField(
                     value = currentComment,
                     placeholder = {
                         Text(text = "Comment")
@@ -118,34 +120,40 @@ private fun CommentScreenContent(
 
 @Composable
 private fun CommentPreview(comment: Comment) {
-    Row(
-        verticalAlignment = Alignment.Top,
-        modifier = Modifier.padding(MaterialTheme.spacing.small)
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(MaterialTheme.spacing.small)
     ) {
-        AsyncImage(
-            model = Uri.EMPTY,
-            placeholder = painterResource(R.drawable.ic_launcher_background),
-            contentDescription = "User profile image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(30.dp)
-        )
-
-        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+        Row(
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier.padding(MaterialTheme.spacing.small)
         ) {
-            Text(
-                text = "Than0s Op",
-                fontWeight = FontWeight.W100,
-                fontSize = MaterialTheme.textSize.small
+            AsyncImage(
+                model = comment.user.profileImage,
+                placeholder = painterResource(R.drawable.ic_launcher_background),
+                contentDescription = "User profile image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(30.dp)
             )
-            Text(
-                text = comment.message,
-                fontWeight = FontWeight.W300
-            )
+
+            Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+            ) {
+                Text(
+                    text = "${comment.user.firstName} ${comment.user.lastName}",
+                    fontWeight = FontWeight.W100,
+                    fontSize = MaterialTheme.textSize.small
+                )
+                Text(
+                    text = comment.message,
+                    fontWeight = FontWeight.W300
+                )
+            }
         }
     }
 }
@@ -158,17 +166,26 @@ private fun CommentScreenPreview() {
             Comment(
                 id = "",
                 message = "Hey what, don't know any thing about me",
-                userId = ""
+                user = User(
+                    firstName = "Than0s",
+                    userId = ""
+                )
             ),
             Comment(
                 id = "",
                 message = "Hey what, don't know any thing about me",
-                userId = ""
+                user = User(
+                    firstName = "Than0s",
+                    userId = ""
+                )
             ),
             Comment(
                 id = "",
                 message = "Hey what, don't know any thing about me",
-                userId = ""
+                user = User(
+                    firstName = "Than0s",
+                    userId = ""
+                )
             )
         ),
         "",
