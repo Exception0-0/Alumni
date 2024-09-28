@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -122,43 +123,57 @@ private fun ProfileScreenContent(
                 textAlign = TextAlign.Center
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
-            ) {
-                Card(
-                    onClick = {
-                        updateProfileDialogState = true
-                    },
-                ) {
+            DropdownMenuItem(
+                text = {
+                    Row {
+                        Text(text = "Update Profile")
+                    }
+                },
+                onClick = {
+                    updateProfileDialogState = true
+                },
+                leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = Icons.Default.Edit.name,
-                        modifier = Modifier.padding(MaterialTheme.spacing.small)
                     )
                 }
+            )
 
-                Card(
-                    onClick = {
-                        openScreen(Screen.SignOutScreen.route)
-                    },
-                ) {
+            DropdownMenuItem(
+                text = {
+                    Row {
+                        Text(text = "My posts")
+                    }
+                },
+                onClick = {
+                    openScreen(Screen.MyPostsScreen.route)
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.List,
+                        contentDescription = "post add"
+                    )
+                }
+            )
+
+            DropdownMenuItem(
+                text = {
+                    Row {
+                        Text(text = "Log Out")
+                    }
+                },
+                onClick = {
+                    openScreen(Screen.SignOutScreen.route)
+                },
+                leadingIcon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                         contentDescription = Icons.AutoMirrored.Filled.ExitToApp.name,
-                        modifier = Modifier.padding(MaterialTheme.spacing.small)
                     )
                 }
-            }
+            )
         }
-    }
-    ExtendedFloatingActionButton(
-        onClick = {
-            openScreen(Screen.MyPostsScreen.route)
-        }
-    ) {
-        Icon(imageVector = Icons.AutoMirrored.Filled.List, contentDescription = "post add")
-        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
-        Text(text = "My posts")
     }
 }
 
