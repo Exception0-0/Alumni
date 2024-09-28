@@ -17,7 +17,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Send
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -32,6 +38,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -125,35 +135,88 @@ private fun CommentPreview(comment: Comment) {
             .fillMaxWidth()
             .padding(MaterialTheme.spacing.small)
     ) {
+
         Row(
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier.padding(MaterialTheme.spacing.small)
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MaterialTheme.spacing.small)
         ) {
-            AsyncImage(
-                model = comment.user.profileImage,
-                placeholder = painterResource(R.drawable.ic_launcher_background),
-                contentDescription = "User profile image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(30.dp)
-            )
-
-            Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+            Row(
+                verticalAlignment = Alignment.Top,
             ) {
-                Text(
-                    text = "${comment.user.firstName} ${comment.user.lastName}",
-                    fontWeight = FontWeight.W100,
-                    fontSize = MaterialTheme.textSize.small
+                AsyncImage(
+                    model = comment.user.profileImage,
+                    placeholder = painterResource(R.drawable.ic_launcher_background),
+                    contentDescription = "User profile image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(30.dp)
                 )
-                Text(
-                    text = comment.message,
-                    fontWeight = FontWeight.W300
-                )
+
+                Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+                ) {
+                    Text(
+                        text = "${comment.user.firstName} ${comment.user.lastName}",
+                        fontWeight = FontWeight.W100,
+                        fontSize = MaterialTheme.textSize.small
+                    )
+                    Text(
+                        text = comment.message,
+                        fontWeight = FontWeight.W300
+                    )
+                }
             }
+            CommentMenu()
+        }
+    }
+}
+
+@Composable
+private fun CommentMenu() {
+    var dropDownMenuState by rememberSaveable { mutableStateOf(false) }
+    Column {
+        Icon(
+            imageVector = Icons.Filled.MoreVert,
+            contentDescription = "menu",
+            modifier = Modifier.clickable {
+                dropDownMenuState = !dropDownMenuState
+            }
+        )
+        DropdownMenu(
+            expanded = dropDownMenuState,
+            onDismissRequest = {
+                dropDownMenuState = false
+            }
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text("Edit")
+                },
+                onClick = {},
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Rounded.Edit,
+                        contentDescription = "comment edit"
+                    )
+                }
+            )
+            DropdownMenuItem(
+                text = {
+                    Text("Delete")
+                },
+                onClick = {},
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Rounded.Delete,
+                        contentDescription = "comment delete"
+                    )
+                }
+            )
         }
     }
 }
