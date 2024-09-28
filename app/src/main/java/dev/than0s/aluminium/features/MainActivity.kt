@@ -147,7 +147,9 @@ private fun NavGraphHost(
             )
         }
         composable(route = Screen.AllPostScreen.route) {
-            AllPostsScreen()
+            AllPostsScreen(
+                openScreen = navController::openScreen
+            )
         }
         composable(
             route = "${Screen.CommentsScreen.route}/{postId}",
