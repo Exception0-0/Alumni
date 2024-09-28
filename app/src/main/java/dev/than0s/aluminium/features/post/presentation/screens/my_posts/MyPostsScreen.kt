@@ -14,7 +14,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
@@ -37,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -103,7 +106,6 @@ private fun PostItem(
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
 ) {
     var warningState by rememberSaveable { mutableStateOf(false) }
-    var likeButtonState by rememberSaveable { mutableStateOf(post.hasLiked) }
 
     if (warningState) {
         WarningDialog(
@@ -157,16 +159,51 @@ private fun PostItem(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxWidth()
             )
-            Checkbox(
-                checked = likeButtonState,
-                onCheckedChange = {
-                    onLikeClick(post.id, post.hasLiked) {
-                        likeButtonState = !likeButtonState
-                    }
+            PostStatus(
+                hasLike = post.hasLiked,
+                onLikeClick = { hasLike, callback ->
+                    onLikeClick(post.id, hasLike, callback)
                 }
             )
             Text(text = post.description)
         }
+    }
+}
+
+@Composable
+private fun PostStatus(
+    hasLike: Boolean,
+    onLikeClick: (Boolean, () -> Unit) -> Unit,
+) {
+    var likeButtonState by rememberSaveable { mutableStateOf(hasLike) }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(MaterialTheme.spacing.extraSmall)
+    ) {
+        Icon(
+            imageVector = if (likeButtonState) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
+            contentDescription = "like button",
+            modifier = Modifier.clickable {
+                onLikeClick(likeButtonState) {
+                    likeButtonState = !likeButtonState
+                }
+            }
+        )
+        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
+        Text(
+            text = "Like",
+        )
+
+        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.medium))
+
+        Icon(
+            painter = painterResource(R.drawable.outline_comment_24),
+            contentDescription = "comment button"
+        )
+        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
+        Text(
+            text = "Comment",
+        )
     }
 }
 
@@ -180,7 +217,8 @@ private fun MyPostScreenPreview() {
                 user = User(userId = ""),
                 title = "Title",
                 description = "asdfklajsdfkl jkldjfklj adklsj fkjasdklfjasdkj f klasdjfljdfjasdlfjasdjfkldajf kladj",
-                timestamp = Timestamp.now()
+                timestamp = Timestamp.now(),
+                hasLiked = false
             ),
         ),
         {},
