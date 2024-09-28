@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.SnackbarController
@@ -29,6 +31,9 @@ class CommentsViewModel @Inject constructor(
     val postId = savedStateHandle.get<String>("postId")!!
     var currentComment by mutableStateOf("")
 
+    // don't use firebase here
+    val currentUserId = Firebase.auth.currentUser!!.uid
+
     init {
         loadComments()
     }
@@ -36,7 +41,7 @@ class CommentsViewModel @Inject constructor(
     private fun loadComments() {
         viewModelScope.launch {
 
-            when (val result = getCommentFlowUseCase.invoke(postId!!)) {
+            when (val result = getCommentFlowUseCase.invoke(postId)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
                 }
@@ -66,6 +71,20 @@ class CommentsViewModel @Inject constructor(
                 is Either.Right -> {
                     SnackbarController.showSnackbar("Comment added successfully")
                     currentComment = ""
+                }
+            }
+        }
+    }
+
+    fun onRemoveCommentClick(comment: Comment) {
+        viewModelScope.launch {
+            when (val result = removeCommentUseCase.invoke(comment)) {
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+
+                is Either.Right -> {
+                    SnackbarController.showSnackbar("Comment removed successfully")
                 }
             }
         }

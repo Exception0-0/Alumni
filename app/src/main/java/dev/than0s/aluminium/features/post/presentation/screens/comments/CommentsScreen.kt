@@ -65,8 +65,10 @@ fun CommentScreen(viewModel: CommentsViewModel = hiltViewModel()) {
     CommentScreenContent(
         commentList = commentList,
         currentComment = viewModel.currentComment,
+        currentUserId = viewModel.currentUserId,
         onCurrentCommentChange = viewModel::onCurrentCommentChange,
-        onAddCommentClick = viewModel::onAddCommentClick
+        onAddCommentClick = viewModel::onAddCommentClick,
+        onRemoveCommentClick = viewModel::onRemoveCommentClick
     )
 }
 
@@ -76,8 +78,10 @@ fun CommentScreen(viewModel: CommentsViewModel = hiltViewModel()) {
 private fun CommentScreenContent(
     commentList: List<Comment>,
     currentComment: String,
+    currentUserId: String,
     onCurrentCommentChange: (String) -> Unit,
-    onAddCommentClick: () -> Unit
+    onAddCommentClick: () -> Unit,
+    onRemoveCommentClick: (Comment) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -121,7 +125,13 @@ private fun CommentScreenContent(
             modifier = Modifier.padding(contentPadding)
         ) {
             items(commentList) { comment ->
-                CommentPreview(comment)
+                CommentPreview(
+                    comment = comment,
+                    isCurrentUser = currentUserId.equals(comment.user.userId),
+                    onRemoveCommentClick = {
+                        onRemoveCommentClick(comment)
+                    }
+                )
             }
         }
 
@@ -129,7 +139,11 @@ private fun CommentScreenContent(
 }
 
 @Composable
-private fun CommentPreview(comment: Comment) {
+private fun CommentPreview(
+    comment: Comment,
+    isCurrentUser: Boolean,
+    onRemoveCommentClick: () -> Unit
+) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -171,13 +185,19 @@ private fun CommentPreview(comment: Comment) {
                     )
                 }
             }
-            CommentMenu()
+            if (isCurrentUser) {
+                CommentMenu(
+                    onRemoveCommentClick = onRemoveCommentClick
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun CommentMenu() {
+private fun CommentMenu(
+    onRemoveCommentClick: () -> Unit
+) {
     var dropDownMenuState by rememberSaveable { mutableStateOf(false) }
     Column {
         Icon(
@@ -209,7 +229,10 @@ private fun CommentMenu() {
                 text = {
                     Text("Delete")
                 },
-                onClick = {},
+                onClick = {
+                    onRemoveCommentClick()
+                    dropDownMenuState = false
+                },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Rounded.Delete,
@@ -252,6 +275,7 @@ private fun CommentScreenPreview() {
             )
         ),
         "",
-        {}, {}
+        "",
+        {}, {}, {}
     )
 }
