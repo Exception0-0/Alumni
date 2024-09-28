@@ -8,15 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.post.domain.data_class.Post
-import dev.than0s.aluminium.features.post.domain.data_class.PostFile
+import dev.than0s.aluminium.features.post.domain.use_cases.AddLikeUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.AddPostUseCase
+import dev.than0s.aluminium.features.post.domain.use_cases.RemoveLikeUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostUploadViewModel @Inject constructor(
-    private val addPostUserCase: AddPostUseCase
+    private val addPostUserCase: AddPostUseCase,
 ) : ViewModel() {
     var post by mutableStateOf(Post())
     var circularProgressIndicatorState by mutableStateOf(false)

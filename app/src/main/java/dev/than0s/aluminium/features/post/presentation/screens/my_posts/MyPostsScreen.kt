@@ -18,6 +18,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -56,7 +57,8 @@ fun MyPostsScreen(viewModel: MyPostViewModel = hiltViewModel(), openScreen: (Str
     MyPostScreenContent(
         postsList = postsList.value,
         openScreen = openScreen,
-        onPostDeleteClick = viewModel::onPostDeleteClick
+        onPostDeleteClick = viewModel::onPostDeleteClick,
+        onLikeClick = viewModel::onLikeClick
     )
 }
 
@@ -64,7 +66,8 @@ fun MyPostsScreen(viewModel: MyPostViewModel = hiltViewModel(), openScreen: (Str
 private fun MyPostScreenContent(
     postsList: List<Post>,
     openScreen: (String) -> Unit,
-    onPostDeleteClick: (String) -> Unit
+    onPostDeleteClick: (String) -> Unit,
+    onLikeClick: (String, Boolean, () -> Unit) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
@@ -86,6 +89,7 @@ private fun MyPostScreenContent(
                 PostItem(
                     post = it,
                     onPostDeleteClick = onPostDeleteClick,
+                    onLikeClick = onLikeClick
                 )
             }
         }
@@ -93,8 +97,14 @@ private fun MyPostScreenContent(
 }
 
 @Composable
-private fun PostItem(post: Post, onPostDeleteClick: (String) -> Unit) {
+private fun PostItem(
+    post: Post,
+    onPostDeleteClick: (String) -> Unit,
+    onLikeClick: (String, Boolean, () -> Unit) -> Unit,
+) {
     var warningState by rememberSaveable { mutableStateOf(false) }
+    var likeButtonState by rememberSaveable { mutableStateOf(post.hasLiked) }
+
     if (warningState) {
         WarningDialog(
             title = "Post Delete",
@@ -147,6 +157,14 @@ private fun PostItem(post: Post, onPostDeleteClick: (String) -> Unit) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxWidth()
             )
+            Checkbox(
+                checked = likeButtonState,
+                onCheckedChange = {
+                    onLikeClick(post.id, post.hasLiked) {
+                        likeButtonState = !likeButtonState
+                    }
+                }
+            )
             Text(text = post.description)
         }
     }
@@ -166,6 +184,7 @@ private fun MyPostScreenPreview() {
             ),
         ),
         {},
-        {}
+        {},
+        { _, _, _ -> }
     )
 }

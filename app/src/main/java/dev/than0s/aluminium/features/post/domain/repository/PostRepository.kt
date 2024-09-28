@@ -9,4 +9,6 @@ interface PostRepository {
     suspend fun addPost(post: Post): Either<Failure, Unit>
     suspend fun deletePost(id: String): Either<Failure, Unit>
     suspend fun getPostFlow(id: String?): Either<Failure, Flow<List<Post>>>
+    suspend fun addLike(id: String): Either<Failure, Unit>
+    suspend fun removeLike(id: String): Either<Failure, Unit>
 }

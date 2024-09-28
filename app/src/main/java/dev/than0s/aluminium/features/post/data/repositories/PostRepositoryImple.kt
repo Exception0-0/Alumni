@@ -39,4 +39,21 @@ class PostRepositoryImple @Inject constructor(private val dataSource: PostDataSo
         }
     }
 
+    override suspend fun addLike(id: String): Either<Failure, Unit> {
+        return try {
+            dataSource.addLike(id)
+            Either.Right(Unit)
+        } catch (e: Exception) {
+            Either.Left(Failure(e.message.toString()))
+        }
+    }
+
+    override suspend fun removeLike(id: String): Either<Failure, Unit> {
+        return try {
+            dataSource.removeLike(id)
+            Either.Right(Unit)
+        } catch (e: Exception) {
+            Either.Left(Failure(e.message.toString()))
+        }
+    }
 }

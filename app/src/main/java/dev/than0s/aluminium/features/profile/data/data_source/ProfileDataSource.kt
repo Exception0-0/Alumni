@@ -29,7 +29,7 @@ class ProfileDataSourceImple @Inject constructor(
                 .get()
                 .await()
                 .toObject(User::class.java)
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
@@ -44,24 +44,24 @@ class ProfileDataSourceImple @Inject constructor(
                     "bio" to user.bio,
                 )
             ).await()
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
 
     override suspend fun setProfileImage(image: Uri) {
         try {
-            cloud.reference.child("$PROFILE_IMAGE/${auth.currentUser!!.uid}").putFile(image)
+            cloud.reference.child("$PROFILE_IMAGE/${auth.currentUser!!.uid}/0").putFile(image)
                 .await()
-        } catch (e: FirebaseException) {
+        } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
 
     override suspend fun getProfileImage(): Uri {
         return try {
-            cloud.reference.child("$PROFILE_IMAGE/${auth.currentUser!!.uid}").downloadUrl.await()
-        } catch (e: FirebaseException) {
+            cloud.reference.child("$PROFILE_IMAGE/${auth.currentUser!!.uid}/0").downloadUrl.await()
+        } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }

@@ -8,11 +8,11 @@ import com.google.firebase.firestore.DocumentId
 
 data class Post(
     @DocumentId
-    val id: String = System.currentTimeMillis()
-        .toString() + (0..100).random() + ('a'..'z').random(),
+    val id: String = System.currentTimeMillis().toString(),
     val user: User = User(),
     val file: Uri = Uri.EMPTY,
     val title: String = "",
     val description: String = "",
     val timestamp: Timestamp = Timestamp.now(),
+    val hasLiked: Boolean = false,
 )
