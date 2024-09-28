@@ -24,10 +24,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
@@ -41,6 +43,7 @@ import dev.than0s.aluminium.features.admin.presentation.screen.requests.Registra
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
 import dev.than0s.aluminium.features.post.presentation.screens.all_posts.AllPostsScreen
+import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.my_posts.MyPostsScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 import javax.inject.Inject
@@ -145,6 +148,16 @@ private fun NavGraphHost(
         }
         composable(route = Screen.AllPostScreen.route) {
             AllPostsScreen()
+        }
+        composable(
+            route = "${Screen.CommentsScreen.route}/{postId}",
+            arguments = listOf(
+                navArgument("postId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            CommentScreen()
         }
     }
 }

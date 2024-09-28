@@ -92,7 +92,10 @@ private fun MyPostScreenContent(
                 PostItem(
                     post = it,
                     onPostDeleteClick = onPostDeleteClick,
-                    onLikeClick = onLikeClick
+                    onLikeClick = onLikeClick,
+                    openCommentScreen = {
+                        openScreen("${Screen.CommentsScreen.route}/${it.id}")
+                    }
                 )
             }
         }
@@ -104,6 +107,7 @@ private fun PostItem(
     post: Post,
     onPostDeleteClick: (String) -> Unit,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
+    openCommentScreen: () -> Unit
 ) {
     var warningState by rememberSaveable { mutableStateOf(false) }
 
@@ -163,7 +167,8 @@ private fun PostItem(
                 hasLike = post.hasLiked,
                 onLikeClick = { hasLike, callback ->
                     onLikeClick(post.id, hasLike, callback)
-                }
+                },
+                openCommentScreen = openCommentScreen
             )
             Text(text = post.description)
         }
@@ -174,6 +179,7 @@ private fun PostItem(
 private fun PostStatus(
     hasLike: Boolean,
     onLikeClick: (Boolean, () -> Unit) -> Unit,
+    openCommentScreen: () -> Unit,
 ) {
     var likeButtonState by rememberSaveable { mutableStateOf(hasLike) }
     Row(
@@ -198,7 +204,10 @@ private fun PostStatus(
 
         Icon(
             painter = painterResource(R.drawable.outline_comment_24),
-            contentDescription = "comment button"
+            contentDescription = "comment button",
+            modifier = Modifier.clickable {
+                openCommentScreen()
+            }
         )
         Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
         Text(

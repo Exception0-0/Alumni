@@ -1,16 +1,19 @@
 package dev.than0s.aluminium.features.post.data.data_source
 
 import android.net.Uri
-import com.google.firebase.FirebaseException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.storage.FirebaseStorage
+import dev.than0s.aluminium.features.post.data.mapper.RawComment
 import dev.than0s.aluminium.features.post.data.mapper.RawPost
+import dev.than0s.aluminium.features.post.data.mapper.toComment
 import dev.than0s.aluminium.features.post.data.mapper.toPost
+import dev.than0s.aluminium.features.post.data.mapper.toRawComment
 import dev.than0s.aluminium.features.post.data.mapper.toRawPost
+import dev.than0s.aluminium.features.post.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
@@ -20,10 +23,13 @@ import javax.inject.Inject
 
 interface PostDataSource {
     suspend fun addPost(post: Post)
-    suspend fun deletePost(id: String)
-    suspend fun getPostFlow(id: String?): Flow<List<Post>>
-    suspend fun addLike(id: String)
-    suspend fun removeLike(id: String)
+    suspend fun deletePost(postId: String)
+    suspend fun getPostFlow(userId: String?): Flow<List<Post>>
+    suspend fun addLike(postId: String)
+    suspend fun removeLike(postId: String)
+    suspend fun addComment(comment: Comment)
+    suspend fun removeComment(postId: String, commentId: String)
+    suspend fun getCommentFlow(postId: String): Flow<List<Comment>>
 }
 
 class PostDataSourceImple @Inject constructor(
@@ -42,19 +48,19 @@ class PostDataSourceImple @Inject constructor(
         }
     }
 
-    override suspend fun deletePost(id: String) {
+    override suspend fun deletePost(postId: String) {
         try {
-            store.collection(POSTS).document(id).delete().await()
-            cloud.reference.child("$POSTS/$id/0").delete().await()
+            store.collection(POSTS).document(postId).delete().await()
+            cloud.reference.child("$POSTS/$postId/0").delete().await()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
 
-    override suspend fun getPostFlow(id: String?): Flow<List<Post>> {
+    override suspend fun getPostFlow(userId: String?): Flow<List<Post>> {
         return try {
-            if (id != null) {
-                store.collection(POSTS).whereEqualTo("userId", id).dataObjects<RawPost>()
+            if (userId != null) {
+                store.collection(POSTS).whereEqualTo("userId", userId).dataObjects<RawPost>()
                     .toPost(::getUser, ::getFile, ::hasUserLiked)
             } else {
                 store.collection(POSTS).dataObjects<RawPost>()
@@ -65,10 +71,10 @@ class PostDataSourceImple @Inject constructor(
         }
     }
 
-    override suspend fun addLike(id: String) {
+    override suspend fun addLike(postId: String) {
         try {
             store.collection(POSTS)
-                .document(id)
+                .document(postId)
                 .collection(LIKES)
                 .document(auth.currentUser!!.uid)
                 .set(
@@ -82,14 +88,52 @@ class PostDataSourceImple @Inject constructor(
         }
     }
 
-    override suspend fun removeLike(id: String) {
+    override suspend fun removeLike(postId: String) {
         try {
             store.collection(POSTS)
-                .document(id)
+                .document(postId)
                 .collection(LIKES)
                 .document(auth.currentUser!!.uid)
                 .delete()
                 .await()
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun addComment(comment: Comment) {
+        try {
+            store.collection(POSTS)
+                .document(comment.postId)
+                .collection(COMMENTS)
+                .document(comment.id)
+                .set(comment.toRawComment())
+                .await()
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun removeComment(postId: String, commentId: String) {
+        try {
+            store.collection(POSTS)
+                .document(postId)
+                .collection(COMMENTS)
+                .document(commentId)
+                .delete()
+                .await()
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun getCommentFlow(postId: String): Flow<List<Comment>> {
+        return try {
+            store.collection(POSTS)
+                .document(postId)
+                .collection(COMMENTS)
+                .dataObjects<RawComment>()
+                .toComment(postId)
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
@@ -153,5 +197,6 @@ class PostDataSourceImple @Inject constructor(
         private const val PROFILE = "profile"
         private const val PROFILE_IMAGE = "profile_images"
         private const val LIKES = "likes"
+        private const val COMMENTS = "comments"
     }
 }
