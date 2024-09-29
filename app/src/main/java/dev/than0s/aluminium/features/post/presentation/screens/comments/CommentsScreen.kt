@@ -54,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.core.composable.RoundedTextField
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.ui.spacing
@@ -100,11 +101,9 @@ private fun CommentScreenContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(MaterialTheme.spacing.medium)
             ) {
-                OutlinedTextField(
+                RoundedTextField(
                     value = currentComment,
-                    placeholder = {
-                        Text(text = "Comment")
-                    },
+                    placeholder = "Comment",
                     onValueChange = onCurrentCommentChange,
                     trailingIcon = {
                         Icon(
@@ -127,7 +126,7 @@ private fun CommentScreenContent(
             items(commentList) { comment ->
                 CommentPreview(
                     comment = comment,
-                    isCurrentUser = currentUserId.equals(comment.user.userId),
+                    isCurrentUser = currentUserId == comment.user.userId,
                     onRemoveCommentClick = {
                         onRemoveCommentClick(comment)
                     }

@@ -48,46 +48,24 @@ import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
-fun ProfileScreen(
+fun SettingScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     openScreen: (String) -> Unit,
 ) {
-    ProfileScreenContent(
+    SettingScreenContent(
         userProfile = viewModel.userProfile,
         openScreen = openScreen,
-        onUpdateProfileClick = viewModel::onUpdateProfileClick,
-        onFirstNameChange = viewModel::onFirstNameChange,
-        onLastNameChange = viewModel::onLastNameChange,
-        onBioChange = viewModel::onBioChange,
-        onProfileImageChange = viewModel::onProfileImageChange,
-    )
+
+        )
 }
 
 @Composable
-private fun ProfileScreenContent(
+private fun SettingScreenContent(
     userProfile: User,
     openScreen: (String) -> Unit,
-    onUpdateProfileClick: () -> Unit,
-    onFirstNameChange: (String) -> Unit,
-    onLastNameChange: (String) -> Unit,
-    onBioChange: (String) -> Unit,
-    onProfileImageChange: (Uri) -> Unit,
-) {
-    var updateProfileDialogState by rememberSaveable { mutableStateOf(false) }
 
-    if (updateProfileDialogState) {
-        UpdateProfileDialog(
-            userProfile = userProfile,
-            onUpdateProfileClick = onUpdateProfileClick,
-            onFirstNameChange = onFirstNameChange,
-            onLastNameChange = onLastNameChange,
-            onBioChange = onBioChange,
-            onProfileImageChange = onProfileImageChange,
-            onDismiss = {
-                updateProfileDialogState = false
-            },
-        )
-    }
+    ) {
+
 
     Surface {
         Column(
@@ -126,7 +104,7 @@ private fun ProfileScreenContent(
                     }
                 },
                 onClick = {
-                    updateProfileDialogState = true
+                    openScreen(Screen.ProfileScreen.route)
                 },
                 leadingIcon = {
                     Icon(
@@ -173,101 +151,16 @@ private fun ProfileScreenContent(
     }
 }
 
-@Composable
-fun UpdateProfileDialog(
-    userProfile: User,
-    onUpdateProfileClick: () -> Unit,
-    onFirstNameChange: (String) -> Unit,
-    onLastNameChange: (String) -> Unit,
-    onBioChange: (String) -> Unit,
-    onProfileImageChange: (Uri) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
-            image?.let {
-                onProfileImageChange(it)
-            }
-        }
-
-    Dialog(
-        onDismissRequest = onDismiss
-    ) {
-        Card {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(MaterialTheme.spacing.medium)
-            ) {
-
-                AsyncImage(
-                    model = userProfile.profileImage,
-                    contentDescription = "user profile image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(128.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            launcher.launch("image/*")
-                        }
-                )
-                TextField(
-                    value = userProfile.firstName,
-                    onValueChange = { newValue ->
-                        onFirstNameChange(newValue)
-                    },
-                    label = {
-                        Text(text = "First Name")
-                    }
-                )
-                TextField(
-                    value = userProfile.lastName,
-                    onValueChange = { newValue ->
-                        onLastNameChange(newValue)
-                    },
-                    placeholder = {
-                        Text(text = "Last Name")
-                    }
-                )
-                TextField(
-                    value = userProfile.bio,
-                    onValueChange = { newValue ->
-                        onBioChange(newValue)
-                    },
-                    placeholder = {
-                        Text(text = "Bio")
-                    },
-                )
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(text = "Cancel")
-                    }
-
-                    TextButton(onClick = {
-                        onUpdateProfileClick()
-                        onDismiss()
-                    }) {
-                        Text(text = "Update")
-                    }
-                }
-            }
-        }
-    }
-}
-
 @Preview(showSystemUi = true)
 @Composable
-private fun ProfileScreenPreview() {
-    ProfileScreenContent(
+private fun SettingScreenPreview() {
+    SettingScreenContent(
         User(
             id = "0",
             firstName = "Than0s",
             lastName = "Op",
             bio = "Hi I'm Than0s"
         ),
-        {}, {}, {}, {}, {}, {},
+        {}
     )
 }

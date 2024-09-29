@@ -30,7 +30,6 @@ import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.features.profile.presentation.screens.settings.ProfileScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
 import dev.than0s.aluminium.features.splash.presentation.splash.SplashScreen
@@ -41,6 +40,8 @@ import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutS
 import dev.than0s.aluminium.features.post.presentation.screens.all_posts.AllPostsScreen
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.my_posts.MyPostsScreen
+import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
+import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 import javax.inject.Inject
 
@@ -108,8 +109,8 @@ private fun NavGraphHost(
         composable(route = Screen.DemoScreen.route) {
             DemoScreen()
         }
-        composable(route = Screen.ProfileScreen.route) {
-            ProfileScreen(
+        composable(route = Screen.SettingScreen.route) {
+            SettingScreen(
                 openScreen = navController::openScreen,
             )
         }
@@ -145,6 +146,11 @@ private fun NavGraphHost(
         composable(route = Screen.AllPostScreen.route) {
             AllPostsScreen(
                 openScreen = navController::openScreen
+            )
+        }
+        composable(route = Screen.ProfileScreen.route) {
+            ProfileScreen(
+
             )
         }
         composable(
@@ -195,7 +201,7 @@ private val BottomNavItemsList = listOf(
         "Posts"
     ),
     BottomNavigationItem(
-        Screen.ProfileScreen.route,
+        Screen.SettingScreen.route,
         Icons.Filled.AccountCircle,
         Icons.Outlined.AccountCircle,
         "Profile"
