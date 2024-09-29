@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.profile.presentation.screens.profile
+package dev.than0s.aluminium.features.profile.presentation.screens.settings
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
+class SettingsViewModel @Inject constructor(
     private val profileUseCase: GetUserUseCase,
     private val updateProfileUseCase: SetProfileUseCase,
 ) :

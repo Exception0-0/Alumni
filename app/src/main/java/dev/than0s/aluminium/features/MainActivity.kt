@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Face
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -21,8 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -33,8 +30,7 @@ import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
+import dev.than0s.aluminium.features.profile.presentation.screens.settings.ProfileScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
 import dev.than0s.aluminium.features.splash.presentation.splash.SplashScreen

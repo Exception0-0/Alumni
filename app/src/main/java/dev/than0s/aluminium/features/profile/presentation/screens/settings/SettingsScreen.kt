@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.profile.presentation.screens.profile
+package dev.than0s.aluminium.features.profile.presentation.screens.settings
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,11 +16,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -53,7 +49,7 @@ import dev.than0s.mydiary.ui.textSize
 
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel = hiltViewModel(),
+    viewModel: SettingsViewModel = hiltViewModel(),
     openScreen: (String) -> Unit,
 ) {
     ProfileScreenContent(
@@ -126,7 +122,7 @@ private fun ProfileScreenContent(
             DropdownMenuItem(
                 text = {
                     Row {
-                        Text(text = "Update Profile")
+                        Text(text = "Profile")
                     }
                 },
                 onClick = {
