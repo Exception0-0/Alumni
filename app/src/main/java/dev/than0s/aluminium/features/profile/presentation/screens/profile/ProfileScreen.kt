@@ -6,8 +6,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -52,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.composable.RoundedTextField
+import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
@@ -60,22 +63,32 @@ import dev.than0s.mydiary.ui.textSize
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
     ProfileScreenContent(
         userProfile = viewModel.userProfile,
+        contactInfo = viewModel.contactInfo,
         onUpdateProfileClick = viewModel::onUpdateProfileClick,
         onFirstNameChange = viewModel::onFirstNameChange,
         onLastNameChange = viewModel::onLastNameChange,
         onBioChange = viewModel::onBioChange,
         onProfileImageChange = viewModel::onProfileImageChange,
+        onEmailChange = viewModel::onEmailChange,
+        onMobileChange = viewModel::onMobileChange,
+        onSocialHandleChange = viewModel::onSocialHandleChange,
+        onContactUpdateClick = viewModel::onContactInfoUpdateClick
     )
 }
 
 @Composable
 private fun ProfileScreenContent(
     userProfile: User,
+    contactInfo: ContactInfo,
     onUpdateProfileClick: (() -> Unit) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onBioChange: (String) -> Unit,
     onProfileImageChange: (Uri) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onMobileChange: (String) -> Unit,
+    onSocialHandleChange: (String) -> Unit,
+    onContactUpdateClick: (() -> Unit) -> Unit
 ) {
 
     var updateProfileDialogState by rememberSaveable { mutableStateOf(false) }
@@ -137,31 +150,61 @@ private fun ProfileScreenContent(
             Text(text = "Edit Profile")
         }
 
-        var tabRowStatus by rememberSaveable { mutableIntStateOf(0) }
-
-        TabRow(
-            selectedTabIndex = tabRowStatus
-        ) {
-            tabItems.forEachIndexed { index, tabItem ->
-                Tab(
-                    selected = index == tabRowStatus,
-                    onClick = {
-                        tabRowStatus = index
-                    },
-                    text = {
-                        Text(text = tabItem.title)
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = if (index == tabRowStatus) tabItem.selectedIcon else tabItem.unselectedIcon,
-                            contentDescription = tabItem.title
-                        )
-                    }
+        ProfileTabRow(
+            listOf
+            {
+                ContactsTabContent(
+                    contactInfo = contactInfo,
+                    onEmailChange = onEmailChange,
+                    onMobileChange = onMobileChange,
+                    onSocialHandleChange = onSocialHandleChange,
+                    onUpdateContactClick = onContactUpdateClick
                 )
-            }
-        }
+            },
+
+            )
     }
 }
+
+@Composable
+private fun ProfileTabRow(
+    contentScreens: List<@Composable () -> Unit>
+) {
+    var tabRowStatus by rememberSaveable { mutableIntStateOf(0) }
+
+    TabRow(
+        selectedTabIndex = tabRowStatus
+    ) {
+        tabItems.forEachIndexed { index, tabItem ->
+            Tab(
+                selected = index == tabRowStatus,
+                onClick = {
+                    tabRowStatus = index
+                },
+                text = {
+                    Text(text = tabItem.title)
+                },
+                icon = {
+                    Icon(
+                        imageVector = if (index == tabRowStatus) tabItem.selectedIcon else tabItem.unselectedIcon,
+                        contentDescription = tabItem.title
+                    )
+                }
+            )
+        }
+    }
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                horizontal = MaterialTheme.spacing.small,
+                vertical = MaterialTheme.spacing.large
+            )
+    ) {
+        contentScreens[tabRowStatus].invoke()
+    }
+}
+
 
 @Composable
 private fun UpdateProfileDialog(
@@ -275,6 +318,10 @@ private fun ProfileScreenPreview() {
             lastName = "Op",
             bio = "Hi I'm Than0s, nice to meet you"
         ),
-        {}, {}, {}, {}, {}
+        ContactInfo(
+            email = "thanosop150@gmail.com",
+            mobile = "+91-1234567890"
+        ),
+        {}, {}, {}, {}, {}, {}, {}, {}, {}
     )
 }

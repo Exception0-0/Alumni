@@ -6,6 +6,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.storage.FirebaseStorage
+import dev.than0s.aluminium.features.profile.data.mapper.RawContactInfo
+import dev.than0s.aluminium.features.profile.data.mapper.toContactInfo
+import dev.than0s.aluminium.features.profile.data.mapper.toRawContactInfo
+import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.tasks.await
@@ -16,6 +20,8 @@ interface ProfileDataSource {
     suspend fun setUserProfile(user: User)
     suspend fun setProfileImage(image: Uri)
     suspend fun getProfileImage(): Uri
+    suspend fun setContactInfo(contactInfo: ContactInfo)
+    suspend fun getContactInfo(): ContactInfo
 }
 
 class ProfileDataSourceImple @Inject constructor(
@@ -66,8 +72,33 @@ class ProfileDataSourceImple @Inject constructor(
         }
     }
 
+    override suspend fun setContactInfo(contactInfo: ContactInfo) {
+        try {
+            store.collection(CONTACT_INFO)
+                .document(auth.currentUser!!.uid)
+                .set(contactInfo.toRawContactInfo())
+                .await()
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun getContactInfo(): ContactInfo {
+        return try {
+            (store.collection(CONTACT_INFO)
+                .document(auth.currentUser!!.uid)
+                .get()
+                .await()
+                .toObject(RawContactInfo::class.java) ?: RawContactInfo())
+                .toContactInfo(auth.currentUser!!.email!!)
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
     companion object {
         private const val PROFILE_IMAGE = "profile_images"
         private const val PROFILE = "profile"
+        private const val CONTACT_INFO = "contact_info"
     }
 }
