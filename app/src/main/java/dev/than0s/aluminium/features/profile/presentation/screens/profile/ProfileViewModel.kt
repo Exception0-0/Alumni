@@ -27,6 +27,8 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     var userProfile by mutableStateOf(User())
     var contactInfo by mutableStateOf(ContactInfo())
+    var editUserProfile by mutableStateOf(User())
+    var editContactInfo by mutableStateOf(ContactInfo())
 
     init {
         loadProfile()
@@ -43,6 +45,7 @@ class ProfileViewModel @Inject constructor(
 
                 is Either.Right -> result.value?.let {
                     userProfile = it
+                    editUserProfile = it
                 }
             }
         }
@@ -57,6 +60,7 @@ class ProfileViewModel @Inject constructor(
 
                 is Either.Right -> result.value.let {
                     contactInfo = it
+                    editContactInfo = it
                 }
             }
         }
@@ -64,7 +68,7 @@ class ProfileViewModel @Inject constructor(
 
     fun onUpdateProfileClick(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            when (val result = updateProfileUseCase.invoke(userProfile)) {
+            when (val result = updateProfileUseCase.invoke(editUserProfile)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
                 }
@@ -79,7 +83,7 @@ class ProfileViewModel @Inject constructor(
 
     fun onContactInfoUpdateClick(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            when (val result = setContactInfoUseCase.invoke(contactInfo)) {
+            when (val result = setContactInfoUseCase.invoke(editContactInfo)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
                 }
@@ -93,30 +97,34 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onFirstNameChange(name: String) {
-        userProfile = userProfile.copy(firstName = name)
+        editUserProfile = editUserProfile.copy(firstName = name)
     }
 
     fun onLastNameChange(name: String) {
-        userProfile = userProfile.copy(lastName = name)
+        editUserProfile = editUserProfile.copy(lastName = name)
     }
 
     fun onBioChange(bio: String) {
-        userProfile = userProfile.copy(bio = bio)
+        editUserProfile = editUserProfile.copy(bio = bio)
     }
 
     fun onProfileImageChange(image: Uri) {
-        userProfile = userProfile.copy(profileImage = image)
+        editUserProfile = editUserProfile.copy(profileImage = image)
+    }
+
+    fun onCoverImageChange(image: Uri) {
+        editUserProfile = editUserProfile.copy(coverImage = image)
     }
 
     fun onEmailChange(email: String) {
-        contactInfo = contactInfo.copy(email = email)
+        editContactInfo = editContactInfo.copy(email = email)
     }
 
     fun onMobileChange(mobile: String) {
-        contactInfo = contactInfo.copy(mobile = mobile)
+        editContactInfo = editContactInfo.copy(mobile = mobile)
     }
 
     fun onSocialHandleChange(handle: String) {
-        contactInfo = contactInfo.copy(socialHandles = handle)
+        editContactInfo = editContactInfo.copy(socialHandles = handle)
     }
 }

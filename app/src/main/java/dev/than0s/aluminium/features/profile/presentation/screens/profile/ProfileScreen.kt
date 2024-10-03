@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,11 +47,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
@@ -64,11 +68,14 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
     ProfileScreenContent(
         userProfile = viewModel.userProfile,
         contactInfo = viewModel.contactInfo,
+        editUserProfile = viewModel.editUserProfile,
+        editContactInfo = viewModel.editContactInfo,
         onUpdateProfileClick = viewModel::onUpdateProfileClick,
         onFirstNameChange = viewModel::onFirstNameChange,
         onLastNameChange = viewModel::onLastNameChange,
         onBioChange = viewModel::onBioChange,
         onProfileImageChange = viewModel::onProfileImageChange,
+        onCoverImageChange = viewModel::onCoverImageChange,
         onEmailChange = viewModel::onEmailChange,
         onMobileChange = viewModel::onMobileChange,
         onSocialHandleChange = viewModel::onSocialHandleChange,
@@ -80,11 +87,14 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
 private fun ProfileScreenContent(
     userProfile: User,
     contactInfo: ContactInfo,
+    editUserProfile: User,
+    editContactInfo: ContactInfo,
     onUpdateProfileClick: (() -> Unit) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onBioChange: (String) -> Unit,
     onProfileImageChange: (Uri) -> Unit,
+    onCoverImageChange: (Uri) -> Unit,
     onEmailChange: (String) -> Unit,
     onMobileChange: (String) -> Unit,
     onSocialHandleChange: (String) -> Unit,
@@ -95,12 +105,13 @@ private fun ProfileScreenContent(
 
     if (updateProfileDialogState) {
         UpdateProfileDialog(
-            userProfile = userProfile,
+            userProfile = editUserProfile,
             onUpdateProfileClick = onUpdateProfileClick,
             onFirstNameChange = onFirstNameChange,
             onLastNameChange = onLastNameChange,
             onBioChange = onBioChange,
             onProfileImageChange = onProfileImageChange,
+            onCoverImageChange = onCoverImageChange,
             onDismiss = {
                 updateProfileDialogState = false
             },
@@ -108,14 +119,15 @@ private fun ProfileScreenContent(
     }
 
     AsyncImage(
-        model = Uri.EMPTY,
-        contentDescription = "user profile image",
+        model = userProfile.coverImage,
+        contentDescription = "cover image",
         contentScale = ContentScale.Crop,
-        placeholder = painterResource(R.drawable.ic_launcher_background),
         modifier = Modifier
-            .fillMaxWidth()
             .height(128.dp)
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.purple_500))
     )
+
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
         modifier = Modifier
@@ -140,6 +152,8 @@ private fun ProfileScreenContent(
         )
         Text(
             text = userProfile.bio,
+            fontSize = MaterialTheme.textSize.small,
+            fontWeight = FontWeight.W300
         )
         ElevatedButton(
             onClick = {
@@ -151,18 +165,26 @@ private fun ProfileScreenContent(
         }
 
         ProfileTabRow(
-            listOf
-            {
+            listOf({
                 ContactsTabContent(
-                    contactInfo = contactInfo,
+                    contactInfo = editContactInfo,
                     onEmailChange = onEmailChange,
                     onMobileChange = onMobileChange,
                     onSocialHandleChange = onSocialHandleChange,
                     onUpdateContactClick = onContactUpdateClick
                 )
             },
-
+                {
+                    ContactsTabContent(
+                        contactInfo = editContactInfo,
+                        onEmailChange = onEmailChange,
+                        onMobileChange = onMobileChange,
+                        onSocialHandleChange = onSocialHandleChange,
+                        onUpdateContactClick = onContactUpdateClick
+                    )
+                }
             )
+        )
     }
 }
 
@@ -214,12 +236,29 @@ private fun UpdateProfileDialog(
     onLastNameChange: (String) -> Unit,
     onBioChange: (String) -> Unit,
     onProfileImageChange: (Uri) -> Unit,
+    onCoverImageChange: (Uri) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val imageSelectionState = mutableMapOf(
+        COVER_IMAGE to false,
+        PROFILE_IMAGE to false,
+    )
+
     val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
-            image?.let {
-                onProfileImageChange(it)
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        )
+        { imageUri ->
+            imageUri?.let {
+                imageSelectionState.let { map ->
+                    if (map[COVER_IMAGE]!!) {
+                        onCoverImageChange(it)
+                        map[COVER_IMAGE] = false
+                    } else if (map[PROFILE_IMAGE]!!) {
+                        onProfileImageChange(it)
+                        map[PROFILE_IMAGE] = false
+                    }
+                }
             }
         }
 
@@ -232,6 +271,19 @@ private fun UpdateProfileDialog(
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
                     modifier = Modifier.padding(MaterialTheme.spacing.medium)
                 ) {
+                    AsyncImage(
+                        model = userProfile.coverImage,
+                        contentDescription = "user profile image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(MaterialTheme.spacing.medium))
+                            .background(color = colorResource(id = R.color.purple_500))
+                            .height(100.dp)
+                            .clickable {
+                                imageSelectionState[COVER_IMAGE] = true
+                                launcher.launch("image/*")
+                            }
+                    )
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
@@ -245,6 +297,7 @@ private fun UpdateProfileDialog(
                                 .size(100.dp)
                                 .clip(CircleShape)
                                 .clickable {
+                                    imageSelectionState[PROFILE_IMAGE] = true
                                     launcher.launch("image/*")
                                 }
                         )
@@ -313,7 +366,6 @@ data class TabItem(
 private fun ProfileScreenPreview() {
     ProfileScreenContent(
         User(
-            id = "",
             firstName = "Than0s",
             lastName = "Op",
             bio = "Hi I'm Than0s, nice to meet you"
@@ -322,6 +374,19 @@ private fun ProfileScreenPreview() {
             email = "thanosop150@gmail.com",
             mobile = "+91-1234567890"
         ),
-        {}, {}, {}, {}, {}, {}, {}, {}, {}
+        User(
+            firstName = "Than0s",
+            lastName = "Op",
+            bio = "Hi I'm Than0s, nice to meet you"
+        ),
+        ContactInfo(
+            email = "thanosop150@gmail.com",
+            mobile = "+91-1234567890"
+        ),
+        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
     )
 }
+
+
+private const val COVER_IMAGE = "cover_image"
+private const val PROFILE_IMAGE = "profile_image"

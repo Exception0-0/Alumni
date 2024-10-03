@@ -156,7 +156,6 @@ private fun SettingScreenContent(
 private fun SettingScreenPreview() {
     SettingScreenContent(
         User(
-            id = "0",
             firstName = "Than0s",
             lastName = "Op",
             bio = "Hi I'm Than0s"

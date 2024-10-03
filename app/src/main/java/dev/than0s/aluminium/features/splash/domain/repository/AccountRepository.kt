@@ -5,5 +5,5 @@ import dev.than0s.aluminium.core.error.Failure
 import dev.than0s.mydiary.core.error.ServerException
 
 interface AccountRepository {
-    val hasUser: Either<Failure, Boolean>
+    val currentUserId: Either<Failure, String?>
 }

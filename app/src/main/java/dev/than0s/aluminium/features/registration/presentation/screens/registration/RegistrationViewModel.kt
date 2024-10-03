@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.features.registration.domain.use_cases.SubmitRegistrationUseCase
 import kotlinx.coroutines.launch
@@ -65,9 +66,13 @@ class RegistrationViewModel @Inject constructor(private val registerUseCase: Sub
 
     fun onRegisterClick() {
         viewModelScope.launch {
-            when (registerUseCase.invoke(param)) {
-                is Either.Left -> TODO("show error message")
-                is Either.Right -> TODO("show registration successfully screen")
+            when (val result = registerUseCase.invoke(param)) {
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+                is Either.Right ->{
+                    SnackbarController.showSnackbar("Registration completed successfully")
+                }
             }
         }
     }

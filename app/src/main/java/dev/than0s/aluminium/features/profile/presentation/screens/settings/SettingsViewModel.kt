@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.aluminium.features.profile.domain.use_cases.GetUserUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetProfileUseCase
@@ -17,7 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val profileUseCase: GetUserUseCase,
-    private val updateProfileUseCase: SetProfileUseCase,
 ) :
     ViewModel() {
     var userProfile by mutableStateOf(User())
@@ -26,10 +26,13 @@ class SettingsViewModel @Inject constructor(
         loadProfile()
     }
 
-    fun loadProfile() {
+    private fun loadProfile() {
         viewModelScope.launch {
             when (val result = profileUseCase.invoke(Unit)) {
-                is Either.Left -> println("load profile failed ${result.value}")
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+
                 is Either.Right -> result.value?.let {
                     userProfile = it
                 }

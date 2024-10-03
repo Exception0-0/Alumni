@@ -6,9 +6,9 @@ import dev.than0s.aluminium.core.error.Failure
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
 import javax.inject.Inject
 
-class HasUserUseCase @Inject constructor(private val repository: AccountRepository) :
-    UseCase<Unit, Boolean> {
-    override suspend fun invoke(param: Unit): Either<Failure, Boolean> {
-        return repository.hasUser
+class GetUserIdUseCase @Inject constructor(private val repository: AccountRepository) :
+    UseCase<Unit, String?> {
+    override suspend fun invoke(param: Unit): Either<Failure, String?> {
+        return repository.currentUserId
     }
 }

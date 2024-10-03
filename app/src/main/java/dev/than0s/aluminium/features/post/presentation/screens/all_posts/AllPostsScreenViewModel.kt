@@ -34,7 +34,7 @@ class AllPostsScreenViewModel @Inject constructor(
                 }
 
                 is Either.Left -> {
-                    println("${result.value}")
+                    SnackbarController.showSnackbar(result.value.message)
                 }
             }
         }

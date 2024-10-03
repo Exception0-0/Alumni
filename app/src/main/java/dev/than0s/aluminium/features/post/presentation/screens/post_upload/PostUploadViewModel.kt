@@ -37,9 +37,13 @@ class PostUploadViewModel @Inject constructor(
 
     fun onUploadClick(popScreen: () -> Unit) {
         viewModelScope.launch {
-            when (val docResult = addPostUserCase.invoke(post)) {
-                is Either.Left -> println("error: ${docResult.value.message}")
+            when (val result = addPostUserCase.invoke(post)) {
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+
                 is Either.Right -> {
+                    SnackbarController.showSnackbar("Post added successfully")
                     popScreen()
                 }
             }

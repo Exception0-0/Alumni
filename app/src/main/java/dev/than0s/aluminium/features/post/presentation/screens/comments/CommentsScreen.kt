@@ -55,6 +55,7 @@ import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.RoundedTextField
+import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.ui.spacing
@@ -66,7 +67,7 @@ fun CommentScreen(viewModel: CommentsViewModel = hiltViewModel()) {
     CommentScreenContent(
         commentList = commentList,
         currentComment = viewModel.currentComment,
-        currentUserId = viewModel.currentUserId,
+        currentUserId = currentUserId!!,
         onCurrentCommentChange = viewModel::onCurrentCommentChange,
         onAddCommentClick = viewModel::onAddCommentClick,
         onRemoveCommentClick = viewModel::onRemoveCommentClick

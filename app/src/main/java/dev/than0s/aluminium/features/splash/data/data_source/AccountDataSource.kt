@@ -7,15 +7,15 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface AccountDataSource {
-    val hasUser: Boolean
+    val currentUserId: String?
 }
 
 class AccountDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
     AccountDataSource {
 
-    override val hasUser: Boolean
+    override val currentUserId: String?
         get() = try {
-            auth.currentUser != null
+            auth.currentUser?.uid
         } catch (e: FirebaseAuthException) {
             throw ServerException(e.message.toString())
         }

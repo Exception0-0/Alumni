@@ -10,9 +10,9 @@ import javax.inject.Inject
 class AccountRepositoryImple @Inject constructor(private val dataSource: AccountDataSource) :
     AccountRepository {
 
-    override val hasUser: Either<Failure, Boolean>
+    override val currentUserId: Either<Failure, String?>
         get() = try {
-            Either.Right(dataSource.hasUser)
+            Either.Right(dataSource.currentUserId)
         } catch (e: ServerException) {
             Either.Left(Failure(e.message))
         }

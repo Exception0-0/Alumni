@@ -31,9 +31,6 @@ class CommentsViewModel @Inject constructor(
     val postId = savedStateHandle.get<String>("postId")!!
     var currentComment by mutableStateOf("")
 
-    // don't use firebase here
-    val currentUserId = Firebase.auth.currentUser!!.uid
-
     init {
         loadComments()
     }

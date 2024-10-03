@@ -10,15 +10,6 @@ import javax.inject.Inject
 class GetUserUseCase @Inject constructor(private val repository: ProfileRepository) :
     UseCase<Unit, User?> {
     override suspend fun invoke(param: Unit): Either<Failure, User?> {
-        return when (val docResult = repository.getProfile()) {
-            is Either.Right -> {
-                when (val imageResult = repository.getProfileImage()) {
-                    is Either.Right -> Either.Right(docResult.value?.copy(profileImage = imageResult.value))
-                    is Either.Left -> Either.Right(docResult.value)
-                }
-            }
-
-            is Either.Left -> Either.Left(docResult.value)
-        }
+        return repository.getUserProfile()
     }
 }

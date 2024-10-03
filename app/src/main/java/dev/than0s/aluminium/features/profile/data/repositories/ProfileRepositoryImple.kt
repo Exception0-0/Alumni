@@ -13,7 +13,7 @@ import javax.inject.Inject
 class ProfileRepositoryImple @Inject constructor(private val dataSource: ProfileDataSource) :
     ProfileRepository {
 
-    override suspend fun getProfile(): Either<Failure, User?> {
+    override suspend fun getUserProfile(): Either<Failure, User?> {
         return try {
             Either.Right(dataSource.getUserProfile())
         } catch (e: ServerException) {
@@ -21,27 +21,10 @@ class ProfileRepositoryImple @Inject constructor(private val dataSource: Profile
         }
     }
 
-    override suspend fun setProfile(profile: User): Either<Failure, Unit> {
+    override suspend fun setUserProfile(profile: User): Either<Failure, Unit> {
         return try {
             dataSource.setUserProfile(profile)
             Either.Right(Unit)
-        } catch (e: ServerException) {
-            Either.Left(Failure(e.message))
-        }
-    }
-
-    override suspend fun setProfileImage(image: Uri): Either<Failure, Unit> {
-        return try {
-            dataSource.setProfileImage(image)
-            Either.Right(Unit)
-        } catch (e: ServerException) {
-            Either.Left(Failure(e.message))
-        }
-    }
-
-    override suspend fun getProfileImage(): Either<Failure, Uri> {
-        return try {
-            Either.Right(dataSource.getProfileImage())
         } catch (e: ServerException) {
             Either.Left(Failure(e.message))
         }

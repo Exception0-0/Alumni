@@ -44,6 +44,7 @@ class PostDataSourceImple @Inject constructor(
             store.collection(POSTS).document(post.id).set(post.toRawPost()).await()
             cloud.reference.child("$POSTS/${post.id}/0").putFile(post.file).await()
         } catch (e: Exception) {
+            store.collection(POSTS).document(post.id).delete().await()
             throw ServerException(e.message.toString())
         }
     }

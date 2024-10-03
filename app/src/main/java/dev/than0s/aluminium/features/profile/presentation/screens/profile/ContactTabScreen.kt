@@ -79,9 +79,8 @@ fun ContactsTabContent(
             onClick = {
                 editStatus = true
             },
-            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Edit")
+            Text(text = "Edit Contacts")
         }
     }
 

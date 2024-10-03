@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.admin.domain.data_class.RequestForm
 import dev.than0s.aluminium.features.admin.domain.use_cases.AcceptedUseCase
 import dev.than0s.aluminium.features.admin.domain.use_cases.RejectedUserCase
@@ -25,7 +26,10 @@ class RequestViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             when (val result = requestsUseCase.invoke(Unit)) {
-                is Either.Left -> TODO("show error message")
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+
                 is Either.Right -> requestsList = result.value
             }
         }
@@ -34,8 +38,13 @@ class RequestViewModel @Inject constructor(
     fun onAcceptClick(form: RequestForm) {
         viewModelScope.launch {
             when (val result = acceptedUseCase.invoke(form)) {
-                is Either.Left -> TODO("show error message")
-                is Either.Right -> println("AcceptedSuccess")
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+
+                is Either.Right -> {
+                    SnackbarController.showSnackbar("Request accepted successfully")
+                }
             }
         }
     }
@@ -43,8 +52,13 @@ class RequestViewModel @Inject constructor(
     fun onRejectedClick(form: RequestForm) {
         viewModelScope.launch {
             when (val result = rejectedUserCase.invoke(form)) {
-                is Either.Left -> TODO("show error message")
-                is Either.Right -> println("Rejected Success")
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+
+                is Either.Right -> {
+                    SnackbarController.showSnackbar("Request rejected successfully")
+                }
             }
         }
     }
