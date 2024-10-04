@@ -31,17 +31,9 @@ class PostRepositoryImple @Inject constructor(private val dataSource: PostDataSo
         }
     }
 
-    override suspend fun getPosts(): Either<Failure, List<Post>> {
+    override suspend fun getPosts(userId: String?): Either<Failure, List<Post>> {
         return try {
-            Either.Right(dataSource.getPosts())
-        } catch (e: Exception) {
-            Either.Left(Failure(e.message.toString()))
-        }
-    }
-
-    override suspend fun getCurrentUserPosts(): Either<Failure, List<Post>> {
-        return try {
-            Either.Right(dataSource.getCurrentUserPosts())
+            Either.Right(dataSource.getPosts(userId))
         } catch (e: Exception) {
             Either.Left(Failure(e.message.toString()))
         }

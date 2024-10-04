@@ -1,12 +1,9 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.settings
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,29 +13,25 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
@@ -51,7 +44,7 @@ import dev.than0s.mydiary.ui.textSize
 @Composable
 fun SettingScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
-    openScreen: (String) -> Unit,
+    openScreen: (Screen) -> Unit,
 ) {
     SettingScreenContent(
         userProfile = viewModel.userProfile,
@@ -63,10 +56,28 @@ fun SettingScreen(
 @Composable
 private fun SettingScreenContent(
     userProfile: User,
-    openScreen: (String) -> Unit,
+    openScreen: (Screen) -> Unit,
 
     ) {
 
+    val listOfSettingsOptions = remember {
+        listOf(
+            SettingsOptions(
+                title = "Security",
+                icon = Icons.Default.Security,
+                onClick = {
+
+                }
+            ),
+            SettingsOptions(
+                title = "Log Out",
+                icon = Icons.AutoMirrored.Filled.ExitToApp,
+                onClick = {
+                    openScreen(Screen.SignOutScreen)
+                }
+            )
+        )
+    }
 
     Surface {
         Column(
@@ -74,83 +85,92 @@ private fun SettingScreenContent(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = MaterialTheme.spacing.medium)
+                .padding(MaterialTheme.spacing.medium)
 
         ) {
 
-            AsyncImage(
-                model = userProfile.profileImage,
-                contentDescription = "user profile image",
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.ic_launcher_background),
-                modifier = Modifier
-                    .size(128.dp)
-                    .clip(CircleShape)
-            )
-            Text(
-                text = "${userProfile.firstName} ${userProfile.lastName}",
-                fontSize = MaterialTheme.textSize.gigantic,
-                fontWeight = FontWeight.W400
-            )
-            Text(
-                text = userProfile.bio,
-                modifier = Modifier.width(256.dp),
-                textAlign = TextAlign.Center
-            )
-
-            DropdownMenuItem(
-                text = {
-                    Row {
-                        Text(text = "Profile")
-                    }
-                },
+            ElevatedCard(
                 onClick = {
-                    openScreen(Screen.ProfileScreen.route)
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = Icons.Default.Edit.name,
-                    )
+                    openScreen(Screen.ProfileScreen(currentUserId!!))
                 }
-            )
-
-            DropdownMenuItem(
-                text = {
-                    Row {
-                        Text(text = "My posts")
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                    modifier = Modifier.padding(MaterialTheme.spacing.medium)
+                ) {
+                    AsyncImage(
+                        model = userProfile.profileImage,
+                        contentDescription = "user profile image",
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(R.drawable.ic_launcher_background),
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)
+                    )
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                    ) {
+                        Text(
+                            text = "${userProfile.firstName} ${userProfile.lastName}",
+                            fontSize = MaterialTheme.textSize.gigantic,
+                            fontWeight = FontWeight.W400
+                        )
+                        Text(
+                            text = userProfile.bio,
+                            modifier = Modifier.width(256.dp),
+                        )
                     }
-                },
-                onClick = {
-                    openScreen("${Screen.PostsScreen.route}/$currentUserId")
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.List,
-                        contentDescription = "post add"
-                    )
                 }
-            )
+            }
 
-            DropdownMenuItem(
-                text = {
-                    Row {
-                        Text(text = "Log Out")
+//            DropdownMenuItem(
+//                text = {
+//                    Row {
+//                        Text(text = "My posts")
+//                    }
+//                },
+//                onClick = {
+//                    openScreen(Screen.PostsScreen(currentUserId))
+//                },
+//                leadingIcon = {
+//                    Icon(
+//                        imageVector = Icons.AutoMirrored.Filled.List,
+//                        contentDescription = "post add"
+//                    )
+//                }
+//            )
+            listOfSettingsOptions.forEach { option ->
+
+                ElevatedCard(
+                    onClick = {
+                        option.onClick()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(MaterialTheme.spacing.medium)
+                    ) {
+                        Icon(
+                            imageVector = option.icon,
+                            contentDescription = option.icon.name,
+                        )
+                        Spacer(
+                            modifier = Modifier.width(MaterialTheme.spacing.medium)
+                        )
+                        Text(text = option.title)
                     }
-                },
-                onClick = {
-                    openScreen(Screen.SignOutScreen.route)
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                        contentDescription = Icons.AutoMirrored.Filled.ExitToApp.name,
-                    )
                 }
-            )
+            }
         }
     }
 }
+
+data class SettingsOptions(
+    val title: String,
+    val icon: ImageVector,
+    val onClick: () -> Unit
+)
 
 @Preview(showSystemUi = true)
 @Composable

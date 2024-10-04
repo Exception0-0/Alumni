@@ -12,7 +12,7 @@ import javax.inject.Inject
 interface LikeDataSource {
     suspend fun addLike(postId: String)
     suspend fun removeLike(postId: String)
-    suspend fun hasUserLiked(postId:String): Boolean
+    suspend fun hasUserLiked(postId: String): Boolean
 }
 
 class LikeDataSourceImple @Inject constructor(
@@ -50,10 +50,10 @@ class LikeDataSourceImple @Inject constructor(
         }
     }
 
-    private suspend fun getLikeCount(id: String): Int {
+    private suspend fun getLikeCount(postId: String): Int {
         return try {
             store.collection(POSTS)
-                .document(id)
+                .document(postId)
                 .collection(LIKES)
                 .count()
                 .get(AggregateSource.SERVER)
@@ -65,15 +65,13 @@ class LikeDataSourceImple @Inject constructor(
 
     override suspend fun hasUserLiked(postId: String): Boolean {
         return try {
-            // just checking is document present or not
-            // if present user already liked it
             store.collection(POSTS)
                 .document(postId)
                 .collection(LIKES)
                 .document(auth.currentUser!!.uid)
                 .get()
                 .await()
-                .data != null
+                .exists()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }

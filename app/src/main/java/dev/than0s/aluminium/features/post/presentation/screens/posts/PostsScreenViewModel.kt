@@ -1,20 +1,23 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.aluminium.features.post.domain.use_cases.AddLikeUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.DeletePostUseCase
-import dev.than0s.aluminium.features.post.domain.use_cases.GetAllPostsUseCase
-import dev.than0s.aluminium.features.post.domain.use_cases.GetCurrentUserPostUseCase
+import dev.than0s.aluminium.features.post.domain.use_cases.GetPostsUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.GetUserProfileUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.HasUserLikedPostUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.RemoveLikeUseCase
@@ -26,8 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PostsScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getAllPostUseCase: GetAllPostsUseCase,
-    private val getCurrentUserPostUseCase: GetCurrentUserPostUseCase,
+    private val getPostUseCase: GetPostsUseCase,
     private val addLikeUseCase: AddLikeUseCase,
     private val removeLikeUseCase: RemoveLikeUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
@@ -35,11 +37,9 @@ class PostsScreenViewModel @Inject constructor(
     private val deletePostUseCase: DeletePostUseCase,
 ) : ViewModel() {
 
-    // to handel "current_user_post_screen" and "all_post_screen"
-    val userId = savedStateHandle.get<String>("userId")
+    val postScreenArgs = savedStateHandle.toRoute<Screen.PostsScreen>()
 
     private val userProfiles = mutableMapOf<String, User>()
-    private val likedPostsStatus = mutableMapOf<String, Boolean>()
 
     var postsList: List<Post> by mutableStateOf(emptyList())
         private set
@@ -50,11 +50,13 @@ class PostsScreenViewModel @Inject constructor(
 
     private fun loadPosts() {
         viewModelScope.launch {
-            val userCase = if (userId != null) getCurrentUserPostUseCase else getAllPostUseCase
-
-            when (val result = userCase.invoke(Unit)) {
+            when (val result = getPostUseCase.invoke(postScreenArgs.userId)) {
                 is Either.Right -> {
-                    postsList = result.value
+                    postsList = result.value.map { post ->
+                        post.copy(
+                            isLiked = getLikeStatus(post.id) ?: false
+                        )
+                    }
                 }
 
                 is Either.Left -> {
@@ -74,7 +76,6 @@ class PostsScreenViewModel @Inject constructor(
                 }
 
                 is Either.Right -> {
-                    likedPostsStatus[postId] = !hasLiked
                     onSuccessfulLike()
                 }
             }
@@ -99,21 +100,16 @@ class PostsScreenViewModel @Inject constructor(
         }
     }
 
-    fun getPostLikeStatus(postId: String): Flow<Boolean> {
-        return flow {
-            if (!likedPostsStatus.containsKey(postId)) {
-                when (val result = hasUserLikedPostUseCase.invoke(postId)) {
-                    is Either.Left -> {
-                        println("Error getting user profile")
-                        return@flow
-                    }
-
-                    is Either.Right -> {
-                        likedPostsStatus[postId] = result.value
-                    }
-                }
+    private suspend fun getLikeStatus(postId: String): Boolean? {
+        return when (val result = hasUserLikedPostUseCase.invoke(postId)) {
+            is Either.Left -> {
+                println("Error getting user profile")
+                return null
             }
-            emit(likedPostsStatus[postId]!!)
+
+            is Either.Right -> {
+                result.value
+            }
         }
     }
 

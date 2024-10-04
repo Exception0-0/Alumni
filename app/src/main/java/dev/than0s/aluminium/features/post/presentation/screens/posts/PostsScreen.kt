@@ -13,7 +13,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.CardDefaults
@@ -26,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,30 +54,28 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
-fun AllPostsScreen(
+fun PostsScreen(
     viewModel: PostsScreenViewModel = hiltViewModel(),
-    openScreen: (String) -> Unit
+    openScreen: (Screen) -> Unit
 ) {
-    AllPostsScreenContent(
+    PostsScreenContent(
         postsList = viewModel.postsList,
-        isCurrentUser = viewModel.userId == currentUserId!!,
+        isCurrentUser = viewModel.postScreenArgs.userId == currentUserId!!,
         onLikeClick = viewModel::onLikeClick,
         onPostDeleteClick = viewModel::onPostDeleteClick,
         getUserProfile = viewModel::getUserProfile,
-        getPostLikeStatus = viewModel::getPostLikeStatus,
         openScreen = openScreen
     )
 }
 
 @Composable
-private fun AllPostsScreenContent(
+private fun PostsScreenContent(
     postsList: List<Post>,
     isCurrentUser: Boolean,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
     onPostDeleteClick: (String) -> Unit,
     getUserProfile: (String) -> Flow<User>,
-    getPostLikeStatus: (String) -> Flow<Boolean>,
-    openScreen: (String) -> Unit
+    openScreen: (Screen) -> Unit
 ) {
     LazyColumn {
         items(postsList) { post ->
@@ -84,9 +85,8 @@ private fun AllPostsScreenContent(
                 onLikeClick = onLikeClick,
                 getUserProfile = getUserProfile,
                 onPostDeleteClick = onPostDeleteClick,
-                getPostLikeStatus = getPostLikeStatus,
                 openCommentScreen = {
-                    openScreen("${Screen.CommentsScreen.route}/${post.id}")
+                    openScreen(Screen.CommentsScreen(post.id))
                 }
             )
         }
@@ -101,11 +101,9 @@ private fun PostItem(
     openCommentScreen: () -> Unit,
     onPostDeleteClick: (String) -> Unit,
     getUserProfile: (String) -> Flow<User>,
-    getPostLikeStatus: (String) -> Flow<Boolean>,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
 ) {
     val userProfile = getUserProfile(post.userId).collectAsState(initial = User()).value
-    val likeStatus = getPostLikeStatus(post.userId).collectAsState(initial = false).value
     var warningState by rememberSaveable { mutableStateOf(false) }
 
     if (warningState) {
@@ -154,7 +152,7 @@ private fun PostItem(
                 modifier = Modifier.fillMaxWidth()
             )
             PostStatus(
-                hasLike = likeStatus,
+                isLiked = post.isLiked,
                 onLikeClick = { hasLike, callback ->
                     onLikeClick(post.id, hasLike, callback)
                 },
@@ -203,11 +201,12 @@ fun UserDetail(user: User) {
 
 @Composable
 private fun PostStatus(
-    hasLike: Boolean,
+    isLiked: Boolean,
     onLikeClick: (Boolean, () -> Unit) -> Unit,
     openCommentScreen: () -> Unit,
 ) {
-    var likeButtonState by rememberSaveable { mutableStateOf(hasLike) }
+    var likeButtonState by rememberSaveable { mutableStateOf(isLiked) }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(MaterialTheme.spacing.extraSmall)
@@ -229,7 +228,7 @@ private fun PostStatus(
         Spacer(modifier = Modifier.padding(MaterialTheme.spacing.medium))
 
         Icon(
-            painter = painterResource(R.drawable.outline_comment_24),
+            imageVector = Icons.AutoMirrored.Outlined.Comment,
             contentDescription = "comment button",
             modifier = Modifier.clickable {
                 openCommentScreen()
@@ -244,8 +243,8 @@ private fun PostStatus(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun AllPostsScreenPreview() {
-    AllPostsScreenContent(
+private fun PostsScreenPreview() {
+    PostsScreenContent(
         postsList = listOf(
             Post(
                 id = "",
@@ -257,7 +256,6 @@ private fun AllPostsScreenPreview() {
         onLikeClick = { _, _, _ -> },
         getUserProfile = { emptyFlow() },
         onPostDeleteClick = {},
-        getPostLikeStatus = { emptyFlow() },
         openScreen = {}
     )
 }

@@ -13,5 +13,6 @@ data class Post(
     val file: Uri = Uri.EMPTY,
     val title: String = "",
     val description: String = "",
+    val isLiked: Boolean = false,
     val timestamp: Timestamp = Timestamp.now(),
 )

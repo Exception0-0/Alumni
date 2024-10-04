@@ -6,12 +6,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
 
 @Composable
-fun SplashScreen(viewModel: SplashViewModel = hiltViewModel(), popAndOpen: (String) -> Unit) {
+fun SplashScreen(
+    viewModel: SplashViewModel = hiltViewModel(),
+    popAndOpen: (Screen) -> Unit
+) {
     viewModel.loadScreen { hasUser: Boolean ->
         if (hasUser) {
-            popAndOpen("${Screen.PostsScreen.route}/{null}")
+            popAndOpen(Screen.PostsScreen())
         } else {
-            popAndOpen(Screen.SignInScreen.route)
+            popAndOpen(Screen.SignInScreen)
         }
     }
 }

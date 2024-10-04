@@ -1,5 +1,9 @@
 package dev.than0s.aluminium.core.composable
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -28,17 +32,17 @@ fun PasswordTextField(
             IconButton(onClick = {
                 passwordVisibilityState = !passwordVisibilityState
             }) {
-//                if (passwordVisibilityState) {
-//                    Icon(
-//                        imageVector = Icons.Default.VisibilityOff,
-//                        contentDescription = "Visibility"
-//                    )
-//                } else {
-//                    Icon(
-//                        imageVector = Icons.Default.Visibility,
-//                        contentDescription = "Visibility"
-//                    )
-//                }
+                if (passwordVisibilityState) {
+                    Icon(
+                        imageVector = Icons.Default.Visibility,
+                        contentDescription = "Visibility"
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.VisibilityOff,
+                        contentDescription = "Visibility"
+                    )
+                }
             }
         },
     )

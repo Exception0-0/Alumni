@@ -40,7 +40,6 @@ class ProfileViewModel @Inject constructor(
             when (val result = profileUseCase.invoke(Unit)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
-
                 }
 
                 is Either.Right -> result.value?.let {

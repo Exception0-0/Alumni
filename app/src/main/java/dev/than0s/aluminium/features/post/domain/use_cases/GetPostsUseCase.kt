@@ -7,9 +7,9 @@ import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
 import javax.inject.Inject
 
-class GetCurrentUserPostUseCase @Inject constructor(private val repository: PostRepository) :
-    UseCase<Unit, List<Post>> {
-    override suspend fun invoke(param: Unit): Either<Failure, List<Post>> {
-        return repository.getCurrentUserPosts()
+class GetPostsUseCase @Inject constructor(private val repository: PostRepository) :
+    UseCase<String?, List<Post>> {
+    override suspend fun invoke(userId: String?): Either<Failure, List<Post>> {
+        return repository.getPosts(userId)
     }
 }

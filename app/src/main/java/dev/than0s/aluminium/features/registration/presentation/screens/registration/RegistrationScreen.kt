@@ -36,7 +36,7 @@ import dev.than0s.mydiary.ui.textSize
 @Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel = hiltViewModel(),
-    popAndOpen: (String) -> Unit,
+    popAndOpen: (Screen) -> Unit,
 ) {
     RegistrationScreenContent(
         param = viewModel.param,
@@ -65,7 +65,7 @@ private fun RegistrationScreenContent(
     batchDialogState: Boolean,
     onEmailChange: (String) -> Unit,
     onRegisterClick: () -> Unit,
-    popAndOpen: (String) -> Unit,
+    popAndOpen: (Screen) -> Unit,
     onBatchDialogDismiss: () -> Unit,
     onCategoryDialogDismiss: () -> Unit,
     onCategoryChange: (String) -> Unit,
@@ -204,7 +204,7 @@ private fun RegistrationScreenContent(
             Text(
                 text = "Already registered?",
                 modifier = Modifier.clickable {
-                    popAndOpen(Screen.SignInScreen.route)
+                    popAndOpen(Screen.SignInScreen)
                 }
             )
 

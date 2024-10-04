@@ -6,10 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.data_class.User
@@ -32,7 +34,8 @@ class CommentsViewModel @Inject constructor(
     private val removeCommentUseCase: RemoveCommentUseCase,
 ) : ViewModel() {
 
-    private val postId = savedStateHandle.get<String>("postId")!!
+    private val commentsScreenArgs = savedStateHandle.toRoute<Screen.CommentsScreen>()
+
     private val userProfiles = mutableMapOf<String, User>()
 
     var commentsList: List<Comment> by mutableStateOf(emptyList())
@@ -49,7 +52,7 @@ class CommentsViewModel @Inject constructor(
     private fun loadComments() {
         viewModelScope.launch {
 
-            when (val result = getCommentFlowUseCase.invoke(postId)) {
+            when (val result = getCommentFlowUseCase.invoke(commentsScreenArgs.postId)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
                 }
@@ -69,7 +72,7 @@ class CommentsViewModel @Inject constructor(
         viewModelScope.launch {
             val comment = Comment(
                 message = currentComment,
-                postId = postId
+                postId = commentsScreenArgs.postId,
             )
             when (val result = addCommentUseCase.invoke(comment)) {
                 is Either.Left -> {

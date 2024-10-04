@@ -24,9 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.composable.LoadingButton
+import dev.than0s.aluminium.core.composable.LoadingElevatedButton
 import dev.than0s.aluminium.features.post.domain.data_class.Post
-import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.ui.spacing
 
 @Composable
@@ -99,7 +98,7 @@ private fun PostUploadScreenContent(
             }
         )
 
-        LoadingButton(
+        LoadingElevatedButton(
             label = "Upload",
             circularProgressIndicatorState = circularProgressIndicatorState,
             onClick = onUploadClick,

@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 interface PostRepository {
     suspend fun addPost(post: Post): Either<Failure, Unit>
     suspend fun deletePost(postId: String): Either<Failure, Unit>
-    suspend fun getPosts(): Either<Failure, List<Post>>
-    suspend fun getCurrentUserPosts(): Either<Failure, List<Post>>
+    suspend fun getPosts(userId: String?): Either<Failure, List<Post>>
     suspend fun getUserProfile(userId: String): Either<Failure, User>
 }

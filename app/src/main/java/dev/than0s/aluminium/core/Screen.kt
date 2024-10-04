@@ -1,16 +1,44 @@
 package dev.than0s.aluminium.core
 
-sealed class Screen(val route: String) {
-    data object SplashScreen : Screen("splash")
-    data object SignInScreen : Screen("sign_in")
-    data object DemoScreen : Screen("demo")
-    data object SettingScreen : Screen("profile")
-    data object RegistrationScreen : Screen("registration")
-    data object RegistrationRequestsScreen : Screen("registration_requests")
-    data object PostUploadScreen : Screen("post_upload_screen")
-    data object SignOutScreen : Screen("sign_out")
-    data object ForgotPasswordScreen : Screen("forgot_password")
-    data object PostsScreen : Screen("post_screen/{userId}")
-    data object CommentsScreen : Screen("comments_screen")
-    data object ProfileScreen : Screen("profile_screen")
+import kotlinx.serialization.Serializable
+
+sealed class Screen {
+    @Serializable
+    data object SplashScreen : Screen()
+
+    @Serializable
+    data object SignInScreen : Screen()
+
+    @Serializable
+    data object SettingScreen : Screen()
+
+    @Serializable
+    data object RegistrationScreen : Screen()
+
+    @Serializable
+    data object RegistrationRequestsScreen : Screen()
+
+    @Serializable
+    data object PostUploadScreen : Screen()
+
+    @Serializable
+    data object SignOutScreen : Screen()
+
+    @Serializable
+    data object ForgotPasswordScreen : Screen()
+
+    @Serializable
+    data class PostsScreen(
+        val userId: String? = null
+    ) : Screen()
+
+    @Serializable
+    data class ProfileScreen(
+        val userId: String
+    ) : Screen()
+
+    @Serializable
+    data class CommentsScreen(
+        val postId: String
+    ) : Screen()
 }

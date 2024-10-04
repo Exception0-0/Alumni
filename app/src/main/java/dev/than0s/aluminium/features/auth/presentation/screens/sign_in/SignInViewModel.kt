@@ -24,7 +24,7 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
         signInParam.value = signInParam.value.copy(password = password)
     }
 
-    fun onSignInClick(restartApp: () -> Unit) {
+    fun onSignInClick(onFinish: () -> Unit, restartApp: () -> Unit) {
         viewModelScope.launch {
             when (val result = signInUseCase.invoke(signInParam.value)) {
                 is Either.Left -> {
@@ -36,6 +36,7 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
                     restartApp()
                 }
             }
+            onFinish()
         }
     }
 }

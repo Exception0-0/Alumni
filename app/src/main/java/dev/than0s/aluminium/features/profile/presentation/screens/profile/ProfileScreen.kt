@@ -21,8 +21,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.Build
+import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -57,19 +59,27 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.core.composable.LoadingTextButton
 import dev.than0s.aluminium.core.composable.RoundedTextField
+import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
+import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
+fun ProfileScreen(
+    viewModel: ProfileViewModel = hiltViewModel(),
+    openScreen: (Screen) -> Unit
+) {
     ProfileScreenContent(
         userProfile = viewModel.userProfile,
         contactInfo = viewModel.contactInfo,
         editUserProfile = viewModel.editUserProfile,
         editContactInfo = viewModel.editContactInfo,
+        openScreen = openScreen,
         onUpdateProfileClick = viewModel::onUpdateProfileClick,
         onFirstNameChange = viewModel::onFirstNameChange,
         onLastNameChange = viewModel::onLastNameChange,
@@ -89,6 +99,7 @@ private fun ProfileScreenContent(
     contactInfo: ContactInfo,
     editUserProfile: User,
     editContactInfo: ContactInfo,
+    openScreen: (Screen) -> Unit,
     onUpdateProfileClick: (() -> Unit) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
@@ -165,32 +176,32 @@ private fun ProfileScreenContent(
         }
 
         ProfileTabRow(
-            listOf({
-                ContactsTabContent(
-                    contactInfo = editContactInfo,
-                    onEmailChange = onEmailChange,
-                    onMobileChange = onMobileChange,
-                    onSocialHandleChange = onSocialHandleChange,
-                    onUpdateContactClick = onContactUpdateClick
-                )
-            },
-                {
-                    ContactsTabContent(
-                        contactInfo = editContactInfo,
-                        onEmailChange = onEmailChange,
-                        onMobileChange = onMobileChange,
-                        onSocialHandleChange = onSocialHandleChange,
-                        onUpdateContactClick = onContactUpdateClick
-                    )
-                }
-            )
+            tabItems = listOf(
+                TabItem(
+                    title = "Contacts",
+                    selectedIcon = Icons.Filled.AccountBox,
+                    unselectedIcon = Icons.Outlined.AccountBox,
+                    screen = {
+                        ContactsTabContent(
+                            contactInfo = contactInfo,
+                            editContactInfo = editContactInfo,
+                            onEmailChange = onEmailChange,
+                            onMobileChange = onMobileChange,
+                            onSocialHandleChange = onSocialHandleChange,
+                            onUpdateContactClick = onContactUpdateClick
+                        )
+                    }
+                ),
+            ),
+            openScreen = openScreen,
         )
     }
 }
 
 @Composable
 private fun ProfileTabRow(
-    contentScreens: List<@Composable () -> Unit>
+    tabItems: List<TabItem>,
+    openScreen: (Screen) -> Unit
 ) {
     var tabRowStatus by rememberSaveable { mutableIntStateOf(0) }
 
@@ -214,6 +225,21 @@ private fun ProfileTabRow(
                 }
             )
         }
+        Tab(
+            selected = false,
+            onClick = {
+                openScreen(Screen.PostsScreen(currentUserId))
+            },
+            text = {
+                Text("Posts")
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.GridView,
+                    contentDescription = "posts"
+                )
+            }
+        )
     }
     Surface(
         modifier = Modifier
@@ -223,7 +249,7 @@ private fun ProfileTabRow(
                 vertical = MaterialTheme.spacing.large
             )
     ) {
-        contentScreens[tabRowStatus].invoke()
+        tabItems[tabRowStatus].screen.invoke()
     }
 }
 
@@ -243,6 +269,8 @@ private fun UpdateProfileDialog(
         COVER_IMAGE to false,
         PROFILE_IMAGE to false,
     )
+
+    var circularProgressState by rememberSaveable { mutableStateOf(false) }
 
     val launcher =
         rememberLauncherForActivityResult(
@@ -265,100 +293,102 @@ private fun UpdateProfileDialog(
     Dialog(
         onDismissRequest = onDismiss
     ) {
-        Card {
-            Surface {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                    modifier = Modifier.padding(MaterialTheme.spacing.medium)
+        Surface(
+            shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(MaterialTheme.spacing.medium)
+            ) {
+                Text(
+                    text = "Profile",
+                    fontSize = MaterialTheme.textSize.gigantic,
+                    fontWeight = FontWeight.W900
+                )
+                AsyncImage(
+                    model = userProfile.coverImage,
+                    contentDescription = "user profile image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(MaterialTheme.spacing.medium))
+                        .background(color = colorResource(id = R.color.purple_500))
+                        .height(100.dp)
+                        .clickable {
+                            imageSelectionState[COVER_IMAGE] = true
+                            launcher.launch("image/*")
+                        }
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
                 ) {
+
                     AsyncImage(
-                        model = userProfile.coverImage,
+                        model = userProfile.profileImage,
                         contentDescription = "user profile image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .clip(RoundedCornerShape(MaterialTheme.spacing.medium))
-                            .background(color = colorResource(id = R.color.purple_500))
-                            .height(100.dp)
+                            .size(100.dp)
+                            .clip(CircleShape)
                             .clickable {
-                                imageSelectionState[COVER_IMAGE] = true
+                                imageSelectionState[PROFILE_IMAGE] = true
                                 launcher.launch("image/*")
                             }
                     )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
                     ) {
-
-                        AsyncImage(
-                            model = userProfile.profileImage,
-                            contentDescription = "user profile image",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(100.dp)
-                                .clip(CircleShape)
-                                .clickable {
-                                    imageSelectionState[PROFILE_IMAGE] = true
-                                    launcher.launch("image/*")
-                                }
+                        RoundedTextField(
+                            value = userProfile.firstName,
+                            onValueChange = onFirstNameChange,
+                            placeholder = "First Name",
                         )
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
-                        ) {
-                            RoundedTextField(
-                                value = userProfile.firstName,
-                                onValueChange = onFirstNameChange,
-                                placeholder = "First Name",
-                            )
-                            RoundedTextField(
-                                value = userProfile.lastName,
-                                onValueChange = onLastNameChange,
-                                placeholder = "Last Name"
-                            )
-                        }
+                        RoundedTextField(
+                            value = userProfile.lastName,
+                            onValueChange = onLastNameChange,
+                            placeholder = "Last Name"
+                        )
                     }
-                    RoundedTextField(
-                        value = userProfile.bio,
-                        onValueChange = onBioChange,
-                        placeholder = "Bio",
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        TextButton(onClick = onDismiss) {
-                            Text(text = "Cancel")
-                        }
+                }
+                RoundedTextField(
+                    value = userProfile.bio,
+                    onValueChange = onBioChange,
+                    placeholder = "Bio",
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text(text = "Cancel")
+                    }
 
-                        TextButton(onClick = {
-                            onUpdateProfileClick(onDismiss)
-                        }) {
-                            Text(text = "Update")
+                    LoadingTextButton(
+                        label = "Update",
+                        circularProgressIndicatorState = circularProgressState,
+                        onClick = {
+                            circularProgressState = true
+                            onUpdateProfileClick(
+                                {
+                                    circularProgressState = false
+                                    onDismiss()
+                                }
+                            )
                         }
-                    }
+                    )
                 }
             }
         }
     }
 }
 
-private val tabItems = listOf(
-    TabItem(
-        title = "Contacts",
-        selectedIcon = Icons.Filled.AccountBox,
-        unselectedIcon = Icons.Outlined.AccountBox
-    ),
-    TabItem(
-        title = "Professional",
-        selectedIcon = Icons.Filled.Build,
-        unselectedIcon = Icons.Outlined.Build
-    ),
-)
-
 data class TabItem(
     val title: String,
     val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
+    val unselectedIcon: ImageVector,
+    val screen: @Composable () -> Unit
 )
 
 @Preview(showSystemUi = true)
@@ -383,7 +413,7 @@ private fun ProfileScreenPreview() {
             email = "thanosop150@gmail.com",
             mobile = "+91-1234567890"
         ),
-        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
     )
 }
 

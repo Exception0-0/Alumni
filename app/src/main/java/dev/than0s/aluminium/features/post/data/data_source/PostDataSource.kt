@@ -21,8 +21,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface PostDataSource {
-    suspend fun getPosts(): List<Post>
-    suspend fun getCurrentUserPosts(): List<Post>
+    suspend fun getPosts(userId: String?): List<Post>
     suspend fun addPost(post: Post)
     suspend fun deletePost(postId: String)
     suspend fun getUserProfile(userId: String): User
@@ -31,31 +30,25 @@ interface PostDataSource {
 class PostDataSourceImple @Inject constructor(
     private val store: FirebaseFirestore,
     private val cloud: FirebaseStorage,
-    private val auth: FirebaseAuth
 ) :
     PostDataSource {
 
-    override suspend fun getPosts(): List<Post> {
+    override suspend fun getPosts(userId: String?): List<Post> {
         return try {
-            store.collection(POSTS)
-                .get()
-                .await()
-                .toObjects<RawPost>()
-                .toPost(::getFile)
-        } catch (e: FirebaseException) {
-            throw ServerException(e.message.toString())
-        }
-    }
-
-    override suspend fun getCurrentUserPosts(): List<Post> {
-        return try {
-            store.collection(POSTS)
-                .whereEqualTo("userId", auth.currentUser!!.uid)
-                .get()
-                .await()
-                .toObjects<RawPost>()
-                .toPost(::getFile)
-
+            if (userId != null) {
+                store.collection(POSTS)
+                    .whereEqualTo("userId", userId)
+                    .get()
+                    .await()
+                    .toObjects<RawPost>()
+                    .toPost(::getFile)
+            } else {
+                store.collection(POSTS)
+                    .get()
+                    .await()
+                    .toObjects<RawPost>()
+                    .toPost(::getFile)
+            }
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }

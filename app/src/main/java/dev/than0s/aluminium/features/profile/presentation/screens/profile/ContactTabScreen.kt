@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Phone
@@ -24,19 +25,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import dev.than0s.aluminium.core.composable.LoadingTextButton
 import dev.than0s.aluminium.core.composable.RoundedTextField
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
+import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
 fun ContactsTabContent(
     contactInfo: ContactInfo,
+    editContactInfo: ContactInfo,
     onEmailChange: (String) -> Unit,
     onMobileChange: (String) -> Unit,
     onSocialHandleChange: (String) -> Unit,
@@ -46,7 +52,7 @@ fun ContactsTabContent(
 
     if (editStatus) {
         UpdateContactInfo(
-            contactInfo = contactInfo,
+            contactInfo = editContactInfo,
             onEmailChange = onEmailChange,
             onPhoneChange = onMobileChange,
             onSocialHandleChange = onSocialHandleChange,
@@ -131,46 +137,61 @@ private fun UpdateContactInfo(
     onUpdateContactClick: (() -> Unit) -> Unit,
     onDismiss: () -> Unit
 ) {
+    var circularProgressState by rememberSaveable { mutableStateOf(false) }
+
     Dialog(
         onDismissRequest = onDismiss
     ) {
-        Card {
-            Surface {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                    modifier = Modifier.padding(MaterialTheme.spacing.medium)
+        Surface(
+            shape = RoundedCornerShape(MaterialTheme.roundCorners.default)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                horizontalAlignment = CenterHorizontally,
+                modifier = Modifier.padding(MaterialTheme.spacing.medium)
+            ) {
+                Text(
+                    text = "Contact",
+                    fontSize = MaterialTheme.textSize.gigantic,
+                    fontWeight = FontWeight.W900
+                )
+                RoundedTextField(
+                    value = contactInfo.email,
+                    onValueChange = onEmailChange,
+                    placeholder = "Email"
+                )
+                RoundedTextField(
+                    value = contactInfo.mobile ?: "",
+                    onValueChange = onPhoneChange,
+                    placeholder = "Mobile"
+                )
+                RoundedTextField(
+                    value = contactInfo.socialHandles ?: "",
+                    onValueChange = onSocialHandleChange,
+                    placeholder = "Social Handles"
+                )
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    RoundedTextField(
-                        value = contactInfo.email,
-                        onValueChange = onEmailChange,
-                        placeholder = "Email"
-                    )
-                    RoundedTextField(
-                        value = contactInfo.mobile ?: "",
-                        onValueChange = onPhoneChange,
-                        placeholder = "Mobile"
-                    )
-                    RoundedTextField(
-                        value = contactInfo.socialHandles ?: "",
-                        onValueChange = onSocialHandleChange,
-                        placeholder = "Social Handles"
-                    )
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        TextButton(onClick = onDismiss) {
-                            Text(text = "Cancel")
-                        }
-
-                        TextButton(onClick = {
-                            onUpdateContactClick(onDismiss)
-                        }) {
-                            Text(text = "Update")
-                        }
+                    TextButton(onClick = onDismiss) {
+                        Text(text = "Cancel")
                     }
+
+                    LoadingTextButton(
+                        label = "Update",
+                        circularProgressIndicatorState = circularProgressState,
+                        onClick = {
+                            circularProgressState = true
+                            onUpdateContactClick {
+                                circularProgressState = false
+                                onDismiss()
+                            }
+                        }
+                    )
                 }
             }
         }
+
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -27,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
@@ -37,8 +39,8 @@ import dev.than0s.aluminium.features.registration.presentation.screens.registrat
 import dev.than0s.aluminium.features.admin.presentation.screen.requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
-import dev.than0s.aluminium.features.post.presentation.screens.posts.AllPostsScreen
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
+import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
@@ -85,87 +87,66 @@ private fun NavGraphHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route,
+        startDestination = Screen.SplashScreen,
         modifier = modifier
     ) {
-        composable(route = Screen.SplashScreen.route) {
+        composable<Screen.SplashScreen> {
             SplashScreen(
                 popAndOpen = navController::popAndOpen
             )
         }
-        composable(route = Screen.SignInScreen.route) {
+        composable<Screen.SignInScreen> {
             SignInScreen(
                 openScreen = navController::openScreen,
                 popAndOpen = navController::popAndOpen,
                 restartApp = navController::restartApp
             )
         }
-        composable(route = Screen.RegistrationScreen.route) {
+        composable<Screen.RegistrationScreen> {
             RegistrationScreen(
                 popAndOpen = navController::popAndOpen
             )
         }
-        composable(route = Screen.DemoScreen.route) {
-            DemoScreen()
-        }
-        composable(route = Screen.SettingScreen.route) {
+        composable<Screen.SettingScreen> {
             SettingScreen(
                 openScreen = navController::openScreen,
             )
         }
-        composable(route = Screen.RegistrationRequestsScreen.route) {
+        composable<Screen.RegistrationRequestsScreen> {
             RegistrationRequestsScreen()
         }
-        composable(route = Screen.PostUploadScreen.route) {
+        composable<Screen.PostUploadScreen> {
             PostUploadScreen(
                 popScreen = navController::popScreen
             )
         }
-        composable(route = Screen.SignOutScreen.route) {
+        composable<Screen.SignOutScreen> {
             SignOutScreen(
                 restartApp = navController::restartApp
             )
         }
-        composable(route = Screen.ForgotPasswordScreen.route) {
+        composable<Screen.ForgotPasswordScreen> {
             ForgetPasswordScreen(
                 popScreen = navController::popScreen
             )
         }
-        composable(route = Screen.PostUploadScreen.route) {
-            PostUploadScreen(
-                popScreen = navController::popScreen
-
-            )
-        }
-        composable(route = Screen.PostsScreen.route,
-            arguments = listOf(
-                navArgument("userId") {
-                    type = NavType.StringType
-                }
-            )) {
-            AllPostsScreen(
+        composable<Screen.PostsScreen> {
+            PostsScreen(
                 openScreen = navController::openScreen
             )
         }
-        composable(route = Screen.ProfileScreen.route) {
+        composable<Screen.ProfileScreen> {
             ProfileScreen(
-
+                openScreen = navController::openScreen
             )
         }
-        composable(
-            route = "${Screen.CommentsScreen.route}/{postId}",
-            arguments = listOf(
-                navArgument("postId") {
-                    type = NavType.StringType
-                }
-            )
-        ) {
+        composable<Screen.CommentsScreen> {
             CommentScreen()
         }
     }
 }
 
-private fun NavHostController.openScreen(screen: String) {
+private fun NavHostController.openScreen(screen: Screen) {
     navigate(screen)
 }
 
@@ -173,20 +154,21 @@ private fun NavHostController.popScreen() {
     popBackStack()
 }
 
-private fun NavHostController.popAndOpen(screen: String) {
+private fun NavHostController.popAndOpen(screen: Screen) {
     popBackStack()
     navigate(screen)
 }
 
 private fun NavHostController.restartApp() {
-    navigate(Screen.SplashScreen.route) {
+    navigate(Screen.SplashScreen) {
         launchSingleTop = true
         popUpTo(0) { inclusive = true }
     }
 }
 
 private data class BottomNavigationItem(
-    val route: String,
+    val uid: String,
+    val route: Screen,
     val filledIcon: ImageVector,
     val outlinedIcon: ImageVector,
     val label: String
@@ -194,13 +176,15 @@ private data class BottomNavigationItem(
 
 private val BottomNavItemsList = listOf(
     BottomNavigationItem(
-        Screen.PostsScreen.route,
+        "dev.than0s.aluminium.core.Screen.PostsScreen?userId={userId}",
+        Screen.PostsScreen(),
         Icons.Filled.Face,
         Icons.Outlined.Face,
         "Posts"
     ),
     BottomNavigationItem(
-        Screen.SettingScreen.route,
+        "dev.than0s.aluminium.core.Screen.SettingScreen",
+        Screen.SettingScreen,
         Icons.Filled.AccountCircle,
         Icons.Outlined.AccountCircle,
         "Profile"
@@ -211,18 +195,19 @@ private val BottomNavItemsList = listOf(
 fun BottomNavigationBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val isCurrentScreenBottomBar = BottomNavItemsList.any { it.route == currentRoute }
-    if (isCurrentScreenBottomBar) {
+    val isCurrentScreenHaveBottomBar = BottomNavItemsList.any { it.uid == currentRoute }
+
+    if (isCurrentScreenHaveBottomBar) {
         NavigationBar {
             BottomNavItemsList.forEach { item ->
                 NavigationBarItem(
-                    selected = currentRoute == item.route,
+                    selected = currentRoute == item.uid,
                     onClick = {
                         navController.popAndOpen(item.route)
                     },
                     icon = {
                         Icon(
-                            imageVector = if (currentRoute == item.route) {
+                            imageVector = if (currentRoute == item.uid) {
                                 item.filledIcon
                             } else {
                                 item.outlinedIcon
