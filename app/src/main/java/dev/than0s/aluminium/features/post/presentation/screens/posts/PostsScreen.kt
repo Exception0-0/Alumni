@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.post.presentation.screens.my_posts
+package dev.than0s.aluminium.features.post.presentation.screens.posts
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -6,26 +6,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.ThumbUp
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,80 +30,82 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.google.firebase.Timestamp
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.WarningDialog
+import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.ui.elevation
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
-fun MyPostsScreen(viewModel: MyPostViewModel = hiltViewModel(), openScreen: (String) -> Unit) {
-    val postsList = viewModel.postFlow.collectAsState(initial = emptyList())
-    MyPostScreenContent(
-        postsList = postsList.value,
-        openScreen = openScreen,
+fun AllPostsScreen(
+    viewModel: PostsScreenViewModel = hiltViewModel(),
+    openScreen: (String) -> Unit
+) {
+    AllPostsScreenContent(
+        postsList = viewModel.postsList,
+        isCurrentUser = viewModel.userId == currentUserId!!,
+        onLikeClick = viewModel::onLikeClick,
         onPostDeleteClick = viewModel::onPostDeleteClick,
-        onLikeClick = viewModel::onLikeClick
+        getUserProfile = viewModel::getUserProfile,
+        getPostLikeStatus = viewModel::getPostLikeStatus,
+        openScreen = openScreen
     )
 }
 
 @Composable
-private fun MyPostScreenContent(
+private fun AllPostsScreenContent(
     postsList: List<Post>,
-    openScreen: (String) -> Unit,
-    onPostDeleteClick: (String) -> Unit,
+    isCurrentUser: Boolean,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
+    onPostDeleteClick: (String) -> Unit,
+    getUserProfile: (String) -> Flow<User>,
+    getPostLikeStatus: (String) -> Flow<Boolean>,
+    openScreen: (String) -> Unit
 ) {
-    Scaffold(
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    openScreen(Screen.PostUploadScreen.route)
-                },
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "post add")
-                Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
-                Text(text = "Add Post")
-            }
-        }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier.padding(padding)
-        ) {
-            items(postsList) {
-                PostItem(
-                    post = it,
-                    onPostDeleteClick = onPostDeleteClick,
-                    onLikeClick = onLikeClick,
-                    openCommentScreen = {
-                        openScreen("${Screen.CommentsScreen.route}/${it.id}")
-                    }
-                )
-            }
+    LazyColumn {
+        items(postsList) { post ->
+            PostItem(
+                post = post,
+                isCurrentUser = isCurrentUser,
+                onLikeClick = onLikeClick,
+                getUserProfile = getUserProfile,
+                onPostDeleteClick = onPostDeleteClick,
+                getPostLikeStatus = getPostLikeStatus,
+                openCommentScreen = {
+                    openScreen("${Screen.CommentsScreen.route}/${post.id}")
+                }
+            )
         }
     }
 }
 
+
 @Composable
 private fun PostItem(
     post: Post,
+    isCurrentUser: Boolean,
+    openCommentScreen: () -> Unit,
     onPostDeleteClick: (String) -> Unit,
+    getUserProfile: (String) -> Flow<User>,
+    getPostLikeStatus: (String) -> Flow<Boolean>,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
-    openCommentScreen: () -> Unit
 ) {
+    val userProfile = getUserProfile(post.userId).collectAsState(initial = User()).value
+    val likeStatus = getPostLikeStatus(post.userId).collectAsState(initial = false).value
     var warningState by rememberSaveable { mutableStateOf(false) }
 
     if (warningState) {
@@ -138,24 +135,17 @@ private fun PostItem(
                 .align(Alignment.CenterHorizontally)
                 .width(360.dp)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = post.title,
-                    fontWeight = FontWeight.W400,
-                    fontSize = MaterialTheme.textSize.gigantic
-                )
-                Icon(
-                    imageVector = Icons.Outlined.Delete,
-                    contentDescription = "delete post",
-                    modifier = Modifier.clickable {
-                        warningState = true
-                    }
-                )
-            }
+
+            UserDetail(
+                user = userProfile
+            )
+
+            Text(
+                text = post.title,
+                fontWeight = FontWeight.W400,
+                fontSize = MaterialTheme.textSize.gigantic
+            )
+
             AsyncImage(
                 model = post.file,
                 placeholder = painterResource(R.drawable.ic_launcher_background),
@@ -164,14 +154,50 @@ private fun PostItem(
                 modifier = Modifier.fillMaxWidth()
             )
             PostStatus(
-                hasLike = post.hasLiked,
+                hasLike = likeStatus,
                 onLikeClick = { hasLike, callback ->
                     onLikeClick(post.id, hasLike, callback)
                 },
                 openCommentScreen = openCommentScreen
             )
             Text(text = post.description)
+
+            if (isCurrentUser) {
+                ElevatedButton(
+                    onClick = {
+                        warningState = true
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(imageVector = Icons.Rounded.Delete, contentDescription = "delete post")
+                    Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
+                    Text(text = "Delete")
+                }
+            }
         }
+    }
+}
+
+@Composable
+fun UserDetail(user: User) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        AsyncImage(
+            model = user.profileImage,
+            placeholder = painterResource(R.drawable.ic_launcher_background),
+            contentDescription = "User profile image",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(40.dp)
+        )
+        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
+        Text(
+            text = "${user.firstName} ${user.lastName}",
+            fontWeight = FontWeight.W100,
+            fontSize = MaterialTheme.textSize.large
+        )
     }
 }
 
@@ -218,20 +244,20 @@ private fun PostStatus(
 
 @Preview(showSystemUi = true)
 @Composable
-private fun MyPostScreenPreview() {
-    MyPostScreenContent(
-        listOf(
+private fun AllPostsScreenPreview() {
+    AllPostsScreenContent(
+        postsList = listOf(
             Post(
                 id = "",
-                user = User(userId = ""),
-                title = "Title",
-                description = "asdfklajsdfkl jkldjfklj adklsj fkjasdklfjasdkj f klasdjfljdfjasdlfjasdjfkldajf kladj",
-                timestamp = Timestamp.now(),
-                hasLiked = false
-            ),
+                title = "Than0s",
+                description = "hello I'm Than0s don't talk to me",
+            )
         ),
-        {},
-        {},
-        { _, _, _ -> }
+        isCurrentUser = true,
+        onLikeClick = { _, _, _ -> },
+        getUserProfile = { emptyFlow() },
+        onPostDeleteClick = {},
+        getPostLikeStatus = { emptyFlow() },
+        openScreen = {}
     )
 }

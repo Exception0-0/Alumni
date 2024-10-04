@@ -37,9 +37,8 @@ import dev.than0s.aluminium.features.registration.presentation.screens.registrat
 import dev.than0s.aluminium.features.admin.presentation.screen.requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
-import dev.than0s.aluminium.features.post.presentation.screens.all_posts.AllPostsScreen
+import dev.than0s.aluminium.features.post.presentation.screens.posts.AllPostsScreen
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
-import dev.than0s.aluminium.features.post.presentation.screens.my_posts.MyPostsScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
@@ -138,12 +137,12 @@ private fun NavGraphHost(
 
             )
         }
-        composable(route = Screen.MyPostsScreen.route) {
-            MyPostsScreen(
-                openScreen = navController::openScreen
-            )
-        }
-        composable(route = Screen.AllPostScreen.route) {
+        composable(route = Screen.PostsScreen.route,
+            arguments = listOf(
+                navArgument("userId") {
+                    type = NavType.StringType
+                }
+            )) {
             AllPostsScreen(
                 openScreen = navController::openScreen
             )
@@ -195,7 +194,7 @@ private data class BottomNavigationItem(
 
 private val BottomNavItemsList = listOf(
     BottomNavigationItem(
-        Screen.AllPostScreen.route,
+        Screen.PostsScreen.route,
         Icons.Filled.Face,
         Icons.Outlined.Face,
         "Posts"

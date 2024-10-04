@@ -4,12 +4,11 @@ import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.UseCase
 import dev.than0s.aluminium.core.error.Failure
 import dev.than0s.aluminium.features.post.domain.repository.LikeRepository
-import dev.than0s.aluminium.features.post.domain.repository.PostRepository
 import javax.inject.Inject
 
-class RemoveLikeUseCase @Inject constructor(private val repository: LikeRepository) :
-    UseCase<String, Unit> {
-    override suspend fun invoke(id: String): Either<Failure, Unit> {
-        return repository.removeLike(id)
+class HasUserLikedPostUseCase @Inject constructor(private val repository: LikeRepository) :
+    UseCase<String, Boolean> {
+    override suspend fun invoke(postId: String): Either<Failure, Boolean> {
+        return repository.hasUserLiked(postId)
     }
 }

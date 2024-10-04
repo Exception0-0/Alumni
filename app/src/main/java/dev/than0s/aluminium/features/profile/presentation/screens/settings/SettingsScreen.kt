@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
@@ -121,7 +122,7 @@ private fun SettingScreenContent(
                     }
                 },
                 onClick = {
-                    openScreen(Screen.MyPostsScreen.route)
+                    openScreen("${Screen.PostsScreen.route}/$currentUserId")
                 },
                 leadingIcon = {
                     Icon(

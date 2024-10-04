@@ -23,9 +23,17 @@ import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryI
 import dev.than0s.aluminium.features.auth.data.repositories.AuthRepositoryImple
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
+import dev.than0s.aluminium.features.post.data.data_source.CommentDataSource
+import dev.than0s.aluminium.features.post.data.data_source.CommentDataSourceImple
+import dev.than0s.aluminium.features.post.data.data_source.LikeDataSource
+import dev.than0s.aluminium.features.post.data.data_source.LikeDataSourceImple
 import dev.than0s.aluminium.features.post.data.data_source.PostDataSource
 import dev.than0s.aluminium.features.post.data.data_source.PostDataSourceImple
+import dev.than0s.aluminium.features.post.data.repositories.CommentRepositoryImple
+import dev.than0s.aluminium.features.post.data.repositories.LikeRepositoryImple
 import dev.than0s.aluminium.features.post.data.repositories.PostRepositoryImple
+import dev.than0s.aluminium.features.post.domain.repository.CommentRepository
+import dev.than0s.aluminium.features.post.domain.repository.LikeRepository
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
 import dev.than0s.aluminium.features.registration.data.data_source.RegisterDataSource
 import dev.than0s.aluminium.features.registration.data.repositories.RegistrationRepositoryImple
@@ -60,6 +68,18 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindPostRepository(imple: PostRepositoryImple): PostRepository
+
+    @Binds
+    abstract fun bindLikeDataSource(imple: LikeDataSourceImple): LikeDataSource
+
+    @Binds
+    abstract fun bindLikeRepository(imple: LikeRepositoryImple): LikeRepository
+
+    @Binds
+    abstract fun bindCommentDataSource(imple: CommentDataSourceImple): CommentDataSource
+
+    @Binds
+    abstract fun bindCommentRepository(imple: CommentRepositoryImple): CommentRepository
 
     // profile
     @Binds

@@ -113,7 +113,6 @@ private fun PostUploadScreenContent(
 private fun PostUploadScreenPreview() {
     PostUploadScreenContent(Post(
         id = "",
-        user = User(userId = ""),
         title = "Title",
         description = "asdfklajsdfkl jkldjfklj adklsj fkjasdklfjasdkj f klasdjfljdfjasdlfjasdjfkldajf kladj",
     ), false, {}, {}, {}, {})

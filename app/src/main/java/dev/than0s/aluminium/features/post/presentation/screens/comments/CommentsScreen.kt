@@ -60,14 +60,16 @@ import dev.than0s.aluminium.features.post.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun CommentScreen(viewModel: CommentsViewModel = hiltViewModel()) {
-    val commentList = viewModel.commentFlow.collectAsState(emptyList()).value
     CommentScreenContent(
-        commentList = commentList,
+        commentList = viewModel.commentsList,
         currentComment = viewModel.currentComment,
         currentUserId = currentUserId!!,
+        getUserProfile = viewModel::getUserProfile,
         onCurrentCommentChange = viewModel::onCurrentCommentChange,
         onAddCommentClick = viewModel::onAddCommentClick,
         onRemoveCommentClick = viewModel::onRemoveCommentClick
@@ -81,6 +83,7 @@ private fun CommentScreenContent(
     commentList: List<Comment>,
     currentComment: String,
     currentUserId: String,
+    getUserProfile: (String) -> Flow<User>,
     onCurrentCommentChange: (String) -> Unit,
     onAddCommentClick: () -> Unit,
     onRemoveCommentClick: (Comment) -> Unit
@@ -125,9 +128,11 @@ private fun CommentScreenContent(
             modifier = Modifier.padding(contentPadding)
         ) {
             items(commentList) { comment ->
+
                 CommentPreview(
                     comment = comment,
-                    isCurrentUser = currentUserId == comment.user.userId,
+                    isCurrentUser = currentUserId == comment.userId,
+                    getUserProfile = getUserProfile,
                     onRemoveCommentClick = {
                         onRemoveCommentClick(comment)
                     }
@@ -142,8 +147,12 @@ private fun CommentScreenContent(
 private fun CommentPreview(
     comment: Comment,
     isCurrentUser: Boolean,
+    getUserProfile: (String) -> Flow<User>,
     onRemoveCommentClick: () -> Unit
 ) {
+
+    val userProfile = getUserProfile(comment.userId).collectAsState(User()).value
+
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -160,7 +169,7 @@ private fun CommentPreview(
                 verticalAlignment = Alignment.Top,
             ) {
                 AsyncImage(
-                    model = comment.user.profileImage,
+                    model = userProfile.profileImage,
                     placeholder = painterResource(R.drawable.ic_launcher_background),
                     contentDescription = "User profile image",
                     contentScale = ContentScale.Crop,
@@ -175,7 +184,7 @@ private fun CommentPreview(
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
                 ) {
                     Text(
-                        text = "${comment.user.firstName} ${comment.user.lastName}",
+                        text = "${userProfile.firstName} ${userProfile.lastName}",
                         fontWeight = FontWeight.W100,
                         fontSize = MaterialTheme.textSize.small
                     )
@@ -252,30 +261,18 @@ private fun CommentScreenPreview() {
             Comment(
                 id = "",
                 message = "Hey what, don't know any thing about me",
-                user = User(
-                    firstName = "Than0s",
-                    userId = ""
-                )
             ),
             Comment(
                 id = "",
                 message = "Hey what, don't know any thing about me",
-                user = User(
-                    firstName = "Than0s",
-                    userId = ""
-                )
             ),
             Comment(
                 id = "",
                 message = "Hey what, don't know any thing about me",
-                user = User(
-                    firstName = "Than0s",
-                    userId = ""
-                )
             )
         ),
         "",
         "",
-        {}, {}, {}
+        { emptyFlow() }, {}, {}, {}
     )
 }
