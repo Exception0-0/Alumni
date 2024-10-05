@@ -9,5 +9,5 @@ data class Comment(
     val postId: String = "",
     val userId: String = "",
     val message: String = "",
-    val timeStamp: Timestamp = Timestamp.now()
+    val timestamp: Timestamp = Timestamp.now()
 )

@@ -21,7 +21,6 @@ class PostUploadViewModel @Inject constructor(
     private val addPostUserCase: AddPostUseCase,
 ) : ViewModel() {
     var post by mutableStateOf(Post())
-    var circularProgressIndicatorState by mutableStateOf(false)
 
     fun onTitleChange(title: String) {
         post = post.copy(title = title)
@@ -35,7 +34,7 @@ class PostUploadViewModel @Inject constructor(
         post = post.copy(file = uri)
     }
 
-    fun onUploadClick(popScreen: () -> Unit) {
+    fun onUploadClick(onSuccess: () -> Unit) {
         viewModelScope.launch {
             when (val result = addPostUserCase.invoke(post)) {
                 is Either.Left -> {
@@ -44,7 +43,7 @@ class PostUploadViewModel @Inject constructor(
 
                 is Either.Right -> {
                     SnackbarController.showSnackbar("Post added successfully")
-                    popScreen()
+                    onSuccess()
                 }
             }
         }

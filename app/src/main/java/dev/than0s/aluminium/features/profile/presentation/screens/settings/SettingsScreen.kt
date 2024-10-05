@@ -11,11 +11,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.outlined.Security
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -38,8 +36,8 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.profile.domain.data_class.User
-import dev.than0s.mydiary.ui.spacing
-import dev.than0s.mydiary.ui.textSize
+import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun SettingScreen(
@@ -63,6 +61,13 @@ private fun SettingScreenContent(
     val listOfSettingsOptions = remember {
         listOf(
             SettingsOptions(
+                title = "Add Post",
+                icon = Icons.Default.AddAPhoto,
+                onClick = {
+                    openScreen(Screen.PostUploadScreen)
+                }
+            ),
+            SettingsOptions(
                 title = "Security",
                 icon = Icons.Default.Security,
                 onClick = {
@@ -75,7 +80,7 @@ private fun SettingScreenContent(
                 onClick = {
                     openScreen(Screen.SignOutScreen)
                 }
-            )
+            ),
         )
     }
 
@@ -149,7 +154,9 @@ private fun SettingScreenContent(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
+                        verticalAlignment = CenterVertically,
                         modifier = Modifier.padding(MaterialTheme.spacing.medium)
+
                     ) {
                         Icon(
                             imageVector = option.icon,

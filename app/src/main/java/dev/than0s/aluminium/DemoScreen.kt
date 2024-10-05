@@ -4,7 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import dev.than0s.mydiary.ui.textSize
+import dev.than0s.aluminium.ui.textSize
 
 @Preview(showSystemUi = true)
 @Composable

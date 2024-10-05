@@ -50,6 +50,7 @@ class CommentsViewModel @Inject constructor(
     }
 
     private fun loadComments() {
+        println("load comments: ${commentsScreenArgs.postId}")
         viewModelScope.launch {
 
             when (val result = getCommentFlowUseCase.invoke(commentsScreenArgs.postId)) {

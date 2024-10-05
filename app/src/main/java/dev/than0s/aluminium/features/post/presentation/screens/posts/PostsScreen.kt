@@ -47,9 +47,9 @@ import dev.than0s.aluminium.core.composable.WarningDialog
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.User
-import dev.than0s.mydiary.ui.elevation
-import dev.than0s.mydiary.ui.spacing
-import dev.than0s.mydiary.ui.textSize
+import dev.than0s.aluminium.ui.elevation
+import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.textSize
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

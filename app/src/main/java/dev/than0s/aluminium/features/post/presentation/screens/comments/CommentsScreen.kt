@@ -58,8 +58,8 @@ import dev.than0s.aluminium.core.composable.RoundedTextField
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.data_class.User
-import dev.than0s.mydiary.ui.spacing
-import dev.than0s.mydiary.ui.textSize
+import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.textSize
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

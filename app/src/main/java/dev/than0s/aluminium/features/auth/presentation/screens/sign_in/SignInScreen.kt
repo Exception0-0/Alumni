@@ -26,8 +26,8 @@ import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.LoadingElevatedButton
 import dev.than0s.aluminium.core.composable.PasswordTextField
 import dev.than0s.aluminium.features.auth.domain.data_class.EmailAuthParam
-import dev.than0s.mydiary.ui.spacing
-import dev.than0s.mydiary.ui.textSize
+import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun SignInScreen(

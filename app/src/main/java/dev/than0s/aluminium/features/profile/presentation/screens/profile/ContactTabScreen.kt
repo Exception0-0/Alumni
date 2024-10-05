@@ -36,8 +36,8 @@ import dev.than0s.aluminium.core.composable.LoadingTextButton
 import dev.than0s.aluminium.core.composable.RoundedTextField
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.ui.roundCorners
-import dev.than0s.mydiary.ui.spacing
-import dev.than0s.mydiary.ui.textSize
+import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun ContactsTabContent(

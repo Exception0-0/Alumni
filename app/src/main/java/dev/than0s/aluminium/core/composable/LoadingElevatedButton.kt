@@ -18,6 +18,7 @@ fun LoadingElevatedButton(
 ) {
     ElevatedButton(
         onClick = onClick,
+        enabled = !circularProgressIndicatorState,
         modifier = modifier
     ) {
         if (circularProgressIndicatorState) {

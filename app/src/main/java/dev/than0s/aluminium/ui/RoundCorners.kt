@@ -6,8 +6,6 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.than0s.mydiary.ui.Elevation
-import dev.than0s.mydiary.ui.LocalElevation
 
 
 data class RoundCorners(

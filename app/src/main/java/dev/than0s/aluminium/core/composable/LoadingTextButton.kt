@@ -19,6 +19,7 @@ fun LoadingTextButton(
 ) {
     TextButton(
         onClick = onClick,
+        enabled = !circularProgressIndicatorState,
         modifier = modifier
     ) {
         if (circularProgressIndicatorState) {

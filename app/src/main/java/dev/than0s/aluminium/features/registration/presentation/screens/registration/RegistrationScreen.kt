@@ -30,8 +30,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
-import dev.than0s.mydiary.ui.spacing
-import dev.than0s.mydiary.ui.textSize
+import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun RegistrationScreen(

@@ -31,8 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.than0s.aluminium.core.composable.WarningDialog
 import dev.than0s.aluminium.features.admin.domain.data_class.RequestForm
-import dev.than0s.mydiary.ui.elevation
-import dev.than0s.mydiary.ui.spacing
+import dev.than0s.aluminium.ui.elevation
+import dev.than0s.aluminium.ui.spacing
 
 @Composable
 fun RegistrationRequestsScreen(viewModel: RequestViewModel = hiltViewModel()) {
