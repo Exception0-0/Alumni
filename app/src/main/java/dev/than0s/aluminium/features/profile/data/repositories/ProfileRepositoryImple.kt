@@ -13,9 +13,9 @@ import javax.inject.Inject
 class ProfileRepositoryImple @Inject constructor(private val dataSource: ProfileDataSource) :
     ProfileRepository {
 
-    override suspend fun getUserProfile(): Either<Failure, User?> {
+    override suspend fun getUserProfile(userId: String): Either<Failure, User?> {
         return try {
-            Either.Right(dataSource.getUserProfile())
+            Either.Right(dataSource.getUserProfile(userId))
         } catch (e: ServerException) {
             Either.Left(Failure(e.message))
         }
@@ -39,9 +39,9 @@ class ProfileRepositoryImple @Inject constructor(private val dataSource: Profile
         }
     }
 
-    override suspend fun getContactInfo(): Either<Failure, ContactInfo> {
+    override suspend fun getContactInfo(userId: String): Either<Failure, ContactInfo?> {
         return try {
-            Either.Right(dataSource.getContactInfo())
+            Either.Right(dataSource.getContactInfo(userId))
         } catch (e: ServerException) {
             Either.Left(Failure(e.message))
         }

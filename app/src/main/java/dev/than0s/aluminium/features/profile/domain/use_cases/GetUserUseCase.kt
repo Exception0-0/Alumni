@@ -8,8 +8,8 @@ import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
 import javax.inject.Inject
 
 class GetUserUseCase @Inject constructor(private val repository: ProfileRepository) :
-    UseCase<Unit, User?> {
-    override suspend fun invoke(param: Unit): Either<Failure, User?> {
-        return repository.getUserProfile()
+    UseCase<String, User?> {
+    override suspend fun invoke(userId: String): Either<Failure, User?> {
+        return repository.getUserProfile(userId)
     }
 }

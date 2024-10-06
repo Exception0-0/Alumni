@@ -22,6 +22,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,8 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.WarningDialog
-import dev.than0s.aluminium.core.currentUserId
+import dev.than0s.aluminium.core.composable.LoadingIconButton
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.aluminium.ui.elevation
@@ -60,9 +60,7 @@ fun PostsScreen(
 ) {
     PostsScreenContent(
         postsList = viewModel.postsList,
-        isCurrentUser = viewModel.postScreenArgs.userId == currentUserId!!,
         onLikeClick = viewModel::onLikeClick,
-        onPostDeleteClick = viewModel::onPostDeleteClick,
         getUserProfile = viewModel::getUserProfile,
         openScreen = openScreen
     )
@@ -71,9 +69,7 @@ fun PostsScreen(
 @Composable
 private fun PostsScreenContent(
     postsList: List<Post>,
-    isCurrentUser: Boolean,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
-    onPostDeleteClick: (String) -> Unit,
     getUserProfile: (String) -> Flow<User>,
     openScreen: (Screen) -> Unit
 ) {
@@ -83,10 +79,8 @@ private fun PostsScreenContent(
         items(postsList) { post ->
             PostItem(
                 post = post,
-                isCurrentUser = isCurrentUser,
                 onLikeClick = onLikeClick,
                 getUserProfile = getUserProfile,
-                onPostDeleteClick = onPostDeleteClick,
                 openCommentScreen = {
                     openScreen(Screen.CommentsScreen(post.id))
                 }
@@ -97,30 +91,13 @@ private fun PostsScreenContent(
 
 
 @Composable
-private fun PostItem(
+fun PostItem(
     post: Post,
-    isCurrentUser: Boolean,
     openCommentScreen: () -> Unit,
-    onPostDeleteClick: (String) -> Unit,
     getUserProfile: (String) -> Flow<User>,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
 ) {
     val userProfile = getUserProfile(post.userId).collectAsState(initial = User()).value
-    var warningState by rememberSaveable { mutableStateOf(false) }
-
-    if (warningState) {
-        WarningDialog(
-            title = "Post Delete",
-            text = "Are you sure you want to delete this post?",
-            onDismissRequest = {
-                warningState = false
-            },
-            onConfirmation = {
-                onPostDeleteClick(post.id)
-                warningState = false
-            }
-        )
-    }
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(MaterialTheme.elevation.medium),
@@ -162,24 +139,12 @@ private fun PostItem(
             )
             Text(text = post.description)
 
-            if (isCurrentUser) {
-                ElevatedButton(
-                    onClick = {
-                        warningState = true
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(imageVector = Icons.Rounded.Delete, contentDescription = "delete post")
-                    Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
-                    Text(text = "Delete")
-                }
-            }
         }
     }
 }
 
 @Composable
-fun UserDetail(user: User) {
+private fun UserDetail(user: User) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -208,38 +173,44 @@ private fun PostStatus(
     openCommentScreen: () -> Unit,
 ) {
     var likeButtonState by rememberSaveable { mutableStateOf(isLiked) }
+    var loadingLikeButtonState by rememberSaveable { mutableStateOf(false) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         modifier = Modifier.padding(MaterialTheme.spacing.extraSmall)
     ) {
-        Icon(
-            imageVector = if (likeButtonState) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
-            contentDescription = "like button",
-            modifier = Modifier.clickable {
-                onLikeClick(likeButtonState) {
-                    likeButtonState = !likeButtonState
-                }
-            }
-        )
-        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
-        Text(
-            text = "Like",
-        )
 
-        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.medium))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+        ) {
+            LoadingIconButton(
+                icon = if (likeButtonState) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
+                circularProgressIndicatorState = loadingLikeButtonState,
+                onClick = {
+                    loadingLikeButtonState = true
+                    onLikeClick(likeButtonState) {
+                        loadingLikeButtonState = false
+                        likeButtonState = !likeButtonState
+                    }
+                },
+            )
+            Text(text = "Like")
+        }
 
-        Icon(
-            imageVector = Icons.AutoMirrored.Outlined.Comment,
-            contentDescription = "comment button",
-            modifier = Modifier.clickable {
-                openCommentScreen()
+        IconButton(onClick = openCommentScreen) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.Comment,
+                    contentDescription = "comment button",
+                )
+                Text(text = "Comment")
             }
-        )
-        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
-        Text(
-            text = "Comment",
-        )
+        }
     }
 }
 
@@ -254,10 +225,8 @@ private fun PostsScreenPreview() {
                 description = "hello I'm Than0s don't talk to me",
             )
         ),
-        isCurrentUser = true,
         onLikeClick = { _, _, _ -> },
         getUserProfile = { emptyFlow() },
-        onPostDeleteClick = {},
         openScreen = {}
     )
 }

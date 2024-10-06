@@ -41,6 +41,7 @@ import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.F
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
+import dev.than0s.aluminium.features.post.presentation.screens.posts.SpecificPostsScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
@@ -132,6 +133,11 @@ private fun NavGraphHost(
         }
         composable<Screen.PostsScreen> {
             PostsScreen(
+                openScreen = navController::openScreen
+            )
+        }
+        composable<Screen.SpecificPostsScreen> {
+            SpecificPostsScreen(
                 openScreen = navController::openScreen
             )
         }

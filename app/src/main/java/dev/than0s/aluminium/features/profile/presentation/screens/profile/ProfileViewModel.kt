@@ -4,10 +4,13 @@ import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
@@ -20,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val profileUseCase: GetUserUseCase,
     private val updateProfileUseCase: SetProfileUseCase,
     private val getContactInfoUseCase: GetContactInfoUseCase,
@@ -30,6 +34,8 @@ class ProfileViewModel @Inject constructor(
     var editUserProfile by mutableStateOf(User())
     var editContactInfo by mutableStateOf(ContactInfo())
 
+    val profileScreenArgs = savedStateHandle.toRoute<Screen.ProfileScreen>()
+
     init {
         loadProfile()
         getContactInfo()
@@ -37,7 +43,7 @@ class ProfileViewModel @Inject constructor(
 
     fun loadProfile() {
         viewModelScope.launch {
-            when (val result = profileUseCase.invoke(Unit)) {
+            when (val result = profileUseCase.invoke(profileScreenArgs.userId)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
                 }
@@ -52,14 +58,14 @@ class ProfileViewModel @Inject constructor(
 
     fun getContactInfo() {
         viewModelScope.launch {
-            when (val result = getContactInfoUseCase.invoke(Unit)) {
+            when (val result = getContactInfoUseCase.invoke(profileScreenArgs.userId)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
                 }
 
                 is Either.Right -> result.value.let {
-                    contactInfo = it
-                    editContactInfo = it
+                    contactInfo = it ?: ContactInfo()
+                    editContactInfo = it ?: ContactInfo()
                 }
             }
         }

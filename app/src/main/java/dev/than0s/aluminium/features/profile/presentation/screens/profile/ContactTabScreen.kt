@@ -41,6 +41,7 @@ import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun ContactsTabContent(
+    isCurrentUser: Boolean,
     contactInfo: ContactInfo,
     editContactInfo: ContactInfo,
     onEmailChange: (String) -> Unit,
@@ -50,17 +51,20 @@ fun ContactsTabContent(
 ) {
     var editStatus by rememberSaveable { mutableStateOf(false) }
 
-    if (editStatus) {
-        UpdateContactInfo(
-            contactInfo = editContactInfo,
-            onEmailChange = onEmailChange,
-            onPhoneChange = onMobileChange,
-            onSocialHandleChange = onSocialHandleChange,
-            onUpdateContactClick = onUpdateContactClick,
-            onDismiss = {
-                editStatus = false
-            }
-        )
+    if (isCurrentUser) {
+
+        if (editStatus) {
+            UpdateContactInfo(
+                contactInfo = editContactInfo,
+                onEmailChange = onEmailChange,
+                onPhoneChange = onMobileChange,
+                onSocialHandleChange = onSocialHandleChange,
+                onUpdateContactClick = onUpdateContactClick,
+                onDismiss = {
+                    editStatus = false
+                }
+            )
+        }
     }
 
     Column(
@@ -81,12 +85,15 @@ fun ContactsTabContent(
             info = contactInfo.socialHandles ?: "No social handles added",
             icon = Icons.Outlined.Star,
         )
-        ElevatedButton(
-            onClick = {
-                editStatus = true
-            },
-        ) {
-            Text(text = "Edit Contacts")
+
+        if (isCurrentUser) {
+            ElevatedButton(
+                onClick = {
+                    editStatus = true
+                },
+            ) {
+                Text(text = "Edit Contacts")
+            }
         }
     }
 

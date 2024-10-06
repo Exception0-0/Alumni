@@ -9,8 +9,8 @@ import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
 import javax.inject.Inject
 
 class GetContactInfoUseCase @Inject constructor(private val repository: ProfileRepository) :
-    UseCase<Unit, ContactInfo> {
-    override suspend fun invoke(param: Unit): Either<Failure, ContactInfo> {
-        return repository.getContactInfo()
+    UseCase<String, ContactInfo?> {
+    override suspend fun invoke(userId: String): Either<Failure, ContactInfo?> {
+        return repository.getContactInfo(userId)
     }
 }

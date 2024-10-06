@@ -18,22 +18,6 @@ fun RawUser.toUser(profileImage: Uri?, coverImage: Uri?): User = User(
     coverImage = coverImage
 )
 
-fun ContactInfo.toRawContactInfo(): RawContactInfo = RawContactInfo(
-    mobile = mobile,
-    socialHandles = socialHandles
-)
-
-fun RawContactInfo.toContactInfo(email: String): ContactInfo = ContactInfo(
-    email = email,
-    mobile = mobile,
-    socialHandles = socialHandles
-)
-
-data class RawContactInfo(
-    val mobile: String? = null,
-    val socialHandles: String? = null
-)
-
 data class RawUser(
     val firstName: String = "",
     val lastName: String = "",

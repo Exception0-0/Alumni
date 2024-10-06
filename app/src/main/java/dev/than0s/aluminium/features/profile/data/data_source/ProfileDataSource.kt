@@ -4,13 +4,10 @@ import android.net.Uri
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
-import dev.than0s.aluminium.features.profile.data.mapper.RawContactInfo
 import dev.than0s.aluminium.features.profile.data.mapper.RawUser
-import dev.than0s.aluminium.features.profile.data.mapper.toContactInfo
-import dev.than0s.aluminium.features.profile.data.mapper.toRawContactInfo
 import dev.than0s.aluminium.features.profile.data.mapper.toRawUser
 import dev.than0s.aluminium.features.profile.data.mapper.toUser
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
@@ -20,10 +17,10 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface ProfileDataSource {
-    suspend fun getUserProfile(): User?
+    suspend fun getUserProfile(userId: String): User?
     suspend fun setUserProfile(user: User)
     suspend fun setContactInfo(contactInfo: ContactInfo)
-    suspend fun getContactInfo(): ContactInfo
+    suspend fun getContactInfo(userId: String): ContactInfo?
 }
 
 class ProfileDataSourceImple @Inject constructor(
@@ -31,10 +28,10 @@ class ProfileDataSourceImple @Inject constructor(
     private val store: FirebaseFirestore,
     private val cloud: FirebaseStorage,
 ) : ProfileDataSource {
-    override suspend fun getUserProfile(): User? {
+    override suspend fun getUserProfile(userId: String): User? {
         return try {
             store.collection(PROFILE)
-                .document(auth.currentUser!!.uid)
+                .document(userId)
                 .get()
                 .await()
                 .toObject(RawUser::class.java)
@@ -76,21 +73,20 @@ class ProfileDataSourceImple @Inject constructor(
         try {
             store.collection(CONTACT_INFO)
                 .document(auth.currentUser!!.uid)
-                .set(contactInfo.toRawContactInfo())
+                .set(contactInfo)
                 .await()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
 
-    override suspend fun getContactInfo(): ContactInfo {
+    override suspend fun getContactInfo(userId: String): ContactInfo? {
         return try {
-            (store.collection(CONTACT_INFO)
-                .document(auth.currentUser!!.uid)
+            store.collection(CONTACT_INFO)
+                .document(userId)
                 .get()
                 .await()
-                .toObject(RawContactInfo::class.java) ?: RawContactInfo())
-                .toContactInfo(auth.currentUser!!.email!!)
+                .toObject()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }

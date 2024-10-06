@@ -33,6 +33,11 @@ sealed class Screen {
     ) : Screen()
 
     @Serializable
+    data class SpecificPostsScreen(
+        val userId: String
+    ) : Screen()
+
+    @Serializable
     data class ProfileScreen(
         val userId: String
     ) : Screen()

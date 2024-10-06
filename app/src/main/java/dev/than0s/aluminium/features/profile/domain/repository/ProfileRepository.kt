@@ -8,8 +8,8 @@ import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
 
 interface ProfileRepository {
-    suspend fun getUserProfile(): Either<Failure, User?>
+    suspend fun getUserProfile(userId: String): Either<Failure, User?>
     suspend fun setUserProfile(profile: User): Either<Failure, Unit>
     suspend fun setContactInfo(contactInfo: ContactInfo): Either<Failure, Unit>
-    suspend fun getContactInfo(): Either<Failure, ContactInfo>
+    suspend fun getContactInfo(userId: String): Either<Failure, ContactInfo?>
 }

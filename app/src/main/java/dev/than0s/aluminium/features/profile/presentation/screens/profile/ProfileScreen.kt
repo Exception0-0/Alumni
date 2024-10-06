@@ -55,7 +55,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
@@ -75,6 +74,7 @@ fun ProfileScreen(
     openScreen: (Screen) -> Unit
 ) {
     ProfileScreenContent(
+        userId = viewModel.profileScreenArgs.userId,
         userProfile = viewModel.userProfile,
         contactInfo = viewModel.contactInfo,
         editUserProfile = viewModel.editUserProfile,
@@ -95,6 +95,7 @@ fun ProfileScreen(
 
 @Composable
 private fun ProfileScreenContent(
+    userId: String,
     userProfile: User,
     contactInfo: ContactInfo,
     editUserProfile: User,
@@ -166,16 +167,20 @@ private fun ProfileScreenContent(
             fontSize = MaterialTheme.textSize.small,
             fontWeight = FontWeight.W300
         )
-        ElevatedButton(
-            onClick = {
-                updateProfileDialogState = true
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Edit Profile")
+
+        if (userId == currentUserId) {
+            ElevatedButton(
+                onClick = {
+                    updateProfileDialogState = true
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Edit Profile")
+            }
         }
 
         ProfileTabRow(
+            userId = userId,
             tabItems = listOf(
                 TabItem(
                     title = "Contacts",
@@ -183,6 +188,7 @@ private fun ProfileScreenContent(
                     unselectedIcon = Icons.Outlined.AccountBox,
                     screen = {
                         ContactsTabContent(
+                            isCurrentUser = userId == currentUserId,
                             contactInfo = contactInfo,
                             editContactInfo = editContactInfo,
                             onEmailChange = onEmailChange,
@@ -200,6 +206,7 @@ private fun ProfileScreenContent(
 
 @Composable
 private fun ProfileTabRow(
+    userId: String,
     tabItems: List<TabItem>,
     openScreen: (Screen) -> Unit
 ) {
@@ -228,7 +235,7 @@ private fun ProfileTabRow(
         Tab(
             selected = false,
             onClick = {
-                openScreen(Screen.PostsScreen(currentUserId))
+                openScreen(Screen.SpecificPostsScreen(userId))
             },
             text = {
                 Text("Posts")
@@ -395,6 +402,7 @@ data class TabItem(
 @Composable
 private fun ProfileScreenPreview() {
     ProfileScreenContent(
+        userId = "",
         User(
             firstName = "Than0s",
             lastName = "Op",
