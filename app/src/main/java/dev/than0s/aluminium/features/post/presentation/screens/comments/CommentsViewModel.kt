@@ -69,7 +69,7 @@ class CommentsViewModel @Inject constructor(
         currentComment = value
     }
 
-    fun onAddCommentClick() {
+    fun onAddCommentClick(onCompleted: () -> Unit) {
         viewModelScope.launch {
             val comment = Comment(
                 message = currentComment,
@@ -85,6 +85,7 @@ class CommentsViewModel @Inject constructor(
                     currentComment = ""
                 }
             }
+            onCompleted()
         }
     }
 

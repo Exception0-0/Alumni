@@ -54,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.core.composable.LoadingIconButton
 import dev.than0s.aluminium.core.composable.RoundedTextField
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
@@ -85,9 +86,10 @@ private fun CommentScreenContent(
     currentUserId: String,
     getUserProfile: (String) -> Flow<User>,
     onCurrentCommentChange: (String) -> Unit,
-    onAddCommentClick: () -> Unit,
+    onAddCommentClick: (() -> Unit) -> Unit,
     onRemoveCommentClick: (Comment) -> Unit
 ) {
+    var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -110,13 +112,15 @@ private fun CommentScreenContent(
                     placeholder = "Comment",
                     onValueChange = onCurrentCommentChange,
                     trailingIcon = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Rounded.Send,
-                            contentDescription = "send comment",
-                            modifier = Modifier
-                                .clickable {
-                                    onAddCommentClick()
+                        LoadingIconButton(
+                            icon = Icons.AutoMirrored.Rounded.Send,
+                            circularProgressIndicatorState = circularProgressIndicatorState,
+                            onClick = {
+                                circularProgressIndicatorState = true
+                                onAddCommentClick {
+                                    circularProgressIndicatorState = false
                                 }
+                            },
                         )
                     },
                     modifier = Modifier.fillMaxWidth()

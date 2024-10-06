@@ -77,7 +77,9 @@ private fun PostsScreenContent(
     getUserProfile: (String) -> Flow<User>,
     openScreen: (Screen) -> Unit
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier.padding(MaterialTheme.spacing.small)
+    ) {
         items(postsList) { post ->
             PostItem(
                 post = post,
