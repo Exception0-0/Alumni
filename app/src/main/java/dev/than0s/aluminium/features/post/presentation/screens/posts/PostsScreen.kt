@@ -81,6 +81,9 @@ private fun PostsScreenContent(
                 post = post,
                 onLikeClick = onLikeClick,
                 getUserProfile = getUserProfile,
+                openProfileScreen = {
+                    openScreen(Screen.ProfileScreen(post.userId))
+                },
                 openCommentScreen = {
                     openScreen(Screen.CommentsScreen(post.id))
                 }
@@ -93,6 +96,7 @@ private fun PostsScreenContent(
 @Composable
 fun PostItem(
     post: Post,
+    openProfileScreen: () -> Unit,
     openCommentScreen: () -> Unit,
     getUserProfile: (String) -> Flow<User>,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
@@ -114,7 +118,8 @@ fun PostItem(
         ) {
 
             UserDetail(
-                user = userProfile
+                user = userProfile,
+                openProfileScreen = openProfileScreen
             )
 
             Text(
@@ -144,9 +149,15 @@ fun PostItem(
 }
 
 @Composable
-private fun UserDetail(user: User) {
+private fun UserDetail(
+    openProfileScreen: () -> Unit,
+    user: User
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            openProfileScreen()
+        }
     ) {
         AsyncImage(
             model = user.profileImage,
@@ -183,7 +194,7 @@ private fun PostStatus(
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
         ) {
             LoadingIconButton(
                 icon = if (likeButtonState) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
@@ -199,18 +210,18 @@ private fun PostStatus(
             Text(text = "Like")
         }
 
-        IconButton(onClick = openCommentScreen) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
-            ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+        ) {
+            IconButton(onClick = openCommentScreen) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.Comment,
                     contentDescription = "comment button",
                 )
-                Text(text = "Comment")
             }
         }
+        Text(text = "Comment")
     }
 }
 

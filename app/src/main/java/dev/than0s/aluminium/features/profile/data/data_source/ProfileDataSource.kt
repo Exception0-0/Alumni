@@ -36,8 +36,8 @@ class ProfileDataSourceImple @Inject constructor(
                 .await()
                 .toObject(RawUser::class.java)
                 ?.toUser(
-                    profileImage = getUserProfileImage(),
-                    coverImage = getUserCoverImage()
+                    profileImage = getUserProfileImage(userId),
+                    coverImage = getUserCoverImage(userId)
                 )
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
@@ -92,10 +92,10 @@ class ProfileDataSourceImple @Inject constructor(
         }
     }
 
-    private suspend fun getUserProfileImage(): Uri? {
+    private suspend fun getUserProfileImage(userId:String): Uri? {
         return try {
             cloud.reference
-                .child("$PROFILE_IMAGE/${auth.currentUser!!.uid}/0")
+                .child("$PROFILE_IMAGE/${userId}/0")
                 .downloadUrl
                 .await()
         } catch (e: StorageException) {
@@ -106,10 +106,10 @@ class ProfileDataSourceImple @Inject constructor(
         }
     }
 
-    private suspend fun getUserCoverImage(): Uri? {
+    private suspend fun getUserCoverImage(userId:String): Uri? {
         return try {
             cloud.reference
-                .child("$COVER_IMAGE/${auth.currentUser!!.uid}/0")
+                .child("$COVER_IMAGE/${userId}/0")
                 .downloadUrl
                 .await()
         } catch (e: StorageException) {

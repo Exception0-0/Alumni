@@ -62,6 +62,9 @@ private fun SpecificPostsScreenContent(
                 onLikeClick = onLikeClick,
                 getUserProfile = getUserProfile,
                 onPostDeleteClick = onPostDeleteClick,
+                openProfileScreen = {
+                    openScreen(Screen.ProfileScreen(post.userId))
+                },
                 openCommentScreen = {
                     openScreen(Screen.CommentsScreen(post.id))
                 }
@@ -74,6 +77,7 @@ private fun SpecificPostsScreenContent(
 private fun SpecificPostItem(
     post: Post,
     isCurrentUser: Boolean,
+    openProfileScreen: () -> Unit,
     openCommentScreen: () -> Unit,
     getUserProfile: (String) -> Flow<User>,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
@@ -99,6 +103,7 @@ private fun SpecificPostItem(
         post = post,
         onLikeClick = onLikeClick,
         getUserProfile = getUserProfile,
+        openProfileScreen = openProfileScreen,
         openCommentScreen = openCommentScreen
     )
 

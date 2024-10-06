@@ -100,7 +100,7 @@ private fun SettingScreenContent(
                 }
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
                     modifier = Modifier.padding(MaterialTheme.spacing.medium)
                 ) {
@@ -129,22 +129,6 @@ private fun SettingScreenContent(
                 }
             }
 
-//            DropdownMenuItem(
-//                text = {
-//                    Row {
-//                        Text(text = "My posts")
-//                    }
-//                },
-//                onClick = {
-//                    openScreen(Screen.PostsScreen(currentUserId))
-//                },
-//                leadingIcon = {
-//                    Icon(
-//                        imageVector = Icons.AutoMirrored.Filled.List,
-//                        contentDescription = "post add"
-//                    )
-//                }
-//            )
             listOfSettingsOptions.forEach { option ->
 
                 ElevatedCard(
