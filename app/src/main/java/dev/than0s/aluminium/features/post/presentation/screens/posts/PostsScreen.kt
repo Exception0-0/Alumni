@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,12 +13,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
@@ -48,6 +51,7 @@ import dev.than0s.aluminium.core.composable.LoadingIconButton
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.aluminium.ui.elevation
+import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
 import kotlinx.coroutines.flow.Flow
@@ -74,7 +78,8 @@ private fun PostsScreenContent(
     openScreen: (Screen) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.padding(MaterialTheme.spacing.small)
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        modifier = Modifier.padding(MaterialTheme.spacing.medium)
     ) {
         items(postsList) { post ->
             PostItem(
@@ -105,9 +110,9 @@ fun PostItem(
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(MaterialTheme.elevation.medium),
+        shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(MaterialTheme.spacing.small)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
@@ -117,10 +122,19 @@ fun PostItem(
                 .width(360.dp)
         ) {
 
-            UserDetail(
-                user = userProfile,
-                openProfileScreen = openProfileScreen
-            )
+            Card(
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
+                    .clickable {
+                        openProfileScreen()
+                    }
+            ) {
+                UserDetail(
+                    user = userProfile,
+                    modifier = Modifier
+                        .padding(MaterialTheme.spacing.small)
+                )
+            }
 
             Text(
                 text = post.title,
@@ -128,36 +142,49 @@ fun PostItem(
                 fontSize = MaterialTheme.textSize.gigantic
             )
 
+            Text(
+                text = post.description,
+                fontWeight = FontWeight.W300,
+                fontSize = MaterialTheme.textSize.small
+            )
+
             AsyncImage(
                 model = post.file,
                 placeholder = painterResource(R.drawable.ic_launcher_background),
                 contentDescription = "post image",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(MaterialTheme.spacing.medium))
             )
-            PostStatus(
-                isLiked = post.isLiked,
-                onLikeClick = { hasLike, callback ->
-                    onLikeClick(post.id, hasLike, callback)
-                },
-                openCommentScreen = openCommentScreen
-            )
-            Text(text = post.description)
 
+            Card(
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
+            ) {
+                PostStatus(
+                    isLiked = post.isLiked,
+                    onLikeClick = { hasLike, callback ->
+                        onLikeClick(post.id, hasLike, callback)
+                    },
+                    openCommentScreen = openCommentScreen,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(MaterialTheme.spacing.small)
+                )
+            }
         }
     }
 }
 
 @Composable
 private fun UserDetail(
-    openProfileScreen: () -> Unit,
-    user: User
+    user: User,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.clickable {
-            openProfileScreen()
-        }
+        modifier = modifier
     ) {
         AsyncImage(
             model = user.profileImage,
@@ -182,6 +209,7 @@ private fun PostStatus(
     isLiked: Boolean,
     onLikeClick: (Boolean, () -> Unit) -> Unit,
     openCommentScreen: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var likeButtonState by rememberSaveable { mutableStateOf(isLiked) }
     var loadingLikeButtonState by rememberSaveable { mutableStateOf(false) }
@@ -189,7 +217,7 @@ private fun PostStatus(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        modifier = Modifier.padding(MaterialTheme.spacing.extraSmall)
+        modifier = modifier.padding(MaterialTheme.spacing.extraSmall)
     ) {
 
         Row(
@@ -220,8 +248,8 @@ private fun PostStatus(
                     contentDescription = "comment button",
                 )
             }
+            Text(text = "Comment")
         }
-        Text(text = "Comment")
     }
 }
 
