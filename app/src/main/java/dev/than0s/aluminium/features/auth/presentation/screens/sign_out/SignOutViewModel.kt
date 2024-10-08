@@ -18,8 +18,8 @@ class SignOutViewModel @Inject constructor(private val useCase: SignOutUseCase) 
                     SnackbarController.showSnackbar(result.value.message)
                 }
                 is Either.Right -> {
-                    SnackbarController.showSnackbar("Signed out successfully")
                     restartApp()
+                    SnackbarController.showSnackbar("Signed out successfully")
                 }
             }
         }

@@ -3,11 +3,9 @@ package dev.than0s.aluminium.features.profile.presentation.screens.profile
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,18 +13,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.outlined.AccountBox
-import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.GridView
-import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,19 +26,15 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -59,8 +47,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.LoadingTextButton
-import dev.than0s.aluminium.core.composable.RoundedTextField
+import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
+import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
+import dev.than0s.aluminium.core.composable.AluminiumDescriptionText
+import dev.than0s.aluminium.core.composable.AluminiumLoadingTextButton
+import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.composable.AluminiumTextField
+import dev.than0s.aluminium.core.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.composable.CoverImageModifier
+import dev.than0s.aluminium.core.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
@@ -130,14 +125,10 @@ private fun ProfileScreenContent(
         )
     }
 
-    AsyncImage(
+    AluminiumAsyncImage(
         model = userProfile.coverImage,
-        contentDescription = "cover image",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .height(128.dp)
-            .fillMaxWidth()
-            .background(colorResource(id = R.color.purple_500))
+        settings = AluminiumAsyncImageSettings.CoverImage,
+        modifier = CoverImageModifier.default
     )
 
     Column(
@@ -148,35 +139,27 @@ private fun ProfileScreenContent(
             .padding(top = MaterialTheme.spacing.extraLarge)
     ) {
 
-        AsyncImage(
+        AluminiumAsyncImage(
             model = userProfile.profileImage,
-            contentDescription = "user profile image",
-            contentScale = ContentScale.Crop,
-            placeholder = painterResource(R.drawable.ic_launcher_background),
-            modifier = Modifier
-                .size(80.dp)
-                .clip(CircleShape)
+            settings = AluminiumAsyncImageSettings.UserProfile,
+            modifier = ProfileImageModifier.large
         )
-        Text(
-            text = "${userProfile.firstName} ${userProfile.lastName}",
+        AluminiumTitleText(
+            title = "${userProfile.firstName} ${userProfile.lastName}",
             fontSize = MaterialTheme.textSize.large,
-            fontWeight = FontWeight.W500
         )
-        Text(
-            text = userProfile.bio,
-            fontSize = MaterialTheme.textSize.small,
-            fontWeight = FontWeight.W300
+        AluminiumDescriptionText(
+            description = userProfile.bio,
         )
 
         if (userId == currentUserId) {
-            ElevatedButton(
+            AluminiumElevatedButton(
+                label = "Edit Profile",
                 onClick = {
                     updateProfileDialogState = true
                 },
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "Edit Profile")
-            }
+            )
         }
 
         ProfileTabRow(
@@ -346,19 +329,19 @@ private fun UpdateProfileDialog(
                     Column(
                         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
                     ) {
-                        RoundedTextField(
+                        AluminiumTextField(
                             value = userProfile.firstName,
                             onValueChange = onFirstNameChange,
                             placeholder = "First Name",
                         )
-                        RoundedTextField(
+                        AluminiumTextField(
                             value = userProfile.lastName,
                             onValueChange = onLastNameChange,
                             placeholder = "Last Name"
                         )
                     }
                 }
-                RoundedTextField(
+                AluminiumTextField(
                     value = userProfile.bio,
                     onValueChange = onBioChange,
                     placeholder = "Bio",
@@ -372,7 +355,7 @@ private fun UpdateProfileDialog(
                         Text(text = "Cancel")
                     }
 
-                    LoadingTextButton(
+                    AluminiumLoadingTextButton(
                         label = "Update",
                         circularProgressIndicatorState = circularProgressState,
                         onClick = {

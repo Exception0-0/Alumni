@@ -11,15 +11,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.than0s.aluminium.core.composable.WarningDialog
+import dev.than0s.aluminium.core.composable.AluminiumAlertDialog
 import dev.than0s.aluminium.features.admin.domain.data_class.RequestForm
 import dev.than0s.aluminium.ui.elevation
 import dev.than0s.aluminium.ui.spacing
@@ -67,9 +64,9 @@ private fun RegistrationRequestItem(
     var showRejectAlertDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showAcceptAlertDialog) {
-        WarningDialog(
+        AluminiumAlertDialog(
             title = accepted_title,
-            text = accepted_text,
+            description = accepted_text,
             onDismissRequest = { showAcceptAlertDialog = false },
             onConfirmation = {
                 onAcceptedClick(request)
@@ -79,9 +76,9 @@ private fun RegistrationRequestItem(
     }
 
     if (showRejectAlertDialog) {
-        WarningDialog(
+        AluminiumAlertDialog(
             title = rejected_title,
-            text = rejected_text,
+            description = rejected_text,
             onDismissRequest = { showRejectAlertDialog = false },
             onConfirmation = {
                 onRejectedClick(request)

@@ -7,11 +7,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun WarningDialog(
+fun AluminiumAlertDialog(
     title: String,
-    text: String,
+    description: String,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
 ) {
@@ -26,7 +27,7 @@ fun WarningDialog(
             Text(text = title)
         },
         text = {
-            Text(text = text)
+            Text(text = description)
         },
         onDismissRequest = {
             onDismissRequest()
@@ -49,5 +50,16 @@ fun WarningDialog(
                 Text("Dismiss")
             }
         }
+    )
+}
+
+@Preview
+@Composable
+private fun AluminiumWarningDialogPreview() {
+    AluminiumAlertDialog(
+        title = "Hello It is a warning",
+        description = "write something to user like what we are going to do",
+        onDismissRequest = {},
+        onConfirmation = {}
     )
 }

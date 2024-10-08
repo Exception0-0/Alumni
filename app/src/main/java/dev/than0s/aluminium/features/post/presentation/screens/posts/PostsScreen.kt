@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,13 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.ThumbUp
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,10 +39,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.LoadingIconButton
+import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
+import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
+import dev.than0s.aluminium.core.composable.AluminiumLoadingIconButton
+import dev.than0s.aluminium.core.composable.AluminiumCard
+import dev.than0s.aluminium.core.composable.AluminiumDescriptionText
+import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.composable.PostImageModifier
+import dev.than0s.aluminium.core.composable.ProfileImageModifier
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.User
-import dev.than0s.aluminium.ui.elevation
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -108,9 +107,7 @@ fun PostItem(
 ) {
     val userProfile = getUserProfile(post.userId).collectAsState(initial = User()).value
 
-    ElevatedCard(
-        elevation = CardDefaults.cardElevation(MaterialTheme.elevation.medium),
-        shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
+    AluminiumElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -122,7 +119,7 @@ fun PostItem(
                 .width(360.dp)
         ) {
 
-            Card(
+            AluminiumCard(
                 modifier = Modifier
                     .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
                     .clickable {
@@ -136,32 +133,21 @@ fun PostItem(
                 )
             }
 
-            Text(
-                text = post.title,
-                fontWeight = FontWeight.W400,
-                fontSize = MaterialTheme.textSize.gigantic
+            AluminiumTitleText(
+                title = post.title,
             )
 
-            Text(
-                text = post.description,
-                fontWeight = FontWeight.W300,
-                fontSize = MaterialTheme.textSize.small
+            AluminiumDescriptionText(
+                description = post.description,
             )
 
-            AsyncImage(
+            AluminiumAsyncImage(
                 model = post.file,
-                placeholder = painterResource(R.drawable.ic_launcher_background),
-                contentDescription = "post image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(MaterialTheme.spacing.medium))
+                settings = AluminiumAsyncImageSettings.PostImage,
+                modifier = PostImageModifier.default
             )
 
-            Card(
-                modifier = Modifier
-                    .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
-            ) {
+            AluminiumCard {
                 PostStatus(
                     isLiked = post.isLiked,
                     onLikeClick = { hasLike, callback ->
@@ -186,19 +172,14 @@ private fun UserDetail(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        AsyncImage(
+        AluminiumAsyncImage(
             model = user.profileImage,
-            placeholder = painterResource(R.drawable.ic_launcher_background),
-            contentDescription = "User profile image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(40.dp)
+            settings = AluminiumAsyncImageSettings.UserProfile,
+            modifier = ProfileImageModifier.medium
         )
         Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
-        Text(
-            text = "${user.firstName} ${user.lastName}",
-            fontWeight = FontWeight.W100,
+        AluminiumTitleText(
+            title = "${user.firstName} ${user.lastName}",
             fontSize = MaterialTheme.textSize.large
         )
     }
@@ -224,7 +205,7 @@ private fun PostStatus(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
         ) {
-            LoadingIconButton(
+            AluminiumLoadingIconButton(
                 icon = if (likeButtonState) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
                 circularProgressIndicatorState = loadingLikeButtonState,
                 onClick = {
@@ -235,7 +216,10 @@ private fun PostStatus(
                     }
                 },
             )
-            Text(text = "Like")
+            AluminiumTitleText(
+                title = "Like",
+                fontSize = MaterialTheme.textSize.small
+            )
         }
 
         Row(
@@ -248,7 +232,10 @@ private fun PostStatus(
                     contentDescription = "comment button",
                 )
             }
-            Text(text = "Comment")
+            AluminiumTitleText(
+                title = "Comments",
+                fontSize = MaterialTheme.textSize.small
+            )
         }
     }
 }

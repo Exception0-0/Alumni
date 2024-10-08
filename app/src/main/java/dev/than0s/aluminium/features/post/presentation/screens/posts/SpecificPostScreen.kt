@@ -20,7 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.WarningDialog
+import dev.than0s.aluminium.core.composable.AluminiumAlertDialog
+import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.User
@@ -86,9 +87,9 @@ private fun SpecificPostItem(
     var warningState by rememberSaveable { mutableStateOf(false) }
 
     if (warningState) {
-        WarningDialog(
+        AluminiumAlertDialog(
             title = "Post Delete",
-            text = "Are you sure you want to delete this post?",
+            description = "Are you sure you want to delete this post?",
             onDismissRequest = {
                 warningState = false
             },
@@ -108,16 +109,12 @@ private fun SpecificPostItem(
     )
 
     if (isCurrentUser) {
-        ElevatedButton(
+        AluminiumElevatedButton(
+            label = "Delete Post",
             onClick = {
                 warningState = true
             },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(imageVector = Icons.Rounded.Delete, contentDescription = "delete post")
-            Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
-            Text(text = "Delete")
-        }
+        )
     }
 }
 

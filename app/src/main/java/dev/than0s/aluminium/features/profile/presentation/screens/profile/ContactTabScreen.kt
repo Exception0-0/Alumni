@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,10 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,11 +24,13 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import dev.than0s.aluminium.core.composable.LoadingTextButton
-import dev.than0s.aluminium.core.composable.RoundedTextField
+import dev.than0s.aluminium.core.composable.AluminiumDescriptionText
+import dev.than0s.aluminium.core.composable.AluminiumLoadingTextButton
+import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.composable.AluminiumTextField
+import dev.than0s.aluminium.core.composable.AluminiumTitleText
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
@@ -87,13 +84,12 @@ fun ContactsTabContent(
         )
 
         if (isCurrentUser) {
-            ElevatedButton(
+            AluminiumElevatedButton(
+                label = "Edit Contacts",
                 onClick = {
                     editStatus = true
                 },
-            ) {
-                Text(text = "Edit Contacts")
-            }
+            )
         }
     }
 
@@ -105,7 +101,7 @@ private fun InfoFormat(
     info: String,
     icon: ImageVector,
 ) {
-    ElevatedCard(
+    AluminiumElevatedCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -119,16 +115,13 @@ private fun InfoFormat(
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
             ) {
-                Text(
-                    text = title,
-                    fontWeight = FontWeight.W500,
+                AluminiumTitleText(
+                    title = title,
                     fontSize = MaterialTheme.textSize.large
                 )
 
-                Text(
-                    text = info,
-                    fontWeight = FontWeight.W300,
-                    fontSize = MaterialTheme.textSize.small
+                AluminiumDescriptionText(
+                    description = info,
                 )
             }
         }
@@ -157,22 +150,20 @@ private fun UpdateContactInfo(
                 horizontalAlignment = CenterHorizontally,
                 modifier = Modifier.padding(MaterialTheme.spacing.medium)
             ) {
-                Text(
-                    text = "Contact",
-                    fontSize = MaterialTheme.textSize.gigantic,
-                    fontWeight = FontWeight.W900
+                AluminiumTitleText(
+                    title = "Contact",
                 )
-                RoundedTextField(
+                AluminiumTextField(
                     value = contactInfo.email,
                     onValueChange = onEmailChange,
                     placeholder = "Email"
                 )
-                RoundedTextField(
+                AluminiumTextField(
                     value = contactInfo.mobile ?: "",
                     onValueChange = onPhoneChange,
                     placeholder = "Mobile"
                 )
-                RoundedTextField(
+                AluminiumTextField(
                     value = contactInfo.socialHandles ?: "",
                     onValueChange = onSocialHandleChange,
                     placeholder = "Social Handles"
@@ -185,7 +176,7 @@ private fun UpdateContactInfo(
                         Text(text = "Cancel")
                     }
 
-                    LoadingTextButton(
+                    AluminiumLoadingTextButton(
                         label = "Update",
                         circularProgressIndicatorState = circularProgressState,
                         onClick = {

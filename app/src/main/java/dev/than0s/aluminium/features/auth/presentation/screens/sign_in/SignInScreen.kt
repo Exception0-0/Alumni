@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,8 +24,12 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.LoadingElevatedButton
-import dev.than0s.aluminium.core.composable.PasswordTextField
+import dev.than0s.aluminium.core.composable.AluminiumClickableText
+import dev.than0s.aluminium.core.composable.AluminiumLoadingElevatedButton
+import dev.than0s.aluminium.core.composable.AluminiumPasswordTextField
+import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.composable.AluminiumTextField
+import dev.than0s.aluminium.core.composable.AluminiumTitleText
 import dev.than0s.aluminium.features.auth.domain.data_class.EmailAuthParam
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -59,14 +64,14 @@ private fun SignInScreenContent(
 ) {
     var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
 
-    ElevatedCard(
+    AluminiumElevatedCard(
         modifier = Modifier
             .padding(MaterialTheme.spacing.large)
             .fillMaxHeight()
             .wrapContentHeight(align = Alignment.CenterVertically)
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = MaterialTheme.spacing.large)
         ) {
@@ -74,49 +79,48 @@ private fun SignInScreenContent(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "Sign In",
-                    fontSize = MaterialTheme.textSize.gigantic,
+                AluminiumTitleText(
+                    title = "Sign In",
                 )
             }
 
-            TextField(
+            AluminiumTextField(
                 value = param.email,
                 onValueChange = { newValue ->
                     onEmailChange(newValue)
                 },
-                label = {
-                    Text(text = "Email")
+                placeholder = "Email",
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Mail,
+                        contentDescription = "Mail Icon"
+                    )
                 }
             )
 
-            PasswordTextField(
+            AluminiumPasswordTextField(
                 value = param.password,
                 onPasswordChange = { newValue ->
                     onPasswordChange(newValue)
                 },
-                label = {
-                    Text(text = "Password")
-                }
+                placeholder = "Password",
             )
 
-            Text(
-                text = "Don't have an account?",
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable {
+            AluminiumClickableText(
+                title = "Don't have an account?",
+                onClick = {
                     popAndOpen(Screen.RegistrationScreen)
                 }
             )
 
-            Text(
-                text = "Forget Password?",
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable {
+            AluminiumClickableText(
+                title = "Forget Password?",
+                onClick = {
                     openScreen(Screen.ForgotPasswordScreen)
                 }
             )
 
-            LoadingElevatedButton(
+            AluminiumLoadingElevatedButton(
                 label = "Sign In",
                 circularProgressIndicatorState = circularProgressIndicatorState,
                 onClick = {

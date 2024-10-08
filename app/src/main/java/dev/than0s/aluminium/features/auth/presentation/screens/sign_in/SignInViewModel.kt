@@ -32,8 +32,8 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
                 }
 
                 is Either.Right -> {
-                    SnackbarController.showSnackbar("Signed in successfully")
                     restartApp()
+                    SnackbarController.showSnackbar("Signed in successfully")
                 }
             }
             onFinish()

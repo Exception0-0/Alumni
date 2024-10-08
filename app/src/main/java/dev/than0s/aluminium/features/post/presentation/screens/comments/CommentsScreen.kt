@@ -1,7 +1,5 @@
 package dev.than0s.aluminium.features.post.presentation.screens.comments
 
-import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,26 +12,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.automirrored.rounded.Send
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -53,9 +44,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.LoadingIconButton
-import dev.than0s.aluminium.core.composable.RoundedTextField
+import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
+import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
+import dev.than0s.aluminium.core.composable.AluminiumDescriptionText
+import dev.than0s.aluminium.core.composable.AluminiumLoadingIconButton
+import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.composable.AluminiumTextField
+import dev.than0s.aluminium.core.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.data_class.User
@@ -78,7 +74,6 @@ fun CommentScreen(viewModel: CommentsViewModel = hiltViewModel()) {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CommentScreenContent(
     commentList: List<Comment>,
@@ -90,29 +85,18 @@ private fun CommentScreenContent(
     onRemoveCommentClick: (Comment) -> Unit
 ) {
     var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(text = "Comments")
-                }
-            )
-        },
         bottomBar = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            Surface(
                 modifier = Modifier.padding(MaterialTheme.spacing.medium)
             ) {
-                RoundedTextField(
+                AluminiumTextField(
                     value = currentComment,
                     placeholder = "Comment",
                     onValueChange = onCurrentCommentChange,
                     trailingIcon = {
-                        LoadingIconButton(
+                        AluminiumLoadingIconButton(
                             icon = Icons.AutoMirrored.Rounded.Send,
                             circularProgressIndicatorState = circularProgressIndicatorState,
                             onClick = {
@@ -132,7 +116,6 @@ private fun CommentScreenContent(
             modifier = Modifier.padding(contentPadding)
         ) {
             items(commentList) { comment ->
-
                 CommentPreview(
                     comment = comment,
                     isCurrentUser = currentUserId == comment.userId,
@@ -157,7 +140,7 @@ private fun CommentPreview(
 
     val userProfile = getUserProfile(comment.userId).collectAsState(User()).value
 
-    ElevatedCard(
+    AluminiumElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(MaterialTheme.spacing.small)
@@ -172,14 +155,10 @@ private fun CommentPreview(
             Row(
                 verticalAlignment = Alignment.Top,
             ) {
-                AsyncImage(
+                AluminiumAsyncImage(
                     model = userProfile.profileImage,
-                    placeholder = painterResource(R.drawable.ic_launcher_background),
-                    contentDescription = "User profile image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(30.dp)
+                    settings = AluminiumAsyncImageSettings.UserProfile,
+                    modifier = ProfileImageModifier.small
                 )
 
                 Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
@@ -187,14 +166,12 @@ private fun CommentPreview(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
                 ) {
-                    Text(
-                        text = "${userProfile.firstName} ${userProfile.lastName}",
-                        fontWeight = FontWeight.W100,
+                    AluminiumTitleText(
+                        title = "${userProfile.firstName} ${userProfile.lastName}",
                         fontSize = MaterialTheme.textSize.small
                     )
-                    Text(
-                        text = comment.message,
-                        fontWeight = FontWeight.W300
+                    AluminiumDescriptionText(
+                        description = comment.message,
                     )
                 }
             }
@@ -213,11 +190,15 @@ private fun CommentMenu(
 ) {
     var dropDownMenuState by rememberSaveable { mutableStateOf(false) }
     Column {
-        Icon(
-            imageVector = Icons.Filled.MoreVert,
-            contentDescription = "menu",
-            modifier = Modifier.clickable {
+        IconButton(
+            onClick = {
                 dropDownMenuState = !dropDownMenuState
+            },
+            content = {
+                Icon(
+                    imageVector = Icons.Filled.MoreVert,
+                    contentDescription = "menu",
+                )
             }
         )
         DropdownMenu(
@@ -226,18 +207,6 @@ private fun CommentMenu(
                 dropDownMenuState = false
             }
         ) {
-            DropdownMenuItem(
-                text = {
-                    Text("Edit")
-                },
-                onClick = {},
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Rounded.Edit,
-                        contentDescription = "comment edit"
-                    )
-                }
-            )
             DropdownMenuItem(
                 text = {
                     Text("Delete")

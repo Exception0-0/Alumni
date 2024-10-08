@@ -16,8 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -29,6 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.composable.AluminiumTextField
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -93,7 +94,7 @@ private fun RegistrationScreenContent(
         }
     }
 
-    ElevatedCard(
+    AluminiumElevatedCard(
         modifier = Modifier
             .padding(MaterialTheme.spacing.large)
             .fillMaxHeight()
@@ -117,24 +118,20 @@ private fun RegistrationScreenContent(
                 )
             }
 
-            TextField(
+            AluminiumTextField(
                 value = param.rollNo,
                 onValueChange = { newValue ->
                     onRollNoChange(newValue)
                 },
-                placeholder = {
-                    Text(text = "Student ID / Staff ID")
-                }
+                placeholder = "Student ID / Staff ID"
             )
 
-            TextField(
+            AluminiumTextField(
                 value = param.email,
                 onValueChange = { newValue ->
                     onEmailChange(newValue)
                 },
-                placeholder = {
-                    Text(text = "Email")
-                }
+                placeholder = "Email"
             )
 
             TextField(
@@ -208,13 +205,12 @@ private fun RegistrationScreenContent(
                 }
             )
 
-            ElevatedButton(
+            AluminiumElevatedButton(
+                label = "Register",
                 onClick = {
                     onRegisterClick()
                 }
-            ) {
-                Text(text = "Register")
-            }
+            )
         }
     }
 }

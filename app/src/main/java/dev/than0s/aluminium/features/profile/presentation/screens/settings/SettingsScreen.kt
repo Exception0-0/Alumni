@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Security
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.aluminium.ui.spacing
@@ -94,7 +94,7 @@ private fun SettingScreenContent(
 
         ) {
 
-            ElevatedCard(
+            AluminiumElevatedCard(
                 onClick = {
                     openScreen(Screen.ProfileScreen(currentUserId!!))
                 }
@@ -131,7 +131,7 @@ private fun SettingScreenContent(
 
             listOfSettingsOptions.forEach { option ->
 
-                ElevatedCard(
+                AluminiumElevatedCard(
                     onClick = {
                         option.onClick()
                     },

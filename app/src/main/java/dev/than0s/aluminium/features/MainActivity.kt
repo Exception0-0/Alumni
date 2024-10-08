@@ -10,27 +10,27 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
-import dev.than0s.aluminium.DemoScreen
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
@@ -60,15 +60,16 @@ class MainActivity : ComponentActivity() {
             AluminiumTheme {
                 val navController = rememberNavController()
                 Scaffold(
+                    topBar = {
+                        AluminiumTopAppBar(navController)
+                    },
                     snackbarHost = {
                         SnackbarHost(
                             hostState = viewModel.snackbarHostState
                         )
                     },
                     bottomBar = {
-                        BottomNavigationBar(
-                            navController
-                        )
+                        AluminiumBottomNavigationBar(navController)
                     }
                 ) { paddingValue ->
                     NavGraphHost(
@@ -172,40 +173,35 @@ private fun NavHostController.restartApp() {
     }
 }
 
-private data class BottomNavigationItem(
-    val uid: String,
-    val route: Screen,
-    val filledIcon: ImageVector,
-    val outlinedIcon: ImageVector,
-    val label: String
-)
-
-private val BottomNavItemsList = listOf(
-    BottomNavigationItem(
-        "dev.than0s.aluminium.core.Screen.PostsScreen?userId={userId}",
-        Screen.PostsScreen(),
-        Icons.Filled.Face,
-        Icons.Outlined.Face,
-        "Posts"
-    ),
-    BottomNavigationItem(
-        "dev.than0s.aluminium.core.Screen.SettingScreen",
-        Screen.SettingScreen,
-        Icons.Filled.AccountCircle,
-        Icons.Outlined.AccountCircle,
-        "Profile"
-    )
-)
-
 @Composable
-fun BottomNavigationBar(navController: NavHostController) {
+private fun AluminiumBottomNavigationBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val isCurrentScreenHaveBottomBar = BottomNavItemsList.any { it.uid == currentRoute }
+
+    val bottomNavItemsList = remember {
+        listOf(
+            BottomNavigationItem(
+                "dev.than0s.aluminium.core.Screen.PostsScreen?userId={userId}",
+                Screen.PostsScreen(),
+                Icons.Filled.Face,
+                Icons.Outlined.Face,
+                "Posts"
+            ),
+            BottomNavigationItem(
+                "dev.than0s.aluminium.core.Screen.SettingScreen",
+                Screen.SettingScreen,
+                Icons.Filled.AccountCircle,
+                Icons.Outlined.AccountCircle,
+                "Profile"
+            )
+        )
+    }
+
+    val isCurrentScreenHaveBottomBar = bottomNavItemsList.any { it.uid == currentRoute }
 
     if (isCurrentScreenHaveBottomBar) {
         NavigationBar {
-            BottomNavItemsList.forEach { item ->
+            bottomNavItemsList.forEach { item ->
                 NavigationBarItem(
                     selected = currentRoute == item.uid,
                     onClick = {
@@ -227,3 +223,46 @@ fun BottomNavigationBar(navController: NavHostController) {
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AluminiumTopAppBar(navController: NavHostController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val topAppBarList = remember {
+        listOf(
+            TopAppBarItem(
+                uid = "dev.than0s.aluminium.core.Screen.CommentsScreen",
+                label = "Comments"
+            ),
+        )
+    }
+
+    val isCurrentScreenHaveTopBar = topAppBarList.any { it.uid == currentRoute }
+
+    if (isCurrentScreenHaveTopBar) {
+        TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            ),
+            title = {
+                Text(text = topAppBarList.find { it.uid == currentRoute }?.label ?: "Aluminium")
+            }
+        )
+    }
+}
+
+private data class BottomNavigationItem(
+    val uid: String,
+    val route: Screen,
+    val filledIcon: ImageVector,
+    val outlinedIcon: ImageVector,
+    val label: String
+)
+
+private data class TopAppBarItem(
+    val uid: String,
+    val label: String,
+)
