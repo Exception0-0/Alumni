@@ -21,6 +21,7 @@ fun AluminiumTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
+    enable: Boolean = true,
     leadingIcon: @Composable() (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
@@ -29,6 +30,7 @@ fun AluminiumTextField(
         onValueChange = { newValue ->
             onValueChange(newValue)
         },
+        enabled = enable,
         label = {
             Text(text = placeholder)
         },

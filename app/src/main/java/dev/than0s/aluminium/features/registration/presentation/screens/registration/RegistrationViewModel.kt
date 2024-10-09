@@ -17,27 +17,13 @@ import javax.inject.Inject
 class RegistrationViewModel @Inject constructor(private val registerUseCase: SubmitRegistrationUseCase) :
     ViewModel() {
     var param by mutableStateOf(RegistrationForm())
-    val categoryDialogState = mutableStateOf(false)
-    val batchDialogState = mutableStateOf(false)
 
     fun onEmailChange(email: String) {
         param = param.copy(email = email)
     }
 
-    fun onCategoryDialogDismiss() {
-        categoryDialogState.value = false
-    }
-
-    fun onCategoryClick() {
-        categoryDialogState.value = true
-    }
-
-    fun onBatchDialogDismiss() {
-        batchDialogState.value = false
-    }
-
-    fun onBatchClick() {
-        batchDialogState.value = true
+    fun onMobileChange(mobile: String) {
+        param = param.copy(mobile = mobile)
     }
 
     fun onCategoryChange(category: String) {
@@ -60,8 +46,12 @@ class RegistrationViewModel @Inject constructor(private val registerUseCase: Sub
         param = param.copy(lastName = lastName)
     }
 
-    fun onBatchChange(batch: String) {
-        param = param.copy(batch = batch)
+    fun onBatchFromChange(from: String) {
+        param = param.copy(batchFrom = from)
+    }
+
+    fun onBatchToChange(to: String) {
+        param = param.copy(batchTo = to)
     }
 
     fun onRegisterClick() {
@@ -70,7 +60,8 @@ class RegistrationViewModel @Inject constructor(private val registerUseCase: Sub
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
                 }
-                is Either.Right ->{
+
+                is Either.Right -> {
                     SnackbarController.showSnackbar("Registration completed successfully")
                 }
             }

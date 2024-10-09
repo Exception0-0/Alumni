@@ -360,12 +360,10 @@ private fun UpdateProfileDialog(
                         circularProgressIndicatorState = circularProgressState,
                         onClick = {
                             circularProgressState = true
-                            onUpdateProfileClick(
-                                {
-                                    circularProgressState = false
-                                    onDismiss()
-                                }
-                            )
+                            onUpdateProfileClick {
+                                circularProgressState = false
+                                onDismiss()
+                            }
                         }
                     )
                 }
