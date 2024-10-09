@@ -7,10 +7,15 @@ import dev.than0s.aluminium.features.registration.domain.data_class.Registration
 import dev.than0s.aluminium.features.registration.domain.repository.RegistrationRepository
 import javax.inject.Inject
 
-class SubmitRegistrationUseCase @Inject constructor(private val repository: RegistrationRepository) :
+class AcceptRegistrationRequest @Inject constructor(private val repository: RegistrationRepository) :
     UseCase<RegistrationForm, Unit> {
     override suspend fun invoke(param: RegistrationForm): Either<Failure, Unit> {
-        val form = param.copy(id = System.currentTimeMillis().toString() + param.rollNo)
+        val form = param.copy(
+            status = param.status.copy(
+                approvalStatus = true,
+                accountGeneratedStatus = false,
+            )
+        )
         return repository.setRegistration(form)
     }
 }

@@ -12,10 +12,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.than0s.aluminium.features.admin.data.data_source.RequestDataSource
-import dev.than0s.aluminium.features.admin.data.data_source.RequestDataSourceImple
-import dev.than0s.aluminium.features.admin.data.repostiory.RequestRepositoryImple
-import dev.than0s.aluminium.features.admin.domain.repositories.RequestRepository
 import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSource
 import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSourceImple
 import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSource
@@ -48,13 +44,6 @@ import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSourceIm
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
-    // Admin
-    @Binds
-    abstract fun bindRequestDataSource(imple: RequestDataSourceImple): RequestDataSource
-
-    @Binds
-    abstract fun bindRequestRepository(imple: RequestRepositoryImple): RequestRepository
-
     // auth
     @Binds
     abstract fun bindAuthDataSource(imple: AuthDataSourceImple): AuthDataSource

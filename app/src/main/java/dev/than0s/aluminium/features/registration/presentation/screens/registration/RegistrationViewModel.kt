@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.registration.presentation.screens.registration
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,7 +15,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegistrationViewModel @Inject constructor(private val registerUseCase: SubmitRegistrationUseCase) :
+class RegistrationViewModel @Inject constructor
+    (
+    private val registerUseCase: SubmitRegistrationUseCase
+) :
     ViewModel() {
     var param by mutableStateOf(RegistrationForm())
 
@@ -54,7 +58,11 @@ class RegistrationViewModel @Inject constructor(private val registerUseCase: Sub
         param = param.copy(batchTo = to)
     }
 
-    fun onRegisterClick() {
+    fun onCollegeIdChange(uri: Uri?) {
+        param = param.copy(idCardImage = uri)
+    }
+
+    fun onRegisterClick(onCompleted: () -> Unit) {
         viewModelScope.launch {
             when (val result = registerUseCase.invoke(param)) {
                 is Either.Left -> {
@@ -65,6 +73,7 @@ class RegistrationViewModel @Inject constructor(private val registerUseCase: Sub
                     SnackbarController.showSnackbar("Registration completed successfully")
                 }
             }
+            onCompleted()
         }
     }
 }

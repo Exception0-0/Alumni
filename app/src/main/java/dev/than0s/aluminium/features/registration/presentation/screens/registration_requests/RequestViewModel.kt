@@ -1,27 +1,28 @@
-package dev.than0s.aluminium.features.admin.presentation.screen.requests
+package dev.than0s.aluminium.features.registration.presentation.screens.registration_requests
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.features.admin.domain.data_class.RequestForm
-import dev.than0s.aluminium.features.admin.domain.use_cases.AcceptedUseCase
-import dev.than0s.aluminium.features.admin.domain.use_cases.RejectedUserCase
-import dev.than0s.aluminium.features.admin.domain.use_cases.RequestsListUseCase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
+import dev.than0s.aluminium.features.registration.domain.use_cases.AcceptRegistrationRequest
+import dev.than0s.aluminium.features.registration.domain.use_cases.RegistrationRequestListUseCase
+import dev.than0s.aluminium.features.registration.domain.use_cases.RejectRegistrationRequest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RequestViewModel @Inject constructor(
-    private val requestsUseCase: RequestsListUseCase,
-    private val acceptedUseCase: AcceptedUseCase,
-    private val rejectedUserCase: RejectedUserCase
+    private val requestsUseCase: RegistrationRequestListUseCase,
+    private val acceptedUseCase: AcceptRegistrationRequest,
+    private val rejectedUserCase: RejectRegistrationRequest
 ) :
     ViewModel() {
-    var requestsList: Flow<List<RequestForm>> = emptyFlow()
+    var requestsList: List<RegistrationForm> by mutableStateOf(emptyList())
 
     init {
         viewModelScope.launch {
@@ -35,7 +36,7 @@ class RequestViewModel @Inject constructor(
         }
     }
 
-    fun onAcceptClick(form: RequestForm) {
+    fun onAcceptClick(form: RegistrationForm, onCompleted: () -> Unit) {
         viewModelScope.launch {
             when (val result = acceptedUseCase.invoke(form)) {
                 is Either.Left -> {
@@ -46,10 +47,11 @@ class RequestViewModel @Inject constructor(
                     SnackbarController.showSnackbar("Request accepted successfully")
                 }
             }
+            onCompleted()
         }
     }
 
-    fun onRejectedClick(form: RequestForm) {
+    fun onRejectedClick(form: RegistrationForm, onCompleted: () -> Unit) {
         viewModelScope.launch {
             when (val result = rejectedUserCase.invoke(form)) {
                 is Either.Left -> {
@@ -60,6 +62,7 @@ class RequestViewModel @Inject constructor(
                     SnackbarController.showSnackbar("Request rejected successfully")
                 }
             }
+            onCompleted()
         }
     }
 }

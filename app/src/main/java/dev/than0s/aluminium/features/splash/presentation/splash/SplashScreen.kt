@@ -10,13 +10,14 @@ fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel(),
     popAndOpen: (Screen) -> Unit
 ) {
-    viewModel.loadScreen { hasUser: Boolean ->
-        if (hasUser) {
-            popAndOpen(Screen.PostsScreen())
-        } else {
-            popAndOpen(Screen.SignInScreen)
-        }
-    }
+    popAndOpen(Screen.RegistrationRequestsScreen)
+//    viewModel.loadScreen { hasUser: Boolean ->
+//        if (hasUser) {
+//            popAndOpen(Screen.PostsScreen())
+//        } else {
+//            popAndOpen(Screen.SignInScreen)
+//        }
+//    }
 }
 
 @Composable

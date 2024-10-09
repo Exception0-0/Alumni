@@ -36,7 +36,7 @@ import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScr
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
 import dev.than0s.aluminium.features.splash.presentation.splash.SplashScreen
 import dev.than0s.aluminium.features.registration.presentation.screens.registration.RegistrationScreen
-import dev.than0s.aluminium.features.admin.presentation.screen.requests.RegistrationRequestsScreen
+import dev.than0s.aluminium.features.registration.presentation.screens.registration_requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen

@@ -1,5 +1,8 @@
 package dev.than0s.aluminium.features.registration.presentation.screens.registration
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -39,17 +43,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.AluminiumClickableText
 import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.composable.AluminiumLoadingElevatedButton
 import dev.than0s.aluminium.core.composable.AluminiumTextField
 import dev.than0s.aluminium.core.composable.AluminiumTitleText
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
+import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
 
@@ -60,9 +69,9 @@ fun RegistrationScreen(
 ) {
     RegistrationScreenContent(
         param = viewModel.param,
+        popAndOpen = popAndOpen,
         onEmailChange = viewModel::onEmailChange,
         onRegisterClick = viewModel::onRegisterClick,
-        popAndOpen = popAndOpen,
         onCategoryChange = viewModel::onCategoryChange,
         onRollNoChange = viewModel::onRollNoChange,
         onFirstNameChange = viewModel::onFirstNameChange,
@@ -70,7 +79,8 @@ fun RegistrationScreen(
         onLastNameChange = viewModel::onLastNameChange,
         onBatchFromChange = viewModel::onBatchFromChange,
         onBatchToChange = viewModel::onBatchToChange,
-        onMobileChange = viewModel::onMobileChange
+        onMobileChange = viewModel::onMobileChange,
+        onCollegeIdChange = viewModel::onCollegeIdChange
     )
 }
 
@@ -78,7 +88,7 @@ fun RegistrationScreen(
 private fun RegistrationScreenContent(
     param: RegistrationForm,
     onEmailChange: (String) -> Unit,
-    onRegisterClick: () -> Unit,
+    onRegisterClick: (() -> Unit) -> Unit,
     popAndOpen: (Screen) -> Unit,
     onCategoryChange: (String) -> Unit,
     onRollNoChange: (String) -> Unit,
@@ -87,39 +97,41 @@ private fun RegistrationScreenContent(
     onLastNameChange: (String) -> Unit,
     onBatchFromChange: (String) -> Unit,
     onBatchToChange: (String) -> Unit,
-    onMobileChange: (String) -> Unit
+    onMobileChange: (String) -> Unit,
+    onCollegeIdChange: (Uri?) -> Unit
 ) {
     var formIndex by rememberSaveable { mutableIntStateOf(0) }
+    var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
 
-    val list: List<@Composable () -> Unit> = remember {
-        listOf(
-            {
-                CollegeInfoCard(
-                    param = param,
-                    onCategoryChange = onCategoryChange,
-                    onRollNoChange = onRollNoChange,
-                    onBatchToChange = onBatchToChange,
-                    onBatchFromChange = onBatchFromChange
-                )
-            },
-            {
-                PersonalInfoCard(
-                    param = param,
-                    onFirstNameChange = onFirstNameChange,
-                    onLastNameChange = onLastNameChange,
-                    onMiddleNameChange = onMiddleNameChange
-                )
-            },
+    val list: List<@Composable () -> Unit> = listOf(
+        {
+            CollegeInfoCard(
+                param = param,
+                onCategoryChange = onCategoryChange,
+                onRollNoChange = onRollNoChange,
+                onBatchToChange = onBatchToChange,
+                onBatchFromChange = onBatchFromChange,
+                onCollegeIdChange = onCollegeIdChange
+            )
+        },
+        {
+            PersonalInfoCard(
+                param = param,
+                onFirstNameChange = onFirstNameChange,
+                onLastNameChange = onLastNameChange,
+                onMiddleNameChange = onMiddleNameChange
+            )
+        },
 
-            {
-                ContactInfoCard(
-                    param = param,
-                    onEmailChange = onEmailChange,
-                    onMobileChange = onMobileChange
-                )
-            }
-        )
-    }
+        {
+            ContactInfoCard(
+                param = param,
+                onEmailChange = onEmailChange,
+                onMobileChange = onMobileChange
+            )
+        }
+    )
+
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -177,10 +189,14 @@ private fun RegistrationScreenContent(
             )
 
             if (formIndex == list.size - 1) {
-                AluminiumElevatedButton(
+                AluminiumLoadingElevatedButton(
                     label = "Register",
+                    circularProgressIndicatorState = circularProgressIndicatorState,
                     onClick = {
-                        onRegisterClick()
+                        circularProgressIndicatorState = true
+                        onRegisterClick {
+                            circularProgressIndicatorState = false
+                        }
                     }
                 )
             }
@@ -264,13 +280,12 @@ private fun ContactInfoCard(
             )
 
             AluminiumTextField(
-                value = param.mobile,
+                value = param.mobile ?: "",
                 onValueChange = { newValue ->
                     onMobileChange(newValue)
                 },
                 placeholder = "Mobile"
             )
-
         }
     }
 }
@@ -282,8 +297,15 @@ private fun CollegeInfoCard(
     onRollNoChange: (String) -> Unit,
     onBatchFromChange: (String) -> Unit,
     onBatchToChange: (String) -> Unit,
+    onCollegeIdChange: (Uri?) -> Unit,
 ) {
     var categoryDropState by rememberSaveable { mutableStateOf(false) }
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
+            image?.let {
+                onCollegeIdChange(it)
+            }
+        }
 
     AluminiumElevatedCard {
         Column(
@@ -330,6 +352,7 @@ private fun CollegeInfoCard(
                             },
                             onClick = {
                                 onCategoryChange(it)
+                                categoryDropState = false
                             },
                             modifier = Modifier.width(128.dp)
                         )
@@ -358,6 +381,27 @@ private fun CollegeInfoCard(
                     modifier = Modifier.weight(0.3f)
                 )
             }
+
+            if (param.idCardImage == null) {
+                AluminiumClickableText(
+                    title = "Add college Id image (optional)",
+                    onClick = {
+                        launcher.launch("image/*")
+                    }
+                )
+            } else {
+                AsyncImage(
+                    model = param.idCardImage,
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "Id card image",
+                    modifier = Modifier
+                        .size(128.dp)
+                        .clip(RoundedCornerShape(MaterialTheme.roundCorners.default))
+                        .clickable {
+                            onCollegeIdChange(null)
+                        }
+                )
+            }
         }
     }
 }
@@ -366,8 +410,10 @@ private fun CollegeInfoCard(
 @Composable
 private fun RegistrationScreenPreview() {
     RegistrationScreenContent(
-        RegistrationForm(),
-        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+        RegistrationForm(
+            idCardImage = Uri.EMPTY
+        ),
+        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
     )
 }
 

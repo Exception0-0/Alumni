@@ -53,6 +53,52 @@ fun AluminiumAlertDialog(
     )
 }
 
+@Composable
+fun AluminiumAlertDialog(
+    title: String,
+    circularProgressIndicatorState: Boolean,
+    description: String,
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+) {
+    AlertDialog(
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Warning,
+                contentDescription = Icons.Default.Warning.name
+            )
+        },
+        title = {
+            Text(text = title)
+        },
+        text = {
+            Text(text = description)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            AluminiumLoadingTextButton(
+                onClick = {
+                    onConfirmation()
+                },
+                circularProgressIndicatorState = circularProgressIndicatorState,
+                label = "Confirm"
+            )
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                },
+                content = {
+                    Text("Dismiss")
+                }
+            )
+        }
+    )
+}
+
 @Preview
 @Composable
 private fun AluminiumWarningDialogPreview() {
