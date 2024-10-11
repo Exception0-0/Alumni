@@ -10,7 +10,9 @@ import javax.inject.Inject
 class SubmitRegistrationUseCase @Inject constructor(private val repository: RegistrationRepository) :
     UseCase<RegistrationForm, Unit> {
     override suspend fun invoke(param: RegistrationForm): Either<Failure, Unit> {
-        val form = param.copy(id = System.currentTimeMillis().toString() + param.rollNo)
+        val form = param.copy(
+            id = System.currentTimeMillis().toString()
+        )
         return repository.setRegistration(form)
     }
 }

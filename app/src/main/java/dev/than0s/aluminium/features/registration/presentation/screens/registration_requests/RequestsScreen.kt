@@ -146,14 +146,18 @@ private fun RegistrationRequestItem(
                 title = request.category,
                 fontSize = MaterialTheme.textSize.huge
             )
-            AluminiumTitleText(
-                title = "${request.batchFrom} - ${request.batchTo}",
-                fontSize = MaterialTheme.textSize.medium
-            )
-            AluminiumTitleText(
-                title = request.rollNo,
-                fontSize = MaterialTheme.textSize.medium
-            )
+            if(request.batchFrom != null) {
+                AluminiumTitleText(
+                    title = "${request.batchFrom} - ${request.batchTo}",
+                    fontSize = MaterialTheme.textSize.medium
+                )
+            }
+            if(request.rollNo != null) {
+                AluminiumTitleText(
+                    title = request.rollNo,
+                    fontSize = MaterialTheme.textSize.medium
+                )
+            }
             AluminiumTitleText(
                 title = "${request.lastName} ${request.firstName} ${request.middleName}",
                 fontSize = MaterialTheme.textSize.medium
@@ -162,13 +166,6 @@ private fun RegistrationRequestItem(
                 title = request.email,
                 fontSize = MaterialTheme.textSize.medium
             )
-
-            if (request.mobile != null) {
-                AluminiumTitleText(
-                    title = request.mobile,
-                    fontSize = MaterialTheme.textSize.medium
-                )
-            }
 
             if (request.idCardImage != null) {
                 AluminiumClickableText(
@@ -228,7 +225,6 @@ private fun RegistrationRequestPreview() {
                 firstName = "Himanshu",
                 middleName = "Vasantrao",
                 lastName = "Patil",
-                mobile = "7030502354",
                 email = "himanshupatil45h@gmail.com",
                 batchFrom = "2023",
                 batchTo = "2025"
@@ -240,7 +236,6 @@ private fun RegistrationRequestPreview() {
                 firstName = "Himanshu",
                 middleName = "Vasantrao",
                 lastName = "Patil",
-                mobile = "7030502354",
                 email = "himanshupatil45h@gmail.com",
                 batchFrom = "2023",
                 batchTo = "2025",
@@ -253,7 +248,6 @@ private fun RegistrationRequestPreview() {
                 firstName = "Himanshu",
                 middleName = "Vasantrao",
                 lastName = "Patil",
-                mobile = "7030502354",
                 email = "himanshupatil45h@gmail.com",
                 batchFrom = "2023",
                 batchTo = "2025"

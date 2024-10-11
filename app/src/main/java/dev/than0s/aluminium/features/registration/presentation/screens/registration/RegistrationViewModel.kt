@@ -26,10 +26,6 @@ class RegistrationViewModel @Inject constructor
         param = param.copy(email = email)
     }
 
-    fun onMobileChange(mobile: String) {
-        param = param.copy(mobile = mobile)
-    }
-
     fun onCategoryChange(category: String) {
         param = param.copy(category = category)
     }

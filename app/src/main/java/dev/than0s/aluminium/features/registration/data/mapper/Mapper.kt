@@ -10,7 +10,6 @@ fun RegistrationForm.toRawRegistrationForm(): RawRegistrationForm = RawRegistrat
     category = category,
     rollNo = rollNo,
     email = email,
-    mobile = mobile,
     firstName = firstName,
     middleName = middleName,
     lastName = lastName,
@@ -28,7 +27,6 @@ suspend fun List<RawRegistrationForm>.toRegistrationForm(
             category = it.category,
             rollNo = it.rollNo,
             email = it.email,
-            mobile = it.mobile,
             firstName = it.firstName,
             middleName = it.middleName,
             lastName = it.lastName,
@@ -44,13 +42,12 @@ suspend fun List<RawRegistrationForm>.toRegistrationForm(
 data class RawRegistrationForm(
     @DocumentId val id: String = "",
     val category: String = "",
-    val rollNo: String = "",
+    val rollNo: String? = null,
     val email: String = "",
-    val mobile: String? = null,
     val firstName: String = "",
     val middleName: String = "",
     val lastName: String = "",
-    val batchFrom: String = "",
-    val batchTo: String = "",
+    val batchFrom: String? = null,
+    val batchTo: String? = null,
     val status: RegistrationStatus = RegistrationStatus()
 )

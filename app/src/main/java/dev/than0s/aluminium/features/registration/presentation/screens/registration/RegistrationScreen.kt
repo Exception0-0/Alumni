@@ -79,7 +79,6 @@ fun RegistrationScreen(
         onLastNameChange = viewModel::onLastNameChange,
         onBatchFromChange = viewModel::onBatchFromChange,
         onBatchToChange = viewModel::onBatchToChange,
-        onMobileChange = viewModel::onMobileChange,
         onCollegeIdChange = viewModel::onCollegeIdChange
     )
 }
@@ -97,40 +96,44 @@ private fun RegistrationScreenContent(
     onLastNameChange: (String) -> Unit,
     onBatchFromChange: (String) -> Unit,
     onBatchToChange: (String) -> Unit,
-    onMobileChange: (String) -> Unit,
     onCollegeIdChange: (Uri?) -> Unit
 ) {
     var formIndex by rememberSaveable { mutableIntStateOf(0) }
     var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
 
-    val list: List<@Composable () -> Unit> = listOf(
-        {
+    val list: MutableList<@Composable () -> Unit> = mutableListOf()
+
+    list.add {
+        RoleCard(
+            param = param,
+            onCategoryChange = onCategoryChange
+        )
+    }
+    if (param.category != admin) {
+        list.add {
             CollegeInfoCard(
                 param = param,
-                onCategoryChange = onCategoryChange,
                 onRollNoChange = onRollNoChange,
                 onBatchToChange = onBatchToChange,
                 onBatchFromChange = onBatchFromChange,
                 onCollegeIdChange = onCollegeIdChange
             )
-        },
-        {
-            PersonalInfoCard(
-                param = param,
-                onFirstNameChange = onFirstNameChange,
-                onLastNameChange = onLastNameChange,
-                onMiddleNameChange = onMiddleNameChange
-            )
-        },
-
-        {
-            ContactInfoCard(
-                param = param,
-                onEmailChange = onEmailChange,
-                onMobileChange = onMobileChange
-            )
         }
-    )
+    }
+    list.add {
+        PersonalInfoCard(
+            param = param,
+            onFirstNameChange = onFirstNameChange,
+            onLastNameChange = onLastNameChange,
+            onMiddleNameChange = onMiddleNameChange
+        )
+    }
+    list.add {
+        ContactInfoCard(
+            param = param,
+            onEmailChange = onEmailChange,
+        )
+    }
 
 
     Column(
@@ -166,7 +169,7 @@ private fun RegistrationScreenContent(
                         }
                     )
                 }
-                if (formIndex < list.size - 1) {
+                if (param.category.isNotEmpty() && formIndex < list.size - 1) {
                     FilledIconButton(
                         onClick = {
                             formIndex++
@@ -196,6 +199,7 @@ private fun RegistrationScreenContent(
                         circularProgressIndicatorState = true
                         onRegisterClick {
                             circularProgressIndicatorState = false
+                            popAndOpen(Screen.SignInScreen)
                         }
                     }
                 )
@@ -256,7 +260,6 @@ private fun PersonalInfoCard(
 private fun ContactInfoCard(
     param: RegistrationForm,
     onEmailChange: (String) -> Unit,
-    onMobileChange: (String) -> Unit,
 ) {
     AluminiumElevatedCard {
         Column(
@@ -278,34 +281,16 @@ private fun ContactInfoCard(
                 },
                 placeholder = "Email"
             )
-
-            AluminiumTextField(
-                value = param.mobile ?: "",
-                onValueChange = { newValue ->
-                    onMobileChange(newValue)
-                },
-                placeholder = "Mobile"
-            )
         }
     }
 }
 
 @Composable
-private fun CollegeInfoCard(
+private fun RoleCard(
     param: RegistrationForm,
     onCategoryChange: (String) -> Unit,
-    onRollNoChange: (String) -> Unit,
-    onBatchFromChange: (String) -> Unit,
-    onBatchToChange: (String) -> Unit,
-    onCollegeIdChange: (Uri?) -> Unit,
 ) {
     var categoryDropState by rememberSaveable { mutableStateOf(false) }
-    val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
-            image?.let {
-                onCollegeIdChange(it)
-            }
-        }
 
     AluminiumElevatedCard {
         Column(
@@ -316,18 +301,9 @@ private fun CollegeInfoCard(
         ) {
 
             AluminiumTitleText(
-                title = "College",
+                title = "Select Role",
                 fontSize = MaterialTheme.textSize.huge
             )
-
-            AluminiumTextField(
-                value = param.rollNo,
-                onValueChange = { newValue ->
-                    onRollNoChange(newValue)
-                },
-                placeholder = "Student ID / Staff ID"
-            )
-
             Column {
                 AluminiumTextField(
                     value = param.category,
@@ -359,27 +335,69 @@ private fun CollegeInfoCard(
                     }
                 }
             }
+        }
+    }
+}
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-            ) {
-                AluminiumTextField(
-                    value = param.batchFrom,
-                    onValueChange = {
-                        onBatchFromChange(it)
-                    },
-                    placeholder = "Batch - From",
-                    modifier = Modifier.weight(0.3f)
-                )
+@Composable
+private fun CollegeInfoCard(
+    param: RegistrationForm,
+    onRollNoChange: (String) -> Unit,
+    onBatchFromChange: (String) -> Unit,
+    onBatchToChange: (String) -> Unit,
+    onCollegeIdChange: (Uri?) -> Unit,
+) {
 
-                AluminiumTextField(
-                    value = param.batchTo,
-                    onValueChange = {
-                        onBatchToChange(it)
-                    },
-                    placeholder = "Batch - To",
-                    modifier = Modifier.weight(0.3f)
-                )
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
+            image?.let {
+                onCollegeIdChange(it)
+            }
+        }
+
+    AluminiumElevatedCard {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(MaterialTheme.spacing.large)
+        ) {
+
+            AluminiumTitleText(
+                title = "College",
+                fontSize = MaterialTheme.textSize.huge
+            )
+
+            AluminiumTextField(
+                value = param.rollNo ?: "",
+                onValueChange = { newValue ->
+                    onRollNoChange(newValue)
+                },
+                placeholder = "Student ID / Staff ID"
+            )
+
+            if (param.category != staff) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+                ) {
+                    AluminiumTextField(
+                        value = param.batchFrom ?: "",
+                        onValueChange = {
+                            onBatchFromChange(it)
+                        },
+                        placeholder = "Batch - From",
+                        modifier = Modifier.weight(0.3f)
+                    )
+
+                    AluminiumTextField(
+                        value = param.batchTo ?: "",
+                        onValueChange = {
+                            onBatchToChange(it)
+                        },
+                        placeholder = "Batch - To",
+                        modifier = Modifier.weight(0.3f)
+                    )
+                }
             }
 
             if (param.idCardImage == null) {
@@ -413,7 +431,7 @@ private fun RegistrationScreenPreview() {
         RegistrationForm(
             idCardImage = Uri.EMPTY
         ),
-        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
     )
 }
 
@@ -421,5 +439,6 @@ private fun RegistrationScreenPreview() {
 const val student = "Student"
 const val staff = "Staff"
 const val alumni = "Alumni"
+const val admin = "Admin"
 
-private val categoryList = listOf(student, staff, alumni)
+private val categoryList = listOf(student, staff, alumni, admin)
