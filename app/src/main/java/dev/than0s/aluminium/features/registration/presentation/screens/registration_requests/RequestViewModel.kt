@@ -12,6 +12,8 @@ import dev.than0s.aluminium.features.registration.domain.data_class.Registration
 import dev.than0s.aluminium.features.registration.domain.use_cases.AcceptRegistrationRequest
 import dev.than0s.aluminium.features.registration.domain.use_cases.RegistrationRequestListUseCase
 import dev.than0s.aluminium.features.registration.domain.use_cases.RejectRegistrationRequest
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +24,7 @@ class RequestViewModel @Inject constructor(
     private val rejectedUserCase: RejectRegistrationRequest
 ) :
     ViewModel() {
-    var requestsList: List<RegistrationForm> by mutableStateOf(emptyList())
+    var requestsList: Flow<List<RegistrationForm>> by mutableStateOf(emptyFlow())
 
     init {
         viewModelScope.launch {

@@ -7,9 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.AppRegistration
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.RequestPage
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.AppRegistration
 import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.RequestPage
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +38,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
 import dev.than0s.aluminium.features.splash.presentation.splash.SplashScreen
@@ -44,6 +51,7 @@ import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.SpecificPostsScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
+import dev.than0s.aluminium.features.registration.presentation.screens.registration.admin
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 import javax.inject.Inject
 
@@ -178,21 +186,39 @@ private fun AluminiumBottomNavigationBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val bottomNavItemsList = remember {
-        listOf(
-            BottomNavigationItem(
-                "dev.than0s.aluminium.core.Screen.PostsScreen?userId={userId}",
-                Screen.PostsScreen(),
-                Icons.Filled.Face,
-                Icons.Outlined.Face,
-                "Posts"
-            ),
+    val bottomNavItemsList = mutableListOf<BottomNavigationItem>()
+    bottomNavItemsList.apply {
+
+        if(currentUserRole == admin) {
+            add(
+                BottomNavigationItem(
+                    "dev.than0s.aluminium.core.Screen.RegistrationRequestsScreen",
+                    Screen.RegistrationRequestsScreen,
+                    Icons.Filled.AppRegistration,
+                    Icons.Outlined.AppRegistration,
+                    "Registration Request"
+                )
+            )
+        }
+        else {
+            add(
+                BottomNavigationItem(
+                    "dev.than0s.aluminium.core.Screen.PostsScreen?userId={userId}",
+                    Screen.PostsScreen(),
+                    Icons.Filled.Face,
+                    Icons.Outlined.Face,
+                    "Posts"
+                )
+            )
+        }
+
+        add(
             BottomNavigationItem(
                 "dev.than0s.aluminium.core.Screen.SettingScreen",
                 Screen.SettingScreen,
-                Icons.Filled.AccountCircle,
-                Icons.Outlined.AccountCircle,
-                "Profile"
+                Icons.Filled.Settings,
+                Icons.Outlined.Settings,
+                "Settings"
             )
         )
     }

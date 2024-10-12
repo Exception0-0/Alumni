@@ -38,7 +38,7 @@ def modifie_request_status(doc_id:string,doc:dict):
 
 
 def fetch_generated_accounts():
-    accepted = db.collection(constant.REGISTRATION_REQUESTS).where(filter = FieldFilter(constant.STATUS_ACCOUNT_GENERATED_STATUS,"==",True))
+    accepted = db.collection(constant.REGISTRATION_REQUESTS).where(filter = FieldFilter(constant.STATUS_ACCOUNT_GENERATED_STATUS,"==",True)).where(filter = FieldFilter(constant.EMAIL_SEND_STATUS,"==",False))
     return accepted.stream()
 
 if __name__=="__main__":

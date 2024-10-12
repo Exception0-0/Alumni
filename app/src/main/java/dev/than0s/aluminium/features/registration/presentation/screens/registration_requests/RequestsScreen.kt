@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -39,8 +40,9 @@ import dev.than0s.aluminium.ui.textSize
 fun RegistrationRequestsScreen(
     viewModel: RequestViewModel = hiltViewModel()
 ) {
+    val requestList = viewModel.requestsList.collectAsState(emptyList()).value
     RegistrationRequestsContent(
-        requestsList = viewModel.requestsList,
+        requestsList = requestList,
         onAcceptedClick = viewModel::onAcceptClick,
         onRejectedClick = viewModel::onRejectedClick
     )
@@ -146,13 +148,13 @@ private fun RegistrationRequestItem(
                 title = request.category,
                 fontSize = MaterialTheme.textSize.huge
             )
-            if(request.batchFrom != null) {
+            if (request.batchFrom != null) {
                 AluminiumTitleText(
                     title = "${request.batchFrom} - ${request.batchTo}",
                     fontSize = MaterialTheme.textSize.medium
                 )
             }
-            if(request.rollNo != null) {
+            if (request.rollNo != null) {
                 AluminiumTitleText(
                     title = request.rollNo,
                     fontSize = MaterialTheme.textSize.medium

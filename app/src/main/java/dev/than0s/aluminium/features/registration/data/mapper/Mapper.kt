@@ -4,6 +4,8 @@ import android.net.Uri
 import com.google.firebase.firestore.DocumentId
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationStatus
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 fun RegistrationForm.toRawRegistrationForm(): RawRegistrationForm = RawRegistrationForm(
     id = id,
@@ -18,23 +20,25 @@ fun RegistrationForm.toRawRegistrationForm(): RawRegistrationForm = RawRegistrat
     status = status
 )
 
-suspend fun List<RawRegistrationForm>.toRegistrationForm(
+suspend fun Flow<List<RawRegistrationForm>>.toRegistrationForm(
     getIdCardImage: suspend (String) -> Uri?
-): List<RegistrationForm> {
-    return map {
-        RegistrationForm(
-            id = it.id,
-            category = it.category,
-            rollNo = it.rollNo,
-            email = it.email,
-            firstName = it.firstName,
-            middleName = it.middleName,
-            lastName = it.lastName,
-            batchFrom = it.batchFrom,
-            idCardImage = getIdCardImage(it.id),
-            batchTo = it.batchTo,
-            status = it.status
-        )
+): Flow<List<RegistrationForm>> {
+    return map { it ->
+        it.map {
+            RegistrationForm(
+                id = it.id,
+                category = it.category,
+                rollNo = it.rollNo,
+                email = it.email,
+                firstName = it.firstName,
+                middleName = it.middleName,
+                lastName = it.lastName,
+                batchFrom = it.batchFrom,
+                idCardImage = getIdCardImage(it.id),
+                batchTo = it.batchTo,
+                status = it.status
+            )
+        }
     }
 }
 

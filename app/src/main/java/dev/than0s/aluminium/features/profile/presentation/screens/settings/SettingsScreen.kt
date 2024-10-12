@@ -35,7 +35,9 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.currentUserId
+import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.features.profile.domain.data_class.User
+import dev.than0s.aluminium.features.registration.presentation.screens.registration.admin
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
 
@@ -55,32 +57,38 @@ fun SettingScreen(
 private fun SettingScreenContent(
     userProfile: User,
     openScreen: (Screen) -> Unit,
+) {
 
-    ) {
-
-    val listOfSettingsOptions = remember {
-        listOf(
-            SettingsOptions(
-                title = "Add Post",
-                icon = Icons.Default.AddAPhoto,
-                onClick = {
-                    openScreen(Screen.PostUploadScreen)
-                }
-            ),
+    val listOfSettingsOptions = mutableListOf<SettingsOptions>()
+    listOfSettingsOptions.apply {
+        if (currentUserRole != admin) {
+            add(
+                SettingsOptions(
+                    title = "Add Post",
+                    icon = Icons.Default.AddAPhoto,
+                    onClick = {
+                        openScreen(Screen.PostUploadScreen)
+                    }
+                )
+            )
+        }
+        add(
             SettingsOptions(
                 title = "Security",
                 icon = Icons.Default.Security,
                 onClick = {
 
                 }
-            ),
+            )
+        )
+        add(
             SettingsOptions(
                 title = "Log Out",
                 icon = Icons.AutoMirrored.Filled.ExitToApp,
                 onClick = {
                     openScreen(Screen.SignOutScreen)
                 }
-            ),
+            )
         )
     }
 
@@ -94,40 +102,13 @@ private fun SettingScreenContent(
 
         ) {
 
-            AluminiumElevatedCard(
-                onClick = {
-                    openScreen(Screen.ProfileScreen(currentUserId!!))
-                }
-            ) {
-                Row(
-                    verticalAlignment = CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                    modifier = Modifier.padding(MaterialTheme.spacing.medium)
-                ) {
-                    AsyncImage(
-                        model = userProfile.profileImage,
-                        contentDescription = "user profile image",
-                        contentScale = ContentScale.Crop,
-                        placeholder = painterResource(R.drawable.ic_launcher_background),
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clip(CircleShape)
-                    )
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
-                    ) {
-                        Text(
-                            text = "${userProfile.firstName} ${userProfile.lastName}",
-                            fontSize = MaterialTheme.textSize.gigantic,
-                            fontWeight = FontWeight.W400
-                        )
-                        Text(
-                            text = userProfile.bio,
-                            modifier = Modifier.width(256.dp),
-                        )
-                    }
-                }
+            if (currentUserRole != admin) {
+                ProfileCard(
+                    userProfile = userProfile,
+                    openScreen = openScreen
+                )
             }
+
 
             listOfSettingsOptions.forEach { option ->
 
@@ -152,6 +133,47 @@ private fun SettingScreenContent(
                         Text(text = option.title)
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProfileCard(
+    userProfile: User,
+    openScreen: (Screen) -> Unit,
+) {
+    AluminiumElevatedCard(
+        onClick = {
+            openScreen(Screen.ProfileScreen(currentUserId!!))
+        }
+    ) {
+        Row(
+            verticalAlignment = CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+            modifier = Modifier.padding(MaterialTheme.spacing.medium)
+        ) {
+            AsyncImage(
+                model = userProfile.profileImage,
+                contentDescription = "user profile image",
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.ic_launcher_background),
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+            ) {
+                Text(
+                    text = "${userProfile.firstName} ${userProfile.lastName}",
+                    fontSize = MaterialTheme.textSize.gigantic,
+                    fontWeight = FontWeight.W400
+                )
+                Text(
+                    text = userProfile.bio,
+                    modifier = Modifier.width(256.dp),
+                )
             }
         }
     }
