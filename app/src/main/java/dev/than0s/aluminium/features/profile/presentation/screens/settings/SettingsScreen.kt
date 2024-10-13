@@ -32,12 +32,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.features.profile.domain.data_class.User
-import dev.than0s.aluminium.features.registration.presentation.screens.registration.admin
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
 
@@ -49,8 +49,7 @@ fun SettingScreen(
     SettingScreenContent(
         userProfile = viewModel.userProfile,
         openScreen = openScreen,
-
-        )
+    )
 }
 
 @Composable
@@ -61,7 +60,7 @@ private fun SettingScreenContent(
 
     val listOfSettingsOptions = mutableListOf<SettingsOptions>()
     listOfSettingsOptions.apply {
-        if (currentUserRole != admin) {
+        if (currentUserRole != Role.Admin) {
             add(
                 SettingsOptions(
                     title = "Add Post",
@@ -102,13 +101,12 @@ private fun SettingScreenContent(
 
         ) {
 
-            if (currentUserRole != admin) {
+            if (currentUserRole != Role.Admin) {
                 ProfileCard(
                     userProfile = userProfile,
                     openScreen = openScreen
                 )
             }
-
 
             listOfSettingsOptions.forEach { option ->
 

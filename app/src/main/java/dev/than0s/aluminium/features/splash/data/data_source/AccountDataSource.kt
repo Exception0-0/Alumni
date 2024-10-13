@@ -32,7 +32,7 @@ class AccountDataSourceImple @Inject constructor(
                 .document(userId)
                 .get()
                 .await()
-                .get("category")
+                .get("role")
                 .toString()
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())

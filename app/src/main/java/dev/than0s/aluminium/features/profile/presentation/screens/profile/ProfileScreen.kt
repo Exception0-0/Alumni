@@ -17,8 +17,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -125,10 +127,12 @@ private fun ProfileScreenContent(
         )
     }
 
-    AluminiumAsyncImage(
+    AsyncImage(
         model = userProfile.coverImage,
-        settings = AluminiumAsyncImageSettings.CoverImage,
-        modifier = CoverImageModifier.default
+        contentDescription = "Cover Image",
+        modifier = Modifier
+            .background(color = colorResource(id = R.color.purple_500))
+            .height(128.dp)
     )
 
     Column(
@@ -169,6 +173,22 @@ private fun ProfileScreenContent(
                     title = "Contacts",
                     selectedIcon = Icons.Filled.AccountBox,
                     unselectedIcon = Icons.Outlined.AccountBox,
+                    screen = {
+                        ContactsTabContent(
+                            isCurrentUser = userId == currentUserId,
+                            contactInfo = contactInfo,
+                            editContactInfo = editContactInfo,
+                            onEmailChange = onEmailChange,
+                            onMobileChange = onMobileChange,
+                            onSocialHandleChange = onSocialHandleChange,
+                            onUpdateContactClick = onContactUpdateClick
+                        )
+                    }
+                ),
+                TabItem(
+                    title = "About",
+                    selectedIcon = Icons.Filled.Info,
+                    unselectedIcon = Icons.Outlined.Info,
                     screen = {
                         ContactsTabContent(
                             isCurrentUser = userId == currentUserId,

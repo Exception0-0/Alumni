@@ -4,41 +4,24 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,12 +30,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import dev.than0s.aluminium.core.Course
+import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.AluminiumClickableText
-import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.composable.AluminiumDropdownMenu
 import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.composable.AluminiumLoadingElevatedButton
 import dev.than0s.aluminium.core.composable.AluminiumTextField
@@ -72,14 +56,15 @@ fun RegistrationScreen(
         popAndOpen = popAndOpen,
         onEmailChange = viewModel::onEmailChange,
         onRegisterClick = viewModel::onRegisterClick,
-        onCategoryChange = viewModel::onCategoryChange,
-        onRollNoChange = viewModel::onRollNoChange,
+        onRoleChange = viewModel::onRoleChange,
+        onRollNoChange = viewModel::onCollegeIdChange,
         onFirstNameChange = viewModel::onFirstNameChange,
         onMiddleNameChange = viewModel::onMiddleNameChange,
         onLastNameChange = viewModel::onLastNameChange,
         onBatchFromChange = viewModel::onBatchFromChange,
         onBatchToChange = viewModel::onBatchToChange,
-        onCollegeIdChange = viewModel::onCollegeIdChange
+        onCollegeIdChange = viewModel::onCollegeIdChange,
+        onCourseChange = viewModel::onCourseChange
     )
 }
 
@@ -89,14 +74,15 @@ private fun RegistrationScreenContent(
     onEmailChange: (String) -> Unit,
     onRegisterClick: (() -> Unit) -> Unit,
     popAndOpen: (Screen) -> Unit,
-    onCategoryChange: (String) -> Unit,
+    onRoleChange: (Role) -> Unit,
+    onCourseChange: (Course) -> Unit,
     onRollNoChange: (String) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onMiddleNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onBatchFromChange: (String) -> Unit,
     onBatchToChange: (String) -> Unit,
-    onCollegeIdChange: (Uri?) -> Unit
+    onCollegeIdChange: (Uri?) -> Unit,
 ) {
     var formIndex by rememberSaveable { mutableIntStateOf(0) }
     var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
@@ -106,17 +92,18 @@ private fun RegistrationScreenContent(
     list.add {
         RoleCard(
             param = param,
-            onCategoryChange = onCategoryChange
+            onRoleChange = onRoleChange
         )
     }
-    if (param.category != admin) {
+    if (param.role != Role.Admin) {
         list.add {
             CollegeInfoCard(
                 param = param,
                 onRollNoChange = onRollNoChange,
                 onBatchToChange = onBatchToChange,
                 onBatchFromChange = onBatchFromChange,
-                onCollegeIdChange = onCollegeIdChange
+                onCollegeIdChange = onCollegeIdChange,
+                onCourseChange = onCourseChange
             )
         }
     }
@@ -152,7 +139,6 @@ private fun RegistrationScreenContent(
                 list[formIndex]()
             }
 
-
             Row(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraLarge)
             ) {
@@ -169,7 +155,7 @@ private fun RegistrationScreenContent(
                         }
                     )
                 }
-                if (param.category.isNotEmpty() && formIndex < list.size - 1) {
+                if (formIndex < list.size - 1) {
                     FilledIconButton(
                         onClick = {
                             formIndex++
@@ -288,9 +274,8 @@ private fun ContactInfoCard(
 @Composable
 private fun RoleCard(
     param: RegistrationForm,
-    onCategoryChange: (String) -> Unit,
+    onRoleChange: (Role) -> Unit,
 ) {
-    var categoryDropState by rememberSaveable { mutableStateOf(false) }
 
     AluminiumElevatedCard {
         Column(
@@ -304,37 +289,13 @@ private fun RoleCard(
                 title = "Select Role",
                 fontSize = MaterialTheme.textSize.huge
             )
-            Column {
-                AluminiumTextField(
-                    value = param.category,
-                    onValueChange = {},
-                    placeholder = "Role",
-                    enable = false,
-                    modifier = Modifier.clickable {
-                        categoryDropState = true
-                    }
-                )
 
-                DropdownMenu(
-                    expanded = categoryDropState,
-                    onDismissRequest = {
-                        categoryDropState = false
-                    },
-                ) {
-                    categoryList.forEach {
-                        DropdownMenuItem(
-                            text = {
-                                Text(text = it)
-                            },
-                            onClick = {
-                                onCategoryChange(it)
-                                categoryDropState = false
-                            },
-                            modifier = Modifier.width(128.dp)
-                        )
-                    }
-                }
-            }
+            AluminiumDropdownMenu(
+                value = param.role.name,
+                placeHolder = "Role",
+                dropdownList = Role.entries,
+                onSelect = onRoleChange
+            )
         }
     }
 }
@@ -346,8 +307,8 @@ private fun CollegeInfoCard(
     onBatchFromChange: (String) -> Unit,
     onBatchToChange: (String) -> Unit,
     onCollegeIdChange: (Uri?) -> Unit,
+    onCourseChange: (Course) -> Unit,
 ) {
-
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
             image?.let {
@@ -369,14 +330,23 @@ private fun CollegeInfoCard(
             )
 
             AluminiumTextField(
-                value = param.rollNo ?: "",
+                value = param.collegeId ?: "",
                 onValueChange = { newValue ->
                     onRollNoChange(newValue)
                 },
-                placeholder = "Student ID / Staff ID"
+                placeholder = "College Id"
             )
 
-            if (param.category != staff) {
+            if (param.role != Role.Staff) {
+                AluminiumDropdownMenu(
+                    value = param.course?.name ?: Course.MCA.name,
+                    placeHolder = "Course",
+                    dropdownList = Course.entries,
+                    onSelect = onCourseChange
+                )
+            }
+
+            if (param.role == Role.Alumni) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                 ) {
@@ -431,14 +401,6 @@ private fun RegistrationScreenPreview() {
         RegistrationForm(
             idCardImage = Uri.EMPTY
         ),
-        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
     )
 }
-
-
-const val student = "Student"
-const val staff = "Staff"
-const val alumni = "Alumni"
-const val admin = "Admin"
-
-private val categoryList = listOf(student, staff, alumni, admin)

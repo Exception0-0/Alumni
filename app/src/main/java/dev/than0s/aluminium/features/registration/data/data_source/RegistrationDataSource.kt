@@ -52,7 +52,7 @@ class RegisterDataSourceImple @Inject constructor(
                 .whereEqualTo("status.approvalStatus", null)
                 .dataObjects<RawRegistrationForm>()
                 .toRegistrationForm(::getIdCardImage)
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }

@@ -37,6 +37,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
@@ -51,7 +52,6 @@ import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.SpecificPostsScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
-import dev.than0s.aluminium.features.registration.presentation.screens.registration.admin
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 import javax.inject.Inject
 
@@ -189,7 +189,7 @@ private fun AluminiumBottomNavigationBar(navController: NavHostController) {
     val bottomNavItemsList = mutableListOf<BottomNavigationItem>()
     bottomNavItemsList.apply {
 
-        if(currentUserRole == admin) {
+        if(currentUserRole == Role.Admin) {
             add(
                 BottomNavigationItem(
                     "dev.than0s.aluminium.core.Screen.RegistrationRequestsScreen",

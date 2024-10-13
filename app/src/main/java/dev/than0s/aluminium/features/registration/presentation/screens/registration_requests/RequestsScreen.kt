@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.composable.AluminiumAlertDialog
 import dev.than0s.aluminium.core.composable.AluminiumClickableText
 import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
@@ -145,7 +146,7 @@ private fun RegistrationRequestItem(
             modifier = Modifier.padding(MaterialTheme.spacing.medium)
         ) {
             AluminiumTitleText(
-                title = request.category,
+                title = request.role.name,
                 fontSize = MaterialTheme.textSize.huge
             )
             if (request.batchFrom != null) {
@@ -154,9 +155,9 @@ private fun RegistrationRequestItem(
                     fontSize = MaterialTheme.textSize.medium
                 )
             }
-            if (request.rollNo != null) {
+            if (request.collegeId != null) {
                 AluminiumTitleText(
-                    title = request.rollNo,
+                    title = request.collegeId,
                     fontSize = MaterialTheme.textSize.medium
                 )
             }
@@ -222,8 +223,8 @@ private fun RegistrationRequestPreview() {
         listOf(
             RegistrationForm(
                 id = "1",
-                category = "Student",
-                rollNo = "123456",
+                role = Role.Student,
+                collegeId = "123456",
                 firstName = "Himanshu",
                 middleName = "Vasantrao",
                 lastName = "Patil",
@@ -233,8 +234,6 @@ private fun RegistrationRequestPreview() {
             ),
             RegistrationForm(
                 id = "2",
-                category = "Student",
-                rollNo = "123456",
                 firstName = "Himanshu",
                 middleName = "Vasantrao",
                 lastName = "Patil",
@@ -245,8 +244,6 @@ private fun RegistrationRequestPreview() {
             ),
             RegistrationForm(
                 id = "3",
-                category = "Student",
-                rollNo = "123456",
                 firstName = "Himanshu",
                 middleName = "Vasantrao",
                 lastName = "Patil",

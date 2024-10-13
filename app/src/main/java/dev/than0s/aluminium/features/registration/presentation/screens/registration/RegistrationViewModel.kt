@@ -7,7 +7,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.than0s.aluminium.core.Course
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.features.registration.domain.use_cases.SubmitRegistrationUseCase
@@ -26,12 +28,12 @@ class RegistrationViewModel @Inject constructor
         param = param.copy(email = email)
     }
 
-    fun onCategoryChange(category: String) {
-        param = param.copy(category = category)
+    fun onRoleChange(category: Role) {
+        param = param.copy(role = category)
     }
 
-    fun onRollNoChange(rollNo: String) {
-        param = param.copy(rollNo = rollNo)
+    fun onCollegeIdChange(rollNo: String) {
+        param = param.copy(collegeId = rollNo)
     }
 
     fun onFirstNameChange(firstName: String) {
@@ -56,6 +58,10 @@ class RegistrationViewModel @Inject constructor
 
     fun onCollegeIdChange(uri: Uri?) {
         param = param.copy(idCardImage = uri)
+    }
+
+    fun onCourseChange(course: Course) {
+        param = param.copy(course = course)
     }
 
     fun onRegisterClick(onCompleted: () -> Unit) {

@@ -48,9 +48,20 @@ if __name__=="__main__":
             user_uid = create_account(dict[constant.EMAIL],generate_password())
 
             #create college_info doc
-            create_college_info_document(user_uid,{
+            college_info_dic = {
                 constant.USER_ROLE:dict[constant.USER_ROLE]
-            })
+            }
+            
+            if constant.USER_COURSE in dict:
+                college_info_dic.update({constant.USER_COURSE: dict[constant.USER_COURSE]})
+            
+            if constant.BATCH_FROM in dict:
+                college_info_dic.update({
+                    constant.BATCH_FROM : dict[constant.BATCH_FROM],
+                    constant.BATCH_TO: dict[constant.BATCH_TO]
+                })
+            
+            create_college_info_document(user_uid,college_info_dic)
 
             # modify the account generation status as True
             dict[constant.STATUS][constant.ACCOUNT_GENERATED_STATUS] = True
