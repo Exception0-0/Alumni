@@ -10,6 +10,7 @@ import com.google.firebase.storage.StorageException
 import dev.than0s.aluminium.features.profile.data.mapper.RawUser
 import dev.than0s.aluminium.features.profile.data.mapper.toRawUser
 import dev.than0s.aluminium.features.profile.data.mapper.toUser
+import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
@@ -21,6 +22,7 @@ interface ProfileDataSource {
     suspend fun setUserProfile(user: User)
     suspend fun setContactInfo(contactInfo: ContactInfo)
     suspend fun getContactInfo(userId: String): ContactInfo?
+    suspend fun getAboutInfo(userId: String): AboutInfo
 }
 
 class ProfileDataSourceImple @Inject constructor(
@@ -92,7 +94,19 @@ class ProfileDataSourceImple @Inject constructor(
         }
     }
 
-    private suspend fun getUserProfileImage(userId:String): Uri? {
+    override suspend fun getAboutInfo(userId: String): AboutInfo {
+        return try {
+            store.collection(COLLEGE_INFO)
+                .document(userId)
+                .get()
+                .await()
+                .toObject()!!
+        } catch (e: FirebaseException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    private suspend fun getUserProfileImage(userId: String): Uri? {
         return try {
             cloud.reference
                 .child("$PROFILE_IMAGE/${userId}/0")
@@ -106,7 +120,7 @@ class ProfileDataSourceImple @Inject constructor(
         }
     }
 
-    private suspend fun getUserCoverImage(userId:String): Uri? {
+    private suspend fun getUserCoverImage(userId: String): Uri? {
         return try {
             cloud.reference
                 .child("$COVER_IMAGE/${userId}/0")
@@ -125,5 +139,6 @@ class ProfileDataSourceImple @Inject constructor(
         private const val COVER_IMAGE = "user_cover_image"
         private const val PROFILE = "profile"
         private const val CONTACT_INFO = "contact_info"
+        private const val COLLEGE_INFO = "college_info"
     }
 }

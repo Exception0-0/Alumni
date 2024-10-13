@@ -96,7 +96,7 @@ fun ContactsTabContent(
 }
 
 @Composable
-private fun InfoFormat(
+fun InfoFormat(
     title: String,
     info: String,
     icon: ImageVector,

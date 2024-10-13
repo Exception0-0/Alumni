@@ -59,6 +59,7 @@ import dev.than0s.aluminium.core.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.composable.CoverImageModifier
 import dev.than0s.aluminium.core.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.currentUserId
+import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.aluminium.ui.roundCorners
@@ -74,6 +75,7 @@ fun ProfileScreen(
         userId = viewModel.profileScreenArgs.userId,
         userProfile = viewModel.userProfile,
         contactInfo = viewModel.contactInfo,
+        aboutInfo = viewModel.aboutInfo,
         editUserProfile = viewModel.editUserProfile,
         editContactInfo = viewModel.editContactInfo,
         openScreen = openScreen,
@@ -95,6 +97,7 @@ private fun ProfileScreenContent(
     userId: String,
     userProfile: User,
     contactInfo: ContactInfo,
+    aboutInfo: AboutInfo,
     editUserProfile: User,
     editContactInfo: ContactInfo,
     openScreen: (Screen) -> Unit,
@@ -130,6 +133,7 @@ private fun ProfileScreenContent(
     AsyncImage(
         model = userProfile.coverImage,
         contentDescription = "Cover Image",
+        contentScale = ContentScale.Crop,
         modifier = Modifier
             .background(color = colorResource(id = R.color.purple_500))
             .height(128.dp)
@@ -190,14 +194,8 @@ private fun ProfileScreenContent(
                     selectedIcon = Icons.Filled.Info,
                     unselectedIcon = Icons.Outlined.Info,
                     screen = {
-                        ContactsTabContent(
-                            isCurrentUser = userId == currentUserId,
-                            contactInfo = contactInfo,
-                            editContactInfo = editContactInfo,
-                            onEmailChange = onEmailChange,
-                            onMobileChange = onMobileChange,
-                            onSocialHandleChange = onSocialHandleChange,
-                            onUpdateContactClick = onContactUpdateClick
+                        AboutTabContent(
+                            aboutInfo = aboutInfo
                         )
                     }
                 ),
@@ -413,6 +411,7 @@ private fun ProfileScreenPreview() {
             email = "thanosop150@gmail.com",
             mobile = "+91-1234567890"
         ),
+        AboutInfo(),
         User(
             firstName = "Than0s",
             lastName = "Op",

@@ -3,6 +3,7 @@ package dev.than0s.aluminium.features.profile.domain.repository
 import android.net.Uri
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.error.Failure
+import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
@@ -12,4 +13,5 @@ interface ProfileRepository {
     suspend fun setUserProfile(profile: User): Either<Failure, Unit>
     suspend fun setContactInfo(contactInfo: ContactInfo): Either<Failure, Unit>
     suspend fun getContactInfo(userId: String): Either<Failure, ContactInfo?>
+    suspend fun getAboutInfo(userId: String): Either<Failure, AboutInfo>
 }

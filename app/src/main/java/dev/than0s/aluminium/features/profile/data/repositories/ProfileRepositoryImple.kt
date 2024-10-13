@@ -5,6 +5,7 @@ import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.error.Failure
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.aluminium.features.profile.data.data_source.ProfileDataSource
+import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
 import dev.than0s.mydiary.core.error.ServerException
@@ -43,6 +44,14 @@ class ProfileRepositoryImple @Inject constructor(private val dataSource: Profile
         return try {
             Either.Right(dataSource.getContactInfo(userId))
         } catch (e: ServerException) {
+            Either.Left(Failure(e.message))
+        }
+    }
+
+    override suspend fun getAboutInfo(userId: String): Either<Failure, AboutInfo> {
+        return try{
+            Either.Right(dataSource.getAboutInfo(userId))
+        } catch(e:ServerException) {
             Either.Left(Failure(e.message))
         }
     }

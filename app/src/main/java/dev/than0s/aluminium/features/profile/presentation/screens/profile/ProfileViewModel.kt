@@ -12,8 +12,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.SnackbarController
+import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
+import dev.than0s.aluminium.features.profile.domain.use_cases.GetAboutInfoUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.GetContactInfoUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.GetUserUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetContactInfoUseCase
@@ -27,10 +29,12 @@ class ProfileViewModel @Inject constructor(
     private val profileUseCase: GetUserUseCase,
     private val updateProfileUseCase: SetProfileUseCase,
     private val getContactInfoUseCase: GetContactInfoUseCase,
-    private val setContactInfoUseCase: SetContactInfoUseCase
+    private val setContactInfoUseCase: SetContactInfoUseCase,
+    private val getAboutInfoUseCase: GetAboutInfoUseCase,
 ) : ViewModel() {
     var userProfile by mutableStateOf(User())
     var contactInfo by mutableStateOf(ContactInfo())
+    var aboutInfo by mutableStateOf(AboutInfo())
     var editUserProfile by mutableStateOf(User())
     var editContactInfo by mutableStateOf(ContactInfo())
 
@@ -39,6 +43,7 @@ class ProfileViewModel @Inject constructor(
     init {
         loadProfile()
         getContactInfo()
+        getAboutInfo()
     }
 
     fun loadProfile() {
@@ -66,6 +71,20 @@ class ProfileViewModel @Inject constructor(
                 is Either.Right -> result.value.let {
                     contactInfo = it ?: ContactInfo()
                     editContactInfo = it ?: ContactInfo()
+                }
+            }
+        }
+    }
+
+    fun getAboutInfo() {
+        viewModelScope.launch {
+            when (val result = getAboutInfoUseCase.invoke(profileScreenArgs.userId)) {
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+
+                is Either.Right -> result.value.let {
+                    aboutInfo = it
                 }
             }
         }
