@@ -69,7 +69,7 @@ fun ContactsTabContent(
     ) {
         InfoFormat(
             title = "Email",
-            info = contactInfo.email,
+            info = contactInfo.email ?: "No email address added yet",
             icon = Icons.Outlined.Email,
         )
         InfoFormat(
@@ -154,7 +154,7 @@ private fun UpdateContactInfo(
                     title = "Contact",
                 )
                 AluminiumTextField(
-                    value = contactInfo.email,
+                    value = contactInfo.email ?: "",
                     onValueChange = onEmailChange,
                     placeholder = "Email"
                 )
