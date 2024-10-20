@@ -18,7 +18,9 @@ import androidx.compose.material.icons.outlined.RequestPage
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -26,11 +28,14 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -61,15 +66,21 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var viewModel: MainActivityViewModel
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AluminiumTheme {
+                val scrollBehavior =
+                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
                 val navController = rememberNavController()
                 Scaffold(
                     topBar = {
-                        AluminiumTopAppBar(navController)
+                        AluminiumTopAppBar(
+                            navController = navController,
+                            scrollBehavior = scrollBehavior
+                        )
                     },
                     snackbarHost = {
                         SnackbarHost(
@@ -78,7 +89,8 @@ class MainActivity : ComponentActivity() {
                     },
                     bottomBar = {
                         AluminiumBottomNavigationBar(navController)
-                    }
+                    },
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) { paddingValue ->
                     NavGraphHost(
                         navController = navController,
@@ -182,14 +194,16 @@ private fun NavHostController.restartApp() {
 }
 
 @Composable
-private fun AluminiumBottomNavigationBar(navController: NavHostController) {
+private fun AluminiumBottomNavigationBar(
+    navController: NavHostController,
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val bottomNavItemsList = mutableListOf<BottomNavigationItem>()
     bottomNavItemsList.apply {
 
-        if(currentUserRole == Role.Admin) {
+        if (currentUserRole == Role.Admin) {
             add(
                 BottomNavigationItem(
                     "dev.than0s.aluminium.core.Screen.RegistrationRequestsScreen",
@@ -199,8 +213,7 @@ private fun AluminiumBottomNavigationBar(navController: NavHostController) {
                     "Registration Request"
                 )
             )
-        }
-        else {
+        } else {
             add(
                 BottomNavigationItem(
                     "dev.than0s.aluminium.core.Screen.PostsScreen?userId={userId}",
@@ -252,14 +265,21 @@ private fun AluminiumBottomNavigationBar(navController: NavHostController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AluminiumTopAppBar(navController: NavHostController) {
+private fun AluminiumTopAppBar(
+    navController: NavHostController,
+    scrollBehavior: TopAppBarScrollBehavior
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val topAppBarList = remember {
         listOf(
             TopAppBarItem(
-                uid = "dev.than0s.aluminium.core.Screen.CommentsScreen",
+                uid = "dev.than0s.aluminium.core.Screen.PostsScreen?userId={userId}",
+                label = "Posts"
+            ),
+            TopAppBarItem(
+                uid = "dev.than0s.aluminium.core.Screen.CommentsScreen/{postId}",
                 label = "Comments"
             ),
         )
@@ -268,14 +288,15 @@ private fun AluminiumTopAppBar(navController: NavHostController) {
     val isCurrentScreenHaveTopBar = topAppBarList.any { it.uid == currentRoute }
 
     if (isCurrentScreenHaveTopBar) {
-        TopAppBar(
+        MediumTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
             title = {
                 Text(text = topAppBarList.find { it.uid == currentRoute }?.label ?: "Aluminium")
-            }
+            },
+            scrollBehavior = scrollBehavior
         )
     }
 }
