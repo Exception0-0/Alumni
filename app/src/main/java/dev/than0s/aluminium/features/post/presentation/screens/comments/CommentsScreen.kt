@@ -113,6 +113,7 @@ private fun CommentScreenContent(
         },
     ) { contentPadding ->
         LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
             modifier = Modifier.padding(contentPadding)
         ) {
             items(commentList) { comment ->
@@ -142,8 +143,8 @@ private fun CommentPreview(
 
     AluminiumElevatedCard(
         modifier = Modifier
+            .padding(horizontal = MaterialTheme.spacing.small)
             .fillMaxWidth()
-            .padding(MaterialTheme.spacing.small)
     ) {
 
         Row(
