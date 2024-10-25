@@ -1,15 +1,13 @@
 package dev.than0s.aluminium.features.post.domain.data_class
 
-import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentId
 
 data class Comment(
     @DocumentId
-    val id: String = System.currentTimeMillis().toString(),
+    val id: String = "",
     val postId: String = "",
-    val user: User = User(),
+    val userId: String = "",
     val message: String = "",
-    val timeStamp: Timestamp = Timestamp.now()
+    val timestamp: Timestamp = Timestamp.now()
 )

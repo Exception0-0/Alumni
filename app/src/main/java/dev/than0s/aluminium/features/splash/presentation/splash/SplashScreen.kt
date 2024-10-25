@@ -3,15 +3,19 @@ package dev.than0s.aluminium.features.splash.presentation.splash
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.Screen
 
 @Composable
-fun SplashScreen(viewModel: SplashViewModel = hiltViewModel(), popAndOpen: (String) -> Unit) {
-    viewModel.loadScreen { hasUser: Boolean ->
-        if (hasUser) {
-            popAndOpen(Screen.AllPostScreen.route)
-        } else {
-            popAndOpen(Screen.SignInScreen.route)
+fun SplashScreen(
+    viewModel: SplashViewModel = hiltViewModel(),
+    popAndOpen: (Screen) -> Unit
+) {
+    viewModel.loadScreen { role: Role? ->
+        when (role) {
+            null -> popAndOpen(Screen.SignInScreen)
+            Role.Admin -> popAndOpen(Screen.RegistrationRequestsScreen)
+            else -> popAndOpen(Screen.PostsScreen())
         }
     }
 }

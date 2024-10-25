@@ -24,12 +24,16 @@ def create_account(email:string,password:string):
         email = email,
         password = password
     )
+    return user.uid
+
+def create_college_info_document(doc_id:string,doc:dict):
+    db.collection(constant.COLLEGE_INFO).document(document_id = doc_id).set(doc)
 
 def modifie_request_status(doc_id:string,doc:dict):
     db.collection(constant.REGISTRATION_REQUESTS).document(document_id = doc_id).set(doc)
 
 def fetch_accepted_request():
-    accepted = db.collection(constant.REGISTRATION_REQUESTS).where(filter = FieldFilter(constant.STATUS_APPROVAL_STATUS,"==",True))
+    accepted = db.collection(constant.REGISTRATION_REQUESTS).where(filter = FieldFilter(constant.STATUS_APPROVAL_STATUS,"==",True)).where(filter = FieldFilter(constant.STATUS_ACCOUNT_GENERATED_STATUS,"==",False))
     return accepted.stream()
         
 
@@ -41,7 +45,23 @@ if __name__=="__main__":
         dict = doc.to_dict()
         try:
             # account creation
-            create_account(dict[constant.EMAIL],generate_password())
+            user_uid = create_account(dict[constant.EMAIL],generate_password())
+
+            #create college_info doc
+            college_info_dic = {
+                constant.USER_ROLE:dict[constant.USER_ROLE]
+            }
+            
+            if constant.USER_COURSE in dict:
+                college_info_dic.update({constant.USER_COURSE: dict[constant.USER_COURSE]})
+            
+            if constant.BATCH_FROM in dict:
+                college_info_dic.update({
+                    constant.BATCH_FROM : dict[constant.BATCH_FROM],
+                    constant.BATCH_TO: dict[constant.BATCH_TO]
+                })
+            
+            create_college_info_document(user_uid,college_info_dic)
 
             # modify the account generation status as True
             dict[constant.STATUS][constant.ACCOUNT_GENERATED_STATUS] = True
@@ -49,10 +69,12 @@ if __name__=="__main__":
             # make update in firestore
             modifie_request_status(doc.id,dict)
             
-            print("operation executed successfully")
+            print("account generated successfully")
 
         except Exception as e:
             print(f"Error: {e}")
+    
+    print("script executed successfully")
 
 # rejected = db.collection(registrationRequests).where(filter = FieldFilter(approvalStatus,"==",False))
 # rejected_docs = rejected.stream()

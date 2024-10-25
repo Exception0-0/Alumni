@@ -10,12 +10,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
-import dev.than0s.mydiary.ui.Elevation
-import dev.than0s.mydiary.ui.LocalElevation
-import dev.than0s.mydiary.ui.LocalSpacing
-import dev.than0s.mydiary.ui.LocalTextSize
-import dev.than0s.mydiary.ui.Spacing
-import dev.than0s.mydiary.ui.TextSize
+import dev.than0s.aluminium.ui.Elevation
+import dev.than0s.aluminium.ui.LocalElevation
+import dev.than0s.aluminium.ui.LocalRoundCorners
+import dev.than0s.aluminium.ui.LocalSpacing
+import dev.than0s.aluminium.ui.LocalTextSize
+import dev.than0s.aluminium.ui.RoundCorners
+import dev.than0s.aluminium.ui.Spacing
+import dev.than0s.aluminium.ui.TextSize
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -59,7 +61,8 @@ fun AluminiumTheme(
     CompositionLocalProvider(
         LocalSpacing provides Spacing(),
         LocalElevation provides Elevation(),
-        LocalTextSize provides TextSize()
+        LocalTextSize provides TextSize(),
+        LocalRoundCorners provides RoundCorners()
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

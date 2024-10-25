@@ -8,56 +8,27 @@ import dev.than0s.aluminium.features.post.domain.data_class.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-suspend fun Flow<List<RawPost>>.toPost(
-    getUser: suspend (String) -> User,
+suspend fun List<RawPost>.toPost(
     getFile: suspend (String) -> Uri,
-    hasUserLiked: suspend (String) -> Boolean
-): Flow<List<Post>> {
-    return this.map { list ->
-        list.map {
-            Post(
-                id = it.id,
-                user = getUser(it.userId),
-                file = getFile(it.id),
-                title = it.title,
-                description = it.description,
-                timestamp = it.timestamp,
-                hasLiked = hasUserLiked(it.id),
-            )
-        }
-    }
-}
-
-suspend fun Flow<List<RawComment>>.toComment(
-    postId: String,
-    getUser: suspend (String) -> User,
-): Flow<List<Comment>> {
-    return this.map { list ->
-        list.map {
-            Comment(
-                id = it.id,
-                postId = postId,
-                user = getUser(it.userId),
-                message = it.message,
-                timeStamp = it.timeStamp
-            )
-        }
+): List<Post> {
+    return this.map {
+        Post(
+            id = it.id,
+            userId = it.userId,
+            file = getFile(it.id),
+            title = it.title,
+            description = it.description,
+            timestamp = it.timestamp,
+        )
     }
 }
 
 fun Post.toRawPost() = RawPost(
     id = id,
-    userId = user.userId,
+    userId = userId,
     title = title,
     description = description,
     timestamp = timestamp
-)
-
-fun Comment.toRawComment() = RawComment(
-    id = id,
-    userId = user.userId,
-    message = message,
-    timeStamp = timeStamp
 )
 
 data class RawPost(
@@ -66,11 +37,4 @@ data class RawPost(
     val title: String = "",
     val description: String = "",
     val timestamp: Timestamp = Timestamp.now()
-)
-
-data class RawComment(
-    val id: String = "",
-    val userId: String = "",
-    val message: String = "",
-    val timeStamp: Timestamp = Timestamp.now()
 )

@@ -4,18 +4,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
-import dev.than0s.aluminium.features.splash.domain.use_cases.HasUserUseCase
+import dev.than0s.aluminium.core.Role
+import dev.than0s.aluminium.core.SnackbarController
+import dev.than0s.aluminium.core.currentUserRole
+import dev.than0s.aluminium.core.setCurrentUserId
+import dev.than0s.aluminium.core.setCurrentUserRole
+import dev.than0s.aluminium.features.splash.domain.data_class.CurrentUser
+import dev.than0s.aluminium.features.splash.domain.use_cases.GetCurrentUserUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(private val hasUserUseCase: HasUserUseCase) :
+class SplashViewModel @Inject constructor(private val getCurrentUser: GetCurrentUserUseCase) :
     ViewModel() {
-    fun loadScreen(onSuccessful: (Boolean) -> Unit) {
+    fun loadScreen(onSuccessful: (Role?) -> Unit) {
         viewModelScope.launch {
-            when (val hasUser = hasUserUseCase.invoke(Unit)) {
-                is Either.Left -> println("has user failed ${hasUser.value}")
-                is Either.Right -> onSuccessful(hasUser.value)
+            when (val result = getCurrentUser.invoke(Unit)) {
+                is Either.Left -> SnackbarController.showSnackbar(result.value.message)
+                is Either.Right -> {
+                    setCurrentUserId(result.value.userId)
+                    setCurrentUserRole(result.value.role)
+                    onSuccessful(result.value.role)
+                }
             }
         }
     }

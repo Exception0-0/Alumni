@@ -12,10 +12,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.than0s.aluminium.features.admin.data.data_source.RequestDataSource
-import dev.than0s.aluminium.features.admin.data.data_source.RequestDataSourceImple
-import dev.than0s.aluminium.features.admin.data.repostiory.RequestRepositoryImple
-import dev.than0s.aluminium.features.admin.domain.repositories.RequestRepository
 import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSource
 import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSourceImple
 import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSource
@@ -23,9 +19,17 @@ import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryI
 import dev.than0s.aluminium.features.auth.data.repositories.AuthRepositoryImple
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
+import dev.than0s.aluminium.features.post.data.data_source.CommentDataSource
+import dev.than0s.aluminium.features.post.data.data_source.CommentDataSourceImple
+import dev.than0s.aluminium.features.post.data.data_source.LikeDataSource
+import dev.than0s.aluminium.features.post.data.data_source.LikeDataSourceImple
 import dev.than0s.aluminium.features.post.data.data_source.PostDataSource
 import dev.than0s.aluminium.features.post.data.data_source.PostDataSourceImple
+import dev.than0s.aluminium.features.post.data.repositories.CommentRepositoryImple
+import dev.than0s.aluminium.features.post.data.repositories.LikeRepositoryImple
 import dev.than0s.aluminium.features.post.data.repositories.PostRepositoryImple
+import dev.than0s.aluminium.features.post.domain.repository.CommentRepository
+import dev.than0s.aluminium.features.post.domain.repository.LikeRepository
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
 import dev.than0s.aluminium.features.registration.data.data_source.RegisterDataSource
 import dev.than0s.aluminium.features.registration.data.repositories.RegistrationRepositoryImple
@@ -40,13 +44,6 @@ import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSourceIm
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
-    // Admin
-    @Binds
-    abstract fun bindRequestDataSource(imple: RequestDataSourceImple): RequestDataSource
-
-    @Binds
-    abstract fun bindRequestRepository(imple: RequestRepositoryImple): RequestRepository
-
     // auth
     @Binds
     abstract fun bindAuthDataSource(imple: AuthDataSourceImple): AuthDataSource
@@ -60,6 +57,18 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindPostRepository(imple: PostRepositoryImple): PostRepository
+
+    @Binds
+    abstract fun bindLikeDataSource(imple: LikeDataSourceImple): LikeDataSource
+
+    @Binds
+    abstract fun bindLikeRepository(imple: LikeRepositoryImple): LikeRepository
+
+    @Binds
+    abstract fun bindCommentDataSource(imple: CommentDataSourceImple): CommentDataSource
+
+    @Binds
+    abstract fun bindCommentRepository(imple: CommentRepositoryImple): CommentRepository
 
     // profile
     @Binds

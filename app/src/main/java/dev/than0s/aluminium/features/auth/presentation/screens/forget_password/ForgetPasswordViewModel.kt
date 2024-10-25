@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.auth.domain.use_cases.ForgetPasswordUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,11 +19,13 @@ class ForgetPasswordViewModel @Inject constructor(private val useCase: ForgetPas
 
     fun onForgetPasswordClick(onSuccess: () -> Unit) {
         viewModelScope.launch {
-            when (useCase.invoke(email)) {
-                is Either.Left -> println("failed forget password")
+            when (val result = useCase.invoke(email)) {
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
                 is Either.Right -> {
+                    SnackbarController.showSnackbar("successfully forget password")
                     onSuccess()
-                    println("successfully forget password")
                 }
             }
         }

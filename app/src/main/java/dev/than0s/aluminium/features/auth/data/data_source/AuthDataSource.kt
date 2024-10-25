@@ -3,6 +3,7 @@ package dev.than0s.aluminium.features.auth.data.data_source
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.firestore.FirebaseFirestore
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -14,7 +15,9 @@ interface AuthDataSource {
     suspend fun signOut()
 }
 
-class AuthDataSourceImple @Inject constructor(private val auth: FirebaseAuth) :
+class AuthDataSourceImple @Inject constructor(
+    private val auth: FirebaseAuth,
+) :
     AuthDataSource {
     override suspend fun signIn(email: String, password: String) {
         try {

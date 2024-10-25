@@ -5,6 +5,7 @@ import dev.than0s.aluminium.core.error.Failure
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.data.data_source.PostDataSource
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
+import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -13,70 +14,34 @@ class PostRepositoryImple @Inject constructor(private val dataSource: PostDataSo
     PostRepository {
 
     override suspend fun addPost(post: Post): Either<Failure, Unit> {
-        try {
+        return try {
             dataSource.addPost(post)
-            return Either.Right(Unit)
+            Either.Right(Unit)
         } catch (e: Exception) {
-            return Either.Left(Failure(e.message.toString()))
+            Either.Left(Failure(e.message.toString()))
         }
     }
 
     override suspend fun deletePost(postId: String): Either<Failure, Unit> {
-        try {
+        return try {
             dataSource.deletePost(postId)
-            return Either.Right(Unit)
-        } catch (e: Exception) {
-            return Either.Left(Failure(e.message.toString()))
-        }
-    }
-
-    override suspend fun getPostFlow(postId: String?): Either<Failure, Flow<List<Post>>> {
-        return try {
-            Either.Right(dataSource.getPostFlow(postId))
-        } catch (e: Exception) {
-            return Either.Left(Failure(e.message.toString()))
-        }
-    }
-
-    override suspend fun addLike(postId: String): Either<Failure, Unit> {
-        return try {
-            dataSource.addLike(postId)
             Either.Right(Unit)
         } catch (e: Exception) {
             Either.Left(Failure(e.message.toString()))
         }
     }
 
-    override suspend fun removeLike(postId: String): Either<Failure, Unit> {
+    override suspend fun getPosts(userId: String?): Either<Failure, List<Post>> {
         return try {
-            dataSource.removeLike(postId)
-            Either.Right(Unit)
+            Either.Right(dataSource.getPosts(userId))
         } catch (e: Exception) {
             Either.Left(Failure(e.message.toString()))
         }
     }
 
-    override suspend fun addComment(comment: Comment): Either<Failure, Unit> {
+    override suspend fun getUserProfile(userId: String): Either<Failure, User> {
         return try {
-            dataSource.addComment(comment)
-            Either.Right(Unit)
-        } catch (e: Exception) {
-            Either.Left(Failure(e.message.toString()))
-        }
-    }
-
-    override suspend fun removeComment(postId: String, commentId: String): Either<Failure, Unit> {
-        return try {
-            dataSource.removeComment(postId, commentId)
-            Either.Right(Unit)
-        } catch (e: Exception) {
-            Either.Left(Failure(e.message.toString()))
-        }
-    }
-
-    override suspend fun getCommentFlow(postId: String): Either<Failure, Flow<List<Comment>>> {
-        return try {
-            Either.Right(dataSource.getCommentFlow(postId))
+            Either.Right(dataSource.getUserProfile(userId))
         } catch (e: Exception) {
             Either.Left(Failure(e.message.toString()))
         }
