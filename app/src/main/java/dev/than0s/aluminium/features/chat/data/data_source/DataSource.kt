@@ -80,25 +80,6 @@ class DataSourceImple @Inject constructor(
     override suspend fun getCurrentChatList(): List<User> {
         try {
             val result = mutableListOf<User>()
-            val chatList = store.collection(CHATS)
-                .document(auth.currentUser!!.uid)
-                .get()
-                .await()
-                .data
-                ?.keys
-            chatList?.let {
-                for (userId in it) {
-                    val profile = getUserProfile(userId)
-                    val image = getProfileImage(userId)
-                    result.add(
-                        User(
-                            firstName = profile?.firstName.toString(),
-                            lastName = profile?.lastName.toString(),
-                            profileImage = image
-                        )
-                    )
-                }
-            }
             return result
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
