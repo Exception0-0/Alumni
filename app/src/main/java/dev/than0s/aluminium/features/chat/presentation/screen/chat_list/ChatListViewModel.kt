@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.SnackbarController
+import dev.than0s.aluminium.features.chat.domain.data_class.User
 import dev.than0s.aluminium.features.chat.domain.use_case.GetCurrentChatList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class ChatListViewModel @Inject constructor(
     val getCurrentChatList: GetCurrentChatList
 ) : ViewModel() {
-    var chatList by mutableStateOf(emptyList<String>())
+    var chatList by mutableStateOf(emptyList<User>())
         private set
 
     init {

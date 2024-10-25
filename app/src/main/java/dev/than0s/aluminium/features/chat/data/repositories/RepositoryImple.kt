@@ -4,6 +4,7 @@ import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.error.Failure
 import dev.than0s.aluminium.features.chat.data.data_source.DataSource
 import dev.than0s.aluminium.features.chat.domain.data_class.Chat
+import dev.than0s.aluminium.features.chat.domain.data_class.User
 import dev.than0s.aluminium.features.chat.domain.repository.Repository
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.flow.Flow
@@ -38,7 +39,7 @@ class RepositoryImple @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentChatList(): Either<Failure, List<String>> {
+    override suspend fun getCurrentChatList(): Either<Failure, List<User>> {
         return try {
             Either.Right(dataSource.getCurrentChatList())
         } catch (e: ServerException) {

@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.chat.presentation.screen.chat_list
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import coil.compose.AsyncImage
 import com.google.firebase.Timestamp
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.features.chat.domain.data_class.Chat
+import dev.than0s.aluminium.features.chat.domain.data_class.User
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
@@ -38,12 +40,12 @@ fun ChatListScreen(viewModel: ChatListViewModel = hiltViewModel()) {
 
 @Composable
 private fun ChatListContent(
-    usersList: List<String>
+    usersList: List<User>
 ) {
     LazyColumn {
         items(usersList) {
             ChatListCard(
-                chatListItem = it
+                user = it
             )
         }
     }
@@ -51,7 +53,7 @@ private fun ChatListContent(
 
 @Composable
 private fun ChatListCard(
-    chatListItem: ChatListItem
+    user: User
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -68,7 +70,7 @@ private fun ChatListCard(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
             ) {
                 AsyncImage(
-                    model = chatListItem.userProfileImage,
+                    model = user.profileImage,
                     placeholder = painterResource(
                         id = R.drawable.ic_launcher_background
                     ),
@@ -82,16 +84,10 @@ private fun ChatListCard(
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
                 ) {
                     Text(
-                        text = "${chatListItem.userFirstName} ${chatListItem.userLastName}"
-                    )
-                    Text(
-                        text = chatListItem.lastChat.message
+                        text = "${user.firstName} ${user.lastName}"
                     )
                 }
             }
-            TimeShower(
-                timestamp = chatListItem.lastChat.timeStamp
-            )
         }
     }
 }
@@ -110,12 +106,10 @@ fun TimeShower(timestamp: Timestamp) {
 private fun ChatListPreview() {
     ChatListContent(
         listOf(
-            ChatListItem(
-                userFirstName = "Than0s",
-                userLastName = "Op",
-                lastChat = Chat(
-                    message = "Hello I'm Than0s. Nothing more than that"
-                )
+            User(
+                firstName = "Than0s",
+                lastName = "Op",
+                profileImage = Uri.EMPTY
             )
         )
     )
