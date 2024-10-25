@@ -26,21 +26,22 @@ import coil.compose.AsyncImage
 import com.google.firebase.Timestamp
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.features.chat.domain.data_class.Chat
-import dev.than0s.aluminium.features.chat.domain.data_class.ChatListItem
 import dev.than0s.mydiary.ui.spacing
 import dev.than0s.mydiary.ui.textSize
 
 @Composable
 fun ChatListScreen(viewModel: ChatListViewModel = hiltViewModel()) {
-
+    ChatListContent(
+        usersList = viewModel.chatList
+    )
 }
 
 @Composable
 private fun ChatListContent(
-    userList: List<ChatListItem>
+    usersList: List<String>
 ) {
     LazyColumn {
-        items(userList) {
+        items(usersList) {
             ChatListCard(
                 chatListItem = it
             )

@@ -9,4 +9,5 @@ interface Repository {
     suspend fun addChat(chat: Chat): Either<Failure, Unit>
     suspend fun removeChat(chat: Chat): Either<Failure, Unit>
     suspend fun getChatFlow(receiverId: String): Either<Failure, Flow<List<Chat>>>
+    suspend fun getCurrentChatList(): Either<Failure, List<String>>
 }

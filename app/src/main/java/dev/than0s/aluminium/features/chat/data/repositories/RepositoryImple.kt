@@ -38,4 +38,12 @@ class RepositoryImple @Inject constructor(
         }
     }
 
+    override suspend fun getCurrentChatList(): Either<Failure, List<String>> {
+        return try {
+            Either.Right(dataSource.getCurrentChatList())
+        } catch (e: ServerException) {
+            Either.Left(Failure(e.message))
+        }
+    }
+
 }
