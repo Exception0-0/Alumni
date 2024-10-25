@@ -168,6 +168,14 @@ private fun ProfileScreenContent(
                 },
                 modifier = Modifier.fillMaxWidth()
             )
+        } else {
+            AluminiumElevatedButton(
+                label = "Message",
+                onClick = {
+                    openScreen(Screen.ChatDetailScreen(userId))
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         ProfileTabRow(

@@ -19,6 +19,10 @@ import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryI
 import dev.than0s.aluminium.features.auth.data.repositories.AuthRepositoryImple
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
+import dev.than0s.aluminium.features.chat.data.data_source.DataSource
+import dev.than0s.aluminium.features.chat.data.data_source.DataSourceImple
+import dev.than0s.aluminium.features.chat.data.repositories.RepositoryImple
+import dev.than0s.aluminium.features.chat.domain.repository.Repository
 import dev.than0s.aluminium.features.post.data.data_source.CommentDataSource
 import dev.than0s.aluminium.features.post.data.data_source.CommentDataSourceImple
 import dev.than0s.aluminium.features.post.data.data_source.LikeDataSource
@@ -76,6 +80,13 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindProfileRepository(imple: ProfileRepositoryImple): ProfileRepository
+
+    // chat
+    @Binds
+    abstract fun bindChatDataSource(imple: DataSourceImple): DataSource
+
+    @Binds
+    abstract fun bindChatRepository(imple: RepositoryImple): Repository
 
     // registration
     @Binds

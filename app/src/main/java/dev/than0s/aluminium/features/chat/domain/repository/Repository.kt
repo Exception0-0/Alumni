@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 interface Repository {
     suspend fun addChat(chat: Chat): Either<Failure, Unit>
     suspend fun removeChat(chat: Chat): Either<Failure, Unit>
-    suspend fun getChatFlow(receiverId: String): Either<Failure, Flow<List<Chat>>>
+    suspend fun getReceiverChatFlow(receiverId: String): Either<Failure, Flow<List<Chat>>>
+    suspend fun getSenderChatFlow(receiverId: String): Either<Failure, Flow<List<Chat>>>
     suspend fun getCurrentChatList(): Either<Failure, List<User>>
+    suspend fun getUserProfile(userId: String): Either<Failure, User>
 }

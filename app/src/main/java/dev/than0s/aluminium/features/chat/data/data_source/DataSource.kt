@@ -11,13 +11,16 @@ import dev.than0s.aluminium.features.chat.domain.data_class.User
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface DataSource {
     suspend fun addChat(chat: Chat)
     suspend fun removeChat(chat: Chat)
-    suspend fun getChatFlow(receiverId: String): Flow<List<Chat>>
+    suspend fun getReceiverChatFlow(receiverId: String): Flow<List<Chat>>
+    suspend fun getSenderChatFlow(receiverId: String): Flow<List<Chat>>
+    suspend fun getUserProfile(userId: String): User
     suspend fun getCurrentChatList(): List<User>
 }
 
@@ -52,22 +55,24 @@ class DataSourceImple @Inject constructor(
         }
     }
 
-    override suspend fun getChatFlow(receiverId: String): Flow<List<Chat>> {
+    override suspend fun getReceiverChatFlow(receiverId: String): Flow<List<Chat>> {
         return try {
-            flow {
-                store.collection(CHATS)
-                    .document(receiverId)
-                    .collection(auth.currentUser!!.uid)
-                    .dataObjects<Chat>()
-                    .collect(this)
-
-                store.collection(CHATS)
-                    .document(auth.currentUser!!.uid)
-                    .collection(receiverId)
-                    .dataObjects<Chat>()
-                    .collect(this)
-            }
+            store.collection(CHATS)
+                .document(receiverId)
+                .collection(auth.currentUser!!.uid)
+                .dataObjects<Chat>()
         } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun getSenderChatFlow(receiverId: String): Flow<List<Chat>> {
+        return try {
+            store.collection(CHATS)
+                .document(auth.currentUser!!.uid)
+                .collection(receiverId)
+                .dataObjects<Chat>()
+        } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }
@@ -100,13 +105,13 @@ class DataSourceImple @Inject constructor(
         }
     }
 
-    private suspend fun getUserProfile(userId: String): User? {
+    override suspend fun getUserProfile(userId: String): User {
         return try {
             store.collection(PROFILE)
                 .document(userId)
                 .get()
                 .await()
-                .toObject(User::class.java)
+                .toObject(User::class.java)!!
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }

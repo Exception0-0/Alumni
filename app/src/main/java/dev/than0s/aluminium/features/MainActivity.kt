@@ -6,13 +6,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AppRegistration
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.RequestPage
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.AppRegistration
+import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.RequestPage
 import androidx.compose.material.icons.outlined.Settings
@@ -52,6 +56,8 @@ import dev.than0s.aluminium.features.registration.presentation.screens.registrat
 import dev.than0s.aluminium.features.registration.presentation.screens.registration_requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
+import dev.than0s.aluminium.features.chat.presentation.screen.chat_detail.ChatDetailScreen
+import dev.than0s.aluminium.features.chat.presentation.screen.chat_list.ChatListScreen
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.SpecificPostsScreen
@@ -170,6 +176,14 @@ private fun NavGraphHost(
         composable<Screen.CommentsScreen> {
             CommentScreen()
         }
+        composable<Screen.ChatListScreen> {
+            ChatListScreen(
+                openScreen = navController::openScreen
+            )
+        }
+        composable<Screen.ChatDetailScreen> {
+            ChatDetailScreen()
+        }
     }
 }
 
@@ -221,6 +235,15 @@ private fun AluminiumBottomNavigationBar(
                     Icons.Filled.Face,
                     Icons.Outlined.Face,
                     "Posts"
+                )
+            )
+            add(
+                BottomNavigationItem(
+                    uid = "dev.than0s.aluminium.core.Screen.ChatListScreen",
+                    route = Screen.ChatListScreen,
+                    filledIcon = Icons.AutoMirrored.Filled.Chat,
+                    outlinedIcon = Icons.AutoMirrored.Outlined.Chat,
+                    label = "Chat",
                 )
             )
         }
@@ -281,6 +304,10 @@ private fun AluminiumTopAppBar(
             TopAppBarItem(
                 uid = "dev.than0s.aluminium.core.Screen.CommentsScreen/{postId}",
                 label = "Comments"
+            ),
+            TopAppBarItem(
+                uid = "dev.than0s.aluminium.core.Screen.ChatListScreen",
+                label = "Chat"
             ),
         )
     }

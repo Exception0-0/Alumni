@@ -28,6 +28,9 @@ sealed class Screen {
     data object ForgotPasswordScreen : Screen()
 
     @Serializable
+    data object ChatListScreen : Screen()
+
+    @Serializable
     data class PostsScreen(
         val userId: String? = null
     ) : Screen()
@@ -45,5 +48,10 @@ sealed class Screen {
     @Serializable
     data class CommentsScreen(
         val postId: String
+    ) : Screen()
+
+    @Serializable
+    data class ChatDetailScreen(
+        val userId: String
     ) : Screen()
 }

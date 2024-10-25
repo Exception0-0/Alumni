@@ -31,9 +31,17 @@ class RepositoryImple @Inject constructor(
         }
     }
 
-    override suspend fun getChatFlow(receiverId: String): Either<Failure, Flow<List<Chat>>> {
+    override suspend fun getReceiverChatFlow(receiverId: String): Either<Failure, Flow<List<Chat>>> {
         return try {
-            Either.Right(dataSource.getChatFlow(receiverId))
+            Either.Right(dataSource.getReceiverChatFlow(receiverId))
+        } catch (e: ServerException) {
+            Either.Left(Failure(e.message))
+        }
+    }
+
+    override suspend fun getSenderChatFlow(receiverId: String): Either<Failure, Flow<List<Chat>>> {
+        return try {
+            Either.Right(dataSource.getSenderChatFlow(receiverId))
         } catch (e: ServerException) {
             Either.Left(Failure(e.message))
         }
@@ -47,4 +55,11 @@ class RepositoryImple @Inject constructor(
         }
     }
 
+    override suspend fun getUserProfile(userId: String): Either<Failure, User> {
+        return try {
+            Either.Right(dataSource.getUserProfile(userId))
+        } catch (e: ServerException) {
+            Either.Left(Failure(e.message))
+        }
+    }
 }

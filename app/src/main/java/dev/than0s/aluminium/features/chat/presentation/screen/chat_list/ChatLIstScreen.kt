@@ -26,13 +26,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.firebase.Timestamp
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.features.chat.domain.data_class.Chat
 import dev.than0s.aluminium.features.chat.domain.data_class.User
-import dev.than0s.mydiary.ui.spacing
-import dev.than0s.mydiary.ui.textSize
+import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.textSize
 
 @Composable
-fun ChatListScreen(viewModel: ChatListViewModel = hiltViewModel()) {
+fun ChatListScreen(
+    viewModel: ChatListViewModel = hiltViewModel(),
+    openScreen: (Screen) -> Unit
+) {
     ChatListContent(
         usersList = viewModel.chatList
     )
