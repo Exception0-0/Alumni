@@ -174,7 +174,9 @@ private fun NavGraphHost(
             )
         }
         composable<Screen.CommentsScreen> {
-            CommentScreen()
+            CommentScreen(
+                openScreen = navController::openScreen
+            )
         }
         composable<Screen.ChatListScreen> {
             ChatListScreen(

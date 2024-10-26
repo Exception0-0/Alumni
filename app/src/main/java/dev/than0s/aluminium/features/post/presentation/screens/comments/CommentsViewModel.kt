@@ -83,6 +83,7 @@ class CommentsViewModel @Inject constructor(
                 is Either.Right -> {
                     SnackbarController.showSnackbar("Comment added successfully")
                     currentComment = ""
+                    loadComments()
                 }
             }
             onCompleted()
@@ -98,6 +99,7 @@ class CommentsViewModel @Inject constructor(
 
                 is Either.Right -> {
                     SnackbarController.showSnackbar("Comment removed successfully")
+                    loadComments()
                 }
             }
         }

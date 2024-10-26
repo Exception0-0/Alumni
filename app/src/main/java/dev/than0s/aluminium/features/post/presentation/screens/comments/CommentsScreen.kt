@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
 import dev.than0s.aluminium.core.composable.AluminiumDescriptionText
@@ -61,11 +62,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
-fun CommentScreen(viewModel: CommentsViewModel = hiltViewModel()) {
+fun CommentScreen(
+    viewModel: CommentsViewModel = hiltViewModel(),
+    openScreen: (Screen) -> Unit
+) {
     CommentScreenContent(
         commentList = viewModel.commentsList,
         currentComment = viewModel.currentComment,
         currentUserId = currentUserId!!,
+        openScreen = openScreen,
         getUserProfile = viewModel::getUserProfile,
         onCurrentCommentChange = viewModel::onCurrentCommentChange,
         onAddCommentClick = viewModel::onAddCommentClick,
@@ -79,6 +84,7 @@ private fun CommentScreenContent(
     commentList: List<Comment>,
     currentComment: String,
     currentUserId: String,
+    openScreen: (Screen) -> Unit,
     getUserProfile: (String) -> Flow<User>,
     onCurrentCommentChange: (String) -> Unit,
     onAddCommentClick: (() -> Unit) -> Unit,
@@ -123,6 +129,9 @@ private fun CommentScreenContent(
                     getUserProfile = getUserProfile,
                     onRemoveCommentClick = {
                         onRemoveCommentClick(comment)
+                    },
+                    onProfileClick = {
+                        openScreen(Screen.ProfileScreen(comment.userId))
                     }
                 )
             }
@@ -136,7 +145,8 @@ private fun CommentPreview(
     comment: Comment,
     isCurrentUser: Boolean,
     getUserProfile: (String) -> Flow<User>,
-    onRemoveCommentClick: () -> Unit
+    onRemoveCommentClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
 
     val userProfile = getUserProfile(comment.userId).collectAsState(User()).value
@@ -160,6 +170,9 @@ private fun CommentPreview(
                     model = userProfile.profileImage,
                     settings = AluminiumAsyncImageSettings.UserProfile,
                     modifier = ProfileImageModifier.small
+                        .clickable {
+                            onProfileClick()
+                        }
                 )
 
                 Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
@@ -247,6 +260,7 @@ private fun CommentScreenPreview() {
         ),
         "",
         "",
+        {},
         { emptyFlow() }, {}, {}, {}
     )
 }
