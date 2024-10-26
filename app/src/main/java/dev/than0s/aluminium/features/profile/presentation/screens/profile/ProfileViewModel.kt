@@ -100,6 +100,7 @@ class ProfileViewModel @Inject constructor(
                 is Either.Right -> {
                     SnackbarController.showSnackbar("Profile updated successfully")
                     onSuccess()
+                    loadProfile()
                 }
             }
         }
@@ -115,6 +116,7 @@ class ProfileViewModel @Inject constructor(
                 is Either.Right -> {
                     SnackbarController.showSnackbar("Contact info updated successfully")
                     onSuccess()
+                    getContactInfo()
                 }
             }
         }

@@ -1,5 +1,7 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,12 +18,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.AluminiumAlertDialog
 import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.post.domain.data_class.User
@@ -100,21 +104,31 @@ private fun SpecificPostItem(
         )
     }
 
-    PostItem(
-        post = post,
-        onLikeClick = onLikeClick,
-        getUserProfile = getUserProfile,
-        openProfileScreen = openProfileScreen,
-        openCommentScreen = openCommentScreen
-    )
+    AluminiumElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            PostItem(
+                post = post,
+                onLikeClick = onLikeClick,
+                getUserProfile = getUserProfile,
+                openProfileScreen = openProfileScreen,
+                openCommentScreen = openCommentScreen,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
 
-    if (isCurrentUser) {
-        AluminiumElevatedButton(
-            label = "Delete Post",
-            onClick = {
-                warningState = true
-            },
-        )
+            if (isCurrentUser) {
+                AluminiumElevatedButton(
+                    label = "Delete Post",
+                    onClick = {
+                        warningState = true
+                    },
+                )
+            }
+        }
     }
 }
 

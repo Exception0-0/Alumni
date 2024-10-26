@@ -81,17 +81,23 @@ private fun PostsScreenContent(
         modifier = Modifier.padding(MaterialTheme.spacing.medium)
     ) {
         items(postsList) { post ->
-            PostItem(
-                post = post,
-                onLikeClick = onLikeClick,
-                getUserProfile = getUserProfile,
-                openProfileScreen = {
-                    openScreen(Screen.ProfileScreen(post.userId))
-                },
-                openCommentScreen = {
-                    openScreen(Screen.CommentsScreen(post.id))
-                }
-            )
+            AluminiumElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                PostItem(
+                    post = post,
+                    onLikeClick = onLikeClick,
+                    getUserProfile = getUserProfile,
+                    openProfileScreen = {
+                        openScreen(Screen.ProfileScreen(post.userId))
+                    },
+                    openCommentScreen = {
+                        openScreen(Screen.CommentsScreen(post.id))
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
         }
     }
 }
@@ -104,61 +110,55 @@ fun PostItem(
     openCommentScreen: () -> Unit,
     getUserProfile: (String) -> Flow<User>,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val userProfile = getUserProfile(post.userId).collectAsState(initial = User()).value
-
-    AluminiumElevatedCard(
+    Column(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         modifier = Modifier
-            .fillMaxWidth()
+            .padding(MaterialTheme.spacing.medium)
+            .width(360.dp)
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+
+        AluminiumCard(
             modifier = Modifier
-                .padding(MaterialTheme.spacing.medium)
-                .align(Alignment.CenterHorizontally)
-                .width(360.dp)
+                .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
+                .clickable {
+                    openProfileScreen()
+                }
         ) {
-
-            AluminiumCard(
+            UserDetail(
+                user = userProfile,
                 modifier = Modifier
-                    .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
-                    .clickable {
-                        openProfileScreen()
-                    }
-            ) {
-                UserDetail(
-                    user = userProfile,
-                    modifier = Modifier
-                        .padding(MaterialTheme.spacing.small)
-                )
-            }
-
-            AluminiumTitleText(
-                title = post.title,
+                    .padding(MaterialTheme.spacing.small)
             )
+        }
 
-            AluminiumDescriptionText(
-                description = post.description,
+        AluminiumTitleText(
+            title = post.title,
+        )
+
+        AluminiumDescriptionText(
+            description = post.description,
+        )
+
+        AluminiumAsyncImage(
+            model = post.file,
+            settings = AluminiumAsyncImageSettings.PostImage,
+            modifier = PostImageModifier.default
+        )
+
+        AluminiumCard {
+            PostStatus(
+                isLiked = post.isLiked,
+                onLikeClick = { hasLike, callback ->
+                    onLikeClick(post.id, hasLike, callback)
+                },
+                openCommentScreen = openCommentScreen,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.spacing.small)
             )
-
-            AluminiumAsyncImage(
-                model = post.file,
-                settings = AluminiumAsyncImageSettings.PostImage,
-                modifier = PostImageModifier.default
-            )
-
-            AluminiumCard {
-                PostStatus(
-                    isLiked = post.isLiked,
-                    onLikeClick = { hasLike, callback ->
-                        onLikeClick(post.id, hasLike, callback)
-                    },
-                    openCommentScreen = openCommentScreen,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MaterialTheme.spacing.small)
-                )
-            }
         }
     }
 }

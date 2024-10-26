@@ -118,6 +118,7 @@ class PostsScreenViewModel @Inject constructor(
             when (val result = deletePostUseCase.invoke(id)) {
                 is Either.Right -> {
                     SnackbarController.showSnackbar("Post delete successfully")
+                    loadPosts()
                 }
 
                 is Either.Left -> {

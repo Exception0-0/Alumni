@@ -24,13 +24,14 @@ import dev.than0s.aluminium.R
 fun AluminiumAsyncImage(
     model: Any?,
     settings: AluminiumAsyncImageSettings,
-    modifier: Modifier
+    modifier: Modifier,
+    contentScale: ContentScale = ContentScale.Crop,
 ) {
     AsyncImage(
         model = model,
         placeholder = painterResource(settings.placeholder),
         error = painterResource(settings.error),
-        contentScale = ContentScale.Crop,
+        contentScale = contentScale,
         contentDescription = settings.contentDescription,
         modifier = modifier
     )
@@ -47,10 +48,16 @@ sealed class AluminiumAsyncImageSettings(
         error = R.drawable.ic_launcher_background,
     )
 
-    data object PostImage : AluminiumAsyncImageSettings(
+    data object PostAddImage : AluminiumAsyncImageSettings(
         contentDescription = "post image",
         placeholder = R.drawable.baseline_add_a_photo_24,
         error = R.drawable.baseline_add_a_photo_24,
+    )
+
+    data object PostImage : AluminiumAsyncImageSettings(
+        contentDescription = "post image",
+        placeholder = R.drawable.ic_launcher_background,
+        error = R.drawable.ic_launcher_background,
     )
 
     data object CoverImage : AluminiumAsyncImageSettings(

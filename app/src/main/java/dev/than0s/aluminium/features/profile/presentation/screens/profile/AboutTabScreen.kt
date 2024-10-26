@@ -2,12 +2,15 @@ package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.ui.spacing
 
@@ -16,7 +19,8 @@ fun AboutTabContent(
     aboutInfo: AboutInfo,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large)
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
+        modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         InfoFormat(
             title = "Role",
