@@ -83,7 +83,7 @@ class PostDataSourceImple @Inject constructor(
                 lastName = doc.get("lastName").toString(),
                 profileImage = profile
             )
-        } catch (e: Exception) {
+        } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }
@@ -91,7 +91,7 @@ class PostDataSourceImple @Inject constructor(
     private suspend fun getFile(id: String): Uri {
         return try {
             cloud.reference.child("$POSTS/$id/0").downloadUrl.await()
-        } catch (e: Exception) {
+        } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }

@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
+import dev.than0s.aluminium.core.isLocalUri
 import dev.than0s.aluminium.features.profile.data.mapper.RawUser
 import dev.than0s.aluminium.features.profile.data.mapper.toRawUser
 import dev.than0s.aluminium.features.profile.data.mapper.toUser
@@ -54,17 +55,21 @@ class ProfileDataSourceImple @Inject constructor(
                 .await()
 
             user.profileImage?.let {
-                cloud.reference
-                    .child("$PROFILE_IMAGE/${auth.currentUser!!.uid}/0")
-                    .putFile(user.profileImage)
-                    .await()
+                if (isLocalUri(it)) {
+                    cloud.reference
+                        .child("$PROFILE_IMAGE/${auth.currentUser!!.uid}/0")
+                        .putFile(it)
+                        .await()
+                }
             }
 
             user.coverImage?.let {
-                cloud.reference
-                    .child("$COVER_IMAGE/${auth.currentUser!!.uid}/0")
-                    .putFile(user.coverImage)
-                    .await()
+                if (isLocalUri(it)) {
+                    cloud.reference
+                        .child("$COVER_IMAGE/${auth.currentUser!!.uid}/0")
+                        .putFile(it)
+                        .await()
+                }
             }
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())

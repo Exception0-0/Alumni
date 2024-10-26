@@ -58,7 +58,7 @@ class LikeDataSourceImple @Inject constructor(
                 .count()
                 .get(AggregateSource.SERVER)
                 .await().count.toInt()
-        } catch (e: Exception) {
+        } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }
@@ -72,7 +72,7 @@ class LikeDataSourceImple @Inject constructor(
                 .get()
                 .await()
                 .exists()
-        } catch (e: Exception) {
+        } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
     }
