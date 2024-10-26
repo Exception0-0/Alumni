@@ -49,8 +49,8 @@ sealed class AluminiumAsyncImageSettings(
 
     data object PostImage : AluminiumAsyncImageSettings(
         contentDescription = "post image",
-        placeholder = R.drawable.ic_launcher_background,
-        error = R.drawable.ic_launcher_background,
+        placeholder = R.drawable.baseline_add_a_photo_24,
+        error = R.drawable.baseline_add_a_photo_24,
     )
 
     data object CoverImage : AluminiumAsyncImageSettings(

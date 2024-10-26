@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -31,6 +32,7 @@ import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
 import dev.than0s.aluminium.core.composable.AluminiumLoadingElevatedButton
 import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.composable.AluminiumTextField
+import dev.than0s.aluminium.core.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.composable.PostImageModifier
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.ui.spacing
@@ -73,9 +75,13 @@ private fun PostUploadScreenContent(
             modifier = Modifier.padding(MaterialTheme.spacing.medium)
         ) {
             Column(
+                horizontalAlignment = CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
                 modifier = Modifier.padding(MaterialTheme.spacing.medium)
             ) {
+                AluminiumTitleText(
+                    title = "Post Upload"
+                )
                 AluminiumAsyncImage(
                     model = post.file,
                     settings = AluminiumAsyncImageSettings.PostImage,
