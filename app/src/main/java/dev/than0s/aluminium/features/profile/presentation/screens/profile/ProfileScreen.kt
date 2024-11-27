@@ -82,6 +82,7 @@ fun ProfileScreen(
         editUserProfile = viewModel.editUserProfile,
         editContactInfo = viewModel.editContactInfo,
         openScreen = openScreen,
+        onLikeClick = viewModel::onLikeClick,
         onUpdateProfileClick = viewModel::onUpdateProfileClick,
         onFirstNameChange = viewModel::onFirstNameChange,
         onLastNameChange = viewModel::onLastNameChange,
@@ -105,6 +106,7 @@ private fun ProfileScreenContent(
     editUserProfile: User,
     editContactInfo: ContactInfo,
     openScreen: (Screen) -> Unit,
+    onLikeClick: (String, Boolean, () -> Unit) -> Unit,
     onUpdateProfileClick: (() -> Unit) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
@@ -217,7 +219,9 @@ private fun ProfileScreenContent(
                     unselectedIcon = Icons.Filled.GridView,
                     screen = {
                         PostsTabScreen(
-                            postsList = postList
+                            postsList = postList,
+                            openScreen = openScreen,
+                            onLikeClick = onLikeClick
                         )
                     }
                 )
@@ -429,7 +433,7 @@ private fun ProfileScreenPreview() {
             email = "thanosop150@gmail.com",
             mobile = "+91-1234567890"
         ),
-        {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+        {}, { _, _, _ -> }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
     )
 }
 

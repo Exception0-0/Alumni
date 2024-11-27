@@ -13,6 +13,8 @@ import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.SnackbarController
 import dev.than0s.aluminium.features.post.domain.data_class.Post
+import dev.than0s.aluminium.features.post.domain.use_cases.AddLikeUseCase
+import dev.than0s.aluminium.features.post.domain.use_cases.RemoveLikeUseCase
 import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
@@ -33,7 +35,9 @@ class ProfileViewModel @Inject constructor(
     private val getContactInfoUseCase: GetContactInfoUseCase,
     private val setContactInfoUseCase: SetContactInfoUseCase,
     private val getAboutInfoUseCase: GetAboutInfoUseCase,
-    private val getUserPostsUseCase: GetUserPostsUseCase
+    private val getUserPostsUseCase: GetUserPostsUseCase,
+    private val removeLikeUseCase: RemoveLikeUseCase,
+    private val addLikeUseCase: AddLikeUseCase
 ) : ViewModel() {
     var userProfile by mutableStateOf(User())
     var contactInfo by mutableStateOf(ContactInfo())
@@ -94,6 +98,23 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun onLikeClick(postId: String, hasLiked: Boolean, onSuccessfulLike: () -> Unit) {
+        viewModelScope.launch {
+            val useCase = if (hasLiked) removeLikeUseCase else addLikeUseCase
+
+            when (val result = useCase.invoke(postId)) {
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+
+                is Either.Right -> {
+                    onSuccessfulLike()
+                }
+            }
+        }
+    }
+
 
     fun getAboutInfo() {
         viewModelScope.launch {
