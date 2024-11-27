@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.GridView
@@ -59,6 +60,7 @@ import dev.than0s.aluminium.core.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.composable.CoverImageModifier
 import dev.than0s.aluminium.core.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.currentUserId
+import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
@@ -76,6 +78,7 @@ fun ProfileScreen(
         userProfile = viewModel.userProfile,
         contactInfo = viewModel.contactInfo,
         aboutInfo = viewModel.aboutInfo,
+        postList = viewModel.postsList,
         editUserProfile = viewModel.editUserProfile,
         editContactInfo = viewModel.editContactInfo,
         openScreen = openScreen,
@@ -98,6 +101,7 @@ private fun ProfileScreenContent(
     userProfile: User,
     contactInfo: ContactInfo,
     aboutInfo: AboutInfo,
+    postList: List<Post>,
     editUserProfile: User,
     editContactInfo: ContactInfo,
     openScreen: (Screen) -> Unit,
@@ -207,6 +211,16 @@ private fun ProfileScreenContent(
                         )
                     }
                 ),
+                TabItem(
+                    title = "Posts",
+                    selectedIcon = Icons.Outlined.GridView,
+                    unselectedIcon = Icons.Filled.GridView,
+                    screen = {
+                        PostsTabScreen(
+                            postsList = postList
+                        )
+                    }
+                )
             ),
             openScreen = openScreen,
         )
@@ -241,21 +255,6 @@ private fun ProfileTabRow(
                 }
             )
         }
-        Tab(
-            selected = false,
-            onClick = {
-                openScreen(Screen.SpecificPostsScreen(userId))
-            },
-            text = {
-                Text("Posts")
-            },
-            icon = {
-                Icon(
-                    imageVector = Icons.Outlined.GridView,
-                    contentDescription = "posts"
-                )
-            }
-        )
     }
     Surface(
         modifier = Modifier
@@ -420,6 +419,7 @@ private fun ProfileScreenPreview() {
             mobile = "+91-1234567890"
         ),
         AboutInfo(),
+        emptyList(),
         User(
             firstName = "Than0s",
             lastName = "Op",

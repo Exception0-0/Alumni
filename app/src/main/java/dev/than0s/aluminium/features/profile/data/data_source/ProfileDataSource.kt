@@ -5,9 +5,14 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import com.google.firebase.firestore.toObjects
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import dev.than0s.aluminium.core.isLocalUri
+import dev.than0s.aluminium.features.post.data.data_source.POSTS
+import dev.than0s.aluminium.features.post.data.mapper.RawPost
+import dev.than0s.aluminium.features.post.data.mapper.toPost
+import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.profile.data.mapper.RawUser
 import dev.than0s.aluminium.features.profile.data.mapper.toRawUser
 import dev.than0s.aluminium.features.profile.data.mapper.toUser
@@ -24,6 +29,7 @@ interface ProfileDataSource {
     suspend fun setContactInfo(contactInfo: ContactInfo)
     suspend fun getContactInfo(userId: String): ContactInfo?
     suspend fun getAboutInfo(userId: String): AboutInfo
+    suspend fun getUserPosts(userId: String): List<Post>
 }
 
 class ProfileDataSourceImple @Inject constructor(
@@ -106,6 +112,27 @@ class ProfileDataSourceImple @Inject constructor(
                 .get()
                 .await()
                 .toObject()!!
+        } catch (e: FirebaseException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun getUserPosts(userId: String): List<Post> {
+        return try {
+            store.collection(POSTS)
+                .whereEqualTo("userId", userId)
+                .get()
+                .await()
+                .toObjects<RawPost>()
+                .toPost(::getFile)
+        } catch (e: FirebaseException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    private suspend fun getFile(id: String): Uri {
+        return try {
+            cloud.reference.child("$POSTS/$id/0").downloadUrl.await()
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }

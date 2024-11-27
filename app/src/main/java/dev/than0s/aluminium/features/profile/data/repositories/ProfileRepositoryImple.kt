@@ -3,6 +3,7 @@ package dev.than0s.aluminium.features.profile.data.repositories
 import android.net.Uri
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.error.Failure
+import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.aluminium.features.profile.data.data_source.ProfileDataSource
 import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
@@ -49,10 +50,18 @@ class ProfileRepositoryImple @Inject constructor(private val dataSource: Profile
     }
 
     override suspend fun getAboutInfo(userId: String): Either<Failure, AboutInfo> {
-        return try{
+        return try {
             Either.Right(dataSource.getAboutInfo(userId))
-        } catch(e:ServerException) {
+        } catch (e: ServerException) {
             Either.Left(Failure(e.message))
+        }
+    }
+
+    override suspend fun getUserPosts(userId: String): Either<Failure, List<Post>> {
+        return try {
+            Either.Right(dataSource.getUserPosts(userId))
+        } catch (e: Exception) {
+            Either.Left(Failure(e.message.toString()))
         }
     }
 }

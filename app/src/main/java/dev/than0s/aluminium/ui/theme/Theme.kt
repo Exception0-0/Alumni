@@ -13,9 +13,11 @@ import androidx.compose.ui.platform.LocalContext
 import dev.than0s.aluminium.ui.Elevation
 import dev.than0s.aluminium.ui.LocalElevation
 import dev.than0s.aluminium.ui.LocalRoundCorners
+import dev.than0s.aluminium.ui.LocalSize
 import dev.than0s.aluminium.ui.LocalSpacing
 import dev.than0s.aluminium.ui.LocalTextSize
 import dev.than0s.aluminium.ui.RoundCorners
+import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.Spacing
 import dev.than0s.aluminium.ui.TextSize
 
@@ -62,7 +64,8 @@ fun AluminiumTheme(
         LocalSpacing provides Spacing(),
         LocalElevation provides Elevation(),
         LocalTextSize provides TextSize(),
-        LocalRoundCorners provides RoundCorners()
+        LocalRoundCorners provides RoundCorners(),
+        LocalSize provides Size()
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

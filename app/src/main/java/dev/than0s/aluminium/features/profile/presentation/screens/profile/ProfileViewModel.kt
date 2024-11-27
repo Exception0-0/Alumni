@@ -12,11 +12,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.SnackbarController
+import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
 import dev.than0s.aluminium.features.profile.domain.use_cases.GetAboutInfoUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.GetContactInfoUseCase
+import dev.than0s.aluminium.features.profile.domain.use_cases.GetUserPostsUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.GetUserUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetContactInfoUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetProfileUseCase
@@ -31,12 +33,14 @@ class ProfileViewModel @Inject constructor(
     private val getContactInfoUseCase: GetContactInfoUseCase,
     private val setContactInfoUseCase: SetContactInfoUseCase,
     private val getAboutInfoUseCase: GetAboutInfoUseCase,
+    private val getUserPostsUseCase: GetUserPostsUseCase
 ) : ViewModel() {
     var userProfile by mutableStateOf(User())
     var contactInfo by mutableStateOf(ContactInfo())
     var aboutInfo by mutableStateOf(AboutInfo())
     var editUserProfile by mutableStateOf(User())
     var editContactInfo by mutableStateOf(ContactInfo())
+    var postsList by mutableStateOf(emptyList<Post>())
 
     val profileScreenArgs = savedStateHandle.toRoute<Screen.ProfileScreen>()
 
@@ -44,6 +48,7 @@ class ProfileViewModel @Inject constructor(
         loadProfile()
         getContactInfo()
         getAboutInfo()
+        getUserPosts()
     }
 
     fun loadProfile() {
@@ -71,6 +76,20 @@ class ProfileViewModel @Inject constructor(
                 is Either.Right -> result.value.let {
                     contactInfo = it ?: ContactInfo()
                     editContactInfo = it ?: ContactInfo()
+                }
+            }
+        }
+    }
+
+    fun getUserPosts() {
+        viewModelScope.launch {
+            when (val result = getUserPostsUseCase.invoke(profileScreenArgs.userId)) {
+                is Either.Left -> {
+                    SnackbarController.showSnackbar(result.value.message)
+                }
+
+                is Either.Right -> {
+                    postsList = result.value
                 }
             }
         }
