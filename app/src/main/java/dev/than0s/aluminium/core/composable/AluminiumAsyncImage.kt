@@ -1,5 +1,14 @@
 package dev.than0s.aluminium.core.composable
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -9,14 +18,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 
@@ -27,14 +45,77 @@ fun AluminiumAsyncImage(
     modifier: Modifier,
     contentScale: ContentScale = ContentScale.Crop,
 ) {
+    var fullScreenState by rememberSaveable { mutableStateOf(false) }
+
+    if (fullScreenState) {
+        Dialog(
+            onDismissRequest = {
+                fullScreenState = false
+            },
+            content = {
+                PinchZoomImage(
+                    model = model
+                )
+            },
+        )
+    }
+
     AsyncImage(
         model = model,
         placeholder = painterResource(settings.placeholder),
         error = painterResource(settings.error),
         contentScale = contentScale,
         contentDescription = settings.contentDescription,
-        modifier = modifier
+        modifier = modifier.clickable {
+            fullScreenState = true
+        }
     )
+}
+
+@Composable
+private fun PinchZoomImage(
+    model: Any?
+) {
+    var scale by remember {
+        mutableFloatStateOf(1f)
+    }
+    var offset by remember {
+        mutableStateOf(Offset.Zero)
+    }
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .aspectRatio(1280f / 959f)
+    ) {
+        val state = rememberTransformableState { zoomChange, panChange, rotationChange ->
+            scale = (scale * zoomChange).coerceIn(1f, 5f)
+
+            val extraWidth = (scale - 1) * constraints.maxWidth
+            val extraHeight = (scale - 1) * constraints.maxHeight
+
+            val maxX = extraWidth / 2
+            val maxY = extraHeight / 2
+
+            offset = Offset(
+                x = (offset.x + scale * panChange.x).coerceIn(-maxX, maxX),
+                y = (offset.y + scale * panChange.y).coerceIn(-maxY, maxY),
+            )
+        }
+        AsyncImage(
+            model = model,
+            contentDescription = "pinch zoom image",
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    translationX = offset.x
+                    translationY = offset.y
+                }
+                .transformable(state)
+        )
+    }
 }
 
 sealed class AluminiumAsyncImageSettings(

@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -62,16 +63,37 @@ fun PostsTabScreen(
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
     openScreen: (Screen) -> Unit
 ) {
+    var dialogState by rememberSaveable { mutableStateOf("-1") }
+
+    if (dialogState != "-1") {
+        Dialog(
+            onDismissRequest = {
+                dialogState = "-1"
+            },
+            content = {
+                AluminiumElevatedCard {
+                    PostDetailCard(
+                        post = postsList.find { it.id == dialogState }!!,
+                        onLikeClick = { isLiked, callback ->
+                            onLikeClick(dialogState, isLiked, callback)
+                        },
+                        openCommentScreen = {
+                            openScreen(Screen.CommentsScreen(dialogState))
+                        },
+                    )
+                }
+            }
+        )
+    }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(MaterialTheme.Size.default),
         content = {
             items(postsList) {
                 PostPreviewCard(
                     post = it,
-                    onLikeClick = { hasLike, callback ->
-                        onLikeClick(it.id, hasLike, callback)
-                    },
-                    openScreen = openScreen
+                    onClick = { postId ->
+                        dialogState = postId
+                    }
                 )
             }
         }
@@ -81,32 +103,11 @@ fun PostsTabScreen(
 @Composable
 fun PostPreviewCard(
     post: Post,
-    onLikeClick: (Boolean, () -> Unit) -> Unit,
-    openScreen: (Screen) -> Unit,
+    onClick: (String) -> Unit
 ) {
-    var dialogState by rememberSaveable { mutableStateOf(false) }
-    if (dialogState) {
-        Dialog(
-            onDismissRequest = {
-                dialogState = false
-            },
-            content = {
-                AluminiumElevatedCard {
-                    PostDetailCard(
-                        post = post,
-                        onLikeClick = onLikeClick,
-                        openCommentScreen = {
-                            openScreen(Screen.CommentsScreen(post.id))
-                        },
-                    )
-                }
-            }
-        )
-    }
-
     AluminiumCard(
         onClick = {
-            dialogState = true
+            onClick(post.id)
         },
         modifier = Modifier
             .size(
@@ -114,10 +115,10 @@ fun PostPreviewCard(
             )
             .padding(MaterialTheme.spacing.extraSmall)
     ) {
-        AsyncImage(
+        AluminiumAsyncImage(
             model = post.file,
-            contentDescription = "post image",
-            contentScale = ContentScale.Crop
+            settings = AluminiumAsyncImageSettings.PostImage,
+            modifier = Modifier
         )
     }
 }
@@ -131,7 +132,7 @@ fun PostDetailCard(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        modifier = Modifier
+        modifier = modifier
             .padding(MaterialTheme.spacing.medium)
             .width(360.dp)
     ) {
