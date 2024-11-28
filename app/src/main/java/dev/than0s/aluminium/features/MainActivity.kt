@@ -311,6 +311,10 @@ private fun AluminiumTopAppBar(
                 uid = "dev.than0s.aluminium.core.Screen.ChatListScreen",
                 label = "Chat"
             ),
+            TopAppBarItem(
+                uid ="dev.than0s.aluminium.core.Screen.SettingScreen",
+                label = "Settings"
+            )
         )
     }
 
