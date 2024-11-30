@@ -22,6 +22,7 @@ class SettingsViewModel @Inject constructor(
 ) :
     ViewModel() {
     var userProfile by mutableStateOf(User())
+    var isProfileLoading by mutableStateOf(false)
 
     init {
         loadProfile()
@@ -29,6 +30,7 @@ class SettingsViewModel @Inject constructor(
 
     private fun loadProfile() {
         viewModelScope.launch {
+            isProfileLoading = true
             when (val result = profileUseCase.invoke(currentUserId!!)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
@@ -38,6 +40,7 @@ class SettingsViewModel @Inject constructor(
                     userProfile = it
                 }
             }
+            isProfileLoading = false
         }
     }
 }

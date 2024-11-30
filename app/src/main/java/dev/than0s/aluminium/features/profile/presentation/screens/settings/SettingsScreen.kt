@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,13 +32,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.composable.ShimmerBackground
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.features.profile.domain.data_class.User
+import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
 
@@ -48,6 +52,7 @@ fun SettingScreen(
 ) {
     SettingScreenContent(
         userProfile = viewModel.userProfile,
+        isProfileLoading = viewModel.isProfileLoading,
         openScreen = openScreen,
     )
 }
@@ -55,6 +60,7 @@ fun SettingScreen(
 @Composable
 private fun SettingScreenContent(
     userProfile: User,
+    isProfileLoading: Boolean,
     openScreen: (Screen) -> Unit,
 ) {
 
@@ -104,7 +110,8 @@ private fun SettingScreenContent(
             if (currentUserRole != Role.Admin) {
                 ProfileCard(
                     userProfile = userProfile,
-                    openScreen = openScreen
+                    isProfileLoading = isProfileLoading,
+                    openScreen = openScreen,
                 )
             }
 
@@ -139,23 +146,62 @@ private fun SettingScreenContent(
 @Composable
 private fun ProfileCard(
     userProfile: User,
+    isProfileLoading: Boolean,
     openScreen: (Screen) -> Unit,
 ) {
-    AluminiumElevatedCard(
-        onClick = {
-            openScreen(Screen.ProfileScreen(currentUserId!!))
+    if (isProfileLoading) {
+        ShimmerProfileCard()
+    } else {
+        AluminiumElevatedCard(
+            onClick = {
+                openScreen(Screen.ProfileScreen(currentUserId!!))
+            }
+        ) {
+            Row(
+                verticalAlignment = CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                modifier = Modifier.padding(MaterialTheme.spacing.medium)
+            ) {
+                AsyncImage(
+                    model = userProfile.profileImage,
+                    contentDescription = "user profile image",
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.ic_launcher_background),
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(CircleShape)
+                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                ) {
+                    Text(
+                        text = "${userProfile.firstName} ${userProfile.lastName}",
+                        fontSize = MaterialTheme.textSize.gigantic,
+                        fontWeight = FontWeight.W400
+                    )
+                    Text(
+                        text = userProfile.bio,
+                        modifier = Modifier.width(256.dp),
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+fun ShimmerProfileCard() {
+    AluminiumElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shimmer()
     ) {
         Row(
             verticalAlignment = CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
             modifier = Modifier.padding(MaterialTheme.spacing.medium)
         ) {
-            AsyncImage(
-                model = userProfile.profileImage,
-                contentDescription = "user profile image",
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.ic_launcher_background),
+            ShimmerBackground(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
@@ -163,14 +209,15 @@ private fun ProfileCard(
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
             ) {
-                Text(
-                    text = "${userProfile.firstName} ${userProfile.lastName}",
-                    fontSize = MaterialTheme.textSize.gigantic,
-                    fontWeight = FontWeight.W400
+                ShimmerBackground(
+                    modifier = Modifier
+                        .height(MaterialTheme.textSize.gigantic.value.dp)
+                        .width(MaterialTheme.Size.medium)
                 )
-                Text(
-                    text = userProfile.bio,
-                    modifier = Modifier.width(256.dp),
+                ShimmerBackground(
+                    modifier = Modifier
+                        .height(MaterialTheme.textSize.small.value.dp)
+                        .width(MaterialTheme.Size.small)
                 )
             }
         }
@@ -192,6 +239,7 @@ private fun SettingScreenPreview() {
             lastName = "Op",
             bio = "Hi I'm Than0s"
         ),
+        false,
         {}
     )
 }
