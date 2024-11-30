@@ -186,7 +186,7 @@ sealed class AluminiumAsyncImageSettings(
     )
 
     data object CoverImage : AluminiumAsyncImageSettings(
-        contentDescription = "conver image",
+        contentDescription = "cover image",
         placeholder = R.drawable.ic_launcher_background,
         error = R.drawable.ic_launcher_background,
     )
@@ -210,7 +210,7 @@ data object PostImageModifier {
     val default: Modifier = Modifier
         .height(450.dp)
         .width(360.dp)
-        .clip(RoundedCornerShape(16.dp))
+        .clip(RoundedCornerShape(8.dp))
 }
 
 data object CoverImageModifier {

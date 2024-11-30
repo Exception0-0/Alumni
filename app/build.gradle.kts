@@ -106,6 +106,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
 
     implementation("androidx.compose.material:material-icons-extended:1.7.3")
+
+    // shimmer effect
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.1")
 }
 
 // Allow references to generated code

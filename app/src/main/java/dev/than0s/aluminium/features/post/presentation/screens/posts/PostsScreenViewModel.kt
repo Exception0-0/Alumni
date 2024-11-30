@@ -3,6 +3,7 @@ package dev.than0s.aluminium.features.post.presentation.screens.posts
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.SavedStateHandle
@@ -38,6 +39,7 @@ class PostsScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     val postScreenArgs = savedStateHandle.toRoute<Screen.PostsScreen>()
+    var isPostListLoading by mutableStateOf(false)
 
     private val userProfiles = mutableMapOf<String, User>()
 
@@ -50,6 +52,7 @@ class PostsScreenViewModel @Inject constructor(
 
     private fun loadPosts() {
         viewModelScope.launch {
+            isPostListLoading = true
             when (val result = getPostUseCase.invoke(postScreenArgs.userId)) {
                 is Either.Right -> {
                     postsList = result.value.map { post ->
@@ -63,6 +66,7 @@ class PostsScreenViewModel @Inject constructor(
                     SnackbarController.showSnackbar(result.value.message)
                 }
             }
+            isPostListLoading = false
         }
     }
 
