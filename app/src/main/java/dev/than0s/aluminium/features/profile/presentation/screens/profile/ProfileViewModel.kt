@@ -48,6 +48,11 @@ class ProfileViewModel @Inject constructor(
 
     val profileScreenArgs = savedStateHandle.toRoute<Screen.ProfileScreen>()
 
+    var isProfileLoading by mutableStateOf(false)
+    var isContactInfoLoading by mutableStateOf(false)
+    var isAboutInfoLoading by mutableStateOf(false)
+    var isPostsLoading by mutableStateOf(false)
+
     init {
         loadProfile()
         getContactInfo()
@@ -57,6 +62,7 @@ class ProfileViewModel @Inject constructor(
 
     fun loadProfile() {
         viewModelScope.launch {
+            isProfileLoading = true
             when (val result = profileUseCase.invoke(profileScreenArgs.userId)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
@@ -67,11 +73,13 @@ class ProfileViewModel @Inject constructor(
                     editUserProfile = it
                 }
             }
+            isProfileLoading = false
         }
     }
 
     fun getContactInfo() {
         viewModelScope.launch {
+            isContactInfoLoading = true
             when (val result = getContactInfoUseCase.invoke(profileScreenArgs.userId)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
@@ -82,11 +90,13 @@ class ProfileViewModel @Inject constructor(
                     editContactInfo = it ?: ContactInfo()
                 }
             }
+            isContactInfoLoading = false
         }
     }
 
     fun getUserPosts() {
         viewModelScope.launch {
+            isPostsLoading = true
             when (val result = getUserPostsUseCase.invoke(profileScreenArgs.userId)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
@@ -96,6 +106,7 @@ class ProfileViewModel @Inject constructor(
                     postsList = result.value
                 }
             }
+            isPostsLoading = false
         }
     }
 
@@ -118,6 +129,7 @@ class ProfileViewModel @Inject constructor(
 
     fun getAboutInfo() {
         viewModelScope.launch {
+            isAboutInfoLoading = true
             when (val result = getAboutInfoUseCase.invoke(profileScreenArgs.userId)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
@@ -127,6 +139,7 @@ class ProfileViewModel @Inject constructor(
                     aboutInfo = it
                 }
             }
+            isAboutInfoLoading = false
         }
     }
 

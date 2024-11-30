@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
@@ -59,11 +61,14 @@ import dev.than0s.aluminium.core.composable.AluminiumTextField
 import dev.than0s.aluminium.core.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.composable.CoverImageModifier
 import dev.than0s.aluminium.core.composable.ProfileImageModifier
+import dev.than0s.aluminium.core.composable.ShimmerBackground
+import dev.than0s.aluminium.core.composable.ShimmerCircularBackground
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.Post
 import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.User
+import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -79,6 +84,10 @@ fun ProfileScreen(
         contactInfo = viewModel.contactInfo,
         aboutInfo = viewModel.aboutInfo,
         postList = viewModel.postsList,
+        isProfileLoading = viewModel.isProfileLoading,
+        isContactsLoading = viewModel.isContactInfoLoading,
+        isAboutLoading = viewModel.isAboutInfoLoading,
+        isPostsLoading = viewModel.isPostsLoading,
         editUserProfile = viewModel.editUserProfile,
         editContactInfo = viewModel.editContactInfo,
         openScreen = openScreen,
@@ -102,6 +111,10 @@ private fun ProfileScreenContent(
     userProfile: User,
     contactInfo: ContactInfo,
     aboutInfo: AboutInfo,
+    isProfileLoading: Boolean,
+    isContactsLoading: Boolean,
+    isAboutLoading: Boolean,
+    isPostsLoading: Boolean,
     postList: List<Post>,
     editUserProfile: User,
     editContactInfo: ContactInfo,
@@ -135,100 +148,107 @@ private fun ProfileScreenContent(
             },
         )
     }
-
-    AsyncImage(
-        model = userProfile.coverImage,
-        contentDescription = "Cover Image",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .background(color = colorResource(id = R.color.purple_500))
-            .height(128.dp)
-    )
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(MaterialTheme.spacing.medium)
-            .padding(top = MaterialTheme.spacing.extraLarge)
-    ) {
-
-        AluminiumAsyncImage(
-            model = userProfile.profileImage,
-            settings = AluminiumAsyncImageSettings.UserProfile,
-            modifier = ProfileImageModifier.large
-        )
-        AluminiumTitleText(
-            title = "${userProfile.firstName} ${userProfile.lastName}",
-            fontSize = MaterialTheme.textSize.large,
-        )
-        AluminiumDescriptionText(
-            description = userProfile.bio,
+//    if (isProfileLoading) {
+//        ShimmerProfile()
+//    } else {
+        AsyncImage(
+            model = userProfile.coverImage,
+            contentDescription = "Cover Image",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .background(color = colorResource(id = R.color.purple_500))
+                .height(128.dp)
         )
 
-        if (userId == currentUserId) {
-            AluminiumElevatedButton(
-                label = "Edit Profile",
-                onClick = {
-                    updateProfileDialogState = true
-                },
-                modifier = Modifier.fillMaxWidth()
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MaterialTheme.spacing.medium)
+                .padding(top = MaterialTheme.spacing.extraLarge)
+        ) {
+
+            AluminiumAsyncImage(
+                model = userProfile.profileImage,
+                settings = AluminiumAsyncImageSettings.UserProfile,
+                modifier = ProfileImageModifier.large
             )
-        } else {
-            AluminiumElevatedButton(
-                label = "Message",
-                onClick = {
-                    openScreen(Screen.ChatDetailScreen(userId))
-                },
-                modifier = Modifier.fillMaxWidth()
+            AluminiumTitleText(
+                title = "${userProfile.firstName} ${userProfile.lastName}",
+                fontSize = MaterialTheme.textSize.large,
+            )
+            AluminiumDescriptionText(
+                description = userProfile.bio,
+            )
+
+            if (userId == currentUserId) {
+                AluminiumElevatedButton(
+                    label = "Edit Profile",
+                    onClick = {
+                        updateProfileDialogState = true
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            } else {
+                AluminiumElevatedButton(
+                    label = "Message",
+                    onClick = {
+                        openScreen(Screen.ChatDetailScreen(userId))
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+
+            ProfileTabRow(
+                userId = userId,
+                tabItems = listOf(
+                    TabItem(
+                        title = "Contacts",
+                        selectedIcon = Icons.Filled.AccountBox,
+                        unselectedIcon = Icons.Outlined.AccountBox,
+                        screen = {
+                            ContactsTabContent(
+                                isCurrentUser = userId == currentUserId,
+                                contactInfo = contactInfo,
+                                isContactsLoading = isContactsLoading,
+                                editContactInfo = editContactInfo,
+                                onEmailChange = onEmailChange,
+                                onMobileChange = onMobileChange,
+                                onSocialHandleChange = onSocialHandleChange,
+                                onUpdateContactClick = onContactUpdateClick
+                            )
+                        }
+                    ),
+                    TabItem(
+                        title = "About",
+                        selectedIcon = Icons.Filled.Info,
+                        unselectedIcon = Icons.Outlined.Info,
+                        screen = {
+                            AboutTabContent(
+                                aboutInfo = aboutInfo,
+                                isAboutLoading = isAboutLoading,
+                            )
+                        }
+                    ),
+                    TabItem(
+                        title = "Posts",
+                        selectedIcon = Icons.Outlined.GridView,
+                        unselectedIcon = Icons.Filled.GridView,
+                        screen = {
+                            PostsTabScreen(
+                                postsList = postList,
+                                openScreen = openScreen,
+                                onLikeClick = onLikeClick,
+                                isPostsLoading = isPostsLoading
+                            )
+                        }
+                    )
+                ),
+                openScreen = openScreen,
             )
         }
-
-        ProfileTabRow(
-            userId = userId,
-            tabItems = listOf(
-                TabItem(
-                    title = "Contacts",
-                    selectedIcon = Icons.Filled.AccountBox,
-                    unselectedIcon = Icons.Outlined.AccountBox,
-                    screen = {
-                        ContactsTabContent(
-                            isCurrentUser = userId == currentUserId,
-                            contactInfo = contactInfo,
-                            editContactInfo = editContactInfo,
-                            onEmailChange = onEmailChange,
-                            onMobileChange = onMobileChange,
-                            onSocialHandleChange = onSocialHandleChange,
-                            onUpdateContactClick = onContactUpdateClick
-                        )
-                    }
-                ),
-                TabItem(
-                    title = "About",
-                    selectedIcon = Icons.Filled.Info,
-                    unselectedIcon = Icons.Outlined.Info,
-                    screen = {
-                        AboutTabContent(
-                            aboutInfo = aboutInfo
-                        )
-                    }
-                ),
-                TabItem(
-                    title = "Posts",
-                    selectedIcon = Icons.Outlined.GridView,
-                    unselectedIcon = Icons.Filled.GridView,
-                    screen = {
-                        PostsTabScreen(
-                            postsList = postList,
-                            openScreen = openScreen,
-                            onLikeClick = onLikeClick
-                        )
-                    }
-                )
-            ),
-            openScreen = openScreen,
-        )
-    }
+//    }
 }
 
 @Composable
@@ -401,6 +421,44 @@ private fun UpdateProfileDialog(
     }
 }
 
+@Composable
+fun ShimmerProfile() {
+    ShimmerBackground(
+        modifier = Modifier
+            .height(128.dp)
+            .fillMaxWidth()
+            .shimmer()
+    )
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(MaterialTheme.spacing.medium)
+            .padding(top = MaterialTheme.spacing.extraLarge)
+            .shimmer()
+    ) {
+
+        ShimmerCircularBackground(
+            modifier = ProfileImageModifier.large
+        )
+        ShimmerBackground(
+            modifier = Modifier
+                .height(MaterialTheme.textSize.large.value.dp)
+                .width(MaterialTheme.Size.small)
+        )
+        ShimmerBackground(
+            modifier = Modifier
+                .height(MaterialTheme.textSize.small.value.dp)
+                .width(MaterialTheme.Size.medium)
+        )
+        ShimmerBackground(
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+    }
+}
+
 data class TabItem(
     val title: String,
     val selectedIcon: ImageVector,
@@ -423,6 +481,10 @@ private fun ProfileScreenPreview() {
             mobile = "+91-1234567890"
         ),
         AboutInfo(),
+        false,
+        false,
+        false,
+        false,
         emptyList(),
         User(
             firstName = "Than0s",

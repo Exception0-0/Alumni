@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -27,13 +29,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.composable.AluminiumLoadingTextButton
 import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.composable.AluminiumTextField
 import dev.than0s.aluminium.core.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.composable.ShimmerBackground
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
+import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -43,6 +48,7 @@ fun ContactsTabContent(
     isCurrentUser: Boolean,
     contactInfo: ContactInfo,
     editContactInfo: ContactInfo,
+    isContactsLoading:Boolean,
     onEmailChange: (String) -> Unit,
     onMobileChange: (String) -> Unit,
     onSocialHandleChange: (String) -> Unit,
@@ -51,7 +57,6 @@ fun ContactsTabContent(
     var editStatus by rememberSaveable { mutableStateOf(false) }
 
     if (isCurrentUser) {
-
         if (editStatus) {
             UpdateContactInfo(
                 contactInfo = editContactInfo,
@@ -66,36 +71,72 @@ fun ContactsTabContent(
         }
     }
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
-        modifier = Modifier.verticalScroll(rememberScrollState())
-    ) {
-        InfoFormat(
-            title = "Email",
-            info = contactInfo.email ?: "No email address added yet",
-            icon = Icons.Outlined.Email,
-        )
-        InfoFormat(
-            title = "Mobile",
-            info = contactInfo.mobile ?: "No mobile number added",
-            icon = Icons.Outlined.Phone,
-        )
-        InfoFormat(
-            title = "Social Handles",
-            info = contactInfo.socialHandles ?: "No social handles added",
-            icon = Icons.Outlined.Star,
-        )
-
-        if (isCurrentUser) {
-            AluminiumElevatedButton(
-                label = "Edit Contacts",
-                onClick = {
-                    editStatus = true
-                },
+    if(isContactsLoading){
+        ShimmerContacts()
+    }
+    else {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
+            InfoFormat(
+                title = "Email",
+                info = contactInfo.email ?: "No email address added yet",
+                icon = Icons.Outlined.Email,
             )
+            InfoFormat(
+                title = "Mobile",
+                info = contactInfo.mobile ?: "No mobile number added",
+                icon = Icons.Outlined.Phone,
+            )
+            InfoFormat(
+                title = "Social Handles",
+                info = contactInfo.socialHandles ?: "No social handles added",
+                icon = Icons.Outlined.Star,
+            )
+
+            if (isCurrentUser) {
+                AluminiumElevatedButton(
+                    label = "Edit Contacts",
+                    onClick = {
+                        editStatus = true
+                    },
+                )
+            }
         }
     }
+}
 
+@Composable
+private fun ShimmerContacts() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .shimmer()
+    ) {
+        ShimmerBackground(
+            modifier = Modifier
+                .height(MaterialTheme.Size.medium)
+                .fillMaxWidth()
+        )
+        ShimmerBackground(
+            modifier = Modifier
+                .height(MaterialTheme.Size.medium)
+                .fillMaxWidth()
+        )
+        ShimmerBackground(
+            modifier = Modifier
+                .height(MaterialTheme.Size.medium)
+                .fillMaxWidth()
+        )
+
+        ShimmerBackground(
+            modifier = Modifier
+                .height(MaterialTheme.Size.small)
+                .width(MaterialTheme.Size.small)
+        )
+    }
 }
 
 @Composable

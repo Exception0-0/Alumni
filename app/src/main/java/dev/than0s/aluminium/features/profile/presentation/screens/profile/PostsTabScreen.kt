@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
@@ -60,6 +61,7 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun PostsTabScreen(
     postsList: List<Post>,
+    isPostsLoading: Boolean,
     onLikeClick: (String, Boolean, () -> Unit) -> Unit,
     openScreen: (Screen) -> Unit
 ) {
@@ -85,19 +87,23 @@ fun PostsTabScreen(
             }
         )
     }
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(MaterialTheme.Size.default),
-        content = {
-            items(postsList) {
-                PostPreviewCard(
-                    post = it,
-                    onClick = { postId ->
-                        dialogState = postId
-                    }
-                )
+    if (isPostsLoading) {
+        ShimmerPostList()
+    } else {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(MaterialTheme.Size.default),
+            content = {
+                items(postsList) {
+                    PostPreviewCard(
+                        post = it,
+                        onClick = { postId ->
+                            dialogState = postId
+                        }
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -167,6 +173,29 @@ fun PostDetailCard(
 }
 
 @Composable
+private fun ShimmerPostCard() {
+    AluminiumCard(
+        modifier = Modifier
+            .size(MaterialTheme.Size.medium)
+            .padding(MaterialTheme.spacing.extraSmall)
+            .shimmer(),
+        content = {}
+    )
+}
+
+@Composable
+private fun ShimmerPostList() {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(MaterialTheme.Size.default),
+        content = {
+            items(10) {
+                ShimmerPostCard()
+            }
+        }
+    )
+}
+
+@Composable
 private fun PostStatus(
     isLiked: Boolean,
     onLikeClick: (Boolean, () -> Unit) -> Unit,
@@ -233,6 +262,7 @@ private fun Preview() {
             Post(file = Uri.EMPTY),
             Post(file = Uri.EMPTY)
         ),
+        isPostsLoading = false,
         onLikeClick = { _, _, _ ->
 
         },
