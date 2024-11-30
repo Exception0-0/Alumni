@@ -44,15 +44,15 @@ class CommentsViewModel @Inject constructor(
     var currentComment by mutableStateOf("")
         private set
 
+    var isCommentsLoading by mutableStateOf(false)
 
     init {
         loadComments()
     }
 
     private fun loadComments() {
-        println("load comments: ${commentsScreenArgs.postId}")
         viewModelScope.launch {
-
+            isCommentsLoading = true
             when (val result = getCommentFlowUseCase.invoke(commentsScreenArgs.postId)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
@@ -62,6 +62,7 @@ class CommentsViewModel @Inject constructor(
                     commentsList = result.value
                 }
             }
+            isCommentsLoading = false
         }
     }
 
