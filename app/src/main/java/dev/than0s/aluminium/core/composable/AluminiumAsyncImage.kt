@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,9 +85,11 @@ fun AluminiumAsyncImage(
                                         ),
                                         title = {},
                                         navigationIcon = {
-                                            IconButton(onClick = {
-                                                fullScreenState = false
-                                            }) {
+                                            IconButton(
+                                                onClick = {
+                                                    fullScreenState = false
+                                                }
+                                            ) {
                                                 Icon(
                                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                                     contentDescription = "Localized description"
@@ -110,10 +115,14 @@ fun AluminiumAsyncImage(
         }
     }
 
-    AsyncImage(
+    SubcomposeAsyncImage(
         model = model,
-        placeholder = painterResource(settings.placeholder),
-        error = painterResource(settings.error),
+        loading = {
+            ShimmerBackground(
+                modifier = modifier
+                    .shimmer()
+            )
+        },
         contentScale = contentScale,
         contentDescription = settings.contentDescription,
         modifier = _modifier
