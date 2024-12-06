@@ -148,9 +148,10 @@ private fun ProfileScreenContent(
             },
         )
     }
-//    if (isProfileLoading) {
-//        ShimmerProfile()
-//    } else {
+
+    if (isProfileLoading) {
+        ShimmerCoverImage()
+    } else {
         AsyncImage(
             model = userProfile.coverImage,
             contentDescription = "Cover Image",
@@ -159,15 +160,18 @@ private fun ProfileScreenContent(
                 .background(color = colorResource(id = R.color.purple_500))
                 .height(128.dp)
         )
+    }
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.spacing.medium)
-                .padding(top = MaterialTheme.spacing.extraLarge)
-        ) {
-
+    Column(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(MaterialTheme.spacing.medium)
+            .padding(top = MaterialTheme.spacing.extraLarge)
+    ) {
+        if (isProfileLoading) {
+            ShimmerProfile()
+        } else {
             AluminiumAsyncImage(
                 model = userProfile.profileImage,
                 settings = AluminiumAsyncImageSettings.UserProfile,
@@ -198,57 +202,56 @@ private fun ProfileScreenContent(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
-
-            ProfileTabRow(
-                userId = userId,
-                tabItems = listOf(
-                    TabItem(
-                        title = "Contacts",
-                        selectedIcon = Icons.Filled.AccountBox,
-                        unselectedIcon = Icons.Outlined.AccountBox,
-                        screen = {
-                            ContactsTabContent(
-                                isCurrentUser = userId == currentUserId,
-                                contactInfo = contactInfo,
-                                isContactsLoading = isContactsLoading,
-                                editContactInfo = editContactInfo,
-                                onEmailChange = onEmailChange,
-                                onMobileChange = onMobileChange,
-                                onSocialHandleChange = onSocialHandleChange,
-                                onUpdateContactClick = onContactUpdateClick
-                            )
-                        }
-                    ),
-                    TabItem(
-                        title = "About",
-                        selectedIcon = Icons.Filled.Info,
-                        unselectedIcon = Icons.Outlined.Info,
-                        screen = {
-                            AboutTabContent(
-                                aboutInfo = aboutInfo,
-                                isAboutLoading = isAboutLoading,
-                            )
-                        }
-                    ),
-                    TabItem(
-                        title = "Posts",
-                        selectedIcon = Icons.Outlined.GridView,
-                        unselectedIcon = Icons.Filled.GridView,
-                        screen = {
-                            PostsTabScreen(
-                                postsList = postList,
-                                openScreen = openScreen,
-                                onLikeClick = onLikeClick,
-                                isPostsLoading = isPostsLoading
-                            )
-                        }
-                    )
-                ),
-                openScreen = openScreen,
-            )
         }
-//    }
+
+        ProfileTabRow(
+            userId = userId,
+            tabItems = listOf(
+                TabItem(
+                    title = "Contacts",
+                    selectedIcon = Icons.Filled.AccountBox,
+                    unselectedIcon = Icons.Outlined.AccountBox,
+                    screen = {
+                        ContactsTabContent(
+                            isCurrentUser = userId == currentUserId,
+                            contactInfo = contactInfo,
+                            isContactsLoading = isContactsLoading,
+                            editContactInfo = editContactInfo,
+                            onEmailChange = onEmailChange,
+                            onMobileChange = onMobileChange,
+                            onSocialHandleChange = onSocialHandleChange,
+                            onUpdateContactClick = onContactUpdateClick
+                        )
+                    }
+                ),
+                TabItem(
+                    title = "About",
+                    selectedIcon = Icons.Filled.Info,
+                    unselectedIcon = Icons.Outlined.Info,
+                    screen = {
+                        AboutTabContent(
+                            aboutInfo = aboutInfo,
+                            isAboutLoading = isAboutLoading,
+                        )
+                    }
+                ),
+                TabItem(
+                    title = "Posts",
+                    selectedIcon = Icons.Outlined.GridView,
+                    unselectedIcon = Icons.Filled.GridView,
+                    screen = {
+                        PostsTabScreen(
+                            postsList = postList,
+                            openScreen = openScreen,
+                            onLikeClick = onLikeClick,
+                            isPostsLoading = isPostsLoading
+                        )
+                    }
+                )
+            ),
+            openScreen = openScreen,
+        )
+    }
 }
 
 @Composable
@@ -422,23 +425,22 @@ private fun UpdateProfileDialog(
 }
 
 @Composable
-fun ShimmerProfile() {
+private fun ShimmerCoverImage() {
     ShimmerBackground(
         modifier = Modifier
             .height(128.dp)
             .fillMaxWidth()
             .shimmer()
     )
+}
 
+@Composable
+private fun ShimmerProfile() {
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(MaterialTheme.spacing.medium)
-            .padding(top = MaterialTheme.spacing.extraLarge)
             .shimmer()
     ) {
-
         ShimmerCircularBackground(
             modifier = ProfileImageModifier.large
         )
@@ -481,7 +483,7 @@ private fun ProfileScreenPreview() {
             mobile = "+91-1234567890"
         ),
         AboutInfo(),
-        false,
+        true,
         false,
         false,
         false,

@@ -57,50 +57,57 @@ fun AluminiumAsyncImage(
     settings: AluminiumAsyncImageSettings,
     modifier: Modifier,
     contentScale: ContentScale = ContentScale.Crop,
+    isFullScreen: Boolean = true,
 ) {
-    var fullScreenState by rememberSaveable { mutableStateOf(false) }
+    var _modifier = modifier
 
-    if (fullScreenState) {
-        Dialog(
-            onDismissRequest = {
-                fullScreenState = false
-            },
-            content = {
-                Surface(
-                    color = Color.Black,
-                    modifier = Modifier.fillMaxSize(),
-                    content = {
-                        Scaffold(
-                            topBar = {
-                                TopAppBar(
-                                    colors = TopAppBarDefaults.topAppBarColors(
-                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                        titleContentColor = MaterialTheme.colorScheme.primary,
-                                    ),
-                                    title = {},
-                                    navigationIcon = {
-                                        IconButton(onClick = {
-                                            fullScreenState = false
-                                        }) {
-                                            Icon(
-                                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                                contentDescription = "Localized description"
-                                            )
+    if (isFullScreen) {
+        var fullScreenState by rememberSaveable { mutableStateOf(false) }
+        if (fullScreenState) {
+            Dialog(
+                onDismissRequest = {
+                    fullScreenState = false
+                },
+                content = {
+                    Surface(
+                        color = Color.Black,
+                        modifier = Modifier.fillMaxSize(),
+                        content = {
+                            Scaffold(
+                                topBar = {
+                                    TopAppBar(
+                                        colors = TopAppBarDefaults.topAppBarColors(
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                            titleContentColor = MaterialTheme.colorScheme.primary,
+                                        ),
+                                        title = {},
+                                        navigationIcon = {
+                                            IconButton(onClick = {
+                                                fullScreenState = false
+                                            }) {
+                                                Icon(
+                                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                                    contentDescription = "Localized description"
+                                                )
+                                            }
                                         }
-                                    }
+                                    )
+                                }
+                            ) { contentPadding ->
+                                PinchZoomImage(
+                                    model = model,
+                                    modifier = Modifier.padding(contentPadding)
                                 )
                             }
-                        ) { contentPadding ->
-                            PinchZoomImage(
-                                model = model,
-                                modifier = Modifier.padding(contentPadding)
-                            )
                         }
-                    }
-                )
-            },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
-        )
+                    )
+                },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
+            )
+        }
+        _modifier = _modifier.clickable {
+            fullScreenState = true
+        }
     }
 
     AsyncImage(
@@ -109,9 +116,7 @@ fun AluminiumAsyncImage(
         error = painterResource(settings.error),
         contentScale = contentScale,
         contentDescription = settings.contentDescription,
-        modifier = modifier.clickable {
-            fullScreenState = true
-        }
+        modifier = _modifier
     )
 }
 

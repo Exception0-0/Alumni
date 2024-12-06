@@ -64,17 +64,17 @@ private fun ShimmerAbout() {
     ) {
         ShimmerBackground(
             modifier = Modifier
-                .height(MaterialTheme.Size.medium)
+                .height(MaterialTheme.Size.small)
                 .fillMaxWidth()
         )
         ShimmerBackground(
             modifier = Modifier
-                .height(MaterialTheme.Size.medium)
+                .height(MaterialTheme.Size.small)
                 .fillMaxWidth()
         )
         ShimmerBackground(
             modifier = Modifier
-                .height(MaterialTheme.Size.medium)
+                .height(MaterialTheme.Size.small)
                 .fillMaxWidth()
         )
     }

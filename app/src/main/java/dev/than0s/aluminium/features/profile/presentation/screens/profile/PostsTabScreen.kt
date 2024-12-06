@@ -124,6 +124,7 @@ fun PostPreviewCard(
         AluminiumAsyncImage(
             model = post.file,
             settings = AluminiumAsyncImageSettings.PostImage,
+            isFullScreen = false,
             modifier = Modifier
         )
     }

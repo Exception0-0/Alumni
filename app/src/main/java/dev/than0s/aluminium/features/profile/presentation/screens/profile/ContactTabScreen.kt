@@ -117,23 +117,23 @@ private fun ShimmerContacts() {
     ) {
         ShimmerBackground(
             modifier = Modifier
-                .height(MaterialTheme.Size.medium)
+                .height(MaterialTheme.Size.small)
                 .fillMaxWidth()
         )
         ShimmerBackground(
             modifier = Modifier
-                .height(MaterialTheme.Size.medium)
+                .height(MaterialTheme.Size.small)
                 .fillMaxWidth()
         )
         ShimmerBackground(
             modifier = Modifier
-                .height(MaterialTheme.Size.medium)
+                .height(MaterialTheme.Size.small)
                 .fillMaxWidth()
         )
 
         ShimmerBackground(
             modifier = Modifier
-                .height(MaterialTheme.Size.small)
+                .height(MaterialTheme.Size.extraSmall)
                 .width(MaterialTheme.Size.small)
         )
     }
