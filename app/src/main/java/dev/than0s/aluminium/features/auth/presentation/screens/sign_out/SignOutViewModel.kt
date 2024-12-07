@@ -11,16 +11,34 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignOutViewModel @Inject constructor(private val useCase: SignOutUseCase) : ViewModel() {
-    fun signOut(restartApp: () -> Unit) {
+    private fun signOut(
+        onSuccess: () -> Unit,
+        onComplete: () -> Unit,
+    ) {
         viewModelScope.launch {
             when (val result = useCase.invoke(Unit)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar(result.value.message)
                 }
+
                 is Either.Right -> {
-                    restartApp()
+                    onSuccess()
                     SnackbarController.showSnackbar("Signed out successfully")
                 }
+            }
+            onComplete()
+        }
+    }
+
+    fun onEvent(
+        event: SignOutEvents
+    ) {
+        when (event) {
+            is SignOutEvents.signOut -> {
+                signOut(
+                    onSuccess = event.onSuccess,
+                    onComplete = event.onComplete
+                )
             }
         }
     }

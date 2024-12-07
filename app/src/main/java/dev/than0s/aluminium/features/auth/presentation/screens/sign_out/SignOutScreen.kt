@@ -4,6 +4,20 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun SignOutScreen(viewModel: SignOutViewModel = hiltViewModel(), restartApp: () -> Unit) {
-    viewModel.signOut(restartApp)
+fun SignOutScreen(
+    viewModel: SignOutViewModel = hiltViewModel(),
+    restartApp: () -> Unit
+) {
+    SignOutContent(
+        onEvent = viewModel::onEvent,
+        restartApp = restartApp
+    )
+}
+
+@Composable
+fun SignOutContent(
+    onEvent: (SignOutEvents) -> Unit,
+    restartApp: () -> Unit
+) {
+    onEvent(SignOutEvents.signOut(onSuccess = restartApp))
 }
