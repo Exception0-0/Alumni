@@ -189,7 +189,7 @@ private fun NavGraphHost(
     }
 }
 
-private fun NavHostController.openScreen(screen: Screen) {
+fun NavHostController.openScreen(screen: Screen) {
     navigate(screen)
 }
 

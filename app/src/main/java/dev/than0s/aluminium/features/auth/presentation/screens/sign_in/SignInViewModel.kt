@@ -15,28 +15,53 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCase) :
     ViewModel() {
     val signInParam = mutableStateOf(EmailAuthParam())
+    val signInState = mutableStateOf(SignInState())
 
-    fun onEmailChange(email: String) {
+    private fun onEmailChange(email: String) {
         signInParam.value = signInParam.value.copy(email = email)
     }
 
-    fun onPasswordChange(password: String) {
+    private fun onPasswordChange(password: String) {
         signInParam.value = signInParam.value.copy(password = password)
     }
 
-    fun onSignInClick(onFinish: () -> Unit, restartApp: () -> Unit) {
+    private fun onSignInClick(
+        onSuccess: () -> Unit = {},
+        onComplete: () -> Unit = {}
+    ) {
         viewModelScope.launch {
+            signInState.value = signInState.value.copy(isLoading = true)
             when (val result = signInUseCase.invoke(signInParam.value)) {
                 is Either.Left -> {
                     SnackbarController.showSnackbar("Error: ${result.value}")
                 }
 
                 is Either.Right -> {
-                    restartApp()
+                    onSuccess()
                     SnackbarController.showSnackbar("Signed in successfully")
                 }
             }
-            onFinish()
+            signInState.value = signInState.value.copy(isLoading = false)
+            onComplete()
+        }
+    }
+
+    fun onEvent(event: SignInEvents) {
+        when (event) {
+            is SignInEvents.OnEmailChanged -> {
+                onEmailChange(event.email)
+            }
+
+            is SignInEvents.OnPasswordChange -> {
+                onPasswordChange(event.password)
+            }
+
+            is SignInEvents.OnSignInClick -> {
+                onSignInClick(
+                    onSuccess = event.onSuccess,
+                    onComplete = event.onComplete
+                )
+            }
         }
     }
 }

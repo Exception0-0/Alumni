@@ -43,26 +43,23 @@ fun SignInScreen(
 ) {
     SignInScreenContent(
         param = viewModel.signInParam.value,
-        onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        onSignInClick = { callBack ->
-            viewModel.onSignInClick(callBack, restartApp)
-        },
+        screenState = viewModel.signInState.value,
+        onEvent = viewModel::onEvent,
         openScreen = openScreen,
         popAndOpen = popAndOpen,
+        restartApp = restartApp
     )
 }
 
 @Composable
 private fun SignInScreenContent(
     param: EmailAuthParam,
-    onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    onSignInClick: (() -> Unit) -> Unit,
+    screenState: SignInState,
+    onEvent: (SignInEvents) -> Unit,
     openScreen: (Screen) -> Unit,
     popAndOpen: (Screen) -> Unit,
+    restartApp: () -> Unit
 ) {
-    var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
 
     AluminiumElevatedCard(
         modifier = Modifier
@@ -87,7 +84,7 @@ private fun SignInScreenContent(
             AluminiumTextField(
                 value = param.email,
                 onValueChange = { newValue ->
-                    onEmailChange(newValue)
+                    onEvent(SignInEvents.OnEmailChanged(newValue))
                 },
                 placeholder = "Email",
                 leadingIcon = {
@@ -101,7 +98,7 @@ private fun SignInScreenContent(
             AluminiumPasswordTextField(
                 value = param.password,
                 onPasswordChange = { newValue ->
-                    onPasswordChange(newValue)
+                    onEvent(SignInEvents.OnPasswordChange(newValue))
                 },
                 placeholder = "Password",
             )
@@ -122,12 +119,15 @@ private fun SignInScreenContent(
 
             AluminiumLoadingElevatedButton(
                 label = "Sign In",
-                circularProgressIndicatorState = circularProgressIndicatorState,
+                circularProgressIndicatorState = screenState.isLoading,
                 onClick = {
-                    circularProgressIndicatorState = true
-                    onSignInClick {
-                        circularProgressIndicatorState = !circularProgressIndicatorState
-                    }
+                    onEvent(
+                        SignInEvents.OnSignInClick(
+                            onSuccess = {
+                                restartApp()
+                            },
+                        )
+                    )
                 }
             )
         }
@@ -137,5 +137,5 @@ private fun SignInScreenContent(
 @Preview(showSystemUi = true)
 @Composable
 private fun SignInScreenPreview() {
-    SignInScreenContent(EmailAuthParam(), {}, {}, {}, {}, {})
+
 }
