@@ -12,11 +12,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSource
-import dev.than0s.aluminium.features.auth.data.data_source.AuthDataSourceImple
+import dev.than0s.aluminium.features.auth.data.remote.AuthDataSource
+import dev.than0s.aluminium.features.auth.data.remote.AuthDataSourceImple
 import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSource
 import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryImple
-import dev.than0s.aluminium.features.auth.data.repositories.AuthRepositoryImple
+import dev.than0s.aluminium.features.auth.data.repository.AuthRepositoryImple
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
 import dev.than0s.aluminium.features.chat.data.data_source.DataSource

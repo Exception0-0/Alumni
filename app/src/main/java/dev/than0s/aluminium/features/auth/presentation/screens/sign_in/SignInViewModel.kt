@@ -29,21 +29,21 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
         onSuccess: () -> Unit = {},
         onComplete: () -> Unit = {}
     ) {
-        viewModelScope.launch {
-            signInState.value = signInState.value.copy(isLoading = true)
-            when (val result = signInUseCase.invoke(signInParam.value)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar("Error: ${result.value}")
-                }
-
-                is Either.Right -> {
-                    onSuccess()
-                    SnackbarController.showSnackbar("Signed in successfully")
-                }
-            }
-            signInState.value = signInState.value.copy(isLoading = false)
-            onComplete()
-        }
+//        viewModelScope.launch {
+//            signInState.value = signInState.value.copy(isLoading = true)
+//            when (val result = signInUseCase.invoke(signInParam.value)) {
+//                is Either.Left -> {
+//                    SnackbarController.showSnackbar("Error: ${result.value}")
+//                }
+//
+//                is Either.Right -> {
+//                    onSuccess()
+//                    SnackbarController.showSnackbar("Signed in successfully")
+//                }
+//            }
+//            signInState.value = signInState.value.copy(isLoading = false)
+//            onComplete()
+//        }
     }
 
     fun onEvent(event: SignInEvents) {

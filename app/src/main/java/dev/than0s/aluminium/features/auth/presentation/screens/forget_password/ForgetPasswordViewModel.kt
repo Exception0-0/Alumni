@@ -23,19 +23,19 @@ class ForgetPasswordViewModel @Inject constructor(private val useCase: ForgetPas
         onSuccess: () -> Unit,
         onComplete: () -> Unit,
     ) {
-        viewModelScope.launch {
-            when (val result = useCase.invoke(param)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
-                }
-
-                is Either.Right -> {
-                    SnackbarController.showSnackbar("successfully forget password")
-                    onSuccess()
-                }
-            }
-            onComplete()
-        }
+//        viewModelScope.launch {
+//            when (val result = useCase.invoke(param)) {
+//                is Either.Left -> {
+//                    SnackbarController.showSnackbar(result.value.message)
+//                }
+//
+//                is Either.Right -> {
+//                    SnackbarController.showSnackbar("successfully forget password")
+//                    onSuccess()
+//                }
+//            }
+//            onComplete()
+//        }
     }
 
     private fun onEmailChange(value: String) {

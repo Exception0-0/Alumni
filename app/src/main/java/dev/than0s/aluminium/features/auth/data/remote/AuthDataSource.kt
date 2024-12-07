@@ -1,9 +1,7 @@
-package dev.than0s.aluminium.features.auth.data.data_source
+package dev.than0s.aluminium.features.auth.data.remote
 
-import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.firestore.FirebaseFirestore
 import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -22,7 +20,7 @@ class AuthDataSourceImple @Inject constructor(
     override suspend fun signIn(email: String, password: String) {
         try {
             auth.signInWithEmailAndPassword(email, password).await()
-        } catch (e: Exception) {
+        } catch (e: FirebaseAuthException) {
             throw ServerException(e.message.toString())
         }
     }
@@ -30,7 +28,7 @@ class AuthDataSourceImple @Inject constructor(
     override suspend fun signUp(email: String, password: String) {
         try {
             auth.createUserWithEmailAndPassword(email, password).await()
-        } catch (e: Exception) {
+        } catch (e: FirebaseAuthException) {
             throw ServerException(e.message.toString())
         }
     }
@@ -38,7 +36,7 @@ class AuthDataSourceImple @Inject constructor(
     override suspend fun signOut() {
         try {
             auth.signOut()
-        } catch (e: Exception) {
+        } catch (e: FirebaseAuthException) {
             throw ServerException(e.message.toString())
         }
     }
