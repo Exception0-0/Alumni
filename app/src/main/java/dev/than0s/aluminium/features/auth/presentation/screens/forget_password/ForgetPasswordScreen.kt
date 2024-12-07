@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,10 +18,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.composable.AluminiumLoadingElevatedButton
 import dev.than0s.aluminium.core.composable.AluminiumTextField
 import dev.than0s.aluminium.core.composable.AluminiumTitleText
+import dev.than0s.aluminium.features.auth.domain.data_class.Email
 import dev.than0s.aluminium.ui.spacing
-import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun ForgetPasswordScreen(
@@ -30,19 +30,19 @@ fun ForgetPasswordScreen(
     popScreen: () -> Unit
 ) {
     ForgetPasswordContent(
-        email = viewModel.email,
-        onForgetPasswordClick = {
-            viewModel.onForgetPasswordClick(popScreen)
-        },
-        onEmailChange = viewModel::onEmailChange
+        param = viewModel.param,
+        state = viewModel.state,
+        onEvent = viewModel::onEvent,
+        popScreen = popScreen,
     )
 }
 
 @Composable
 private fun ForgetPasswordContent(
-    email: String,
-    onForgetPasswordClick: () -> Unit,
-    onEmailChange: (String) -> Unit
+    param: Email,
+    state: ForgetPasswordState,
+    onEvent: (ForgetPasswordEvents) -> Unit,
+    popScreen: () -> Unit,
 ) {
     AluminiumElevatedCard(
         modifier = Modifier
@@ -65,9 +65,9 @@ private fun ForgetPasswordContent(
             }
 
             AluminiumTextField(
-                value = email,
+                value = param.email,
                 onValueChange = { newValue ->
-                    onEmailChange(newValue)
+                    onEvent(ForgetPasswordEvents.onEmailChange(newValue))
                 },
                 leadingIcon = {
                     Icon(
@@ -78,10 +78,15 @@ private fun ForgetPasswordContent(
                 placeholder = "Email"
             )
 
-            AluminiumElevatedButton(
+            AluminiumLoadingElevatedButton(
                 label = "Forget Password",
+                circularProgressIndicatorState = state.isLoading,
                 onClick = {
-                    onForgetPasswordClick()
+                    onEvent(
+                        ForgetPasswordEvents.onForgetPasswordClick(
+                            onSuccess = popScreen
+                        )
+                    )
                 }
             )
         }
@@ -91,5 +96,10 @@ private fun ForgetPasswordContent(
 @Preview(showSystemUi = true)
 @Composable
 private fun ForgetPasswordPreview() {
-    ForgetPasswordContent("", {}, {})
+    ForgetPasswordContent(
+        param = Email(),
+        state = ForgetPasswordState(),
+        onEvent = {},
+        popScreen = {}
+    )
 }
