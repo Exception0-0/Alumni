@@ -56,8 +56,8 @@ class LikeDataSourceImple @Inject constructor(
                 .whereEqualTo(USER_ID, auth.currentUser!!.uid)
                 .get()
                 .await()
-                .toObjects(RemoteLike::class.java)[0]
-                .toLike(postId)
+                .toObjects(RemoteLike::class.java).getOrNull(0)
+                ?.toLike(postId)
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }

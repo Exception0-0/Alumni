@@ -57,6 +57,7 @@ class PostsViewModel @Inject constructor(
                     screenState = screenState.copy(
                         postList = result.data!!
                     )
+                    println("post list: ${result.data}")
                 }
 
                 is Resource.Error -> {
@@ -84,6 +85,7 @@ class PostsViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     likeMap.remove(postId)
+                    likeMap.getLike(postId)
                 }
             }
         }
@@ -102,6 +104,7 @@ class PostsViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
+                    likeMap.remove(postId)
                     likeMap.getLike(postId)
                 }
             }

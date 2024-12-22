@@ -2,6 +2,7 @@ package dev.than0s.aluminium.features.post.data.mapper
 
 import android.net.Uri
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentId
 import dev.than0s.aluminium.core.domain.data_class.Post
 
 fun List<RemotePost>.toPost(): List<Post> {
@@ -27,6 +28,7 @@ fun Post.toRemotePost() = RemotePost(
 )
 
 data class RemotePost(
+    @DocumentId
     val id: String = "",
     val userId: String = "",
     val file: String = Uri.EMPTY.toString(),

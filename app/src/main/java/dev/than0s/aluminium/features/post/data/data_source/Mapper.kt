@@ -15,7 +15,6 @@ fun RemoteLike.toLike(postId: String) = Like(
 )
 
 data class RemoteLike(
-    val id: String = "",
     val userId: String = "",
-    val timestamp: Timestamp
+    val timestamp: Timestamp = Timestamp.now()
 )
