@@ -22,16 +22,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Role
-import dev.than0s.aluminium.core.composable.AluminiumAlertDialog
-import dev.than0s.aluminium.core.composable.AluminiumClickableText
-import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
-import dev.than0s.aluminium.core.composable.AluminiumLoadingElevatedButton
-import dev.than0s.aluminium.core.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAlertDialog
+import dev.than0s.aluminium.core.presentation.composable.AluminiumClickableText
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
@@ -41,93 +42,52 @@ import dev.than0s.aluminium.ui.textSize
 fun RegistrationRequestsScreen(
     viewModel: RequestViewModel = hiltViewModel()
 ) {
-    val requestList = viewModel.requestsList.collectAsState(emptyList()).value
     RegistrationRequestsContent(
-        requestsList = requestList,
-        onAcceptedClick = viewModel::onAcceptClick,
-        onRejectedClick = viewModel::onRejectedClick
+        screenState = viewModel.screenState,
+        onEvent = viewModel::onEvent
     )
 }
 
 @Composable
 private fun RegistrationRequestsContent(
-    requestsList: List<RegistrationForm>,
-    onAcceptedClick: (RegistrationForm, () -> Unit) -> Unit,
-    onRejectedClick: (RegistrationForm, () -> Unit) -> Unit
+    screenState: RequestScreenState,
+    onEvent: (RequestScreenEvents) -> Unit,
 ) {
+    WarningDialogLogic(
+        screenState = screenState,
+        onEvent = onEvent
+    )
+    IdCardImageLogic(
+        screenState = screenState,
+        onEvent = onEvent
+    )
     LazyColumn {
         items(
-            items = requestsList,
-            key = { it.id }
+            items = screenState.requestsList,
         ) { request ->
             RegistrationRequestItem(
                 request = request,
-                onAcceptedClick = { callBack ->
-                    onAcceptedClick(request, callBack)
-                },
-                onRejectedClick = { callBack ->
-                    onRejectedClick(request, callBack)
-                }
+                onEvent = onEvent
             )
         }
     }
 }
 
 @Composable
-private fun RegistrationRequestItem(
-    request: RegistrationForm,
-    onAcceptedClick: (() -> Unit) -> Unit,
-    onRejectedClick: (() -> Unit) -> Unit
+private fun IdCardImageLogic(
+    screenState: RequestScreenState,
+    onEvent: (RequestScreenEvents) -> Unit
 ) {
-    var showAcceptAlertDialog by rememberSaveable { mutableStateOf(false) }
-    var showRejectAlertDialog by rememberSaveable { mutableStateOf(false) }
-    var showIdCardImage by rememberSaveable { mutableStateOf(false) }
-    var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
-
-    if (showAcceptAlertDialog) {
-        AluminiumAlertDialog(
-            title = accepted_title,
-            description = accepted_text,
-            circularProgressIndicatorState = circularProgressIndicatorState,
-            onDismissRequest = {
-                showAcceptAlertDialog = false
-            },
-            onConfirmation = {
-                circularProgressIndicatorState = true
-                onAcceptedClick {
-                    circularProgressIndicatorState = false
-                    showAcceptAlertDialog = false
-                }
-            }
-        )
-    }
-
-    if (showRejectAlertDialog) {
-        AluminiumAlertDialog(
-            title = rejected_title,
-            description = rejected_text,
-            circularProgressIndicatorState = circularProgressIndicatorState,
-            onDismissRequest = {
-                showRejectAlertDialog = false
-            },
-            onConfirmation = {
-                circularProgressIndicatorState = true
-                onRejectedClick {
-                    circularProgressIndicatorState = false
-                    showRejectAlertDialog = false
-                }
-            }
-        )
-    }
-
-    if (showIdCardImage) {
+    if (screenState.idCardSelection != null) {
         Dialog(
             onDismissRequest = {
-                showIdCardImage = false
+                onEvent(RequestScreenEvents.OnHideIdCard)
             },
             content = {
                 AsyncImage(
-                    model = request.idCardImage,
+                    model = screenState.requestsList.first {
+                        it.id == screenState.idCardSelection
+                    }.idCardImage,
                     contentDescription = "Id card image",
                     modifier = Modifier
                         .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
@@ -135,8 +95,14 @@ private fun RegistrationRequestItem(
             }
         )
     }
+}
 
-    ElevatedCard(
+@Composable
+private fun RegistrationRequestItem(
+    request: RegistrationForm,
+    onEvent: (RequestScreenEvents) -> Unit,
+) {
+    AluminiumElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(MaterialTheme.spacing.small)
@@ -174,7 +140,7 @@ private fun RegistrationRequestItem(
                 AluminiumClickableText(
                     title = "show Id card image",
                     onClick = {
-                        showIdCardImage = true
+                        onEvent(RequestScreenEvents.OnShowIdCard(request.id))
                     }
                 )
             }
@@ -187,7 +153,7 @@ private fun RegistrationRequestItem(
             ) {
                 TextButton(
                     onClick = {
-                        showAcceptAlertDialog = true
+                        onEvent(RequestScreenEvents.OnShowDialog(request.id, true))
                     },
                     content = {
                         Text("Accept")
@@ -198,7 +164,7 @@ private fun RegistrationRequestItem(
 
                 TextButton(
                     onClick = {
-                        showRejectAlertDialog = true
+                        onEvent(RequestScreenEvents.OnShowDialog(request.id, false))
                     },
                     content = {
                         Text("Cancel")
@@ -209,49 +175,75 @@ private fun RegistrationRequestItem(
     }
 }
 
-
-const val accepted_title = "Do you really want to accept this request?"
-const val accepted_text = "you can't undo this action, so be careful with your choices."
-
-const val rejected_title = "Do you really want to reject this request?"
-const val rejected_text = "You can't undo this action, so be careful with your choices."
+@Composable
+private fun WarningDialogLogic(
+    screenState: RequestScreenState,
+    onEvent: (RequestScreenEvents) -> Unit
+) {
+    if (screenState.requestSelection != null) {
+        screenState.requestSelection.second.let { dialogMode ->
+            AluminiumAlertDialog(
+                title = if (dialogMode) stringResource(R.string.accept_request_title)
+                else stringResource(R.string.reject_request_title),
+                description = stringResource(R.string.request_desc),
+                circularProgressIndicatorState = screenState.isDialogLoading,
+                onDismissRequest = {
+                    onEvent(RequestScreenEvents.OnDismissDialog)
+                },
+                onConfirmation = {
+                    screenState.requestsList.first { it.id == screenState.requestSelection.first }
+                        .run {
+                            onEvent(
+                                if (dialogMode)
+                                    RequestScreenEvents.OnAcceptClick(this)
+                                else
+                                    RequestScreenEvents.OnRejectClick(this)
+                            )
+                        }
+                }
+            )
+        }
+    }
+}
 
 @Preview(showSystemUi = true)
 @Composable
 private fun RegistrationRequestPreview() {
     RegistrationRequestsContent(
-        listOf(
-            RegistrationForm(
-                id = "1",
-                role = Role.Student,
-                collegeId = "123456",
-                firstName = "Himanshu",
-                middleName = "Vasantrao",
-                lastName = "Patil",
-                email = "himanshupatil45h@gmail.com",
-                batchFrom = "2023",
-                batchTo = "2025"
-            ),
-            RegistrationForm(
-                id = "2",
-                firstName = "Himanshu",
-                middleName = "Vasantrao",
-                lastName = "Patil",
-                email = "himanshupatil45h@gmail.com",
-                batchFrom = "2023",
-                batchTo = "2025",
-                idCardImage = Uri.EMPTY
-            ),
-            RegistrationForm(
-                id = "3",
-                firstName = "Himanshu",
-                middleName = "Vasantrao",
-                lastName = "Patil",
-                email = "himanshupatil45h@gmail.com",
-                batchFrom = "2023",
-                batchTo = "2025"
+        screenState = RequestScreenState(
+            listOf(
+                RegistrationForm(
+                    id = "1",
+                    role = Role.Student,
+                    collegeId = "123456",
+                    firstName = "Himanshu",
+                    middleName = "Vasantrao",
+                    lastName = "Patil",
+                    email = "himanshupatil45h@gmail.com",
+                    batchFrom = "2023",
+                    batchTo = "2025"
+                ),
+                RegistrationForm(
+                    id = "2",
+                    firstName = "Himanshu",
+                    middleName = "Vasantrao",
+                    lastName = "Patil",
+                    email = "himanshupatil45h@gmail.com",
+                    batchFrom = "2023",
+                    batchTo = "2025",
+                    idCardImage = Uri.EMPTY
+                ),
+                RegistrationForm(
+                    id = "3",
+                    firstName = "Himanshu",
+                    middleName = "Vasantrao",
+                    lastName = "Patil",
+                    email = "himanshupatil45h@gmail.com",
+                    batchFrom = "2023",
+                    batchTo = "2025"
+                )
             )
         ),
-        { _, _ -> }, { _, _ -> },
+        onEvent = {}
     )
 }

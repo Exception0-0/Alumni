@@ -1,15 +1,12 @@
 package dev.than0s.aluminium.features.auth.data.repository
 
-import android.net.http.HttpException
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.Either
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SimpleResource
 import dev.than0s.aluminium.core.UiText
-import dev.than0s.aluminium.core.error.Failure
 import dev.than0s.aluminium.features.auth.data.remote.AuthDataSource
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
-import dev.than0s.mydiary.core.error.ServerException
+import dev.than0s.aluminium.core.data.remote.error.ServerException
 import java.io.IOException
 import javax.inject.Inject
 

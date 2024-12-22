@@ -8,38 +8,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AppRegistration
-import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.RequestPage
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.AppRegistration
-import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material.icons.outlined.Face
-import androidx.compose.material.icons.outlined.RequestPage
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -48,6 +42,9 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.Screen
+import dev.than0s.aluminium.core.SnackbarController
+import dev.than0s.aluminium.core.asString
+import dev.than0s.aluminium.core.presentation.composable.ObserveAsEvents
 import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
@@ -56,53 +53,73 @@ import dev.than0s.aluminium.features.registration.presentation.screens.registrat
 import dev.than0s.aluminium.features.registration.presentation.screens.registration_requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
-import dev.than0s.aluminium.features.chat.presentation.screen.chat_detail.ChatDetailScreen
-import dev.than0s.aluminium.features.chat.presentation.screen.chat_list.ChatListScreen
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
-import dev.than0s.aluminium.features.post.presentation.screens.posts.SpecificPostsScreen
+import dev.than0s.aluminium.features.profile.presentation.screens.create_profile.CreateProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var viewModel: MainActivityViewModel
-
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AluminiumTheme {
-                val scrollBehavior =
-                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
                 val navController = rememberNavController()
+                val snackbarHostState = remember { SnackbarHostState() }
+
+                SnackbarLogic(snackbarHostState)
+
                 Scaffold(
                     topBar = {
                         AluminiumTopAppBar(
                             navController = navController,
-                            scrollBehavior = scrollBehavior
                         )
                     },
                     snackbarHost = {
                         SnackbarHost(
-                            hostState = viewModel.snackbarHostState
+                            hostState = snackbarHostState
                         )
                     },
                     bottomBar = {
                         AluminiumBottomNavigationBar(navController)
                     },
-                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) { paddingValue ->
                     NavGraphHost(
                         navController = navController,
                         modifier = Modifier.padding(paddingValue)
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SnackbarLogic(
+    snackbarHostState: SnackbarHostState
+) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    ObserveAsEvents(
+        flow = SnackbarController.events,
+        snackbarHostState
+    ) { event ->
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+
+            val result = snackbarHostState.showSnackbar(
+                message = event.message.asString(context),
+                actionLabel = event.action?.name?.asString(context),
+                duration = SnackbarDuration.Long
+            )
+
+            if (result == SnackbarResult.ActionPerformed) {
+                event.action?.action?.invoke()
             }
         }
     }
@@ -163,11 +180,6 @@ private fun NavGraphHost(
                 openScreen = navController::openScreen
             )
         }
-        composable<Screen.SpecificPostsScreen> {
-            SpecificPostsScreen(
-                openScreen = navController::openScreen
-            )
-        }
         composable<Screen.ProfileScreen> {
             ProfileScreen(
                 openScreen = navController::openScreen
@@ -178,13 +190,18 @@ private fun NavGraphHost(
                 openScreen = navController::openScreen
             )
         }
-        composable<Screen.ChatListScreen> {
-            ChatListScreen(
-                openScreen = navController::openScreen
+        composable<Screen.CreateProfileScreen> {
+            CreateProfileScreen(
+                restartApp = navController::restartApp
             )
         }
+        composable<Screen.ChatListScreen> {
+//            ChatListScreen(
+//                openScreen = navController::openScreen
+//            )
+        }
         composable<Screen.ChatDetailScreen> {
-            ChatDetailScreen()
+//            ChatDetailScreen()
         }
     }
 }
@@ -292,7 +309,6 @@ private fun AluminiumBottomNavigationBar(
 @Composable
 private fun AluminiumTopAppBar(
     navController: NavHostController,
-    scrollBehavior: TopAppBarScrollBehavior
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -312,7 +328,7 @@ private fun AluminiumTopAppBar(
                 label = "Chat"
             ),
             TopAppBarItem(
-                uid ="dev.than0s.aluminium.core.Screen.SettingScreen",
+                uid = "dev.than0s.aluminium.core.Screen.SettingScreen",
                 label = "Settings"
             )
         )
@@ -321,7 +337,7 @@ private fun AluminiumTopAppBar(
     val isCurrentScreenHaveTopBar = topAppBarList.any { it.uid == currentRoute }
 
     if (isCurrentScreenHaveTopBar) {
-        MediumTopAppBar(
+        TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.primary,
@@ -329,7 +345,6 @@ private fun AluminiumTopAppBar(
             title = {
                 Text(text = topAppBarList.find { it.uid == currentRoute }?.label ?: "Aluminium")
             },
-            scrollBehavior = scrollBehavior
         )
     }
 }

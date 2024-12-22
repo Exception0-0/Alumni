@@ -19,5 +19,5 @@ fun SignOutContent(
     onEvent: (SignOutEvents) -> Unit,
     restartApp: () -> Unit
 ) {
-    onEvent(SignOutEvents.signOut(onSuccess = restartApp))
+    onEvent(SignOutEvents.SignOut(onSuccess = restartApp))
 }

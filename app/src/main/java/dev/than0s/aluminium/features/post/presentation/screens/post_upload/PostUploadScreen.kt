@@ -7,68 +7,46 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
-import dev.than0s.aluminium.core.composable.AluminiumLoadingElevatedButton
-import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.composable.AluminiumTextField
-import dev.than0s.aluminium.core.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.composable.PostImageModifier
-import dev.than0s.aluminium.features.post.domain.data_class.Post
+import dev.than0s.aluminium.core.asString
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImageSettings
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.PostImageModifier
 import dev.than0s.aluminium.ui.spacing
 
 @Composable
 fun PostUploadScreen(viewModel: PostUploadViewModel = hiltViewModel(), popScreen: () -> Unit) {
     PostUploadScreenContent(
-        post = viewModel.post,
-        onFileUriChange = viewModel::onFileUriChange,
-        onTitleChange = viewModel::onTitleChange,
-        onDescriptionChange = viewModel::onDescriptionChange,
-        onUploadClick = {
-            viewModel.onUploadClick(popScreen)
-        }
+        screenStates = viewModel.screenStatus,
+        onEvent = viewModel::onEvent
     )
 }
 
 @Composable
 private fun PostUploadScreenContent(
-    post: Post,
-    onFileUriChange: (Uri) -> Unit,
-    onTitleChange: (String) -> Unit,
-    onDescriptionChange: (String) -> Unit,
-    onUploadClick: (() -> Unit) -> Unit,
+    screenStates: PostStatus,
+    onEvent: (PostEvents) -> Unit,
 ) {
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
             image?.let {
-                onFileUriChange(it)
+                onEvent(PostEvents.OnFileUriChanged(it))
             }
         }
-
-    var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -88,7 +66,7 @@ private fun PostUploadScreenContent(
                     title = "Post Upload"
                 )
                 AluminiumAsyncImage(
-                    model = post.file,
+                    model = screenStates.post.file,
                     settings = AluminiumAsyncImageSettings.PostAddImage,
                     contentScale = ContentScale.None,
                     modifier = PostImageModifier
@@ -100,29 +78,30 @@ private fun PostUploadScreenContent(
                 )
 
                 AluminiumTextField(
-                    value = post.title,
+                    value = screenStates.post.title,
                     placeholder = "Title",
+                    supportingText = screenStates.titleError?.message?.asString(),
                     onValueChange = {
-                        onTitleChange(it)
+                        onEvent(PostEvents.OnTitleChanged(it))
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 AluminiumTextField(
-                    value = post.description,
+                    value = screenStates.post.description,
                     placeholder = "Description",
+                    supportingText = screenStates.descriptionError?.message?.asString(),
                     onValueChange = {
-                        onDescriptionChange(it)
+                        onEvent(PostEvents.OnDescriptionChanged(it))
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 AluminiumLoadingElevatedButton(
                     label = "Upload",
-                    circularProgressIndicatorState = circularProgressIndicatorState,
+                    circularProgressIndicatorState = screenStates.isLoading,
                     onClick = {
-                        circularProgressIndicatorState = true
-                        onUploadClick { circularProgressIndicatorState = false }
+                        onEvent(PostEvents.OnUploadClick)
                     },
                     modifier = Modifier.align(CenterHorizontally)
                 )
@@ -135,11 +114,7 @@ private fun PostUploadScreenContent(
 @Composable
 private fun PostUploadScreenPreview() {
     PostUploadScreenContent(
-        Post(
-            id = "",
-            title = "Title",
-            description = "asdfklajsdfkl jkldjfklj adklsj fkjasdklfjasdkj f klasdjfljdfjasdlfjasdjfkldajf kladj",
-        ),
-        {}, {}, {}, {},
+        screenStates = PostStatus(),
+        onEvent = {}
     )
 }

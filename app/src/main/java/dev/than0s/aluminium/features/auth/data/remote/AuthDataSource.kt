@@ -2,7 +2,7 @@ package dev.than0s.aluminium.features.auth.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
-import dev.than0s.mydiary.core.error.ServerException
+import dev.than0s.aluminium.core.data.remote.error.ServerException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 

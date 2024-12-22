@@ -9,20 +9,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.Screen
 import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.features.post.domain.data_class.Post
-import dev.than0s.aluminium.features.post.domain.use_cases.AddLikeUseCase
-import dev.than0s.aluminium.features.post.domain.use_cases.RemoveLikeUseCase
-import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
-import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
-import dev.than0s.aluminium.features.profile.domain.data_class.User
-import dev.than0s.aluminium.features.profile.domain.use_cases.GetAboutInfoUseCase
-import dev.than0s.aluminium.features.profile.domain.use_cases.GetContactInfoUseCase
-import dev.than0s.aluminium.features.profile.domain.use_cases.GetUserPostsUseCase
-import dev.than0s.aluminium.features.profile.domain.use_cases.GetUserUseCase
-import dev.than0s.aluminium.features.profile.domain.use_cases.SetContactInfoUseCase
+import dev.than0s.aluminium.core.SnackbarEvent
+import dev.than0s.aluminium.core.UiText
+import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetProfileUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,178 +25,167 @@ class ProfileViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val profileUseCase: GetUserUseCase,
     private val updateProfileUseCase: SetProfileUseCase,
-    private val getContactInfoUseCase: GetContactInfoUseCase,
-    private val setContactInfoUseCase: SetContactInfoUseCase,
-    private val getAboutInfoUseCase: GetAboutInfoUseCase,
-    private val getUserPostsUseCase: GetUserPostsUseCase,
-    private val removeLikeUseCase: RemoveLikeUseCase,
-    private val addLikeUseCase: AddLikeUseCase
 ) : ViewModel() {
-    var userProfile by mutableStateOf(User())
-    var contactInfo by mutableStateOf(ContactInfo())
-    var aboutInfo by mutableStateOf(AboutInfo())
-    var editUserProfile by mutableStateOf(User())
-    var editContactInfo by mutableStateOf(ContactInfo())
-    var postsList by mutableStateOf(emptyList<Post>())
-
     val profileScreenArgs = savedStateHandle.toRoute<Screen.ProfileScreen>()
-
-    var isProfileLoading by mutableStateOf(false)
-    var isContactInfoLoading by mutableStateOf(false)
-    var isAboutInfoLoading by mutableStateOf(false)
-    var isPostsLoading by mutableStateOf(false)
+    var screenState by mutableStateOf(ProfileState())
 
     init {
         loadProfile()
-        getContactInfo()
-        getAboutInfo()
-        getUserPosts()
     }
 
-    fun loadProfile() {
+    private fun loadProfile() {
         viewModelScope.launch {
-            isProfileLoading = true
-            when (val result = profileUseCase.invoke(profileScreenArgs.userId)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
+            screenState = screenState.copy(isLoading = true)
+            when (val result = profileUseCase(profileScreenArgs.userId)) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.uiText ?: UiText.unknownError()
+                        )
+                    )
                 }
 
-                is Either.Right -> result.value?.let {
-                    userProfile = it
-                    editUserProfile = it
+                is Resource.Success -> {
+                    screenState = screenState.copy(
+                        user = result.data!!
+                    )
                 }
             }
-            isProfileLoading = false
+            screenState = screenState.copy(isLoading = false)
         }
     }
 
-    fun getContactInfo() {
+    private fun onUpdateProfileClick() {
         viewModelScope.launch {
-            isContactInfoLoading = true
-            when (val result = getContactInfoUseCase.invoke(profileScreenArgs.userId)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
-                }
+            screenState = screenState.copy(isUpdating = true)
+            val updateProfileResult = updateProfileUseCase(screenState.dialogUser)
 
-                is Either.Right -> result.value.let {
-                    contactInfo = it ?: ContactInfo()
-                    editContactInfo = it ?: ContactInfo()
-                }
+            updateProfileResult.let {
+                screenState = screenState.copy(
+                    firstNameError = it.firstNameError,
+                    lastNameError = it.lastNameError,
+                    bioError = it.bioError,
+                    profileImageError = it.profileImageError,
+                    coverImageError = it.coverImageError
+                )
             }
-            isContactInfoLoading = false
-        }
-    }
 
-    fun getUserPosts() {
-        viewModelScope.launch {
-            isPostsLoading = true
-            when (val result = getUserPostsUseCase.invoke(profileScreenArgs.userId)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
+            when (updateProfileResult.result) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = updateProfileResult.result.uiText ?: UiText.unknownError()
+                        )
+                    )
                 }
 
-                is Either.Right -> {
-                    postsList = result.value
-                }
-            }
-            isPostsLoading = false
-        }
-    }
-
-    fun onLikeClick(postId: String, hasLiked: Boolean, onSuccessfulLike: () -> Unit) {
-        viewModelScope.launch {
-            val useCase = if (hasLiked) removeLikeUseCase else addLikeUseCase
-
-            when (val result = useCase.invoke(postId)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
-                }
-
-                is Either.Right -> {
-                    onSuccessfulLike()
-                }
-            }
-        }
-    }
-
-
-    fun getAboutInfo() {
-        viewModelScope.launch {
-            isAboutInfoLoading = true
-            when (val result = getAboutInfoUseCase.invoke(profileScreenArgs.userId)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
-                }
-
-                is Either.Right -> result.value.let {
-                    aboutInfo = it
-                }
-            }
-            isAboutInfoLoading = false
-        }
-    }
-
-    fun onUpdateProfileClick(onSuccess: () -> Unit) {
-        viewModelScope.launch {
-            when (val result = updateProfileUseCase.invoke(editUserProfile)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
-                }
-
-                is Either.Right -> {
-                    SnackbarController.showSnackbar("Profile updated successfully")
-                    onSuccess()
+                is Resource.Success -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.successfully_profile_update)
+                        )
+                    )
+                    onUpdateProfileDismissRequest()
                     loadProfile()
                 }
+
+                null -> {}
             }
+
+            screenState = screenState.copy(isUpdating = false)
         }
     }
 
-    fun onContactInfoUpdateClick(onSuccess: () -> Unit) {
-        viewModelScope.launch {
-            when (val result = setContactInfoUseCase.invoke(editContactInfo)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
-                }
+    private fun onFirstNameChange(name: String) {
+        screenState = screenState.copy(
+            dialogUser = screenState.dialogUser.copy(firstName = name)
+        )
+    }
 
-                is Either.Right -> {
-                    SnackbarController.showSnackbar("Contact info updated successfully")
-                    onSuccess()
-                    getContactInfo()
-                }
+    private fun onLastNameChange(name: String) {
+        screenState = screenState.copy(
+            dialogUser = screenState.dialogUser.copy(lastName = name)
+        )
+    }
+
+    private fun onBioChange(bio: String) {
+        screenState = screenState.copy(
+            dialogUser = screenState.dialogUser.copy(bio = bio)
+        )
+    }
+
+    private fun onProfileImageChange(image: Uri?) {
+        screenState = screenState.copy(
+            dialogUser = screenState.dialogUser.copy(profileImage = image)
+        )
+    }
+
+    private fun onCoverImageChange(image: Uri?) {
+        screenState = screenState.copy(
+            dialogUser = screenState.dialogUser.copy(coverImage = image)
+        )
+    }
+
+    private fun onUpdateProfileDismissRequest() {
+        screenState = screenState.copy(updateProfileDialog = false)
+    }
+
+    private fun onEditProfileClick() {
+        copyUserToDialog()
+        screenState = screenState.copy(updateProfileDialog = true)
+    }
+
+    private fun copyUserToDialog() {
+        screenState = screenState.copy(
+            dialogUser = screenState.user
+        )
+    }
+
+    private fun onTabChanged(tabIndex: Int) {
+        screenState = screenState.copy(tabSelection = tabIndex)
+    }
+
+    fun onEvent(event: ProfileEvents) {
+        when (event) {
+            is ProfileEvents.OnFirstNameChanged -> {
+                onFirstNameChange(event.name)
+            }
+
+            is ProfileEvents.OnLastNameChanged -> {
+                onLastNameChange(event.name)
+            }
+
+            is ProfileEvents.OnBioChanged -> {
+                onBioChange(event.name)
+            }
+
+            is ProfileEvents.OnProfileUpdateClick -> {
+                onUpdateProfileClick()
+            }
+
+            is ProfileEvents.OnLoadProfile -> {
+                loadProfile()
+            }
+
+            is ProfileEvents.OnCoverImageChanged -> {
+                onCoverImageChange(event.uri)
+            }
+
+            is ProfileEvents.OnEditProfileClick -> {
+                onEditProfileClick()
+            }
+
+            is ProfileEvents.OnProfileImageChanged -> {
+                onProfileImageChange(event.uri)
+            }
+
+            is ProfileEvents.OnUpdateDialogDismissRequest -> {
+                onUpdateProfileDismissRequest()
+            }
+
+            is ProfileEvents.OnTabChanged -> {
+                onTabChanged(event.tabIndex)
             }
         }
-    }
-
-    fun onFirstNameChange(name: String) {
-        editUserProfile = editUserProfile.copy(firstName = name)
-    }
-
-    fun onLastNameChange(name: String) {
-        editUserProfile = editUserProfile.copy(lastName = name)
-    }
-
-    fun onBioChange(bio: String) {
-        editUserProfile = editUserProfile.copy(bio = bio)
-    }
-
-    fun onProfileImageChange(image: Uri) {
-        editUserProfile = editUserProfile.copy(profileImage = image)
-    }
-
-    fun onCoverImageChange(image: Uri) {
-        editUserProfile = editUserProfile.copy(coverImage = image)
-    }
-
-    fun onEmailChange(email: String) {
-        editContactInfo = editContactInfo.copy(email = email)
-    }
-
-    fun onMobileChange(mobile: String) {
-        editContactInfo = editContactInfo.copy(mobile = mobile)
-    }
-
-    fun onSocialHandleChange(handle: String) {
-        editContactInfo = editContactInfo.copy(socialHandles = handle)
     }
 }

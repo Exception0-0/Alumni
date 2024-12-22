@@ -7,12 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.features.post.domain.data_class.Post
-import dev.than0s.aluminium.features.post.domain.use_cases.AddLikeUseCase
+import dev.than0s.aluminium.core.SnackbarEvent
+import dev.than0s.aluminium.core.UiText
 import dev.than0s.aluminium.features.post.domain.use_cases.AddPostUseCase
-import dev.than0s.aluminium.features.post.domain.use_cases.RemoveLikeUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,32 +20,86 @@ import javax.inject.Inject
 class PostUploadViewModel @Inject constructor(
     private val addPostUserCase: AddPostUseCase,
 ) : ViewModel() {
-    var post by mutableStateOf(Post())
+    var screenStatus by mutableStateOf(PostStatus())
 
-    fun onTitleChange(title: String) {
-        post = post.copy(title = title)
+    private fun onTitleChanged(title: String) {
+        screenStatus = screenStatus.copy(
+            post = screenStatus.post.copy(
+                title = title
+            )
+        )
     }
 
-    fun onDescriptionChange(description: String) {
-        post = post.copy(description = description)
+    private fun onDescriptionChanged(description: String) {
+        screenStatus = screenStatus.copy(
+            post = screenStatus.post.copy(
+                description = description
+            )
+        )
     }
 
-    fun onFileUriChange(uri: Uri) {
-        post = post.copy(file = uri)
+    private fun onFileUriChanged(uri: Uri) {
+        screenStatus = screenStatus.copy(
+            post = screenStatus.post.copy(
+                file = uri
+            )
+        )
     }
 
-    fun onUploadClick(onSuccess: () -> Unit) {
+    private fun onUploadClick() {
         viewModelScope.launch {
-            when (val result = addPostUserCase.invoke(post)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
+            screenStatus = screenStatus.copy(isLoading = true)
+
+            val addPostResult = addPostUserCase(screenStatus.post)
+
+            addPostResult.titleError?.let {
+                screenStatus = screenStatus.copy(
+                    titleError = it
+                )
+            }
+            addPostResult.descriptionError?.let {
+                screenStatus = screenStatus.copy(
+                    descriptionError = it
+                )
+            }
+            addPostResult.fileError?.let {
+                SnackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = it.message ?: UiText.unknownError()
+                    )
+                )
+            }
+
+            when (addPostResult.result) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = addPostResult.result.uiText ?: UiText.unknownError()
+                        )
+                    )
                 }
 
-                is Either.Right -> {
-                    SnackbarController.showSnackbar("Post added successfully")
-                    onSuccess()
+                is Resource.Success -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.successfully_post_uploaded)
+                        )
+                    )
                 }
+
+                null -> {}
             }
+
+            screenStatus = screenStatus.copy(isLoading = false)
+        }
+    }
+
+    fun onEvent(event: PostEvents) {
+        when (event) {
+            is PostEvents.OnTitleChanged -> onTitleChanged(event.text)
+            is PostEvents.OnDescriptionChanged -> onDescriptionChanged(event.text)
+            is PostEvents.OnFileUriChanged -> onFileUriChanged(event.uri)
+            is PostEvents.OnUploadClick -> onUploadClick()
         }
     }
 }

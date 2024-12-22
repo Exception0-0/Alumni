@@ -1,17 +1,19 @@
 package dev.than0s.aluminium.features.post.data.data_source
 
-import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.toObjects
+import dev.than0s.aluminium.core.data.remote.COMMENTS
+import dev.than0s.aluminium.core.data.remote.POSTS
+import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
-import dev.than0s.mydiary.core.error.ServerException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface CommentDataSource {
     suspend fun getComments(postId: String): List<Comment>
     suspend fun addComment(comment: Comment)
-    suspend fun removeComment(postId: String, commentId: String)
+    suspend fun removeComment(comment: Comment)
 }
 
 class CommentDataSourceImple @Inject constructor(
@@ -26,20 +28,20 @@ class CommentDataSourceImple @Inject constructor(
                 .document(comment.id)
                 .set(comment)
                 .await()
-        } catch (e: FirebaseException) {
+        } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
     }
 
-    override suspend fun removeComment(postId: String, commentId: String) {
+    override suspend fun removeComment(comment: Comment) {
         try {
             store.collection(POSTS)
-                .document(postId)
+                .document(comment.postId)
                 .collection(COMMENTS)
-                .document(commentId)
+                .document(comment.id)
                 .delete()
                 .await()
-        } catch (e: FirebaseException) {
+        } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
     }
@@ -52,7 +54,7 @@ class CommentDataSourceImple @Inject constructor(
                 .get()
                 .await()
                 .toObjects()
-        } catch (e: Exception) {
+        } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
     }

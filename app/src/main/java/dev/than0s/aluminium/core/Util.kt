@@ -4,6 +4,7 @@ import android.net.Uri
 
 var currentUserId: String? = null
     private set
+
 var currentUserRole: Role? = null
     private set
 

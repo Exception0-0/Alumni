@@ -8,65 +8,51 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer
-import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
-import dev.than0s.aluminium.core.composable.AluminiumDescriptionText
-import dev.than0s.aluminium.core.composable.AluminiumLoadingIconButton
-import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.composable.AluminiumTextField
-import dev.than0s.aluminium.core.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.composable.ProfileImageModifier
-import dev.than0s.aluminium.core.composable.ShimmerBackground
+import dev.than0s.aluminium.core.asString
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImageSettings
+import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingIconButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
+import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.currentUserId
+import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
-import dev.than0s.aluminium.features.post.domain.data_class.User
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun CommentScreen(
@@ -74,34 +60,22 @@ fun CommentScreen(
     openScreen: (Screen) -> Unit
 ) {
     CommentScreenContent(
-        commentList = viewModel.commentsList,
-        currentComment = viewModel.currentComment,
-        currentUserId = currentUserId!!,
-        isCommentsLoading = viewModel.isCommentsLoading,
-        openScreen = openScreen,
-        getUserProfile = viewModel::getUserProfile,
-        onCurrentCommentChange = viewModel::onCurrentCommentChange,
-        onAddCommentClick = viewModel::onAddCommentClick,
-        onRemoveCommentClick = viewModel::onRemoveCommentClick
+        screenState = viewModel.screenState,
+        userMap = viewModel.userMap,
+        onEvents = viewModel::onEvent,
+        openScreen = openScreen
     )
 }
 
 
 @Composable
 private fun CommentScreenContent(
-    commentList: List<Comment>,
-    currentComment: String,
-    currentUserId: String,
-    isCommentsLoading: Boolean,
+    screenState: CommentState,
+    userMap: Map<String, User>,
+    onEvents: (CommentEvents) -> Unit,
     openScreen: (Screen) -> Unit,
-    getUserProfile: (String) -> Flow<User>,
-    onCurrentCommentChange: (String) -> Unit,
-    onAddCommentClick: (() -> Unit) -> Unit,
-    onRemoveCommentClick: (Comment) -> Unit
 ) {
-    var circularProgressIndicatorState by rememberSaveable { mutableStateOf(false) }
-
-    if (isCommentsLoading) {
+    if (screenState.isLoading) {
         ShimmerCommentList()
     } else {
         Scaffold(
@@ -110,18 +84,18 @@ private fun CommentScreenContent(
                     modifier = Modifier.padding(MaterialTheme.spacing.medium)
                 ) {
                     AluminiumTextField(
-                        value = currentComment,
+                        value = screenState.comment.message,
                         placeholder = "Comment",
-                        onValueChange = onCurrentCommentChange,
+                        onValueChange = {
+                            onEvents(CommentEvents.OnCommentChanged(it))
+                        },
+                        supportingText = screenState.commentError?.message?.asString(),
                         trailingIcon = {
                             AluminiumLoadingIconButton(
                                 icon = Icons.AutoMirrored.Rounded.Send,
-                                circularProgressIndicatorState = circularProgressIndicatorState,
+                                circularProgressIndicatorState = screenState.isCommentAdding,
                                 onClick = {
-                                    circularProgressIndicatorState = true
-                                    onAddCommentClick {
-                                        circularProgressIndicatorState = false
-                                    }
+                                    onEvents(CommentEvents.OnAddCommentClick)
                                 },
                             )
                         },
@@ -134,14 +108,11 @@ private fun CommentScreenContent(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
                 modifier = Modifier.padding(contentPadding)
             ) {
-                items(commentList) { comment ->
+                items(screenState.commentList) { comment ->
                     CommentPreview(
                         comment = comment,
-                        isCurrentUser = currentUserId == comment.userId,
-                        getUserProfile = getUserProfile,
-                        onRemoveCommentClick = {
-                            onRemoveCommentClick(comment)
-                        },
+                        userMap = userMap,
+                        onEvent = onEvents,
                         onProfileClick = {
                             openScreen(Screen.ProfileScreen(comment.userId))
                         }
@@ -155,13 +126,12 @@ private fun CommentScreenContent(
 @Composable
 private fun CommentPreview(
     comment: Comment,
-    isCurrentUser: Boolean,
-    getUserProfile: (String) -> Flow<User>,
-    onRemoveCommentClick: () -> Unit,
+    userMap: Map<String, User>,
+    onEvent: (CommentEvents) -> Unit,
     onProfileClick: () -> Unit
 ) {
-
-    val userProfile = getUserProfile(comment.userId).collectAsState(User()).value
+    onEvent(CommentEvents.GetUser(comment.userId))
+    val userProfile = userMap[comment.userId]
 
     AluminiumElevatedCard(
         modifier = Modifier
@@ -177,14 +147,15 @@ private fun CommentPreview(
         ) {
             Row(
                 verticalAlignment = Alignment.Top,
+                modifier = Modifier
+                    .clickable {
+                        onProfileClick()
+                    }
             ) {
                 AluminiumAsyncImage(
-                    model = userProfile.profileImage,
+                    model = userProfile?.profileImage,
                     settings = AluminiumAsyncImageSettings.UserProfile,
                     modifier = ProfileImageModifier.small
-                        .clickable {
-                            onProfileClick()
-                        }
                 )
 
                 Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
@@ -193,7 +164,7 @@ private fun CommentPreview(
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
                 ) {
                     AluminiumTitleText(
-                        title = "${userProfile.firstName} ${userProfile.lastName}",
+                        title = "${userProfile?.firstName} ${userProfile?.lastName}",
                         fontSize = MaterialTheme.textSize.small
                     )
                     AluminiumDescriptionText(
@@ -201,9 +172,11 @@ private fun CommentPreview(
                     )
                 }
             }
-            if (isCurrentUser) {
+            if (comment.id == currentUserId) {
                 CommentMenu(
-                    onRemoveCommentClick = onRemoveCommentClick
+                    onRemoveCommentClick = {
+                        onEvent(CommentEvents.OnCommentRemovedClick(comment))
+                    }
                 )
             }
         }
@@ -253,7 +226,7 @@ private fun CommentMenu(
 }
 
 @Composable
-fun ShimmerCommentCard() {
+private fun ShimmerCommentCard() {
     AluminiumElevatedCard(
         modifier = Modifier
             .padding(horizontal = MaterialTheme.spacing.small)
@@ -293,7 +266,7 @@ fun ShimmerCommentCard() {
 }
 
 @Composable
-fun ShimmerCommentList() {
+private fun ShimmerCommentList() {
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         modifier = Modifier
@@ -309,24 +282,9 @@ fun ShimmerCommentList() {
 @Composable
 private fun CommentScreenPreview() {
     CommentScreenContent(
-        listOf(
-            Comment(
-                id = "",
-                message = "Hey what, don't know any thing about me",
-            ),
-            Comment(
-                id = "",
-                message = "Hey what, don't know any thing about me",
-            ),
-            Comment(
-                id = "",
-                message = "Hey what, don't know any thing about me",
-            )
-        ),
-        "",
-        "",
-        false,
-        {},
-        { emptyFlow() }, {}, {}, {}
+        screenState = CommentState(),
+        userMap = emptyMap(),
+        onEvents = {},
+        openScreen = {}
     )
 }

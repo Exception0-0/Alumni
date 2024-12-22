@@ -16,12 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
-import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.composable.AluminiumLoadingElevatedButton
-import dev.than0s.aluminium.core.composable.AluminiumTextField
-import dev.than0s.aluminium.core.composable.AluminiumTitleText
-import dev.than0s.aluminium.features.auth.domain.data_class.Email
+import dev.than0s.aluminium.core.asString
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.ui.spacing
 
 @Composable
@@ -30,7 +29,6 @@ fun ForgetPasswordScreen(
     popScreen: () -> Unit
 ) {
     ForgetPasswordContent(
-        param = viewModel.param,
         state = viewModel.state,
         onEvent = viewModel::onEvent,
         popScreen = popScreen,
@@ -39,7 +37,6 @@ fun ForgetPasswordScreen(
 
 @Composable
 private fun ForgetPasswordContent(
-    param: Email,
     state: ForgetPasswordState,
     onEvent: (ForgetPasswordEvents) -> Unit,
     popScreen: () -> Unit,
@@ -65,10 +62,12 @@ private fun ForgetPasswordContent(
             }
 
             AluminiumTextField(
-                value = param.email,
+                value = state.email,
                 onValueChange = { newValue ->
-                    onEvent(ForgetPasswordEvents.onEmailChange(newValue))
+                    onEvent(ForgetPasswordEvents.OnEmailChange(newValue))
                 },
+                supportingText = state.emailError?.message?.asString(),
+
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.Mail,
@@ -83,7 +82,7 @@ private fun ForgetPasswordContent(
                 circularProgressIndicatorState = state.isLoading,
                 onClick = {
                     onEvent(
-                        ForgetPasswordEvents.onForgetPasswordClick(
+                        ForgetPasswordEvents.OnForgetPasswordClick(
                             onSuccess = popScreen
                         )
                     )
@@ -97,7 +96,6 @@ private fun ForgetPasswordContent(
 @Composable
 private fun ForgetPasswordPreview() {
     ForgetPasswordContent(
-        param = Email(),
         state = ForgetPasswordState(),
         onEvent = {},
         popScreen = {}

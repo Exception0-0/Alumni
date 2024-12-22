@@ -4,13 +4,17 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
-import dev.than0s.mydiary.core.error.ServerException
+import com.google.firebase.firestore.FirebaseFirestoreException
+import dev.than0s.aluminium.core.data.remote.COLLEGE_INFO
+import dev.than0s.aluminium.core.data.remote.PROFILE
+import dev.than0s.aluminium.core.data.remote.error.ServerException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface AccountDataSource {
     val currentUserId: String?
     suspend fun getUserRole(userId: String): String
+    suspend fun hasUserProfileCreated(userId: String): Boolean
 }
 
 class AccountDataSourceImple @Inject constructor(
@@ -28,18 +32,26 @@ class AccountDataSourceImple @Inject constructor(
 
     override suspend fun getUserRole(userId: String): String {
         return try {
-            store.collection(USER_COLLEGE_INFO)
+            store.collection(COLLEGE_INFO)
                 .document(userId)
                 .get()
                 .await()
                 .get("role")
                 .toString()
-        } catch (e: FirebaseException) {
+        } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
     }
 
-    companion object {
-        const val USER_COLLEGE_INFO = "college_info"
+    override suspend fun hasUserProfileCreated(userId: String): Boolean {
+        return try {
+            store.collection(PROFILE)
+                .document(userId)
+                .get()
+                .await()
+                .exists()
+        } catch (e: FirebaseFirestoreException) {
+            throw ServerException(e.message.toString())
+        }
     }
 }

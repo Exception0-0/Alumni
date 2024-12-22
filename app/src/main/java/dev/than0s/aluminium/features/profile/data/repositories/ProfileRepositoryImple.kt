@@ -1,67 +1,40 @@
 package dev.than0s.aluminium.features.profile.data.repositories
 
-import android.net.Uri
-import dev.than0s.aluminium.core.Either
-import dev.than0s.aluminium.core.error.Failure
-import dev.than0s.aluminium.features.post.domain.data_class.Post
-import dev.than0s.aluminium.features.profile.domain.data_class.User
-import dev.than0s.aluminium.features.profile.data.data_source.ProfileDataSource
+import dev.than0s.aluminium.core.Resource
+import dev.than0s.aluminium.core.SimpleResource
+import dev.than0s.aluminium.core.UiText
+import dev.than0s.aluminium.core.data.remote.error.ServerException
+import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.features.profile.data.remote.ProfileDataSource
 import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
-import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
-import dev.than0s.mydiary.core.error.ServerException
 import javax.inject.Inject
 
 class ProfileRepositoryImple @Inject constructor(private val dataSource: ProfileDataSource) :
     ProfileRepository {
 
-    override suspend fun getUserProfile(userId: String): Either<Failure, User?> {
-        return try {
-            Either.Right(dataSource.getUserProfile(userId))
-        } catch (e: ServerException) {
-            Either.Left(Failure(e.message))
-        }
-    }
-
-    override suspend fun setUserProfile(profile: User): Either<Failure, Unit> {
+    override suspend fun setUserProfile(profile: User): SimpleResource {
         return try {
             dataSource.setUserProfile(profile)
-            Either.Right(Unit)
+            Resource.Success(Unit)
         } catch (e: ServerException) {
-            Either.Left(Failure(e.message))
+            Resource.Error(UiText.DynamicString(e.message))
         }
     }
 
-    override suspend fun setContactInfo(contactInfo: ContactInfo): Either<Failure, Unit> {
+    override suspend fun getAboutInfo(userId: String): Resource<AboutInfo> {
         return try {
-            dataSource.setContactInfo(contactInfo)
-            Either.Right(Unit)
+            Resource.Success(dataSource.getAboutInfo(userId))
         } catch (e: ServerException) {
-            Either.Left(Failure(e.message))
+            Resource.Error(UiText.DynamicString(e.message))
         }
     }
 
-    override suspend fun getContactInfo(userId: String): Either<Failure, ContactInfo?> {
+    override suspend fun getUserProfile(userId: String): Resource<User> {
         return try {
-            Either.Right(dataSource.getContactInfo(userId))
+            Resource.Success(dataSource.getUserProfile(userId))
         } catch (e: ServerException) {
-            Either.Left(Failure(e.message))
-        }
-    }
-
-    override suspend fun getAboutInfo(userId: String): Either<Failure, AboutInfo> {
-        return try {
-            Either.Right(dataSource.getAboutInfo(userId))
-        } catch (e: ServerException) {
-            Either.Left(Failure(e.message))
-        }
-    }
-
-    override suspend fun getUserPosts(userId: String): Either<Failure, List<Post>> {
-        return try {
-            Either.Right(dataSource.getUserPosts(userId))
-        } catch (e: Exception) {
-            Either.Left(Failure(e.message.toString()))
+            Resource.Error(UiText.DynamicString(e.message))
         }
     }
 }

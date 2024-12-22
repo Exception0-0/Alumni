@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -36,11 +35,11 @@ import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.composable.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
-import dev.than0s.aluminium.features.profile.domain.data_class.User
+import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -50,52 +49,49 @@ fun SettingScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     openScreen: (Screen) -> Unit,
 ) {
+    initOptionList(openScreen)
     SettingScreenContent(
-        userProfile = viewModel.userProfile,
-        isProfileLoading = viewModel.isProfileLoading,
+        screenState = viewModel.screenState,
+        onEvent = viewModel::onEvent,
         openScreen = openScreen,
     )
 }
 
+fun initOptionList(openScreen: (Screen) -> Unit) {
+    settingsOptionList = listOf(
+        if (currentUserRole != Role.Admin) {
+            SettingsOptions(
+                title = "Add Post",
+                icon = Icons.Default.AddAPhoto,
+                onClick = {
+                    openScreen(Screen.PostUploadScreen)
+                }
+            )
+        } else
+        SettingsOptions(
+            title = "Security",
+            icon = Icons.Default.Security,
+            onClick = {
+
+            }
+        ),
+        SettingsOptions(
+            title = "Log Out",
+            icon = Icons.AutoMirrored.Filled.ExitToApp,
+            onClick = {
+                openScreen(Screen.SignOutScreen)
+            }
+        )
+    )
+}
+
+
 @Composable
 private fun SettingScreenContent(
-    userProfile: User,
-    isProfileLoading: Boolean,
+    screenState: SettingsState,
+    onEvent: (SettingsEvents) -> Unit,
     openScreen: (Screen) -> Unit,
 ) {
-
-    val listOfSettingsOptions = mutableListOf<SettingsOptions>()
-    listOfSettingsOptions.apply {
-        if (currentUserRole != Role.Admin) {
-            add(
-                SettingsOptions(
-                    title = "Add Post",
-                    icon = Icons.Default.AddAPhoto,
-                    onClick = {
-                        openScreen(Screen.PostUploadScreen)
-                    }
-                )
-            )
-        }
-        add(
-            SettingsOptions(
-                title = "Security",
-                icon = Icons.Default.Security,
-                onClick = {
-
-                }
-            )
-        )
-        add(
-            SettingsOptions(
-                title = "Log Out",
-                icon = Icons.AutoMirrored.Filled.ExitToApp,
-                onClick = {
-                    openScreen(Screen.SignOutScreen)
-                }
-            )
-        )
-    }
 
     Surface {
         Column(
@@ -109,13 +105,13 @@ private fun SettingScreenContent(
 
             if (currentUserRole != Role.Admin) {
                 ProfileCard(
-                    userProfile = userProfile,
-                    isProfileLoading = isProfileLoading,
+                    userProfile = screenState.user,
+                    isProfileLoading = screenState.isLoading,
                     openScreen = openScreen,
                 )
             }
 
-            listOfSettingsOptions.forEach { option ->
+            settingsOptionList.forEach { option ->
 
                 AluminiumElevatedCard(
                     onClick = {
@@ -224,6 +220,8 @@ fun ShimmerProfileCard() {
     }
 }
 
+var settingsOptionList: List<SettingsOptions> = emptyList()
+
 data class SettingsOptions(
     val title: String,
     val icon: ImageVector,
@@ -234,12 +232,8 @@ data class SettingsOptions(
 @Composable
 private fun SettingScreenPreview() {
     SettingScreenContent(
-        User(
-            firstName = "Than0s",
-            lastName = "Op",
-            bio = "Hi I'm Than0s"
-        ),
-        false,
-        {}
+        screenState = SettingsState(),
+        onEvent = {},
+        openScreen = {}
     )
 }

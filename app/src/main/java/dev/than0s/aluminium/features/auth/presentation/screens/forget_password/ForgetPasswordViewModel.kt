@@ -6,9 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.features.auth.domain.data_class.Email
+import dev.than0s.aluminium.core.SnackbarEvent
+import dev.than0s.aluminium.core.UiText
 import dev.than0s.aluminium.features.auth.domain.use_cases.ForgetPasswordUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,46 +18,60 @@ import javax.inject.Inject
 @HiltViewModel
 class ForgetPasswordViewModel @Inject constructor(private val useCase: ForgetPasswordUseCase) :
     ViewModel() {
-    var param by mutableStateOf(Email())
     var state by mutableStateOf(ForgetPasswordState())
 
     private fun onForgetPasswordClick(
         onSuccess: () -> Unit,
-        onComplete: () -> Unit,
     ) {
-//        viewModelScope.launch {
-//            when (val result = useCase.invoke(param)) {
-//                is Either.Left -> {
-//                    SnackbarController.showSnackbar(result.value.message)
-//                }
-//
-//                is Either.Right -> {
-//                    SnackbarController.showSnackbar("successfully forget password")
-//                    onSuccess()
-//                }
-//            }
-//            onComplete()
-//        }
+        viewModelScope.launch {
+            val forgetPasswordResult = useCase(state.email)
+
+            forgetPasswordResult.emailError?.let {
+                state = state.copy(
+                    emailError = it
+                )
+            }
+
+            when (forgetPasswordResult.result) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = forgetPasswordResult.result.uiText ?: UiText.unknownError()
+                        )
+                    )
+                }
+
+                is Resource.Success -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.forget_password_success)
+                        )
+                    )
+                    onSuccess()
+                }
+
+                null -> {}
+            }
+        }
     }
 
-    private fun onEmailChange(value: String) {
-        param = param.copy(email = value)
+    private fun onEmailChange(email: String) {
+        state = state.copy(email = email)
     }
 
     fun onEvent(
         event: ForgetPasswordEvents
     ) {
         when (event) {
-            is ForgetPasswordEvents.onForgetPasswordClick -> {
+            is ForgetPasswordEvents.OnForgetPasswordClick -> {
                 onForgetPasswordClick(
-                    onSuccess = event.onSuccess,
-                    onComplete = event.onComplete
+                    onSuccess = event.onSuccess
                 )
             }
 
-            is ForgetPasswordEvents.onEmailChange -> {
+            is ForgetPasswordEvents.OnEmailChange -> {
                 onEmailChange(
-                    value = event.email
+                    email = event.email
                 )
             }
         }

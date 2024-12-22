@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -31,18 +30,13 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,22 +46,23 @@ import coil.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
-import dev.than0s.aluminium.core.composable.AluminiumDescriptionText
-import dev.than0s.aluminium.core.composable.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.composable.AluminiumElevatedButton
-import dev.than0s.aluminium.core.composable.AluminiumTextField
-import dev.than0s.aluminium.core.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.composable.CoverImageModifier
-import dev.than0s.aluminium.core.composable.ProfileImageModifier
-import dev.than0s.aluminium.core.composable.ShimmerBackground
-import dev.than0s.aluminium.core.composable.ShimmerCircularBackground
+import dev.than0s.aluminium.core.asString
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImageSettings
+import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
+import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.ShimmerCircularBackground
 import dev.than0s.aluminium.core.currentUserId
-import dev.than0s.aluminium.features.post.domain.data_class.Post
-import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
-import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
-import dev.than0s.aluminium.features.profile.domain.data_class.User
+import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
+import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
+import dev.than0s.aluminium.features.profile.presentation.screens.about.AboutScreen
+import dev.than0s.aluminium.features.profile.presentation.screens.contact.ContactScreen
+import dev.than0s.aluminium.features.profile.presentation.screens.post.PostsScreen
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
@@ -78,82 +73,74 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     openScreen: (Screen) -> Unit
 ) {
+    initTabItemList(
+        userId = viewModel.profileScreenArgs.userId,
+        openScreen = openScreen
+    )
+
     ProfileScreenContent(
         userId = viewModel.profileScreenArgs.userId,
-        userProfile = viewModel.userProfile,
-        contactInfo = viewModel.contactInfo,
-        aboutInfo = viewModel.aboutInfo,
-        postList = viewModel.postsList,
-        isProfileLoading = viewModel.isProfileLoading,
-        isContactsLoading = viewModel.isContactInfoLoading,
-        isAboutLoading = viewModel.isAboutInfoLoading,
-        isPostsLoading = viewModel.isPostsLoading,
-        editUserProfile = viewModel.editUserProfile,
-        editContactInfo = viewModel.editContactInfo,
-        openScreen = openScreen,
-        onLikeClick = viewModel::onLikeClick,
-        onUpdateProfileClick = viewModel::onUpdateProfileClick,
-        onFirstNameChange = viewModel::onFirstNameChange,
-        onLastNameChange = viewModel::onLastNameChange,
-        onBioChange = viewModel::onBioChange,
-        onProfileImageChange = viewModel::onProfileImageChange,
-        onCoverImageChange = viewModel::onCoverImageChange,
-        onEmailChange = viewModel::onEmailChange,
-        onMobileChange = viewModel::onMobileChange,
-        onSocialHandleChange = viewModel::onSocialHandleChange,
-        onContactUpdateClick = viewModel::onContactInfoUpdateClick
+        screenState = viewModel.screenState,
+        onEvent = viewModel::onEvent,
+        openScreen = openScreen
+    )
+}
+
+fun initTabItemList(
+    userId: String,
+    openScreen: (Screen) -> Unit
+) {
+    tabItemList = listOf(
+        TabItem(
+            title = "About",
+            selectedIcon = Icons.Filled.Info,
+            unselectedIcon = Icons.Outlined.Info,
+            screen = {
+                AboutScreen(userId = userId)
+            }
+        ),
+        TabItem(
+            title = "Contacts",
+            selectedIcon = Icons.Filled.AccountBox,
+            unselectedIcon = Icons.Outlined.AccountBox,
+            screen = {
+                ContactScreen(userId = userId)
+            }
+        ),
+        TabItem(
+            title = "Posts",
+            selectedIcon = Icons.Filled.GridView,
+            unselectedIcon = Icons.Outlined.GridView,
+            screen = {
+                PostsScreen(
+                    userId = userId,
+                    openScreen = openScreen
+                )
+            }
+        ),
     )
 }
 
 @Composable
 private fun ProfileScreenContent(
     userId: String,
-    userProfile: User,
-    contactInfo: ContactInfo,
-    aboutInfo: AboutInfo,
-    isProfileLoading: Boolean,
-    isContactsLoading: Boolean,
-    isAboutLoading: Boolean,
-    isPostsLoading: Boolean,
-    postList: List<Post>,
-    editUserProfile: User,
-    editContactInfo: ContactInfo,
-    openScreen: (Screen) -> Unit,
-    onLikeClick: (String, Boolean, () -> Unit) -> Unit,
-    onUpdateProfileClick: (() -> Unit) -> Unit,
-    onFirstNameChange: (String) -> Unit,
-    onLastNameChange: (String) -> Unit,
-    onBioChange: (String) -> Unit,
-    onProfileImageChange: (Uri) -> Unit,
-    onCoverImageChange: (Uri) -> Unit,
-    onEmailChange: (String) -> Unit,
-    onMobileChange: (String) -> Unit,
-    onSocialHandleChange: (String) -> Unit,
-    onContactUpdateClick: (() -> Unit) -> Unit
+    screenState: ProfileState,
+    onEvent: (ProfileEvents) -> Unit,
+    openScreen: (Screen) -> Unit
 ) {
 
-    var updateProfileDialogState by rememberSaveable { mutableStateOf(false) }
-
-    if (updateProfileDialogState) {
+    if (screenState.updateProfileDialog) {
         UpdateProfileDialog(
-            userProfile = editUserProfile,
-            onUpdateProfileClick = onUpdateProfileClick,
-            onFirstNameChange = onFirstNameChange,
-            onLastNameChange = onLastNameChange,
-            onBioChange = onBioChange,
-            onProfileImageChange = onProfileImageChange,
-            onCoverImageChange = onCoverImageChange,
-            onDismiss = {
-                updateProfileDialogState = false
-            },
+            screenState = screenState,
+            onEvent = onEvent
         )
     }
 
-    if (isProfileLoading) {
+    if (screenState.isLoading) {
         ShimmerCoverImage()
     } else {
         AsyncImage(
-            model = userProfile.coverImage,
+            model = screenState.user.coverImage,
             contentDescription = "Cover Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -169,27 +156,27 @@ private fun ProfileScreenContent(
             .padding(MaterialTheme.spacing.medium)
             .padding(top = MaterialTheme.spacing.extraLarge)
     ) {
-        if (isProfileLoading) {
+        if (screenState.isLoading) {
             ShimmerProfile()
         } else {
             AluminiumAsyncImage(
-                model = userProfile.profileImage,
+                model = screenState.user.profileImage,
                 settings = AluminiumAsyncImageSettings.UserProfile,
                 modifier = ProfileImageModifier.large
             )
             AluminiumTitleText(
-                title = "${userProfile.firstName} ${userProfile.lastName}",
+                title = "${screenState.user.firstName} ${screenState.user.lastName}",
                 fontSize = MaterialTheme.textSize.large,
             )
             AluminiumDescriptionText(
-                description = userProfile.bio,
+                description = screenState.user.bio,
             )
 
             if (userId == currentUserId) {
                 AluminiumElevatedButton(
                     label = "Edit Profile",
                     onClick = {
-                        updateProfileDialogState = true
+                        onEvent(ProfileEvents.OnEditProfileClick)
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -205,78 +192,34 @@ private fun ProfileScreenContent(
         }
 
         ProfileTabRow(
-            userId = userId,
-            tabItems = listOf(
-                TabItem(
-                    title = "Contacts",
-                    selectedIcon = Icons.Filled.AccountBox,
-                    unselectedIcon = Icons.Outlined.AccountBox,
-                    screen = {
-                        ContactsTabContent(
-                            isCurrentUser = userId == currentUserId,
-                            contactInfo = contactInfo,
-                            isContactsLoading = isContactsLoading,
-                            editContactInfo = editContactInfo,
-                            onEmailChange = onEmailChange,
-                            onMobileChange = onMobileChange,
-                            onSocialHandleChange = onSocialHandleChange,
-                            onUpdateContactClick = onContactUpdateClick
-                        )
-                    }
-                ),
-                TabItem(
-                    title = "About",
-                    selectedIcon = Icons.Filled.Info,
-                    unselectedIcon = Icons.Outlined.Info,
-                    screen = {
-                        AboutTabContent(
-                            aboutInfo = aboutInfo,
-                            isAboutLoading = isAboutLoading,
-                        )
-                    }
-                ),
-                TabItem(
-                    title = "Posts",
-                    selectedIcon = Icons.Outlined.GridView,
-                    unselectedIcon = Icons.Filled.GridView,
-                    screen = {
-                        PostsTabScreen(
-                            postsList = postList,
-                            openScreen = openScreen,
-                            onLikeClick = onLikeClick,
-                            isPostsLoading = isPostsLoading
-                        )
-                    }
-                )
-            ),
-            openScreen = openScreen,
+            tabItems = tabItemList,
+            screenState = screenState,
+            onEvent = onEvent
         )
     }
 }
 
 @Composable
 private fun ProfileTabRow(
-    userId: String,
     tabItems: List<TabItem>,
-    openScreen: (Screen) -> Unit
+    screenState: ProfileState,
+    onEvent: (ProfileEvents) -> Unit
 ) {
-    var tabRowStatus by rememberSaveable { mutableIntStateOf(0) }
-
     TabRow(
-        selectedTabIndex = tabRowStatus
+        selectedTabIndex = screenState.tabSelection
     ) {
         tabItems.forEachIndexed { index, tabItem ->
             Tab(
-                selected = index == tabRowStatus,
+                selected = index == screenState.tabSelection,
                 onClick = {
-                    tabRowStatus = index
+                    onEvent(ProfileEvents.OnTabChanged(index))
                 },
                 text = {
                     Text(text = tabItem.title)
                 },
                 icon = {
                     Icon(
-                        imageVector = if (index == tabRowStatus) tabItem.selectedIcon else tabItem.unselectedIcon,
+                        imageVector = if (index == screenState.tabSelection) tabItem.selectedIcon else tabItem.unselectedIcon,
                         contentDescription = tabItem.title
                     )
                 }
@@ -291,49 +234,43 @@ private fun ProfileTabRow(
                 vertical = MaterialTheme.spacing.large
             )
     ) {
-        tabItems[tabRowStatus].screen.invoke()
+        tabItems[screenState.tabSelection].screen.invoke()
     }
 }
 
 
 @Composable
 private fun UpdateProfileDialog(
-    userProfile: User,
-    onUpdateProfileClick: (() -> Unit) -> Unit,
-    onFirstNameChange: (String) -> Unit,
-    onLastNameChange: (String) -> Unit,
-    onBioChange: (String) -> Unit,
-    onProfileImageChange: (Uri) -> Unit,
-    onCoverImageChange: (Uri) -> Unit,
-    onDismiss: () -> Unit,
+    screenState: ProfileState,
+    onEvent: (ProfileEvents) -> Unit,
 ) {
-    val imageSelectionState = mutableMapOf(
-        COVER_IMAGE to false,
-        PROFILE_IMAGE to false,
-    )
-
-    var circularProgressState by rememberSaveable { mutableStateOf(false) }
-
-    val launcher =
-        rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetContent()
+    val imageSelectionState = rememberSaveable {
+        mutableMapOf(
+            COVER_IMAGE to false,
+            PROFILE_IMAGE to false,
         )
-        { imageUri ->
-            imageUri?.let {
-                imageSelectionState.let { map ->
-                    if (map[COVER_IMAGE]!!) {
-                        onCoverImageChange(it)
-                        map[COVER_IMAGE] = false
-                    } else if (map[PROFILE_IMAGE]!!) {
-                        onProfileImageChange(it)
-                        map[PROFILE_IMAGE] = false
-                    }
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { imageUri ->
+        imageUri?.let {
+            imageSelectionState.let { map ->
+                if (map[COVER_IMAGE]!!) {
+                    onEvent(ProfileEvents.OnCoverImageChanged(it))
+                    map[COVER_IMAGE] = false
+                } else if (map[PROFILE_IMAGE]!!) {
+                    onEvent(ProfileEvents.OnProfileImageChanged(it))
+                    map[PROFILE_IMAGE] = false
                 }
             }
         }
+    }
 
     Dialog(
-        onDismissRequest = onDismiss
+        onDismissRequest = {
+            onEvent(ProfileEvents.OnUpdateDialogDismissRequest)
+        }
     ) {
         Surface(
             shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
@@ -349,7 +286,7 @@ private fun UpdateProfileDialog(
                     fontWeight = FontWeight.W900
                 )
                 AsyncImage(
-                    model = userProfile.coverImage,
+                    model = screenState.dialogUser.coverImage,
                     contentDescription = "user profile image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -367,7 +304,7 @@ private fun UpdateProfileDialog(
                 ) {
 
                     AsyncImage(
-                        model = userProfile.profileImage,
+                        model = screenState.dialogUser.profileImage,
                         contentDescription = "user profile image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -382,20 +319,32 @@ private fun UpdateProfileDialog(
                         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
                     ) {
                         AluminiumTextField(
-                            value = userProfile.firstName,
-                            onValueChange = onFirstNameChange,
+                            value = screenState.dialogUser.firstName,
+                            onValueChange = {
+                                onEvent(ProfileEvents.OnFirstNameChanged(it))
+                            },
+                            enable = !screenState.isUpdating,
+                            supportingText = screenState.firstNameError?.message?.asString(),
                             placeholder = "First Name",
                         )
                         AluminiumTextField(
-                            value = userProfile.lastName,
-                            onValueChange = onLastNameChange,
+                            value = screenState.dialogUser.lastName,
+                            enable = !screenState.isUpdating,
+                            onValueChange = {
+                                onEvent(ProfileEvents.OnLastNameChanged(it))
+                            },
+                            supportingText = screenState.lastNameError?.message?.asString(),
                             placeholder = "Last Name"
                         )
                     }
                 }
                 AluminiumTextField(
-                    value = userProfile.bio,
-                    onValueChange = onBioChange,
+                    value = screenState.dialogUser.bio,
+                    onValueChange = {
+                        onEvent(ProfileEvents.OnBioChanged(it))
+                    },
+                    enable = !screenState.isUpdating,
+                    supportingText = screenState.bioError?.message?.asString(),
                     placeholder = "Bio",
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -403,19 +352,17 @@ private fun UpdateProfileDialog(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(onClick = onDismiss) {
+                    TextButton(onClick = {
+                        onEvent(ProfileEvents.OnUpdateDialogDismissRequest)
+                    }) {
                         Text(text = "Cancel")
                     }
 
                     AluminiumLoadingTextButton(
                         label = "Update",
-                        circularProgressIndicatorState = circularProgressState,
+                        circularProgressIndicatorState = screenState.isUpdating,
                         onClick = {
-                            circularProgressState = true
-                            onUpdateProfileClick {
-                                circularProgressState = false
-                                onDismiss()
-                            }
+                            onEvent(ProfileEvents.OnProfileUpdateClick)
                         }
                     )
                 }
@@ -461,6 +408,8 @@ private fun ShimmerProfile() {
     }
 }
 
+var tabItemList: List<TabItem> = emptyList()
+
 data class TabItem(
     val title: String,
     val selectedIcon: ImageVector,
@@ -468,39 +417,14 @@ data class TabItem(
     val screen: @Composable () -> Unit
 )
 
+
 @Preview(showSystemUi = true)
 @Composable
 private fun ProfileScreenPreview() {
     ProfileScreenContent(
         userId = "",
-        User(
-            firstName = "Than0s",
-            lastName = "Op",
-            bio = "Hi I'm Than0s, nice to meet you"
-        ),
-        ContactInfo(
-            email = "thanosop150@gmail.com",
-            mobile = "+91-1234567890"
-        ),
-        AboutInfo(),
-        true,
-        false,
-        false,
-        false,
-        emptyList(),
-        User(
-            firstName = "Than0s",
-            lastName = "Op",
-            bio = "Hi I'm Than0s, nice to meet you"
-        ),
-        ContactInfo(
-            email = "thanosop150@gmail.com",
-            mobile = "+91-1234567890"
-        ),
-        {}, { _, _, _ -> }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+        openScreen = {},
+        screenState = ProfileState(),
+        onEvent = {}
     )
 }
-
-
-private const val COVER_IMAGE = "cover_image"
-private const val PROFILE_IMAGE = "profile_image"

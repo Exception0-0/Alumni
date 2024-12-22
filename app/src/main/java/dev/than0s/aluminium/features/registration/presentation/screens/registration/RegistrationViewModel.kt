@@ -7,75 +7,158 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Course
-import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
+import dev.than0s.aluminium.core.SnackbarEvent
+import dev.than0s.aluminium.core.UiText
 import dev.than0s.aluminium.features.registration.domain.use_cases.SubmitRegistrationUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegistrationViewModel @Inject constructor
-    (
+class RegistrationViewModel @Inject constructor(
     private val registerUseCase: SubmitRegistrationUseCase
 ) :
     ViewModel() {
-    var param by mutableStateOf(RegistrationForm())
+    var screenState by mutableStateOf(RegistrationState())
 
-    fun onEmailChange(email: String) {
-        param = param.copy(email = email)
+
+    private fun onEmailChange(email: String) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                email = email
+            )
+        )
     }
 
-    fun onRoleChange(category: Role) {
-        param = param.copy(role = category)
+    private fun onRoleChange(category: Role) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                role = category
+            )
+        )
     }
 
-    fun onCollegeIdChange(rollNo: String) {
-        param = param.copy(collegeId = rollNo)
+    private fun onCollegeIdChange(rollNo: String) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                collegeId = rollNo
+            )
+        )
     }
 
-    fun onFirstNameChange(firstName: String) {
-        param = param.copy(firstName = firstName)
+    private fun onFirstNameChange(firstName: String) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                firstName = firstName
+            )
+        )
     }
 
-    fun onMiddleNameChange(middleName: String) {
-        param = param.copy(middleName = middleName)
+    private fun onMiddleNameChange(middleName: String) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                middleName = middleName
+            )
+        )
     }
 
-    fun onLastNameChange(lastName: String) {
-        param = param.copy(lastName = lastName)
+    private fun onLastNameChange(lastName: String) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                lastName = lastName
+            )
+        )
     }
 
-    fun onBatchFromChange(from: String) {
-        param = param.copy(batchFrom = from)
+    private fun onBatchFromChange(from: String) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                batchFrom = from
+            )
+        )
     }
 
-    fun onBatchToChange(to: String) {
-        param = param.copy(batchTo = to)
+    private fun onBatchToChange(to: String) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                batchTo = to
+            )
+        )
     }
 
-    fun onCollegeIdChange(uri: Uri?) {
-        param = param.copy(idCardImage = uri)
+    private fun onCollegeIdCardChange(uri: Uri?) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                idCardImage = uri
+            )
+        )
     }
 
-    fun onCourseChange(course: Course) {
-        param = param.copy(course = course)
+    private fun onCourseChange(course: Course) {
+        screenState = screenState.copy(
+            screenState.registrationForm.copy(
+                course = course
+            )
+        )
     }
 
-    fun onRegisterClick(onCompleted: () -> Unit) {
+    private fun onRegisterClick() {
         viewModelScope.launch {
-            when (val result = registerUseCase.invoke(param)) {
-                is Either.Left -> {
-                    SnackbarController.showSnackbar(result.value.message)
+            screenState = screenState.copy(isLoading = true)
+
+            val registrationResult = registerUseCase(screenState.registrationForm)
+
+            screenState = screenState.copy(
+                emailError = registrationResult.emailError,
+                batchFromError = registrationResult.batchFromError,
+                batchToError = registrationResult.batchToError,
+                firstNameError = registrationResult.firstNameError,
+                lastNameError = registrationResult.lastNameError,
+                collageIdError = registrationResult.rollNoError,
+                middleNameError = registrationResult.middleNameError,
+            )
+
+            when (registrationResult.result) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = registrationResult.result.uiText ?: UiText.unknownError()
+                        )
+                    )
                 }
 
-                is Either.Right -> {
-                    SnackbarController.showSnackbar("Registration completed successfully")
+                is Resource.Success -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.successfully_register)
+                        )
+                    )
                 }
+
+                null -> {}
             }
-            onCompleted()
+
+            screenState = screenState.copy(isLoading = false)
+        }
+    }
+
+    fun onEvent(event: RegistrationEvents) {
+        when (event) {
+            is RegistrationEvents.OnEmailChange -> onEmailChange(event.email)
+            is RegistrationEvents.OnRoleChange -> onRoleChange(event.role)
+            is RegistrationEvents.OnCollegeIdChange -> onCollegeIdChange(event.rollNo)
+            is RegistrationEvents.OnFirstNameChange -> onFirstNameChange(event.firstName)
+            is RegistrationEvents.OnMiddleNameChange -> onMiddleNameChange(event.middleName)
+            is RegistrationEvents.OnLastNameChange -> onLastNameChange(event.lastName)
+            is RegistrationEvents.OnBatchFromChange -> onBatchFromChange(event.from)
+            is RegistrationEvents.OnBatchToChange -> onBatchToChange(event.to)
+            is RegistrationEvents.OnCourseChange -> onCourseChange(event.course)
+            is RegistrationEvents.OnCollegeIdCardChange -> onCollegeIdCardChange(event.idCard)
+            is RegistrationEvents.OnRegisterClick -> onRegisterClick()
         }
     }
 }

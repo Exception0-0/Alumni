@@ -1,32 +1,42 @@
 package dev.than0s.aluminium.features.splash.data.repositories
 
-import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.Role
-import dev.than0s.aluminium.core.error.Failure
+import dev.than0s.aluminium.core.UiText
+import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSource
 import dev.than0s.aluminium.features.splash.domain.data_class.CurrentUser
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
-import dev.than0s.mydiary.core.error.ServerException
 import javax.inject.Inject
 
 class AccountRepositoryImple @Inject constructor(private val dataSource: AccountDataSource) :
     AccountRepository {
-    override suspend fun getCurrentUser(): Either<Failure, CurrentUser> {
+    override suspend fun getCurrentUser(): Resource<CurrentUser> {
         return try {
             val userId = dataSource.currentUserId
-            var role: String? = null
-            if (userId != null) {
-                role = dataSource.getUserRole(userId)
+            val role = userId?.let {
+                dataSource.getUserRole(it)
             }
-            if(role != null){
-                Either.Right(CurrentUser(userId, Role.valueOf(role)))
-            }
-            else{
-                Either.Right(CurrentUser(userId, null))
-            }
+
+            Resource.Success(
+                CurrentUser(userId, role?.let { Role.valueOf(it) })
+            )
         } catch (e: ServerException) {
-            Either.Left(Failure(e.message))
+            Resource.Error(
+                uiText = UiText.DynamicString(e.message)
+            )
         }
     }
 
+    override suspend fun hasUserProfileCreated(userId: String): Resource<Boolean> {
+        return try {
+            Resource.Success(
+                dataSource.hasUserProfileCreated(userId)
+            )
+        } catch (e: ServerException) {
+            Resource.Error(
+                uiText = UiText.DynamicString(e.message)
+            )
+        }
+    }
 }

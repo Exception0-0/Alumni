@@ -1,49 +1,77 @@
 package dev.than0s.aluminium.features.auth.presentation.screens.sign_in
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.than0s.aluminium.core.Either
+import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SnackbarController
+import dev.than0s.aluminium.core.SnackbarEvent
+import dev.than0s.aluminium.core.UiText
 import dev.than0s.aluminium.features.auth.domain.use_cases.SignInUseCase
-import dev.than0s.aluminium.features.auth.domain.data_class.EmailAuthParam
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCase) :
     ViewModel() {
-    val signInParam = mutableStateOf(EmailAuthParam())
-    val signInState = mutableStateOf(SignInState())
+    var screenState by mutableStateOf(SignInState())
 
     private fun onEmailChange(email: String) {
-        signInParam.value = signInParam.value.copy(email = email)
+        screenState = screenState.copy(email = email)
     }
 
     private fun onPasswordChange(password: String) {
-        signInParam.value = signInParam.value.copy(password = password)
+        screenState = screenState.copy(password = password)
     }
 
     private fun onSignInClick(
         onSuccess: () -> Unit = {},
-        onComplete: () -> Unit = {}
     ) {
-//        viewModelScope.launch {
-//            signInState.value = signInState.value.copy(isLoading = true)
-//            when (val result = signInUseCase.invoke(signInParam.value)) {
-//                is Either.Left -> {
-//                    SnackbarController.showSnackbar("Error: ${result.value}")
-//                }
-//
-//                is Either.Right -> {
-//                    onSuccess()
-//                    SnackbarController.showSnackbar("Signed in successfully")
-//                }
-//            }
-//            signInState.value = signInState.value.copy(isLoading = false)
-//            onComplete()
-//        }
+        viewModelScope.launch {
+            screenState = screenState.copy(isLoading = true)
+            val signInResult = signInUseCase(
+                email = screenState.email,
+                password = screenState.password,
+            )
+
+            signInResult.emailError?.let {
+                screenState = screenState.copy(
+                    emailError = signInResult.emailError
+                )
+            }
+
+            signInResult.passwordError?.let {
+                screenState = screenState.copy(
+                    passwordError = signInResult.passwordError
+                )
+            }
+
+            when (signInResult.result) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = signInResult.result.uiText ?: UiText.unknownError()
+                        )
+                    )
+                }
+
+                is Resource.Success -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.successfully_login)
+                        )
+                    )
+                    onSuccess()
+                }
+
+                null -> {}
+            }
+            screenState = screenState.copy(isLoading = false)
+        }
     }
 
     fun onEvent(event: SignInEvents) {
@@ -59,7 +87,6 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
             is SignInEvents.OnSignInClick -> {
                 onSignInClick(
                     onSuccess = event.onSuccess,
-                    onComplete = event.onComplete
                 )
             }
         }

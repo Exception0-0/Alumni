@@ -2,20 +2,14 @@ package dev.than0s.aluminium.features.post.data.mapper
 
 import android.net.Uri
 import com.google.firebase.Timestamp
-import dev.than0s.aluminium.features.post.domain.data_class.Comment
-import dev.than0s.aluminium.features.post.domain.data_class.Post
-import dev.than0s.aluminium.features.post.domain.data_class.User
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import dev.than0s.aluminium.core.domain.data_class.Post
 
-suspend fun List<RawPost>.toPost(
-    getFile: suspend (String) -> Uri,
-): List<Post> {
+fun List<RemotePost>.toPost(): List<Post> {
     return this.map {
         Post(
             id = it.id,
             userId = it.userId,
-            file = getFile(it.id),
+            file = Uri.parse(it.file),
             title = it.title,
             description = it.description,
             timestamp = it.timestamp,
@@ -23,17 +17,19 @@ suspend fun List<RawPost>.toPost(
     }
 }
 
-fun Post.toRawPost() = RawPost(
+fun Post.toRemotePost() = RemotePost(
     id = id,
     userId = userId,
+    file = file.toString(),
     title = title,
     description = description,
     timestamp = timestamp
 )
 
-data class RawPost(
+data class RemotePost(
     val id: String = "",
     val userId: String = "",
+    val file: String = Uri.EMPTY.toString(),
     val title: String = "",
     val description: String = "",
     val timestamp: Timestamp = Timestamp.now()

@@ -1,12 +1,11 @@
 package dev.than0s.aluminium.features.auth.presentation.screens.forget_password
 
 sealed class ForgetPasswordEvents {
-    data class onForgetPasswordClick(
+    data class OnForgetPasswordClick(
         val onSuccess: () -> Unit = {},
-        val onComplete: () -> Unit = {},
     ) : ForgetPasswordEvents()
 
-    data class onEmailChange(
+    data class OnEmailChange(
         val email: String = ""
     ) : ForgetPasswordEvents()
 }

@@ -1,25 +1,28 @@
 package dev.than0s.aluminium.features.profile.data.mapper
 
 import android.net.Uri
-import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
-import dev.than0s.aluminium.features.profile.domain.data_class.User
+import dev.than0s.aluminium.core.domain.data_class.User
 
-fun User.toRawUser(): RawUser = RawUser(
-    firstName = firstName,
-    lastName = lastName,
-    bio = bio
-)
-
-fun RawUser.toUser(profileImage: Uri?, coverImage: Uri?): User = User(
+fun User.toRemoteUser(profileImageUri: Uri?, coverImageUri: Uri?): RemoteUser = RemoteUser(
     firstName = firstName,
     lastName = lastName,
     bio = bio,
-    profileImage = profileImage,
-    coverImage = coverImage
+    profileImageUri = profileImageUri.toString(),
+    coverImageUri = coverImageUri.toString()
 )
 
-data class RawUser(
+fun RemoteUser.toUser(): User = User(
+    firstName = firstName,
+    lastName = lastName,
+    bio = bio,
+    profileImage = Uri.parse(profileImageUri),
+    coverImage = Uri.parse(coverImageUri)
+)
+
+data class RemoteUser(
     val firstName: String = "",
     val lastName: String = "",
     val bio: String = "",
+    val profileImageUri: String? = null,
+    val coverImageUri: String? = null
 )

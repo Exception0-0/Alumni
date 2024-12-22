@@ -11,6 +11,5 @@ sealed class SignInEvents {
 
     data class OnSignInClick(
         val onSuccess: () -> Unit = {},
-        val onComplete: () -> Unit = {}
     ) : SignInEvents()
 }

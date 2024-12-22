@@ -1,10 +1,11 @@
 package dev.than0s.aluminium.features.post.domain.repository
 
-import dev.than0s.aluminium.core.Either
-import dev.than0s.aluminium.core.error.Failure
+import dev.than0s.aluminium.core.Resource
+import dev.than0s.aluminium.core.SimpleResource
+import dev.than0s.aluminium.core.domain.data_class.Like
 
 interface LikeRepository {
-    suspend fun addLike(postId: String): Either<Failure, Unit>
-    suspend fun removeLike(postId: String): Either<Failure, Unit>
-    suspend fun hasUserLiked(postId: String): Either<Failure, Boolean>
+    suspend fun addLike(like: Like): SimpleResource
+    suspend fun removeLike(like: Like): SimpleResource
+    suspend fun getCurrentUserLikeStatus(postId: String): Resource<Like?>
 }

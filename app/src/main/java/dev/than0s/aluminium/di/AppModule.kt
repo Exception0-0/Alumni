@@ -19,10 +19,6 @@ import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryI
 import dev.than0s.aluminium.features.auth.data.repository.AuthRepositoryImple
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
-import dev.than0s.aluminium.features.chat.data.data_source.DataSource
-import dev.than0s.aluminium.features.chat.data.data_source.DataSourceImple
-import dev.than0s.aluminium.features.chat.data.repositories.RepositoryImple
-import dev.than0s.aluminium.features.chat.domain.repository.Repository
 import dev.than0s.aluminium.features.post.data.data_source.CommentDataSource
 import dev.than0s.aluminium.features.post.data.data_source.CommentDataSourceImple
 import dev.than0s.aluminium.features.post.data.data_source.LikeDataSource
@@ -35,14 +31,18 @@ import dev.than0s.aluminium.features.post.data.repositories.PostRepositoryImple
 import dev.than0s.aluminium.features.post.domain.repository.CommentRepository
 import dev.than0s.aluminium.features.post.domain.repository.LikeRepository
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
-import dev.than0s.aluminium.features.registration.data.data_source.RegisterDataSource
+import dev.than0s.aluminium.features.profile.data.remote.ContactRemote
+import dev.than0s.aluminium.features.profile.data.remote.ContactRemoteImple
+import dev.than0s.aluminium.features.registration.data.remote.RegisterDataSource
 import dev.than0s.aluminium.features.registration.data.repositories.RegistrationRepositoryImple
 import dev.than0s.aluminium.features.registration.domain.repository.RegistrationRepository
-import dev.than0s.aluminium.features.profile.data.data_source.ProfileDataSource
-import dev.than0s.aluminium.features.profile.data.data_source.ProfileDataSourceImple
+import dev.than0s.aluminium.features.profile.data.remote.ProfileDataSource
+import dev.than0s.aluminium.features.profile.data.remote.ProfileDataSourceImple
+import dev.than0s.aluminium.features.profile.data.repositories.ContactRepositoryImple
 import dev.than0s.aluminium.features.profile.data.repositories.ProfileRepositoryImple
+import dev.than0s.aluminium.features.profile.domain.repository.ContactRepository
 import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
-import dev.than0s.aluminium.features.registration.data.data_source.RegisterDataSourceImple
+import dev.than0s.aluminium.features.registration.data.remote.RegisterDataSourceImple
 import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSourceImple
 
 @Module
@@ -81,12 +81,11 @@ abstract class AppModule {
     @Binds
     abstract fun bindProfileRepository(imple: ProfileRepositoryImple): ProfileRepository
 
-    // chat
     @Binds
-    abstract fun bindChatDataSource(imple: DataSourceImple): DataSource
+    abstract fun bindContactRemote(imple: ContactRemoteImple): ContactRemote
 
     @Binds
-    abstract fun bindChatRepository(imple: RepositoryImple): Repository
+    abstract fun bindContactRepository(imple: ContactRepositoryImple): ContactRepository
 
     // registration
     @Binds

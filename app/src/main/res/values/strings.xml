@@ -3,4 +3,27 @@
     <string name="error_unknown">unknow error</string>
     <string name="error_couldnt_reach_server">error while connecting to server</string>
     <string name="oops_something_went_wrong">oops something went wrong</string>
+    <string name="successfully_login">login successfully</string>
+    <string name="forget_password_success">forget password link send to email</string>
+    <string name="successfully_log_out">log out successfully</string>
+    <string name="field_empty_error">field is empty</string>
+    <string name="successfully_profile_update">profile successfully update</string>
+    <string name="successfully_update_contact_info">contacts update successfully</string>
+    <string name="successfully_comment_added">comment added successfully</string>
+    <string name="successfully_comment_removed">comment removed successfully</string>
+    <string name="successfully_post_uploaded">post uploaded successfully</string>
+    <string name="successfully_register">Registration completed successfully</string>
+    <string name="request_accepted_successfully">Request accepted successfully</string>
+    <string name="request_rejected_successfully">Request rejected successfully</string>
+    <string name="accept_request_title">Do you really want to accept this request?</string>
+    <string name="reject_request_title">Do you really want to reject this request?</string>
+    <string name="request_desc">You can\'t undo this action, so be careful with your choices</string>
+    <string name="invalid_email">invalid email format</string>
+    <string name="input_too_short_error">input too short</string>
+    <string name="invalid_password">invalid password</string>
+    <string name="invalid_mobile_number">invalid mobile number</string>
+    <string name="invalid_link_format">invalid link format</string>
+    <string name="file_not_picked_error">file not picked yet!</string>
+    <string name="post_delete_successfully">post deleted successfully</string>
+    <string name="profile_create_successfully">profile create successfully</string>
 </resources>

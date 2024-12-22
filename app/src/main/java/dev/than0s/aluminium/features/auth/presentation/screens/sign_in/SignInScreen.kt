@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.features.auth.presentation.screens.sign_in
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,27 +11,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.AluminiumClickableText
-import dev.than0s.aluminium.core.composable.AluminiumLoadingElevatedButton
-import dev.than0s.aluminium.core.composable.AluminiumPasswordTextField
-import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.composable.AluminiumTextField
-import dev.than0s.aluminium.core.composable.AluminiumTitleText
-import dev.than0s.aluminium.features.auth.domain.data_class.EmailAuthParam
+import dev.than0s.aluminium.core.asString
+import dev.than0s.aluminium.core.presentation.composable.AluminiumClickableText
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumPasswordTextField
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.TextFieldError
 import dev.than0s.aluminium.ui.spacing
-import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun SignInScreen(
@@ -42,8 +37,7 @@ fun SignInScreen(
     restartApp: () -> Unit
 ) {
     SignInScreenContent(
-        param = viewModel.signInParam.value,
-        screenState = viewModel.signInState.value,
+        screenState = viewModel.screenState,
         onEvent = viewModel::onEvent,
         openScreen = openScreen,
         popAndOpen = popAndOpen,
@@ -53,7 +47,6 @@ fun SignInScreen(
 
 @Composable
 private fun SignInScreenContent(
-    param: EmailAuthParam,
     screenState: SignInState,
     onEvent: (SignInEvents) -> Unit,
     openScreen: (Screen) -> Unit,
@@ -82,7 +75,9 @@ private fun SignInScreenContent(
             }
 
             AluminiumTextField(
-                value = param.email,
+                value = screenState.email,
+                enable = !screenState.isLoading,
+                supportingText = screenState.emailError?.message?.asString(),
                 onValueChange = { newValue ->
                     onEvent(SignInEvents.OnEmailChanged(newValue))
                 },
@@ -96,7 +91,9 @@ private fun SignInScreenContent(
             )
 
             AluminiumPasswordTextField(
-                value = param.password,
+                value = screenState.password,
+                enable = !screenState.isLoading,
+                supportingText = screenState.passwordError?.message?.asString(),
                 onPasswordChange = { newValue ->
                     onEvent(SignInEvents.OnPasswordChange(newValue))
                 },
@@ -137,5 +134,11 @@ private fun SignInScreenContent(
 @Preview(showSystemUi = true)
 @Composable
 private fun SignInScreenPreview() {
-
+    SignInScreenContent(
+        screenState = SignInState(),
+        onEvent = {},
+        openScreen = {},
+        popAndOpen = {},
+        restartApp = {}
+    )
 }

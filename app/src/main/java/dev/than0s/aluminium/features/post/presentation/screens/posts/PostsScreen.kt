@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,25 +8,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
-import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,30 +30,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer
-import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.composable.AluminiumAsyncImageSettings
-import dev.than0s.aluminium.core.composable.AluminiumLoadingIconButton
-import dev.than0s.aluminium.core.composable.AluminiumCard
-import dev.than0s.aluminium.core.composable.AluminiumDescriptionText
-import dev.than0s.aluminium.core.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.composable.PostImageModifier
-import dev.than0s.aluminium.core.composable.ProfileImageModifier
-import dev.than0s.aluminium.core.composable.ShimmerBackground
-import dev.than0s.aluminium.core.composable.ShimmerCircularBackground
-import dev.than0s.aluminium.features.post.domain.data_class.Post
-import dev.than0s.aluminium.features.post.domain.data_class.User
+import dev.than0s.aluminium.core.domain.data_class.Like
+import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImageSettings
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingIconButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumCard
+import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.PostImageModifier
+import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
+import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.ShimmerCircularBackground
+import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
@@ -70,48 +58,44 @@ import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun PostsScreen(
-    viewModel: PostsScreenViewModel = hiltViewModel(),
+    viewModel: PostsViewModel = hiltViewModel(),
     openScreen: (Screen) -> Unit
 ) {
     PostsScreenContent(
-        postsList = viewModel.postsList,
-        isPostListLoading = viewModel.isPostListLoading,
-        onLikeClick = viewModel::onLikeClick,
-        getUserProfile = viewModel::getUserProfile,
+        screenState = viewModel.screenState,
+        userMap = viewModel.userMap,
+        likeMap = viewModel.likeMap,
+        onEvent = viewModel::onEvent,
         openScreen = openScreen
     )
 }
 
 @Composable
 private fun PostsScreenContent(
-    postsList: List<Post>,
-    isPostListLoading: Boolean,
-    onLikeClick: (String, Boolean, () -> Unit) -> Unit,
-    getUserProfile: (String) -> Flow<User>,
-    openScreen: (Screen) -> Unit
+    screenState: PostsState,
+    userMap: Map<String, User>,
+    likeMap: Map<String, Like?>,
+    onEvent: (PostsEvents) -> Unit,
+    openScreen: (Screen) -> Unit,
 ) {
-    if (isPostListLoading) {
+    if (screenState.isLoading) {
         ShimmerList()
     } else {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
             modifier = Modifier.padding(MaterialTheme.spacing.medium)
         ) {
-            items(postsList) { post ->
+            items(screenState.postList) { post ->
                 AluminiumElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
                     PostItem(
                         post = post,
-                        onLikeClick = onLikeClick,
-                        getUserProfile = getUserProfile,
-                        openProfileScreen = {
-                            openScreen(Screen.ProfileScreen(post.userId))
-                        },
-                        openCommentScreen = {
-                            openScreen(Screen.CommentsScreen(post.id))
-                        },
+                        userMap = userMap,
+                        likeMap = likeMap,
+                        onEvent = onEvent,
+                        openScreen = openScreen,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
                 }
@@ -124,13 +108,17 @@ private fun PostsScreenContent(
 @Composable
 fun PostItem(
     post: Post,
-    openProfileScreen: () -> Unit,
-    openCommentScreen: () -> Unit,
-    getUserProfile: (String) -> Flow<User>,
-    onLikeClick: (String, Boolean, () -> Unit) -> Unit,
+    userMap: Map<String, User>,
+    likeMap: Map<String, Like?>,
+    openScreen: (Screen) -> Unit,
+    onEvent: (PostsEvents) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val userProfile = getUserProfile(post.userId).collectAsState(initial = User()).value
+    onEvent(PostsEvents.GetUser(post.userId))
+    onEvent(PostsEvents.GetLike(post.id))
+    val user = userMap[post.userId]
+    val like = likeMap[post.id]
+
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         modifier = Modifier
@@ -142,11 +130,11 @@ fun PostItem(
             modifier = Modifier
                 .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
                 .clickable {
-                    openProfileScreen()
+                    openScreen(Screen.ProfileScreen(post.userId))
                 }
         ) {
             UserDetail(
-                user = userProfile,
+                user = user ?: User(),
                 modifier = Modifier
                     .padding(MaterialTheme.spacing.small)
             )
@@ -168,11 +156,10 @@ fun PostItem(
 
         AluminiumCard {
             PostStatus(
-                isLiked = post.isLiked,
-                onLikeClick = { hasLike, callback ->
-                    onLikeClick(post.id, hasLike, callback)
-                },
-                openCommentScreen = openCommentScreen,
+                postId = post.id,
+                isLiked = like != null,
+                onEvent = onEvent,
+                openScreen = openScreen,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(MaterialTheme.spacing.small)
@@ -205,13 +192,12 @@ private fun UserDetail(
 
 @Composable
 private fun PostStatus(
+    postId: String,
     isLiked: Boolean,
-    onLikeClick: (Boolean, () -> Unit) -> Unit,
-    openCommentScreen: () -> Unit,
+    onEvent: (PostsEvents) -> Unit,
+    openScreen: (Screen) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var likeButtonState by rememberSaveable { mutableStateOf(isLiked) }
-    var loadingLikeButtonState by rememberSaveable { mutableStateOf(false) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -223,15 +209,15 @@ private fun PostStatus(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
         ) {
-            AluminiumLoadingIconButton(
-                icon = if (likeButtonState) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
-                circularProgressIndicatorState = loadingLikeButtonState,
+            IconButton(
+                content = {
+                    Icon(
+                        imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
+                        contentDescription = "like button"
+                    )
+                },
                 onClick = {
-                    loadingLikeButtonState = true
-                    onLikeClick(likeButtonState) {
-                        loadingLikeButtonState = false
-                        likeButtonState = !likeButtonState
-                    }
+                    onEvent(PostsEvents.OnLikeClick(postId, isLiked))
                 },
             )
             AluminiumTitleText(
@@ -244,7 +230,9 @@ private fun PostStatus(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
         ) {
-            IconButton(onClick = openCommentScreen) {
+            IconButton(onClick = {
+                openScreen(Screen.CommentsScreen(postId))
+            }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.Comment,
                     contentDescription = "comment button",
@@ -316,16 +304,10 @@ private fun ShimmerList() {
 @Composable
 private fun PostsScreenPreview() {
     PostsScreenContent(
-        postsList = listOf(
-            Post(
-                id = "",
-                title = "Than0s",
-                description = "hello I'm Than0s don't talk to me",
-            )
-        ),
-        isPostListLoading = false,
-        onLikeClick = { _, _, _ -> },
-        getUserProfile = { emptyFlow() },
+        screenState = PostsState(),
+        userMap = emptyMap(),
+        likeMap = emptyMap(),
+        onEvent = {},
         openScreen = {}
     )
 }
