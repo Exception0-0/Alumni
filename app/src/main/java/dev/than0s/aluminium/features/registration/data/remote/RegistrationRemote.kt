@@ -10,7 +10,7 @@ import com.google.firebase.storage.StorageException
 import dev.than0s.aluminium.core.data.remote.ID_CARD_IMAGES
 import dev.than0s.aluminium.core.data.remote.REGISTRATION_REQUESTS
 import dev.than0s.aluminium.core.data.remote.error.ServerException
-import dev.than0s.aluminium.core.isLocalUri
+import dev.than0s.aluminium.core.domain.util.isLocalUri
 import dev.than0s.aluminium.features.registration.data.mapper.RemoteRegistrationForm
 import dev.than0s.aluminium.features.registration.data.mapper.toRegistrationForm
 import dev.than0s.aluminium.features.registration.data.mapper.toRemoteRegistrationForm

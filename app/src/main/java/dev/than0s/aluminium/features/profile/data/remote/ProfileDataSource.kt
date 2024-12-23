@@ -12,9 +12,9 @@ import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
 import dev.than0s.aluminium.core.data.remote.error.ServerException
-import dev.than0s.aluminium.core.isLocalUri
 import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.domain.util.isLocalUri
 import dev.than0s.aluminium.features.profile.data.mapper.RemoteUser
 import dev.than0s.aluminium.features.profile.data.mapper.toRemoteUser
 import dev.than0s.aluminium.features.profile.data.mapper.toUser

@@ -1,7 +1,5 @@
 package dev.than0s.aluminium.core
 
-import android.net.Uri
-
 var currentUserId: String? = null
     private set
 
@@ -14,10 +12,6 @@ fun setCurrentUserId(id: String?) {
 
 fun setCurrentUserRole(role: Role) {
     currentUserRole = role
-}
-
-fun isLocalUri(file: Uri): Boolean {
-    return file.scheme == "file" || file.scheme == "content" || file.scheme == "android.resource"
 }
 
 enum class Role {
