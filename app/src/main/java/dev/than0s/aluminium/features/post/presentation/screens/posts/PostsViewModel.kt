@@ -57,7 +57,6 @@ class PostsViewModel @Inject constructor(
                     screenState = screenState.copy(
                         postList = result.data!!
                     )
-                    println("post list: ${result.data}")
                 }
 
                 is Resource.Error -> {

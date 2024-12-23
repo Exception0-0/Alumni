@@ -3,6 +3,7 @@ package dev.than0s.aluminium.core
 import kotlinx.serialization.Serializable
 
 sealed class Screen {
+
     @Serializable
     data object SplashScreen : Screen()
 
@@ -35,22 +36,17 @@ sealed class Screen {
 
     @Serializable
     data class PostsScreen(
-        val userId: String? = null
-    ) : Screen()
-
-    @Serializable
-    data class SpecificPostsScreen(
-        val userId: String
+        val userId: String? = null,
     ) : Screen()
 
     @Serializable
     data class ProfileScreen(
-        val userId: String
+        val userId: String,
     ) : Screen()
 
     @Serializable
     data class CommentsScreen(
-        val postId: String
+        val postId: String,
     ) : Screen()
 
     @Serializable

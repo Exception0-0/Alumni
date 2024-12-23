@@ -39,7 +39,9 @@ class SplashViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     setCurrentUserId(result.data!!.userId)
-                    setCurrentUserRole(result.data.role)
+                    result.data.role?.let {
+                        setCurrentUserRole(it)
+                    }
 
                     when (currentUserRole) {
                         null -> popAndOpen(Screen.SignInScreen)

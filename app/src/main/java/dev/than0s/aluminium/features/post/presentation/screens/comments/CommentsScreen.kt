@@ -114,7 +114,7 @@ private fun CommentScreenContent(
                         userMap = userMap,
                         onEvent = onEvents,
                         onProfileClick = {
-                            openScreen(Screen.ProfileScreen(comment.userId))
+                            openScreen(Screen.ProfileScreen(userId = comment.userId))
                         }
                     )
                 }

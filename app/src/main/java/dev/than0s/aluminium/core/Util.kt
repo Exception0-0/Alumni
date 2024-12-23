@@ -5,14 +5,14 @@ import android.net.Uri
 var currentUserId: String? = null
     private set
 
-var currentUserRole: Role? = null
+var currentUserRole: Role = Role.Anonymous
     private set
 
 fun setCurrentUserId(id: String?) {
     currentUserId = id
 }
 
-fun setCurrentUserRole(role: Role?) {
+fun setCurrentUserRole(role: Role) {
     currentUserRole = role
 }
 
@@ -20,13 +20,15 @@ fun isLocalUri(file: Uri): Boolean {
     return file.scheme == "file" || file.scheme == "content" || file.scheme == "android.resource"
 }
 
-enum class Role{
+enum class Role {
     Student,
     Staff,
     Alumni,
     Admin,
+    Anonymous,
 }
-enum class Course{
+
+enum class Course {
     MCA,
     MBA
 }
