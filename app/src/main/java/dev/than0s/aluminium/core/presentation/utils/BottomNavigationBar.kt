@@ -28,7 +28,6 @@ private data class BottomNavigationItem(
     val screen: Screen,
     val filledIcon: ImageVector,
     val outlinedIcon: ImageVector,
-    val name: String
 )
 
 private val bottomNavItems = listOf(
@@ -36,25 +35,21 @@ private val bottomNavItems = listOf(
         Screen.RegistrationRequestsScreen,
         Icons.Filled.AppRegistration,
         Icons.Outlined.AppRegistration,
-        "Registration Request"
     ),
     BottomNavigationItem(
         Screen.PostsScreen(),
         Icons.Filled.Face,
         Icons.Outlined.Face,
-        "Posts"
     ),
     BottomNavigationItem(
         Screen.ChatListScreen,
         Icons.AutoMirrored.Filled.Chat,
         Icons.AutoMirrored.Outlined.Chat,
-        "Chat",
     ),
     BottomNavigationItem(
         Screen.SettingScreen,
         Icons.Filled.Settings,
         Icons.Outlined.Settings,
-        "Settings"
     )
 )
 
@@ -67,6 +62,7 @@ private fun getCurrentScreenName(navBackStackEntry: NavBackStackEntry?): String?
         ?.destination
         ?.route
         ?.substringAfterLast(".")
+        ?.substringBefore("/")
         ?.substringBefore("?")
 }
 
@@ -79,7 +75,6 @@ private fun isCurrentScreenHaveBottomBar(currentScreenName: String?): Boolean {
 
 private fun shouldShowOption(screen: Screen): Boolean {
     return true
-//    return Screen.role.contains(currentUserRole)
 }
 
 @Composable
@@ -88,7 +83,7 @@ fun AluminiumBottomNavigationBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreenName = getCurrentScreenName(navBackStackEntry)
-
+    println("currentScreenName:${currentScreenName}")
     if (isCurrentScreenHaveBottomBar(currentScreenName)) {
         NavigationBar {
             bottomNavItems.forEach { item ->
@@ -106,12 +101,12 @@ fun AluminiumBottomNavigationBar(
                                 } else {
                                     item.outlinedIcon
                                 },
-                                contentDescription = item.name
+                                contentDescription = item.screen.name
                             )
                         },
                         label = {
                             Text(
-                                text = item.name
+                                text = item.screen.name
                             )
                         }
                     )
