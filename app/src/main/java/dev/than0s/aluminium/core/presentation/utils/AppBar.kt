@@ -22,19 +22,19 @@ fun AluminiumTopAppBar(
     val topAppBarList = remember {
         listOf(
             TopAppBarItem(
-                uid = "dev.than0s.aluminium.core.Screen.PostsScreen?userId={userId}",
+                uid = "dev.than0s.aluminium.core.presentation.utils.Screen.PostsScreen?userId={userId}",
                 label = "Posts"
             ),
             TopAppBarItem(
-                uid = "dev.than0s.aluminium.core.Screen.CommentsScreen/{postId}",
+                uid = "dev.than0s.aluminium.core.presentation.utils.Screen.CommentsScreen/{postId}",
                 label = "Comments"
             ),
             TopAppBarItem(
-                uid = "dev.than0s.aluminium.core.Screen.ChatListScreen",
+                uid = "dev.than0s.aluminium.core.presentation.utils.Screen.ChatListScreen",
                 label = "Chat"
             ),
             TopAppBarItem(
-                uid = "dev.than0s.aluminium.core.Screen.SettingScreen",
+                uid = "dev.than0s.aluminium.core.presentation.utils.Screen.SettingScreen",
                 label = "Settings"
             )
         )

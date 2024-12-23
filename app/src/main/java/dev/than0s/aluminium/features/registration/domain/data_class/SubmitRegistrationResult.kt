@@ -1,7 +1,7 @@
 package dev.than0s.aluminium.features.registration.domain.data_class
 
 import dev.than0s.aluminium.core.SimpleResource
-import dev.than0s.aluminium.core.data.remote.error.Error
+import dev.than0s.aluminium.core.domain.error.Error
 
 data class SubmitRegistrationResult(
     val emailError: Error? = null,

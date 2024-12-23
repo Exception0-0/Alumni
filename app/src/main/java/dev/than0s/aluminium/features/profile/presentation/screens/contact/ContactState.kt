@@ -1,6 +1,6 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.contact
 
-import dev.than0s.aluminium.core.data.remote.error.Error
+import dev.than0s.aluminium.core.domain.error.Error
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
 
 data class ContactState(

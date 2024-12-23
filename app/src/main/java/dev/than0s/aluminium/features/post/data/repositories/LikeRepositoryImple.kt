@@ -2,7 +2,7 @@ package dev.than0s.aluminium.features.post.data.repositories
 
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SimpleResource
-import dev.than0s.aluminium.core.UiText
+import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.features.post.data.data_source.LikeDataSource

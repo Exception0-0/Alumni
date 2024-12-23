@@ -45,8 +45,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.asString
+import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImageSettings
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText

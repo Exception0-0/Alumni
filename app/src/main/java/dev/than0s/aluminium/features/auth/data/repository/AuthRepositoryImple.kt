@@ -3,7 +3,7 @@ package dev.than0s.aluminium.features.auth.data.repository
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SimpleResource
-import dev.than0s.aluminium.core.UiText
+import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.auth.data.remote.AuthDataSource
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
 import dev.than0s.aluminium.core.data.remote.error.ServerException

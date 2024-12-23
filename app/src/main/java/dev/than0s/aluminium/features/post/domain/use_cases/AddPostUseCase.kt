@@ -5,8 +5,8 @@ import com.google.firebase.Timestamp
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.features.post.domain.data_class.AddPostResult
 import dev.than0s.aluminium.core.domain.data_class.Post
-import dev.than0s.aluminium.core.domain.util.uniqueIdGenerator
-import dev.than0s.aluminium.core.presentation.TextFieldError
+import dev.than0s.aluminium.core.domain.util.generateUniqueId
+import dev.than0s.aluminium.core.presentation.error.TextFieldError
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class AddPostUseCase @Inject constructor(private val repository: PostRepository)
         return AddPostResult(
             result = repository.addPost(
                 post.copy(
-                    id = uniqueIdGenerator(),
+                    id = generateUniqueId(),
                     userId = currentUserId!!,
                     timestamp = Timestamp.now()
                 )

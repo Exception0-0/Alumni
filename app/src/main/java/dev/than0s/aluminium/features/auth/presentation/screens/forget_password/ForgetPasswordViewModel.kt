@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
-import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.core.SnackbarEvent
-import dev.than0s.aluminium.core.UiText
+import dev.than0s.aluminium.core.presentation.utils.SnackbarController
+import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
+import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.auth.domain.use_cases.ForgetPasswordUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject

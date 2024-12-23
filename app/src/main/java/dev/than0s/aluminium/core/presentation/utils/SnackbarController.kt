@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.core
+package dev.than0s.aluminium.core.presentation.utils
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

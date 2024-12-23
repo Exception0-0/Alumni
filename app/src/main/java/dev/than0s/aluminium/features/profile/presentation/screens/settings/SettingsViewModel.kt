@@ -8,12 +8,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.Role
-import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.core.SnackbarEvent
-import dev.than0s.aluminium.core.UiText
+import dev.than0s.aluminium.core.presentation.utils.SnackbarController
+import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
+import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
-import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject

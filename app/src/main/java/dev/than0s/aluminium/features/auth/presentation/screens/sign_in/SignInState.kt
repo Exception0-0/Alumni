@@ -1,6 +1,6 @@
 package dev.than0s.aluminium.features.auth.presentation.screens.sign_in
 
-import dev.than0s.aluminium.core.data.remote.error.Error
+import dev.than0s.aluminium.core.domain.error.Error
 
 data class SignInState(
     val isLoading: Boolean = false,

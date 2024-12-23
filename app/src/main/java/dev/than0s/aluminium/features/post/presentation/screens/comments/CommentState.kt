@@ -1,6 +1,6 @@
 package dev.than0s.aluminium.features.post.presentation.screens.comments
 
-import dev.than0s.aluminium.core.data.remote.error.Error
+import dev.than0s.aluminium.core.domain.error.Error
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
 
 data class CommentState(

@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.core
+package dev.than0s.aluminium.core.presentation.utils
 
 import android.content.Context
 import androidx.annotation.StringRes
@@ -12,7 +12,7 @@ sealed class UiText {
 
     companion object {
         fun unknownError(): UiText {
-            return UiText.StringResource(R.string.error_unknown)
+            return StringResource(R.string.error_unknown)
         }
     }
 }

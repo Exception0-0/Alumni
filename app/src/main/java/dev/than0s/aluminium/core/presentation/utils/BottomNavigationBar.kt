@@ -12,16 +12,12 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import dev.than0s.aluminium.core.Role
-import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.currentUserRole
 
 
 private data class BottomNavigationItem(
@@ -68,7 +64,6 @@ private fun getCurrentScreenName(navBackStackEntry: NavBackStackEntry?): String?
 
 private fun isCurrentScreenHaveBottomBar(currentScreenName: String?): Boolean {
     return bottomNavItems.any {
-        println(getScreenName(it.screen))
         getScreenName(it.screen) == currentScreenName
     }
 }
@@ -83,7 +78,7 @@ fun AluminiumBottomNavigationBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreenName = getCurrentScreenName(navBackStackEntry)
-    println("currentScreenName:${currentScreenName}")
+
     if (isCurrentScreenHaveBottomBar(currentScreenName)) {
         NavigationBar {
             bottomNavItems.forEach { item ->
@@ -101,13 +96,13 @@ fun AluminiumBottomNavigationBar(
                                 } else {
                                     item.outlinedIcon
                                 },
-                                contentDescription = item.screen.name
+                                contentDescription = item.screen::class.simpleName
                             )
                         },
                         label = {
-                            Text(
-                                text = item.screen.name
-                            )
+//                            Text(
+//                                text = item.screen::class.simpleName
+//                            )
                         }
                     )
                 }

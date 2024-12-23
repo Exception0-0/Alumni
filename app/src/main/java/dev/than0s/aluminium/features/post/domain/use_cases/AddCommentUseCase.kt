@@ -2,12 +2,11 @@ package dev.than0s.aluminium.features.post.domain.use_cases
 
 import com.google.firebase.Timestamp
 import dev.than0s.aluminium.core.currentUserId
-import dev.than0s.aluminium.core.domain.util.uniqueIdGenerator
-import dev.than0s.aluminium.core.presentation.TextFieldError
+import dev.than0s.aluminium.core.domain.util.generateUniqueId
+import dev.than0s.aluminium.core.presentation.error.TextFieldError
 import dev.than0s.aluminium.features.post.domain.data_class.AddCommentResult
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.repository.CommentRepository
-import java.util.UUID
 import javax.inject.Inject
 
 class AddCommentUseCase @Inject constructor(private val repository: CommentRepository) {
@@ -24,7 +23,7 @@ class AddCommentUseCase @Inject constructor(private val repository: CommentRepos
         return AddCommentResult(
             result = repository.addComment(
                 comment.copy(
-                    id = uniqueIdGenerator(),
+                    id = generateUniqueId(),
                     userId = currentUserId!!,
                     timestamp = Timestamp.now()
                 )

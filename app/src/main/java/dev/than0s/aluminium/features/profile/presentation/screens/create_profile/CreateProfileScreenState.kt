@@ -1,6 +1,6 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.create_profile
 
-import dev.than0s.aluminium.core.data.remote.error.Error
+import dev.than0s.aluminium.core.domain.error.Error
 import dev.than0s.aluminium.core.domain.data_class.User
 
 data class CreateProfileScreenState(

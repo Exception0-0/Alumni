@@ -1,6 +1,6 @@
 package dev.than0s.aluminium.features.registration.presentation.screens.registration
 
-import dev.than0s.aluminium.core.data.remote.error.Error
+import dev.than0s.aluminium.core.domain.error.Error
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 
 data class RegistrationState(

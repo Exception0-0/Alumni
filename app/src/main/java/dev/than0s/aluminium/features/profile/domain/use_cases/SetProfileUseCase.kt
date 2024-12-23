@@ -2,8 +2,8 @@ package dev.than0s.aluminium.features.profile.domain.use_cases
 
 import dev.than0s.aluminium.features.profile.domain.data_class.SetProfileResult
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.FileFieldError
-import dev.than0s.aluminium.core.presentation.TextFieldError
+import dev.than0s.aluminium.core.presentation.error.FileFieldError
+import dev.than0s.aluminium.core.presentation.error.TextFieldError
 import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
 import javax.inject.Inject
 

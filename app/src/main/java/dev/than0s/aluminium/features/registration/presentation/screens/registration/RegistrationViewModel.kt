@@ -11,9 +11,9 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Course
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.Role
-import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.core.SnackbarEvent
-import dev.than0s.aluminium.core.UiText
+import dev.than0s.aluminium.core.presentation.utils.SnackbarController
+import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
+import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.registration.domain.use_cases.SubmitRegistrationUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject

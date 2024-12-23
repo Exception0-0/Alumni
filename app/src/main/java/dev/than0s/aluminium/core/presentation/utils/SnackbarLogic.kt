@@ -6,8 +6,6 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.core.asString
 import dev.than0s.aluminium.core.presentation.composable.ObserveAsEvents
 import kotlinx.coroutines.launch
 

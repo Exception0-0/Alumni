@@ -11,10 +11,10 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
-import dev.than0s.aluminium.core.Screen
-import dev.than0s.aluminium.core.SnackbarController
-import dev.than0s.aluminium.core.SnackbarEvent
-import dev.than0s.aluminium.core.UiText
+import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.SnackbarController
+import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
+import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetProfileUseCase
 import kotlinx.coroutines.launch
