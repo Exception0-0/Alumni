@@ -17,7 +17,7 @@ class SignOutViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
     private fun signOut(
-        onSuccess: () -> Unit,
+        restartApp: () -> Unit,
     ) {
         viewModelScope.launch {
             when (val result = signOutUseCase()) {
@@ -35,7 +35,7 @@ class SignOutViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.successfully_log_out)
                         )
                     )
-                    onSuccess()
+                    restartApp()
                 }
             }
         }
@@ -47,7 +47,7 @@ class SignOutViewModel @Inject constructor(
         when (event) {
             is SignOutEvents.SignOut -> {
                 signOut(
-                    onSuccess = event.onSuccess,
+                    restartApp = event.restartApp,
                 )
             }
         }

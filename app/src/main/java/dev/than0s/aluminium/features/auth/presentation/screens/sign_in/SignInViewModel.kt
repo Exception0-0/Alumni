@@ -29,7 +29,7 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
     }
 
     private fun onSignInClick(
-        onSuccess: () -> Unit = {},
+        restartApp: () -> Unit,
     ) {
         viewModelScope.launch {
             screenState = screenState.copy(isLoading = true)
@@ -38,15 +38,10 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
                 password = screenState.password,
             )
 
-            signInResult.emailError?.let {
+            signInResult.let {
                 screenState = screenState.copy(
-                    emailError = signInResult.emailError
-                )
-            }
-
-            signInResult.passwordError?.let {
-                screenState = screenState.copy(
-                    passwordError = signInResult.passwordError
+                    emailError = it.emailError,
+                    passwordError = it.passwordError
                 )
             }
 
@@ -65,7 +60,7 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
                             message = UiText.StringResource(R.string.successfully_login)
                         )
                     )
-                    onSuccess()
+                    restartApp()
                 }
 
                 null -> {}
@@ -86,7 +81,7 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
 
             is SignInEvents.OnSignInClick -> {
                 onSignInClick(
-                    onSuccess = event.onSuccess,
+                    restartApp = event.restartApp,
                 )
             }
         }

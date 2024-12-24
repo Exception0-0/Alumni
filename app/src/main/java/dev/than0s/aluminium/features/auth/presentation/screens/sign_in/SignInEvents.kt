@@ -10,6 +10,6 @@ sealed class SignInEvents {
     ) : SignInEvents()
 
     data class OnSignInClick(
-        val onSuccess: () -> Unit = {},
+        val restartApp: () -> Unit = {},
     ) : SignInEvents()
 }

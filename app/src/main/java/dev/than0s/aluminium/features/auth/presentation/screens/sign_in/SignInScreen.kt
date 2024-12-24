@@ -117,9 +117,7 @@ private fun SignInScreenContent(
                 onClick = {
                     onEvent(
                         SignInEvents.OnSignInClick(
-                            onSuccess = {
-                                restartApp()
-                            },
+                            restartApp = restartApp,
                         )
                     )
                 }
