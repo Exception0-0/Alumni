@@ -63,6 +63,7 @@ fun getScreenName(screenClassName: String?): String? {
         Screen.SignInScreen::class.simpleName -> "Sign In"
         Screen.SettingScreen::class.simpleName -> "Settings"
         Screen.RegistrationScreen::class.simpleName -> "Registration"
+        Screen.RegistrationRequestsScreen::class.simpleName -> "Registration Request"
         Screen.PostUploadScreen::class.simpleName -> "Post Upload"
         Screen.SignOutScreen::class.simpleName -> "Sign Out"
         Screen.ForgotPasswordScreen::class.simpleName -> "Forgot Password"
@@ -74,7 +75,6 @@ fun getScreenName(screenClassName: String?): String? {
 }
 
 fun getClassNameFromNavGraph(nav: NavDestination?): String? {
-    println(nav?.route)
     return nav?.route
         ?.substringAfterLast(".")
         ?.substringBefore("/")

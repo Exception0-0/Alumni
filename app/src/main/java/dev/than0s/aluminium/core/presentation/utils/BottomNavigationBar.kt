@@ -12,12 +12,15 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import dev.than0s.aluminium.core.Role
+import dev.than0s.aluminium.core.currentUserRole
 
 
 private data class BottomNavigationItem(
@@ -49,22 +52,9 @@ private val bottomNavItems = listOf(
     )
 )
 
-private fun getScreenName(screen: Screen): String? {
-    return screen::class.simpleName
-}
-
-private fun getCurrentScreenName(navBackStackEntry: NavBackStackEntry?): String? {
-    return navBackStackEntry
-        ?.destination
-        ?.route
-        ?.substringAfterLast(".")
-        ?.substringBefore("/")
-        ?.substringBefore("?")
-}
-
-private fun isCurrentScreenHaveBottomBar(currentScreenName: String?): Boolean {
+private fun isGiveScreenHaveBottomBar(screenClassName: String?): Boolean {
     return bottomNavItems.any {
-        getScreenName(it.screen) == currentScreenName
+        it.screen::class.simpleName == screenClassName
     }
 }
 
@@ -77,13 +67,13 @@ fun AluminiumBottomNavigationBar(
     navController: NavHostController,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreenName = getCurrentScreenName(navBackStackEntry)
+    val currentScreenClassName = getClassNameFromNavGraph(navBackStackEntry?.destination)
 
-    if (isCurrentScreenHaveBottomBar(currentScreenName)) {
+    if (isGiveScreenHaveBottomBar(currentScreenClassName)) {
         NavigationBar {
             bottomNavItems.forEach { item ->
                 if (shouldShowOption(item.screen)) {
-                    val isScreenSelected = currentScreenName == getScreenName(item.screen)
+                    val isScreenSelected = currentScreenClassName == item::class.simpleName
                     NavigationBarItem(
                         selected = isScreenSelected,
                         onClick = {
@@ -100,9 +90,9 @@ fun AluminiumBottomNavigationBar(
                             )
                         },
                         label = {
-//                            Text(
-//                                text = item.screen::class.simpleName
-//                            )
+                            Text(
+                                text = getScreenName(item.screen::class.simpleName) ?: "Than0s"
+                            )
                         }
                     )
                 }
