@@ -44,11 +44,11 @@ private fun removeCustomAppBar() {
     customAppBar = null
 }
 
-private fun setCustomAppBar(appBar: TopAppBarItem) {
+fun setCustomAppBar(appBar: TopAppBarItem) {
     customAppBar = appBar
 }
 
-fun getDefaultTopAppBar(
+private fun getDefaultTopAppBar(
     navController: NavHostController
 ): TopAppBarItem {
     val navBackStackEntry = navController.currentBackStackEntry
