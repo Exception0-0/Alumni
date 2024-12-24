@@ -1,61 +1,66 @@
 package dev.than0s.aluminium.core.presentation.utils
 
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
+
+private var customAppBar by mutableStateOf<TopAppBarItem?>(null)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AluminiumTopAppBar(
-    navController: NavHostController,
+    navController: NavHostController
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val appBar = customAppBar ?: getDefaultTopAppBar(navController)
 
-    val topAppBarList = remember {
-        listOf(
-            TopAppBarItem(
-                uid = "dev.than0s.aluminium.core.presentation.utils.Screen.PostsScreen?userId={userId}",
-                label = "Posts"
-            ),
-            TopAppBarItem(
-                uid = "dev.than0s.aluminium.core.presentation.utils.Screen.CommentsScreen/{postId}",
-                label = "Comments"
-            ),
-            TopAppBarItem(
-                uid = "dev.than0s.aluminium.core.presentation.utils.Screen.ChatListScreen",
-                label = "Chat"
-            ),
-            TopAppBarItem(
-                uid = "dev.than0s.aluminium.core.presentation.utils.Screen.SettingScreen",
-                label = "Settings"
-            )
-        )
-    }
-
-    val isCurrentScreenHaveTopBar = topAppBarList.any { it.uid == currentRoute }
-
-    if (isCurrentScreenHaveTopBar) {
-        TopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary,
-            ),
-            title = {
-                Text(text = topAppBarList.find { it.uid == currentRoute }?.label ?: "Aluminium")
-            },
-        )
-    }
+    TopAppBar(
+        title = appBar.title,
+        navigationIcon = {
+            IconButton(onClick = {
+                navController.popScreen()
+                removeCustomAppBar()
+            }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "back button"
+                )
+            }
+        },
+        actions = appBar.actions
+    )
 }
 
-private data class TopAppBarItem(
-    val uid: String,
-    val label: String,
+private fun removeCustomAppBar() {
+    customAppBar = null
+}
+
+private fun setCustomAppBar(appBar: TopAppBarItem) {
+    customAppBar = appBar
+}
+
+fun getDefaultTopAppBar(
+    navController: NavHostController
+): TopAppBarItem {
+    val navBackStackEntry = navController.currentBackStackEntry
+    val currentRoute = navBackStackEntry?.destination?.route
+    return TopAppBarItem(
+        title = {
+            Text("Aluminium")
+        }
+    )
+}
+
+data class TopAppBarItem(
+    val title: @Composable () -> Unit = {},
+    val actions: @Composable (RowScope.() -> Unit) = {},
 )
