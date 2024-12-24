@@ -83,7 +83,7 @@ private fun ForgetPasswordContent(
                 onClick = {
                     onEvent(
                         ForgetPasswordEvents.OnForgetPasswordClick(
-                            onSuccess = popScreen
+                            popScreen = popScreen
                         )
                     )
                 }

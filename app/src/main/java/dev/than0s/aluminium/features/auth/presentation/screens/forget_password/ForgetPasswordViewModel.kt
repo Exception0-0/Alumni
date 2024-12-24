@@ -21,14 +21,14 @@ class ForgetPasswordViewModel @Inject constructor(private val useCase: ForgetPas
     var state by mutableStateOf(ForgetPasswordState())
 
     private fun onForgetPasswordClick(
-        onSuccess: () -> Unit,
+        popScreen: () -> Unit,
     ) {
         viewModelScope.launch {
             val forgetPasswordResult = useCase(state.email)
 
-            forgetPasswordResult.emailError?.let {
+            forgetPasswordResult.let {
                 state = state.copy(
-                    emailError = it
+                    emailError = it.emailError
                 )
             }
 
@@ -47,7 +47,7 @@ class ForgetPasswordViewModel @Inject constructor(private val useCase: ForgetPas
                             message = UiText.StringResource(R.string.forget_password_success)
                         )
                     )
-                    onSuccess()
+                    popScreen()
                 }
 
                 null -> {}
@@ -65,7 +65,7 @@ class ForgetPasswordViewModel @Inject constructor(private val useCase: ForgetPas
         when (event) {
             is ForgetPasswordEvents.OnForgetPasswordClick -> {
                 onForgetPasswordClick(
-                    onSuccess = event.onSuccess
+                    popScreen = event.popScreen
                 )
             }
 
