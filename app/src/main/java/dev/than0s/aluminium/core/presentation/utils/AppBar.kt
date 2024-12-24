@@ -14,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 private var customAppBar by mutableStateOf<TopAppBarItem?>(null)
 
@@ -23,7 +25,8 @@ private var customAppBar by mutableStateOf<TopAppBarItem?>(null)
 fun AluminiumTopAppBar(
     navController: NavHostController
 ) {
-    val appBar = customAppBar ?: getDefaultTopAppBar(navController)
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val appBar = customAppBar ?: getDefaultTopAppBar(currentBackStackEntry)
 
     TopAppBar(
         title = appBar.title,
@@ -57,13 +60,15 @@ fun addCustomAppBar(appBar: TopAppBarItem) {
 }
 
 private fun getDefaultTopAppBar(
-    navController: NavHostController
-): TopAppBarItem {
-    val navBackStackEntry = navController.currentBackStackEntry
-    val currentRoute = navBackStackEntry?.destination?.route
+    currentBackStackEntry: NavBackStackEntry?
+): TopAppBarItem
+{
+    val className = getClassNameFromNavGraph(currentBackStackEntry?.destination)
     return TopAppBarItem(
         title = {
-            Text("Aluminium")
+            Text(
+                text = getScreenName(className) ?: "Than0s"
+            )
         }
     )
 }
