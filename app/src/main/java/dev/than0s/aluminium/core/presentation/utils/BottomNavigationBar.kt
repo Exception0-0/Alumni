@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.core.presentation.utils
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
@@ -15,13 +16,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import dev.than0s.aluminium.core.Role
-import dev.than0s.aluminium.core.currentUserRole
 
+private var customNavbar by mutableStateOf<(@Composable (RowScope.() -> Unit))?>(null)
 
 private data class BottomNavigationItem(
     val screen: Screen,
@@ -62,6 +63,10 @@ private fun shouldShowOption(screen: Screen): Boolean {
     return true
 }
 
+private fun getDefaultBottomBar() {
+
+}
+
 @Composable
 fun AluminiumBottomNavigationBar(
     navController: NavHostController,
@@ -70,33 +75,36 @@ fun AluminiumBottomNavigationBar(
     val currentScreenClassName = getClassNameFromNavGraph(navBackStackEntry?.destination)
 
     if (isGiveScreenHaveBottomBar(currentScreenClassName)) {
-        NavigationBar {
-            bottomNavItems.forEach { item ->
-                if (shouldShowOption(item.screen)) {
-                    val isScreenSelected = currentScreenClassName == item::class.simpleName
-                    NavigationBarItem(
-                        selected = isScreenSelected,
-                        onClick = {
-                            navController.popAndOpen(item.screen)
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (isScreenSelected) {
-                                    item.filledIcon
-                                } else {
-                                    item.outlinedIcon
-                                },
-                                contentDescription = item.screen::class.simpleName
-                            )
-                        },
-                        label = {
-                            Text(
-                                text = getScreenName(item.screen::class.simpleName) ?: "Than0s"
-                            )
-                        }
-                    )
+        NavigationBar(
+            content = customNavbar ?: {
+                bottomNavItems.forEach { item ->
+                    if (shouldShowOption(item.screen)) {
+                        val isScreenSelected =
+                            currentScreenClassName == item.screen::class.simpleName
+                        NavigationBarItem(
+                            selected = isScreenSelected,
+                            onClick = {
+                                navController.popAndOpen(item.screen)
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = if (isScreenSelected) {
+                                        item.filledIcon
+                                    } else {
+                                        item.outlinedIcon
+                                    },
+                                    contentDescription = item.screen::class.simpleName
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = getScreenName(item.screen::class.simpleName) ?: "Than0s"
+                                )
+                            }
+                        )
+                    }
                 }
             }
-        }
+        )
     }
 }

@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
 import android.net.Uri
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,6 +17,8 @@ import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
+import dev.than0s.aluminium.core.presentation.utils.TopAppBarItem
+import dev.than0s.aluminium.core.presentation.utils.addCustomAppBar
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetProfileUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
