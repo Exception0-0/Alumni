@@ -32,6 +32,7 @@ import dev.than0s.aluminium.ui.spacing
 fun PostUploadScreen(viewModel: PostUploadViewModel = hiltViewModel(), popScreen: () -> Unit) {
     PostUploadScreenContent(
         screenStates = viewModel.screenStatus,
+        popScreen = popScreen,
         onEvent = viewModel::onEvent
     )
 }
@@ -39,6 +40,7 @@ fun PostUploadScreen(viewModel: PostUploadViewModel = hiltViewModel(), popScreen
 @Composable
 private fun PostUploadScreenContent(
     screenStates: PostStatus,
+    popScreen: () -> Unit,
     onEvent: (PostEvents) -> Unit,
 ) {
     val launcher =
@@ -101,7 +103,7 @@ private fun PostUploadScreenContent(
                     label = "Upload",
                     circularProgressIndicatorState = screenStates.isLoading,
                     onClick = {
-                        onEvent(PostEvents.OnUploadClick)
+                        onEvent(PostEvents.OnUploadClick(popScreen = popScreen))
                     },
                     modifier = Modifier.align(CenterHorizontally)
                 )
@@ -115,6 +117,7 @@ private fun PostUploadScreenContent(
 private fun PostUploadScreenPreview() {
     PostUploadScreenContent(
         screenStates = PostStatus(),
+        popScreen = {},
         onEvent = {}
     )
 }

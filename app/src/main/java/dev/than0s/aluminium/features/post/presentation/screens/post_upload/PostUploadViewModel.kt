@@ -46,27 +46,19 @@ class PostUploadViewModel @Inject constructor(
         )
     }
 
-    private fun onUploadClick() {
+    private fun onUploadClick(
+        popScreen: () -> Unit,
+    ) {
         viewModelScope.launch {
             screenStatus = screenStatus.copy(isLoading = true)
 
             val addPostResult = addPostUserCase(screenStatus.post)
 
-            addPostResult.titleError?.let {
+            addPostResult.let {
                 screenStatus = screenStatus.copy(
-                    titleError = it
-                )
-            }
-            addPostResult.descriptionError?.let {
-                screenStatus = screenStatus.copy(
-                    descriptionError = it
-                )
-            }
-            addPostResult.fileError?.let {
-                SnackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = it.message ?: UiText.unknownError()
-                    )
+                    titleError = it.titleError,
+                    descriptionError = it.descriptionError,
+                    fileError = it.fileError
                 )
             }
 
@@ -85,6 +77,7 @@ class PostUploadViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.successfully_post_uploaded)
                         )
                     )
+                    popScreen()
                 }
 
                 null -> {}
@@ -99,7 +92,7 @@ class PostUploadViewModel @Inject constructor(
             is PostEvents.OnTitleChanged -> onTitleChanged(event.text)
             is PostEvents.OnDescriptionChanged -> onDescriptionChanged(event.text)
             is PostEvents.OnFileUriChanged -> onFileUriChanged(event.uri)
-            is PostEvents.OnUploadClick -> onUploadClick()
+            is PostEvents.OnUploadClick -> onUploadClick(popScreen = event.popScreen)
         }
     }
 }

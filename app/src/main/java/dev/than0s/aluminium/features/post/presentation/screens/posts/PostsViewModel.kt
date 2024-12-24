@@ -70,6 +70,11 @@ class PostsViewModel @Inject constructor(
         }
     }
 
+    private fun refreshLikeMap(postId: String) {
+        likeMap.remove(postId)
+        likeMap.getLike(postId)
+    }
+
     private fun removeLike(postId: String) {
         viewModelScope.launch {
             when (val result = removeLikeUseCase(likeMap[postId]!!)) {
@@ -82,8 +87,7 @@ class PostsViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    likeMap.remove(postId)
-                    likeMap.getLike(postId)
+                    refreshLikeMap(postId)
                 }
             }
         }
@@ -102,8 +106,7 @@ class PostsViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    likeMap.remove(postId)
-                    likeMap.getLike(postId)
+                    refreshLikeMap(postId)
                 }
             }
         }

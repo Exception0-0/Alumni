@@ -42,13 +42,24 @@ class CommentsViewModel @Inject constructor(
 
     init {
         // loading post id in comment param
+        initScreenState()
+        loadComments()
+    }
+
+    private fun initScreenState() {
         screenState = screenState.copy(
             comment = screenState.comment.copy(
                 postId = commentsScreenArgs.postId
             )
         )
+    }
 
-        loadComments()
+    private fun removeCommentMessage() {
+        screenState = screenState.copy(
+            comment = screenState.comment.copy(
+                message = ""
+            )
+        )
     }
 
     private fun loadComments() {
@@ -87,9 +98,9 @@ class CommentsViewModel @Inject constructor(
 
             val addCommentResult = addCommentUseCase.invoke(screenState.comment)
 
-            addCommentResult.messageError?.let {
+            addCommentResult.let {
                 screenState = screenState.copy(
-                    commentError = it
+                    commentError = it.messageError
                 )
             }
 
@@ -108,13 +119,8 @@ class CommentsViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.successfully_comment_added)
                         )
                     )
-
-                    // removing message from comment box
-                    screenState = screenState.copy(
-                        comment = screenState.comment.copy(
-                            message = ""
-                        )
-                    )
+                    removeCommentMessage()
+                    loadComments()
                 }
 
                 null -> {}
@@ -140,6 +146,7 @@ class CommentsViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.successfully_comment_removed)
                         )
                     )
+                    loadComments()
                 }
             }
         }

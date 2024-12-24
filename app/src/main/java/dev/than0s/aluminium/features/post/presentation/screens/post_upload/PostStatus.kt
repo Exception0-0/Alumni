@@ -7,5 +7,6 @@ data class PostStatus(
     val post: Post = Post(),
     val isLoading: Boolean = false,
     val titleError: Error? = null,
+    val fileError: Error? = null,
     val descriptionError: Error? = null,
 )
