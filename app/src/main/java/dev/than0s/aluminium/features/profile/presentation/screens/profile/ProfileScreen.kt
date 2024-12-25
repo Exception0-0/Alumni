@@ -30,6 +30,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -160,23 +161,27 @@ private fun ProfileTabRow(
     openScreen: (Screen) -> Unit,
 ) {
     val navController = rememberNavController()
-
+    LaunchedEffect(key1 = screenState.tabRowSelectedIndex) {
+        navController.replace(
+            screen = tabRowItemList[screenState.tabRowSelectedIndex].screen(screenState.user.id)
+        )
+    }
     TabRow(
-        selectedTabIndex = screenState.tabSelection
+        selectedTabIndex = screenState.tabRowSelectedIndex
     ) {
-        screenState.tabRow.forEachIndexed { index, tabItem ->
+        tabRowItemList.forEachIndexed { index, tabItem ->
+            val isSelected = index == screenState.tabRowSelectedIndex
             Tab(
-                selected = index == screenState.tabSelection,
+                selected = isSelected,
                 onClick = {
                     onEvent(ProfileEvents.OnTabChanged(index))
-                    navController.replace(tabItem.screen)
                 },
                 text = {
                     Text(text = tabItem.title)
                 },
                 icon = {
                     Icon(
-                        imageVector = if (index == screenState.tabSelection) {
+                        imageVector = if (isSelected) {
                             tabItem.selectedIcon
                         } else {
                             tabItem.unselectedIcon
@@ -340,7 +345,40 @@ data class TabItem(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val screen: ProfileTabScreen
+    val screen: (String) -> ProfileTabScreen,
+)
+
+private val tabRowItemList = listOf(
+    TabItem(
+        title = "About",
+        selectedIcon = Icons.Filled.Info,
+        unselectedIcon = Icons.Outlined.Info,
+        screen = { userId ->
+            ProfileTabScreen.AboutScreen(
+                userId = userId
+            )
+        }
+    ),
+    TabItem(
+        title = "Contacts",
+        selectedIcon = Icons.Filled.AccountBox,
+        unselectedIcon = Icons.Outlined.AccountBox,
+        screen = { userId ->
+            ProfileTabScreen.ContactScreen(
+                userId = userId
+            )
+        }
+    ),
+    TabItem(
+        title = "Posts",
+        selectedIcon = Icons.Filled.GridView,
+        unselectedIcon = Icons.Outlined.GridView,
+        screen = { userId ->
+            ProfileTabScreen.PostsScreen(
+                userId = userId
+            )
+        }
+    ),
 )
 
 @Preview(showSystemUi = true)

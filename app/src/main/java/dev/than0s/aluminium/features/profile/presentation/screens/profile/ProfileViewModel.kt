@@ -39,38 +39,6 @@ class ProfileViewModel @Inject constructor(
 
     init {
         loadProfile()
-        loadTabRow()
-    }
-
-    private fun loadTabRow() {
-        screenState = screenState.copy(
-            tabRow = listOf(
-                TabItem(
-                    title = "About",
-                    selectedIcon = Icons.Filled.Info,
-                    unselectedIcon = Icons.Outlined.Info,
-                    screen = ProfileTabScreen.AboutScreen(
-                        userId = profileScreenArgs.userId
-                    )
-                ),
-                TabItem(
-                    title = "Contacts",
-                    selectedIcon = Icons.Filled.AccountBox,
-                    unselectedIcon = Icons.Outlined.AccountBox,
-                    screen = ProfileTabScreen.ContactScreen(
-                        userId = profileScreenArgs.userId
-                    )
-                ),
-                TabItem(
-                    title = "Posts",
-                    selectedIcon = Icons.Filled.GridView,
-                    unselectedIcon = Icons.Outlined.GridView,
-                    screen = ProfileTabScreen.PostsScreen(
-                        userId = profileScreenArgs.userId
-                    )
-                ),
-            )
-        )
     }
 
     private fun loadProfile() {
@@ -182,7 +150,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun onTabChanged(tabIndex: Int) {
-        screenState = screenState.copy(tabSelection = tabIndex)
+        screenState = screenState.copy(tabRowSelectedIndex = tabIndex)
     }
 
     fun onEvent(event: ProfileEvents) {

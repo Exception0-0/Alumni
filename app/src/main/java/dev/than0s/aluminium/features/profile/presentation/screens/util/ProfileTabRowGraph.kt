@@ -57,15 +57,7 @@ sealed class ProfileTabScreen {
 }
 
 fun NavHostController.replace(screen: ProfileTabScreen) {
-    navigate(screen) {
-        graph.startDestinationRoute?.let { route ->
-            popUpTo(route) {
-                inclusive = true
-                saveState = true
-            }
-        }
-        launchSingleTop = true
-        restoreState = true
-    }
+    popBackStack()
+    navigate(screen)
 }
 
