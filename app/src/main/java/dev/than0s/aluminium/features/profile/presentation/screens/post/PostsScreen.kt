@@ -1,8 +1,10 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.post
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -11,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
@@ -32,6 +35,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.composable.PostImageModifier
 import dev.than0s.aluminium.core.domain.data_class.Post
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLinearLoading
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.ui.Size
@@ -79,19 +83,30 @@ private fun PostsContent(
     if (screenState.isLoading) {
         AluminiumLinearLoading()
     } else {
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(MaterialTheme.Size.default),
-            content = {
-                items(screenState.postList) {
-                    PostPreviewCard(
-                        post = it,
-                        onClick = { postId ->
-                            onEvent(PostsEvents.OnPostClick(postId))
-                        }
-                    )
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(MaterialTheme.Size.default),
+                content = {
+                    items(screenState.postList) {
+                        PostPreviewCard(
+                            post = it,
+                            onClick = { postId ->
+                                onEvent(PostsEvents.OnPostClick(postId))
+                            }
+                        )
+                    }
                 }
-            }
-        )
+            )
+            AluminiumElevatedButton(
+                icon = Icons.Default.Add,
+                onClick = {
+                    openScreen(Screen.PostUploadScreen)
+                },
+                modifier = Modifier.align(Alignment.BottomEnd)
+            )
+        }
     }
 }
 
