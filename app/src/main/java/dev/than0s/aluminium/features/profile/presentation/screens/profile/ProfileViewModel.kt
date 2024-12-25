@@ -1,6 +1,13 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
 import android.net.Uri
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.AccountBox
+import androidx.compose.material.icons.outlined.GridView
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,6 +24,7 @@ import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetProfileUseCase
+import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileTabScreen
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,6 +39,38 @@ class ProfileViewModel @Inject constructor(
 
     init {
         loadProfile()
+        loadTabRow()
+    }
+
+    private fun loadTabRow() {
+        screenState = screenState.copy(
+            tabRow = listOf(
+                TabItem(
+                    title = "About",
+                    selectedIcon = Icons.Filled.Info,
+                    unselectedIcon = Icons.Outlined.Info,
+                    screen = ProfileTabScreen.AboutScreen(
+                        userId = profileScreenArgs.userId
+                    )
+                ),
+                TabItem(
+                    title = "Contacts",
+                    selectedIcon = Icons.Filled.AccountBox,
+                    unselectedIcon = Icons.Outlined.AccountBox,
+                    screen = ProfileTabScreen.ContactScreen(
+                        userId = profileScreenArgs.userId
+                    )
+                ),
+                TabItem(
+                    title = "Posts",
+                    selectedIcon = Icons.Filled.GridView,
+                    unselectedIcon = Icons.Outlined.GridView,
+                    screen = ProfileTabScreen.PostsScreen(
+                        userId = profileScreenArgs.userId
+                    )
+                ),
+            )
+        )
     }
 
     private fun loadProfile() {

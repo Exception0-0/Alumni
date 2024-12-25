@@ -5,6 +5,7 @@ import dev.than0s.aluminium.core.domain.error.Error
 
 data class ProfileState(
     val user: User = User(),
+    val tabRow: List<TabItem> = emptyList(),
     val dialogUser: User = User(),
     val isLoading: Boolean = false,
     val isUpdating: Boolean = false,

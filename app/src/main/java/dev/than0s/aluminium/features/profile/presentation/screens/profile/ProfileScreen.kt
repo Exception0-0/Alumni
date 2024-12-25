@@ -161,39 +161,10 @@ private fun ProfileTabRow(
 ) {
     val navController = rememberNavController()
 
-    val tabItemList = rememberSaveable {
-        listOf(
-            TabItem(
-                title = "About",
-                selectedIcon = Icons.Filled.Info,
-                unselectedIcon = Icons.Outlined.Info,
-                screen = ProfileTabScreen.AboutScreen(
-                    userId = screenState.user.id
-                )
-            ),
-            TabItem(
-                title = "Contacts",
-                selectedIcon = Icons.Filled.AccountBox,
-                unselectedIcon = Icons.Outlined.AccountBox,
-                screen = ProfileTabScreen.ContactScreen(
-                    userId = screenState.user.id
-                )
-            ),
-            TabItem(
-                title = "Posts",
-                selectedIcon = Icons.Filled.GridView,
-                unselectedIcon = Icons.Outlined.GridView,
-                screen = ProfileTabScreen.PostsScreen(
-                    userId = screenState.user.id
-                )
-            ),
-        )
-    }
-
     TabRow(
         selectedTabIndex = screenState.tabSelection
     ) {
-        tabItemList.forEachIndexed { index, tabItem ->
+        screenState.tabRow.forEachIndexed { index, tabItem ->
             Tab(
                 selected = index == screenState.tabSelection,
                 onClick = {
