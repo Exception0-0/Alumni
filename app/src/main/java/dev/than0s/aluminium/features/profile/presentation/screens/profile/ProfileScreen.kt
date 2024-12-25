@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -140,6 +141,7 @@ private fun ProfileScreenContent(
     if (screenState.isLoading) {
         AluminumLoading()
     } else {
+
         AsyncImage(
             model = screenState.user.coverImage,
             contentDescription = "Cover Image",
@@ -148,7 +150,6 @@ private fun ProfileScreenContent(
                 .background(color = colorResource(id = R.color.purple_500))
                 .height(128.dp)
         )
-//    }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
@@ -157,9 +158,6 @@ private fun ProfileScreenContent(
                 .padding(MaterialTheme.spacing.medium)
                 .padding(top = MaterialTheme.spacing.extraLarge)
         ) {
-//        if (screenState.isLoading) {
-//            AluminumLoading()
-//        } else {
             AluminiumAsyncImage(
                 model = screenState.user.profileImage,
                 settings = AluminiumAsyncImageSettings.UserProfile,
@@ -190,7 +188,6 @@ private fun ProfileScreenContent(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-//        }
 
             ProfileTabRow(
                 tabItems = tabItemList,
@@ -228,7 +225,7 @@ private fun ProfileTabRow(
             )
         }
     }
-    Surface(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(
