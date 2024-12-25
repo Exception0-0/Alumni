@@ -43,6 +43,7 @@ import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.composable.ShimmerCircularBackground
 import dev.than0s.aluminium.core.domain.data_class.Post
+import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
@@ -71,7 +72,7 @@ private fun PostsScreenContent(
     openScreen: (Screen) -> Unit,
 ) {
     if (screenState.isLoading) {
-        ShimmerList()
+        AluminumLoading()
     } else {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
@@ -234,60 +235,6 @@ private fun PostStatus(
                 title = "Comments",
                 fontSize = MaterialTheme.textSize.small
             )
-        }
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-private fun ShimmerListCard() {
-    AluminiumElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding()
-            .shimmer()
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.medium)
-                .fillMaxWidth()
-        ) {
-            ShimmerCircularBackground(
-                modifier = ProfileImageModifier.medium
-            )
-            ShimmerBackground(
-                modifier = Modifier
-                    .height(MaterialTheme.textSize.gigantic.value.dp)
-                    .width(MaterialTheme.Size.medium)
-            )
-            ShimmerBackground(
-                modifier = Modifier
-                    .height(MaterialTheme.textSize.small.value.dp)
-                    .width(MaterialTheme.Size.medium)
-            )
-            ShimmerBackground(
-                modifier = PostImageModifier.default
-            )
-            ShimmerBackground(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(MaterialTheme.Size.small)
-            )
-        }
-    }
-}
-
-@Composable
-private fun ShimmerList() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(MaterialTheme.spacing.medium)
-    ) {
-        for (i in 1..10) {
-            ShimmerListCard()
         }
     }
 }
