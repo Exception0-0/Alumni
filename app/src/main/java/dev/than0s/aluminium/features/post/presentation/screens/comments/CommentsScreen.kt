@@ -49,6 +49,7 @@ import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
 import dev.than0s.aluminium.features.post.domain.data_class.Comment
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
@@ -76,7 +77,7 @@ private fun CommentScreenContent(
     openScreen: (Screen) -> Unit,
 ) {
     if (screenState.isLoading) {
-        ShimmerCommentList()
+        AluminumLoading()
     } else {
         Scaffold(
             bottomBar = {
@@ -225,58 +226,58 @@ private fun CommentMenu(
     }
 }
 
-@Composable
-private fun ShimmerCommentCard() {
-    AluminiumElevatedCard(
-        modifier = Modifier
-            .padding(horizontal = MaterialTheme.spacing.small)
-            .fillMaxWidth()
-            .shimmer()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.spacing.small)
-        ) {
-            Row(
-                verticalAlignment = Alignment.Top,
-            ) {
-                ShimmerBackground(
-                    modifier = ProfileImageModifier.small
-                )
-                Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
-                ) {
-                    ShimmerBackground(
-                        modifier = Modifier
-                            .height(MaterialTheme.textSize.small.value.dp)
-                            .width(MaterialTheme.Size.small)
-                    )
-                    ShimmerBackground(
-                        modifier = Modifier
-                            .height(MaterialTheme.textSize.small.value.dp)
-                            .width(MaterialTheme.Size.medium)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ShimmerCommentList() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-    ) {
-        for (i in 1..10) {
-            ShimmerCommentCard()
-        }
-    }
-}
+//@Composable
+//private fun ShimmerCommentCard() {
+//    AluminiumElevatedCard(
+//        modifier = Modifier
+//            .padding(horizontal = MaterialTheme.spacing.small)
+//            .fillMaxWidth()
+//            .shimmer()
+//    ) {
+//        Row(
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(MaterialTheme.spacing.small)
+//        ) {
+//            Row(
+//                verticalAlignment = Alignment.Top,
+//            ) {
+//                ShimmerBackground(
+//                    modifier = ProfileImageModifier.small
+//                )
+//                Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
+//                Column(
+//                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+//                ) {
+//                    ShimmerBackground(
+//                        modifier = Modifier
+//                            .height(MaterialTheme.textSize.small.value.dp)
+//                            .width(MaterialTheme.Size.small)
+//                    )
+//                    ShimmerBackground(
+//                        modifier = Modifier
+//                            .height(MaterialTheme.textSize.small.value.dp)
+//                            .width(MaterialTheme.Size.medium)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//@Composable
+//private fun ShimmerCommentList() {
+//    Column(
+//        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+//        modifier = Modifier
+//            .verticalScroll(rememberScrollState())
+//    ) {
+//        for (i in 1..10) {
+//            ShimmerCommentCard()
+//        }
+//    }
+//}
 
 @Preview(showSystemUi = true)
 @Composable

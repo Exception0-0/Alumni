@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
+import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormat
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
@@ -47,7 +48,7 @@ fun AboutContent(
     onEvents: (AboutEvents) -> Unit,
 ) {
     if (screenState.isLoading) {
-        ShimmerAbout()
+        AluminumLoading()
     } else {
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
@@ -76,28 +77,28 @@ fun AboutContent(
     }
 }
 
-@Composable
-private fun ShimmerAbout() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .shimmer()
-    ) {
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.Size.small)
-                .fillMaxWidth()
-        )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.Size.small)
-                .fillMaxWidth()
-        )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.Size.small)
-                .fillMaxWidth()
-        )
-    }
-}
+//@Composable
+//private fun ShimmerAbout() {
+//    Column(
+//        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
+//        modifier = Modifier
+//            .verticalScroll(rememberScrollState())
+//            .shimmer()
+//    ) {
+//        ShimmerBackground(
+//            modifier = Modifier
+//                .height(MaterialTheme.Size.small)
+//                .fillMaxWidth()
+//        )
+//        ShimmerBackground(
+//            modifier = Modifier
+//                .height(MaterialTheme.Size.small)
+//                .fillMaxWidth()
+//        )
+//        ShimmerBackground(
+//            modifier = Modifier
+//                .height(MaterialTheme.Size.small)
+//                .fillMaxWidth()
+//        )
+//    }
+//}

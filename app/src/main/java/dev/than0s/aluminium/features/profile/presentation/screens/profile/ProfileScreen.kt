@@ -60,6 +60,7 @@ import dev.than0s.aluminium.core.presentation.composable.ShimmerCircularBackgrou
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
+import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
 import dev.than0s.aluminium.features.profile.presentation.screens.about.AboutScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.contact.ContactScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.post.PostsScreen
@@ -137,7 +138,7 @@ private fun ProfileScreenContent(
     }
 
     if (screenState.isLoading) {
-        ShimmerCoverImage()
+        AluminumLoading()
     } else {
         AsyncImage(
             model = screenState.user.coverImage,
@@ -147,18 +148,18 @@ private fun ProfileScreenContent(
                 .background(color = colorResource(id = R.color.purple_500))
                 .height(128.dp)
         )
-    }
+//    }
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(MaterialTheme.spacing.medium)
-            .padding(top = MaterialTheme.spacing.extraLarge)
-    ) {
-        if (screenState.isLoading) {
-            ShimmerProfile()
-        } else {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MaterialTheme.spacing.medium)
+                .padding(top = MaterialTheme.spacing.extraLarge)
+        ) {
+//        if (screenState.isLoading) {
+//            AluminumLoading()
+//        } else {
             AluminiumAsyncImage(
                 model = screenState.user.profileImage,
                 settings = AluminiumAsyncImageSettings.UserProfile,
@@ -189,13 +190,14 @@ private fun ProfileScreenContent(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-        }
+//        }
 
-        ProfileTabRow(
-            tabItems = tabItemList,
-            screenState = screenState,
-            onEvent = onEvent
-        )
+            ProfileTabRow(
+                tabItems = tabItemList,
+                screenState = screenState,
+                onEvent = onEvent
+            )
+        }
     }
 }
 
@@ -371,42 +373,42 @@ private fun UpdateProfileDialog(
     }
 }
 
-@Composable
-private fun ShimmerCoverImage() {
-    ShimmerBackground(
-        modifier = Modifier
-            .height(128.dp)
-            .fillMaxWidth()
-            .shimmer()
-    )
-}
-
-@Composable
-private fun ShimmerProfile() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-        modifier = Modifier
-            .shimmer()
-    ) {
-        ShimmerCircularBackground(
-            modifier = ProfileImageModifier.large
-        )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.textSize.large.value.dp)
-                .width(MaterialTheme.Size.small)
-        )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.textSize.small.value.dp)
-                .width(MaterialTheme.Size.medium)
-        )
-        ShimmerBackground(
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-    }
-}
+//@Composable
+//private fun ShimmerCoverImage() {
+//    ShimmerBackground(
+//        modifier = Modifier
+//            .height(128.dp)
+//            .fillMaxWidth()
+//            .shimmer()
+//    )
+//}
+//
+//@Composable
+//private fun ShimmerProfile() {
+//    Column(
+//        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+//        modifier = Modifier
+//            .shimmer()
+//    ) {
+//        ShimmerCircularBackground(
+//            modifier = ProfileImageModifier.large
+//        )
+//        ShimmerBackground(
+//            modifier = Modifier
+//                .height(MaterialTheme.textSize.large.value.dp)
+//                .width(MaterialTheme.Size.small)
+//        )
+//        ShimmerBackground(
+//            modifier = Modifier
+//                .height(MaterialTheme.textSize.small.value.dp)
+//                .width(MaterialTheme.Size.medium)
+//        )
+//        ShimmerBackground(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//        )
+//    }
+//}
 
 var tabItemList: List<TabItem> = emptyList()
 

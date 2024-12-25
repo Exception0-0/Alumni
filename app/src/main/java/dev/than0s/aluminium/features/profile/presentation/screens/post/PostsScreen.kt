@@ -34,6 +34,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.composable.PostImageModifier
 import dev.than0s.aluminium.core.domain.data_class.Post
+import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -83,7 +84,7 @@ private fun PostsContent(
     }
 
     if (screenState.isLoading) {
-        ShimmerPostList()
+        AluminumLoading()
     } else {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(MaterialTheme.Size.default),
@@ -171,28 +172,28 @@ private fun PostDetailCard(
     }
 }
 
-@Composable
-private fun ShimmerPostCard() {
-    AluminiumCard(
-        modifier = Modifier
-            .size(MaterialTheme.Size.medium)
-            .padding(MaterialTheme.spacing.extraSmall)
-            .shimmer(),
-        content = {}
-    )
-}
-
-@Composable
-private fun ShimmerPostList() {
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(MaterialTheme.Size.default),
-        content = {
-            items(10) {
-                ShimmerPostCard()
-            }
-        }
-    )
-}
+//@Composable
+//private fun ShimmerPostCard() {
+//    AluminiumCard(
+//        modifier = Modifier
+//            .size(MaterialTheme.Size.medium)
+//            .padding(MaterialTheme.spacing.extraSmall)
+//            .shimmer(),
+//        content = {}
+//    )
+//}
+//
+//@Composable
+//private fun ShimmerPostList() {
+//    LazyVerticalGrid(
+//        columns = GridCells.Adaptive(MaterialTheme.Size.default),
+//        content = {
+//            items(10) {
+//                ShimmerPostCard()
+//            }
+//        }
+//    )
+//}
 
 @Composable
 private fun PostStatus(
