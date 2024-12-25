@@ -17,13 +17,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
@@ -34,7 +32,8 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.composable.PostImageModifier
 import dev.than0s.aluminium.core.domain.data_class.Post
-import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLinearLoading
+import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -78,7 +77,7 @@ private fun PostsContent(
     }
 
     if (screenState.isLoading) {
-        AluminumLoading()
+        AluminiumLinearLoading()
     } else {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(MaterialTheme.Size.default),

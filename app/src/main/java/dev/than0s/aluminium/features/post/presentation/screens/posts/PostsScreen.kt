@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.ThumbUp
@@ -28,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.domain.data_class.User
@@ -40,11 +36,8 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.composable.PostImageModifier
 import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
-import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
-import dev.than0s.aluminium.core.presentation.composable.ShimmerCircularBackground
 import dev.than0s.aluminium.core.domain.data_class.Post
-import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
-import dev.than0s.aluminium.ui.Size
+import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -72,7 +65,7 @@ private fun PostsScreenContent(
     openScreen: (Screen) -> Unit,
 ) {
     if (screenState.isLoading) {
-        AluminumLoading()
+        AluminumCircularLoading()
     } else {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),

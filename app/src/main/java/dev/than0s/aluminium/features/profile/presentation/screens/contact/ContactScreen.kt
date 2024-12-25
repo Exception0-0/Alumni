@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -19,23 +17,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLinearLoading
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
+import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormat
-import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
-import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 
@@ -65,7 +60,7 @@ private fun ContactsContent(
     }
 
     if (screenState.isLoading) {
-        AluminumLoading()
+        AluminiumLinearLoading()
     } else {
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),

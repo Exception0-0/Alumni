@@ -58,7 +58,7 @@ import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
-import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
+import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileTabScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.util.replace
@@ -94,7 +94,7 @@ private fun ProfileScreenContent(
     }
 
     if (screenState.isLoading) {
-        AluminumLoading()
+        AluminumCircularLoading()
     } else {
 
         AsyncImage(
