@@ -26,16 +26,8 @@ import dev.than0s.aluminium.ui.spacing
 @Composable
 fun AboutScreen(
     viewModel: AboutViewModel = hiltViewModel(),
-    userId: String
 ) {
-    // TODO
-    LaunchedEffect(key1 = Unit) {
-        viewModel.userId = userId
-        viewModel.onEvent(AboutEvents.LoadAboutInfo)
-    }
-
     AboutContent(
-        aboutInfo = viewModel.aboutInfo,
         screenState = viewModel.screenState,
         onEvents = viewModel::onEvent
     )
@@ -43,7 +35,6 @@ fun AboutScreen(
 
 @Composable
 fun AboutContent(
-    aboutInfo: AboutInfo,
     screenState: AboutState,
     onEvents: (AboutEvents) -> Unit,
 ) {
@@ -56,49 +47,23 @@ fun AboutContent(
         ) {
             CardInfoFormat(
                 title = "Role",
-                info = aboutInfo.role.name,
+                info = screenState.aboutInfo.role.name,
                 icon = Icons.Outlined.Email,
             )
-            aboutInfo.course?.let {
+            screenState.aboutInfo.course?.let {
                 CardInfoFormat(
                     title = "Course",
                     info = it.name,
                     icon = Icons.Outlined.Phone,
                 )
             }
-            aboutInfo.batchFrom?.let {
+            screenState.aboutInfo.batchFrom?.let {
                 CardInfoFormat(
                     title = "Batch",
-                    info = "${aboutInfo.batchFrom} - ${aboutInfo.batchTo}",
+                    info = "${screenState.aboutInfo.batchFrom} - ${screenState.aboutInfo.batchTo}",
                     icon = Icons.Outlined.Star,
                 )
             }
         }
     }
 }
-
-//@Composable
-//private fun ShimmerAbout() {
-//    Column(
-//        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
-//        modifier = Modifier
-//            .verticalScroll(rememberScrollState())
-//            .shimmer()
-//    ) {
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .height(MaterialTheme.Size.small)
-//                .fillMaxWidth()
-//        )
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .height(MaterialTheme.Size.small)
-//                .fillMaxWidth()
-//        )
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .height(MaterialTheme.Size.small)
-//                .fillMaxWidth()
-//        )
-//    }
-//}

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -43,8 +42,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.asString
@@ -56,16 +55,13 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
-import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
-import dev.than0s.aluminium.core.presentation.composable.ShimmerCircularBackground
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
 import dev.than0s.aluminium.core.presentation.composable.AluminumLoading
-import dev.than0s.aluminium.features.profile.presentation.screens.about.AboutScreen
-import dev.than0s.aluminium.features.profile.presentation.screens.contact.ContactScreen
-import dev.than0s.aluminium.features.profile.presentation.screens.post.PostsScreen
-import dev.than0s.aluminium.ui.Size
+import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
+import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileTabScreen
+import dev.than0s.aluminium.features.profile.presentation.screens.util.replace
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -75,51 +71,11 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     openScreen: (Screen) -> Unit
 ) {
-    initTabItemList(
-        userId = viewModel.profileScreenArgs.userId,
-        openScreen = openScreen
-    )
-
     ProfileScreenContent(
         userId = viewModel.profileScreenArgs.userId,
         screenState = viewModel.screenState,
         onEvent = viewModel::onEvent,
         openScreen = openScreen
-    )
-}
-
-fun initTabItemList(
-    userId: String,
-    openScreen: (Screen) -> Unit
-) {
-    tabItemList = listOf(
-        TabItem(
-            title = "About",
-            selectedIcon = Icons.Filled.Info,
-            unselectedIcon = Icons.Outlined.Info,
-            screen = {
-                AboutScreen(userId = userId)
-            }
-        ),
-        TabItem(
-            title = "Contacts",
-            selectedIcon = Icons.Filled.AccountBox,
-            unselectedIcon = Icons.Outlined.AccountBox,
-            screen = {
-                ContactScreen(userId = userId)
-            }
-        ),
-        TabItem(
-            title = "Posts",
-            selectedIcon = Icons.Filled.GridView,
-            unselectedIcon = Icons.Outlined.GridView,
-            screen = {
-                PostsScreen(
-                    userId = userId,
-                    openScreen = openScreen
-                )
-            }
-        ),
     )
 }
 
@@ -130,7 +86,6 @@ private fun ProfileScreenContent(
     onEvent: (ProfileEvents) -> Unit,
     openScreen: (Screen) -> Unit
 ) {
-
     if (screenState.updateProfileDialog) {
         UpdateProfileDialog(
             screenState = screenState,
@@ -190,9 +145,9 @@ private fun ProfileScreenContent(
             }
 
             ProfileTabRow(
-                tabItems = tabItemList,
                 screenState = screenState,
-                onEvent = onEvent
+                onEvent = onEvent,
+                openScreen = openScreen
             )
         }
     }
@@ -200,25 +155,61 @@ private fun ProfileScreenContent(
 
 @Composable
 private fun ProfileTabRow(
-    tabItems: List<TabItem>,
     screenState: ProfileState,
-    onEvent: (ProfileEvents) -> Unit
+    onEvent: (ProfileEvents) -> Unit,
+    openScreen: (Screen) -> Unit,
 ) {
+    val navController = rememberNavController()
+
+    val tabItemList = rememberSaveable {
+        listOf(
+            TabItem(
+                title = "About",
+                selectedIcon = Icons.Filled.Info,
+                unselectedIcon = Icons.Outlined.Info,
+                screen = ProfileTabScreen.AboutScreen(
+                    userId = screenState.user.id
+                )
+            ),
+            TabItem(
+                title = "Contacts",
+                selectedIcon = Icons.Filled.AccountBox,
+                unselectedIcon = Icons.Outlined.AccountBox,
+                screen = ProfileTabScreen.ContactScreen(
+                    userId = screenState.user.id
+                )
+            ),
+            TabItem(
+                title = "Posts",
+                selectedIcon = Icons.Filled.GridView,
+                unselectedIcon = Icons.Outlined.GridView,
+                screen = ProfileTabScreen.PostsScreen(
+                    userId = screenState.user.id
+                )
+            ),
+        )
+    }
+
     TabRow(
         selectedTabIndex = screenState.tabSelection
     ) {
-        tabItems.forEachIndexed { index, tabItem ->
+        tabItemList.forEachIndexed { index, tabItem ->
             Tab(
                 selected = index == screenState.tabSelection,
                 onClick = {
                     onEvent(ProfileEvents.OnTabChanged(index))
+                    navController.replace(tabItem.screen)
                 },
                 text = {
                     Text(text = tabItem.title)
                 },
                 icon = {
                     Icon(
-                        imageVector = if (index == screenState.tabSelection) tabItem.selectedIcon else tabItem.unselectedIcon,
+                        imageVector = if (index == screenState.tabSelection) {
+                            tabItem.selectedIcon
+                        } else {
+                            tabItem.unselectedIcon
+                        },
                         contentDescription = tabItem.title
                     )
                 }
@@ -233,7 +224,11 @@ private fun ProfileTabRow(
                 vertical = MaterialTheme.spacing.large
             )
     ) {
-        tabItems[screenState.tabSelection].screen.invoke()
+        ProfileNavHost(
+            userId = screenState.user.id,
+            navController = navController,
+            openScreen = openScreen,
+        )
     }
 }
 
@@ -370,52 +365,12 @@ private fun UpdateProfileDialog(
     }
 }
 
-//@Composable
-//private fun ShimmerCoverImage() {
-//    ShimmerBackground(
-//        modifier = Modifier
-//            .height(128.dp)
-//            .fillMaxWidth()
-//            .shimmer()
-//    )
-//}
-//
-//@Composable
-//private fun ShimmerProfile() {
-//    Column(
-//        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-//        modifier = Modifier
-//            .shimmer()
-//    ) {
-//        ShimmerCircularBackground(
-//            modifier = ProfileImageModifier.large
-//        )
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .height(MaterialTheme.textSize.large.value.dp)
-//                .width(MaterialTheme.Size.small)
-//        )
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .height(MaterialTheme.textSize.small.value.dp)
-//                .width(MaterialTheme.Size.medium)
-//        )
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        )
-//    }
-//}
-
-var tabItemList: List<TabItem> = emptyList()
-
 data class TabItem(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val screen: @Composable () -> Unit
+    val screen: ProfileTabScreen
 )
-
 
 @Preview(showSystemUi = true)
 @Composable

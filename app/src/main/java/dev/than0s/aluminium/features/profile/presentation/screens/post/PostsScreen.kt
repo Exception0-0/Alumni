@@ -42,14 +42,8 @@ import dev.than0s.aluminium.ui.textSize
 @Composable
 fun PostsScreen(
     viewModel: PostsViewModel = hiltViewModel(),
-    userId: String,
     openScreen: (Screen) -> Unit
 ) {
-    LaunchedEffect(key1 = Unit) {
-        viewModel.userId = userId
-        viewModel.onEvent(PostsEvents.LoadPosts)
-    }
-
     PostsContent(
         screenState = viewModel.screenState,
         likeMap = viewModel.likeMap,
@@ -171,29 +165,6 @@ private fun PostDetailCard(
         }
     }
 }
-
-//@Composable
-//private fun ShimmerPostCard() {
-//    AluminiumCard(
-//        modifier = Modifier
-//            .size(MaterialTheme.Size.medium)
-//            .padding(MaterialTheme.spacing.extraSmall)
-//            .shimmer(),
-//        content = {}
-//    )
-//}
-//
-//@Composable
-//private fun ShimmerPostList() {
-//    LazyVerticalGrid(
-//        columns = GridCells.Adaptive(MaterialTheme.Size.default),
-//        content = {
-//            items(10) {
-//                ShimmerPostCard()
-//            }
-//        }
-//    )
-//}
 
 @Composable
 private fun PostStatus(

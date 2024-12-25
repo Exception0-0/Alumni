@@ -11,7 +11,8 @@ fun User.toRemoteUser(profileImageUri: Uri?, coverImageUri: Uri?): RemoteUser = 
     coverImageUri = coverImageUri.toString()
 )
 
-fun RemoteUser.toUser(): User = User(
+fun RemoteUser.toUser(userId: String): User = User(
+    id = userId,
     firstName = firstName,
     lastName = lastName,
     bio = bio,

@@ -75,7 +75,7 @@ class ProfileDataSourceImple @Inject constructor(
                 .get()
                 .await()
                 .toObject(RemoteUser::class.java)!!
-                .toUser()
+                .toUser(userId)
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }

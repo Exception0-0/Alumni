@@ -42,14 +42,9 @@ import dev.than0s.aluminium.ui.spacing
 @Composable
 fun ContactScreen(
     viewModel: ContactViewModel = hiltViewModel(),
-    userId: String
 ) {
-    LaunchedEffect(key1 = Unit) {
-        viewModel.userId = userId
-        viewModel.onEvent(ContactEvents.LoadContactInfo)
-    }
     ContactsContent(
-        isCurrentUser = viewModel.userId == currentUserId,
+        isCurrentUser = viewModel.contactScreenArgs.userId == currentUserId,
         screenState = viewModel.screenState,
         onEvents = viewModel::onEvent
     )
@@ -103,38 +98,6 @@ private fun ContactsContent(
         }
     }
 }
-
-//@Composable
-//private fun ShimmerContacts() {
-//    Column(
-//        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
-//        modifier = Modifier
-//            .verticalScroll(rememberScrollState())
-//            .shimmer()
-//    ) {
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .height(MaterialTheme.Size.small)
-//                .fillMaxWidth()
-//        )
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .height(MaterialTheme.Size.small)
-//                .fillMaxWidth()
-//        )
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .height(MaterialTheme.Size.small)
-//                .fillMaxWidth()
-//        )
-//
-//        ShimmerBackground(
-//            modifier = Modifier
-//                .height(MaterialTheme.Size.extraSmall)
-//                .width(MaterialTheme.Size.small)
-//        )
-//    }
-//}
 
 @Composable
 private fun UpdateContactInfo(

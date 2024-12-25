@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
@@ -17,25 +19,30 @@ import dev.than0s.aluminium.core.domain.use_case.AddLikeUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetCurrentUserLikeStatusUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetPostsUseCase
 import dev.than0s.aluminium.core.domain.use_case.RemoveLikeUseCase
+import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileTabScreen
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getPostsUseCase: GetPostsUseCase,
     private val removeLikeUseCase: RemoveLikeUseCase,
     private val addLikeUseCase: AddLikeUseCase,
     private val getCurrentUserLikeStatusUseCase: GetCurrentUserLikeStatusUseCase,
 ) : ViewModel() {
-    var userId = ""
+    private val postsScreenArgs = savedStateHandle.toRoute<ProfileTabScreen.PostsScreen>()
     var screenState by mutableStateOf(PostsState())
     val likeMap = mutableStateMapOf<String, Like?>()
+
+    init {
+        getUserPosts()
+    }
 
     private fun getUserPosts() {
         viewModelScope.launch {
             screenState = screenState.copy(isLoading = true)
-
-            when (val result = getPostsUseCase(userId)) {
+            when (val result = getPostsUseCase(postsScreenArgs.userId)) {
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
@@ -138,7 +145,7 @@ class PostsViewModel @Inject constructor(
                 }
             }
 
-            is PostsEvents.GetLike ->{
+            is PostsEvents.GetLike -> {
                 likeMap.getLike(event.postId)
             }
         }
