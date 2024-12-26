@@ -109,6 +109,9 @@ dependencies {
 
     // shimmer effect
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.1")
+
+    // lottie animation
+    implementation("com.airbnb.android:lottie-compose:4.0.0")
 }
 
 // Allow references to generated code

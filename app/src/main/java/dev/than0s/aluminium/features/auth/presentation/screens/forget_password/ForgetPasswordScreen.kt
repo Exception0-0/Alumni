@@ -1,11 +1,14 @@
 package dev.than0s.aluminium.features.auth.presentation.screens.forget_password
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mail
@@ -15,10 +18,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumFilledButton
@@ -46,57 +57,87 @@ private fun ForgetPasswordContent(
     onEvent: (ForgetPasswordEvents) -> Unit,
     popScreen: () -> Unit,
 ) {
-    AluminiumElevatedCard(
+    Column(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         modifier = Modifier
+            .fillMaxSize()
+            .wrapContentHeight()
             .padding(MaterialTheme.spacing.large)
-            .fillMaxHeight()
-            .wrapContentHeight(align = Alignment.CenterVertically)
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = MaterialTheme.spacing.large)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+        AluminiumElevatedCard {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(vertical = MaterialTheme.spacing.large)
             ) {
-                AluminiumTitleText(
-                    title = "Forget Password",
-                )
-            }
-
-            AluminiumTextField(
-                value = state.email,
-                onValueChange = { newValue ->
-                    onEvent(ForgetPasswordEvents.OnEmailChange(newValue))
-                },
-                supportingText = state.emailError?.message?.asString(),
-
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Mail,
-                        contentDescription = "Mail icon"
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    AluminiumTitleText(
+                        title = "Forget Password",
                     )
-                },
-                placeholder = "Email"
-            )
-            AluminiumLoadingFilledButton(
-                isLoading = state.isLoading,
-                onClick = {
-                    onEvent(
-                        ForgetPasswordEvents.OnForgetPasswordClick(
-                            popScreen = popScreen
-                        )
-                    )
-                },
-                enabled = !state.isLoading,
-                content = {
-                    Text("Forget Password")
                 }
-            )
+
+                AluminiumTextField(
+                    value = state.email,
+                    onValueChange = { newValue ->
+                        onEvent(ForgetPasswordEvents.OnEmailChange(newValue))
+                    },
+                    supportingText = state.emailError?.message?.asString(),
+
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Mail,
+                            contentDescription = "Mail icon"
+                        )
+                    },
+                    placeholder = "Email"
+                )
+                AluminiumLoadingFilledButton(
+                    isLoading = state.isLoading,
+                    onClick = {
+                        onEvent(
+                            ForgetPasswordEvents.OnForgetPasswordClick(
+                                popScreen = popScreen
+                            )
+                        )
+                    },
+                    enabled = !state.isLoading,
+                    content = {
+                        Text("Forget Password")
+                    }
+                )
+
+
+            }
         }
+        AnimatedPreloader(
+            modifier = Modifier
+                .size(150.dp)
+        )
     }
+}
+
+@Composable
+private fun AnimatedPreloader(modifier: Modifier = Modifier) {
+    val preloaderLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(
+            R.raw.forget_password_animation
+        )
+    )
+
+    val preloaderProgress by animateLottieCompositionAsState(
+        preloaderLottieComposition,
+        iterations = LottieConstants.IterateForever,
+        isPlaying = true
+    )
+
+    LottieAnimation(
+        composition = preloaderLottieComposition,
+        progress = preloaderProgress,
+        modifier = modifier
+    )
 }
 
 @Preview(showSystemUi = true)
