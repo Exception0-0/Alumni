@@ -40,6 +40,7 @@ import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -158,11 +159,9 @@ private fun ProfileCard(
                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
                 modifier = Modifier.padding(MaterialTheme.spacing.medium)
             ) {
-                AsyncImage(
+                AluminiumAsyncImage(
                     model = userProfile.profileImage,
                     contentDescription = "user profile image",
-                    contentScale = ContentScale.Crop,
-                    placeholder = painterResource(R.drawable.ic_launcher_background),
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CircleShape)

@@ -49,13 +49,11 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImageSettings
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
@@ -98,10 +96,10 @@ private fun ProfileScreenContent(
         AluminumCircularLoading()
     } else {
 
-        AsyncImage(
+        AluminiumAsyncImage(
             model = screenState.user.coverImage,
             contentDescription = "Cover Image",
-            contentScale = ContentScale.Crop,
+            onTapFullScreen = true,
             modifier = Modifier
                 .background(color = colorResource(id = R.color.purple_500))
                 .height(128.dp)
@@ -116,8 +114,10 @@ private fun ProfileScreenContent(
         ) {
             AluminiumAsyncImage(
                 model = screenState.user.profileImage,
-                settings = AluminiumAsyncImageSettings.UserProfile,
-                modifier = ProfileImageModifier.large
+                onTapFullScreen = true,
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape),
             )
             AluminiumTitleText(
                 title = "${screenState.user.firstName} ${screenState.user.lastName}",

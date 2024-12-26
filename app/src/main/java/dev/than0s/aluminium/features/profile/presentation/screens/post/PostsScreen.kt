@@ -28,16 +28,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImageSettings
 import dev.than0s.aluminium.core.presentation.composable.AluminiumCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.presentation.composable.PostImageModifier
 import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLinearLoading
-import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -127,8 +124,7 @@ private fun PostPreviewCard(
     ) {
         AluminiumAsyncImage(
             model = post.file,
-            settings = AluminiumAsyncImageSettings.PostImage,
-            isFullScreen = false,
+            onTapFullScreen = false,
             modifier = Modifier
         )
     }
@@ -162,8 +158,6 @@ private fun PostDetailCard(
 
         AluminiumAsyncImage(
             model = post.file,
-            settings = AluminiumAsyncImageSettings.PostImage,
-            modifier = PostImageModifier.default
         )
 
         AluminiumCard {

@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
@@ -29,13 +32,10 @@ import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImageSettings
 import dev.than0s.aluminium.core.presentation.composable.AluminiumCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.presentation.composable.PostImageModifier
-import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.ui.roundCorners
@@ -136,8 +136,10 @@ fun PostItem(
 
         AluminiumAsyncImage(
             model = post.file,
-            settings = AluminiumAsyncImageSettings.PostImage,
-            modifier = PostImageModifier.default
+            onTapFullScreen = true,
+            modifier = Modifier
+                .height(450.dp)
+                .width(360.dp)
         )
 
         AluminiumCard {
@@ -165,8 +167,10 @@ private fun UserDetail(
     ) {
         AluminiumAsyncImage(
             model = user.profileImage,
-            settings = AluminiumAsyncImageSettings.UserProfile,
-            modifier = ProfileImageModifier.medium
+            onTapFullScreen = true,
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
         )
         Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
         AluminiumTitleText(
