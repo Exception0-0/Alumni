@@ -29,7 +29,7 @@ fun AluminiumLinearLoading() {
         LinearProgressIndicator(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.TopCenter)
+                .align(Alignment.BottomCenter)
         )
     }
 }
