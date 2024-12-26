@@ -12,7 +12,7 @@ class AddLikeUseCase @Inject constructor(private val repository: LikeRepository)
         return repository.addLike(
             like.copy(
                 userId = currentUserId!!,
-                timestamp = Timestamp.now()
+                timestamp = System.currentTimeMillis()
             )
         )
     }

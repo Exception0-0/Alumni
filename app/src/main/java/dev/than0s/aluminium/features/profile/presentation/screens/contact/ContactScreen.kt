@@ -28,9 +28,8 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLinearLoading
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormat
-import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
+import dev.than0s.aluminium.core.domain.data_class.ContactInfo
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 
@@ -53,7 +52,7 @@ private fun ContactsContent(
 ) {
     if (isCurrentUser && screenState.updateDialog) {
         UpdateContactInfo(
-            contactInfo = screenState.contactInfo,
+            contactInfo = screenState.dialogContactInfo,
             screenState = screenState,
             onEvents = onEvents
         )
@@ -73,12 +72,12 @@ private fun ContactsContent(
             )
             CardInfoFormat(
                 title = "Mobile",
-                info = screenState.contactInfo.mobile ?: "No mobile number added",
+                info = screenState.contactInfo.mobile ?: "No mobile number added yet",
                 icon = Icons.Outlined.Phone,
             )
             CardInfoFormat(
                 title = "Social Handles",
-                info = screenState.contactInfo.socialHandles ?: "No social handles added",
+                info = screenState.contactInfo.socialHandles ?: "No social handles added yet",
                 icon = Icons.Outlined.Star,
             )
 

@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.post.data.data_source
+package dev.than0s.aluminium.features.post.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -8,10 +8,13 @@ import dev.than0s.aluminium.core.data.remote.POSTS
 import dev.than0s.aluminium.core.data.remote.USER_ID
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.core.domain.data_class.Like
+import dev.than0s.aluminium.features.post.data.mapper.RemoteLike
+import dev.than0s.aluminium.features.post.data.mapper.toLike
+import dev.than0s.aluminium.features.post.data.mapper.toRemoteLike
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-interface LikeDataSource {
+interface LikeRemote {
     suspend fun addLike(like: Like)
     suspend fun removeLike(like: Like)
     suspend fun getCurrentUserLikeStatus(postId: String): Like?
@@ -20,7 +23,7 @@ interface LikeDataSource {
 class LikeDataSourceImple @Inject constructor(
     private val auth: FirebaseAuth,
     private val store: FirebaseFirestore,
-) : LikeDataSource {
+) : LikeRemote {
 
     override suspend fun addLike(like: Like) {
         try {
@@ -53,10 +56,10 @@ class LikeDataSourceImple @Inject constructor(
             store.collection(POSTS)
                 .document(postId)
                 .collection(LIKES)
-                .whereEqualTo(USER_ID, auth.currentUser!!.uid)
+                .document(auth.currentUser!!.uid)
                 .get()
                 .await()
-                .toObjects(RemoteLike::class.java).getOrNull(0)
+                .toObject(RemoteLike::class.java)
                 ?.toLike(postId)
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())

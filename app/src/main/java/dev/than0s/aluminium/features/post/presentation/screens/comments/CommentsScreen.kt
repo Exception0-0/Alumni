@@ -43,7 +43,7 @@ import dev.than0s.aluminium.core.presentation.composable.ProfileImageModifier
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
-import dev.than0s.aluminium.features.post.domain.data_class.Comment
+import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
 

@@ -6,7 +6,7 @@ import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.features.profile.data.remote.ProfileDataSource
-import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
+import dev.than0s.aluminium.core.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
 import javax.inject.Inject
 

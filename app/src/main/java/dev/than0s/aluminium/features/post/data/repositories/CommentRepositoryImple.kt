@@ -4,12 +4,12 @@ import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SimpleResource
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.data.remote.error.ServerException
-import dev.than0s.aluminium.features.post.data.data_source.CommentDataSource
-import dev.than0s.aluminium.features.post.domain.data_class.Comment
+import dev.than0s.aluminium.features.post.data.remote.CommentRemote
+import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.repository.CommentRepository
 import javax.inject.Inject
 
-class CommentRepositoryImple @Inject constructor(private val dataSource: CommentDataSource) :
+class CommentRepositoryImple @Inject constructor(private val dataSource: CommentRemote) :
     CommentRepository {
     override suspend fun addComment(comment: Comment): SimpleResource {
         return try {

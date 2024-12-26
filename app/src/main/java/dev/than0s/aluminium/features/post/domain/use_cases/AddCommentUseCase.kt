@@ -5,7 +5,7 @@ import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.util.generateUniqueId
 import dev.than0s.aluminium.core.presentation.error.TextFieldError
 import dev.than0s.aluminium.features.post.domain.data_class.AddCommentResult
-import dev.than0s.aluminium.features.post.domain.data_class.Comment
+import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.repository.CommentRepository
 import javax.inject.Inject
 
@@ -25,7 +25,7 @@ class AddCommentUseCase @Inject constructor(private val repository: CommentRepos
                 comment.copy(
                     id = generateUniqueId(),
                     userId = currentUserId!!,
-                    timestamp = Timestamp.now()
+                    timestamp = System.currentTimeMillis()
                 )
             )
         )

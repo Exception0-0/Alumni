@@ -1,7 +1,7 @@
 package dev.than0s.aluminium.features.profile.domain.use_cases
 
 import dev.than0s.aluminium.core.Resource
-import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
+import dev.than0s.aluminium.core.domain.data_class.AboutInfo
 import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
 import javax.inject.Inject
 

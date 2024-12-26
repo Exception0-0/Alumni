@@ -6,17 +6,17 @@ import dev.than0s.aluminium.core.data.remote.error.ServerException
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-interface AuthDataSource {
+interface AuthRemote {
     suspend fun signIn(email: String, password: String)
     suspend fun signUp(email: String, password: String)
     suspend fun forgetPassword(email: String)
     suspend fun signOut()
 }
 
-class AuthDataSourceImple @Inject constructor(
+class AuthRemoteImple @Inject constructor(
     private val auth: FirebaseAuth,
 ) :
-    AuthDataSource {
+    AuthRemote {
     override suspend fun signIn(email: String, password: String) {
         try {
             auth.signInWithEmailAndPassword(email, password).await()

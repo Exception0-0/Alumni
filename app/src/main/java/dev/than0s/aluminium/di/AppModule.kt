@@ -12,19 +12,19 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.than0s.aluminium.features.auth.data.remote.AuthDataSource
-import dev.than0s.aluminium.features.auth.data.remote.AuthDataSourceImple
+import dev.than0s.aluminium.features.auth.data.remote.AuthRemote
+import dev.than0s.aluminium.features.auth.data.remote.AuthRemoteImple
 import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSource
 import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryImple
 import dev.than0s.aluminium.features.auth.data.repository.AuthRepositoryImple
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
-import dev.than0s.aluminium.features.post.data.data_source.CommentDataSource
-import dev.than0s.aluminium.features.post.data.data_source.CommentDataSourceImple
-import dev.than0s.aluminium.features.post.data.data_source.LikeDataSource
-import dev.than0s.aluminium.features.post.data.data_source.LikeDataSourceImple
-import dev.than0s.aluminium.features.post.data.data_source.PostDataSource
-import dev.than0s.aluminium.features.post.data.data_source.PostDataSourceImple
+import dev.than0s.aluminium.features.post.data.remote.CommentRemote
+import dev.than0s.aluminium.features.post.data.remote.CommentRemoteImple
+import dev.than0s.aluminium.features.post.data.remote.LikeRemote
+import dev.than0s.aluminium.features.post.data.remote.LikeDataSourceImple
+import dev.than0s.aluminium.features.post.data.remote.PostRemote
+import dev.than0s.aluminium.features.post.data.remote.PostRemoteImple
 import dev.than0s.aluminium.features.post.data.repositories.CommentRepositoryImple
 import dev.than0s.aluminium.features.post.data.repositories.LikeRepositoryImple
 import dev.than0s.aluminium.features.post.data.repositories.PostRepositoryImple
@@ -50,26 +50,26 @@ import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSourceIm
 abstract class AppModule {
     // auth
     @Binds
-    abstract fun bindAuthDataSource(imple: AuthDataSourceImple): AuthDataSource
+    abstract fun bindAuthDataSource(imple: AuthRemoteImple): AuthRemote
 
     @Binds
     abstract fun bindAuthRepository(imple: AuthRepositoryImple): AuthRepository
 
     // post
     @Binds
-    abstract fun bindPostDataSource(imple: PostDataSourceImple): PostDataSource
+    abstract fun bindPostDataSource(imple: PostRemoteImple): PostRemote
 
     @Binds
     abstract fun bindPostRepository(imple: PostRepositoryImple): PostRepository
 
     @Binds
-    abstract fun bindLikeDataSource(imple: LikeDataSourceImple): LikeDataSource
+    abstract fun bindLikeDataSource(imple: LikeDataSourceImple): LikeRemote
 
     @Binds
     abstract fun bindLikeRepository(imple: LikeRepositoryImple): LikeRepository
 
     @Binds
-    abstract fun bindCommentDataSource(imple: CommentDataSourceImple): CommentDataSource
+    abstract fun bindCommentDataSource(imple: CommentRemoteImple): CommentRemote
 
     @Binds
     abstract fun bindCommentRepository(imple: CommentRepositoryImple): CommentRepository

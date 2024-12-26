@@ -12,10 +12,12 @@ import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
 import dev.than0s.aluminium.core.data.remote.error.ServerException
-import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
+import dev.than0s.aluminium.core.domain.data_class.AboutInfo
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.domain.util.isLocalUri
+import dev.than0s.aluminium.features.profile.data.mapper.RemoteAboutInfo
 import dev.than0s.aluminium.features.profile.data.mapper.RemoteUser
+import dev.than0s.aluminium.features.profile.data.mapper.toAboutInfo
 import dev.than0s.aluminium.features.profile.data.mapper.toRemoteUser
 import dev.than0s.aluminium.features.profile.data.mapper.toUser
 import kotlinx.coroutines.tasks.await
@@ -35,20 +37,23 @@ class ProfileDataSourceImple @Inject constructor(
 
     override suspend fun setUserProfile(user: User) {
         try {
-            var profileImageUri: Uri? = null
-            var coverImageUri: Uri? = null
 
-            user.profileImage?.let {
-                profileImageUri = uploadProfileImage(it)
+            val profileImageUri = user.profileImage?.let {
+                uploadProfileImage(it)
             }
 
-            user.coverImage?.let {
-                coverImageUri = uploadCoverImage(it)
+            val coverImageUri = user.coverImage?.let {
+                uploadCoverImage(it)
             }
 
             store.collection(PROFILE)
                 .document(auth.currentUser!!.uid)
-                .set(user.toRemoteUser(profileImageUri, coverImageUri))
+                .set(
+                    user.copy(
+                        profileImage = profileImageUri,
+                        coverImage = coverImageUri,
+                    ).toRemoteUser()
+                )
                 .await()
 
         } catch (e: FirebaseFirestoreException) {
@@ -62,7 +67,8 @@ class ProfileDataSourceImple @Inject constructor(
                 .document(userId)
                 .get()
                 .await()
-                .toObject()!!
+                .toObject<RemoteAboutInfo>()!!
+                .toAboutInfo()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
@@ -75,7 +81,7 @@ class ProfileDataSourceImple @Inject constructor(
                 .get()
                 .await()
                 .toObject(RemoteUser::class.java)!!
-                .toUser(userId)
+                .toUser()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }

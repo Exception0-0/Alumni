@@ -38,7 +38,7 @@ class AddPostUseCase @Inject constructor(private val repository: PostRepository)
                 post.copy(
                     id = generateUniqueId(),
                     userId = currentUserId!!,
-                    timestamp = Timestamp.now()
+                    timestamp = System.currentTimeMillis()
                 )
             )
         )

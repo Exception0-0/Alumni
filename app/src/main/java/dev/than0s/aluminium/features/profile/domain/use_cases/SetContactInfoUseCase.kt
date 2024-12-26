@@ -4,7 +4,7 @@ import dev.than0s.aluminium.core.domain.util.isValidEmail
 import dev.than0s.aluminium.core.domain.util.isValidLink
 import dev.than0s.aluminium.core.domain.util.isValidPhoneNumber
 import dev.than0s.aluminium.core.presentation.error.TextFieldError
-import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
+import dev.than0s.aluminium.core.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.data_class.SetContactInfoResult
 import dev.than0s.aluminium.features.profile.domain.repository.ContactRepository
 import javax.inject.Inject

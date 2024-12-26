@@ -5,11 +5,11 @@ import dev.than0s.aluminium.core.SimpleResource
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.core.domain.data_class.Post
-import dev.than0s.aluminium.features.post.data.data_source.PostDataSource
+import dev.than0s.aluminium.features.post.data.remote.PostRemote
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
 import javax.inject.Inject
 
-class PostRepositoryImple @Inject constructor(private val dataSource: PostDataSource) :
+class PostRepositoryImple @Inject constructor(private val dataSource: PostRemote) :
     PostRepository {
 
     override suspend fun addPost(post: Post): SimpleResource {

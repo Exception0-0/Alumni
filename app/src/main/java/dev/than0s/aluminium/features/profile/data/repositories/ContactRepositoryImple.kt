@@ -5,7 +5,7 @@ import dev.than0s.aluminium.core.SimpleResource
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.features.profile.data.remote.ContactRemote
-import dev.than0s.aluminium.features.profile.domain.data_class.ContactInfo
+import dev.than0s.aluminium.core.domain.data_class.ContactInfo
 import dev.than0s.aluminium.features.profile.domain.repository.ContactRepository
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class ContactRepositoryImple @Inject constructor(
         }
     }
 
-    override suspend fun getContactInfo(userId: String): Resource<ContactInfo> {
+    override suspend fun getContactInfo(userId: String): Resource<ContactInfo?> {
         return try {
             Resource.Success(dataSource.getContactInfo(userId))
         } catch (e: ServerException) {

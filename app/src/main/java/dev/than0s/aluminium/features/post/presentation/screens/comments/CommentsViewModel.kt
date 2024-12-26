@@ -17,7 +17,7 @@ import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.features.post.domain.data_class.Comment
+import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.use_cases.AddCommentUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.GetCommentUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.RemoveCommentUseCase

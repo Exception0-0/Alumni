@@ -1,7 +1,7 @@
 package dev.than0s.aluminium.features.post.presentation.screens.comments
 
 import dev.than0s.aluminium.core.domain.error.Error
-import dev.than0s.aluminium.features.post.domain.data_class.Comment
+import dev.than0s.aluminium.core.domain.data_class.Comment
 
 data class CommentState(
     val isLoading: Boolean = false,

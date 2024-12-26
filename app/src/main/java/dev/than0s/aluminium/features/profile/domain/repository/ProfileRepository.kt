@@ -2,7 +2,7 @@ package dev.than0s.aluminium.features.profile.domain.repository
 
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SimpleResource
-import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
+import dev.than0s.aluminium.core.domain.data_class.AboutInfo
 import dev.than0s.aluminium.core.domain.data_class.User
 
 interface ProfileRepository {

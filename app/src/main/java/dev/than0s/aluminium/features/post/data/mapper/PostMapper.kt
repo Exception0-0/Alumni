@@ -5,18 +5,14 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
 import dev.than0s.aluminium.core.domain.data_class.Post
 
-fun List<RemotePost>.toPost(): List<Post> {
-    return this.map {
-        Post(
-            id = it.id,
-            userId = it.userId,
-            file = Uri.parse(it.file),
-            title = it.title,
-            description = it.description,
-            timestamp = it.timestamp,
-        )
-    }
-}
+fun RemotePost.toPost(): Post = Post(
+    id = id,
+    userId = userId,
+    file = Uri.parse(file),
+    title = title,
+    description = description,
+    timestamp = timestamp.seconds,
+)
 
 fun Post.toRemotePost() = RemotePost(
     id = id,
@@ -24,14 +20,14 @@ fun Post.toRemotePost() = RemotePost(
     file = file.toString(),
     title = title,
     description = description,
-    timestamp = timestamp
+    timestamp = Timestamp(timestamp, 0)
 )
 
 data class RemotePost(
     @DocumentId
     val id: String = "",
     val userId: String = "",
-    val file: String = Uri.EMPTY.toString(),
+    val file: String = "",
     val title: String = "",
     val description: String = "",
     val timestamp: Timestamp = Timestamp.now()

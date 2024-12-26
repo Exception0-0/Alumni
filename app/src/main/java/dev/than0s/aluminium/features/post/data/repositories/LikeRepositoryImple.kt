@@ -5,12 +5,12 @@ import dev.than0s.aluminium.core.SimpleResource
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.core.domain.data_class.Like
-import dev.than0s.aluminium.features.post.data.data_source.LikeDataSource
+import dev.than0s.aluminium.features.post.data.remote.LikeRemote
 import dev.than0s.aluminium.features.post.domain.repository.LikeRepository
 import javax.inject.Inject
 
 class LikeRepositoryImple @Inject constructor(
-    private val likeRemote: LikeDataSource,
+    private val likeRemote: LikeRemote,
 ) : LikeRepository {
     override suspend fun addLike(like: Like): SimpleResource {
         return try {

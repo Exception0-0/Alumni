@@ -10,6 +10,7 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
+import dev.than0s.aluminium.core.domain.data_class.ContactInfo
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
@@ -46,7 +47,9 @@ class ContactViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    screenState = screenState.copy(contactInfo = result.data!!)
+                    result.data?.let {
+                        screenState = screenState.copy(contactInfo = it)
+                    }
                 }
             }
             screenState = screenState.copy(isLoading = false)
@@ -55,7 +58,7 @@ class ContactViewModel @Inject constructor(
 
     private fun onContactInfoUpdateClick() {
         viewModelScope.launch {
-            val setContactInfoResult = setContactInfoUseCase(screenState.contactInfo)
+            val setContactInfoResult = setContactInfoUseCase(screenState.dialogContactInfo)
 
             setContactInfoResult.let {
                 screenState = screenState.copy(
@@ -80,6 +83,8 @@ class ContactViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.successfully_update_contact_info)
                         )
                     )
+                    onContactUpdateDialogDismissRequest()
+                    loadContactInfo()
                 }
 
                 null -> {}
@@ -90,24 +95,27 @@ class ContactViewModel @Inject constructor(
 
     private fun onEmailChange(email: String) {
         screenState = screenState.copy(
-            contactInfo = screenState.contactInfo.copy(email = email)
+            dialogContactInfo = screenState.dialogContactInfo.copy(email = email)
         )
     }
 
     private fun onMobileChange(mobile: String) {
         screenState = screenState.copy(
-            contactInfo = screenState.contactInfo.copy(mobile = mobile)
+            dialogContactInfo = screenState.dialogContactInfo.copy(mobile = mobile)
         )
     }
 
     private fun onSocialHandleChange(handle: String) {
         screenState = screenState.copy(
-            contactInfo = screenState.contactInfo.copy(socialHandles = handle)
+            dialogContactInfo = screenState.dialogContactInfo.copy(socialHandles = handle)
         )
     }
 
     private fun onContactEditClick() {
-        screenState = screenState.copy(updateDialog = true)
+        screenState = screenState.copy(
+            dialogContactInfo = screenState.contactInfo,
+            updateDialog = true
+        )
     }
 
     private fun onContactUpdateDialogDismissRequest() {

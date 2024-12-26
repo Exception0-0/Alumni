@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.post.data.data_source
+package dev.than0s.aluminium.features.post.data.remote
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -6,19 +6,22 @@ import com.google.firebase.firestore.toObjects
 import dev.than0s.aluminium.core.data.remote.COMMENTS
 import dev.than0s.aluminium.core.data.remote.POSTS
 import dev.than0s.aluminium.core.data.remote.error.ServerException
-import dev.than0s.aluminium.features.post.domain.data_class.Comment
+import dev.than0s.aluminium.core.domain.data_class.Comment
+import dev.than0s.aluminium.features.post.data.mapper.RemoteComment
+import dev.than0s.aluminium.features.post.data.mapper.toComment
+import dev.than0s.aluminium.features.post.data.mapper.toRemoteComment
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-interface CommentDataSource {
+interface CommentRemote {
     suspend fun getComments(postId: String): List<Comment>
     suspend fun addComment(comment: Comment)
     suspend fun removeComment(comment: Comment)
 }
 
-class CommentDataSourceImple @Inject constructor(
+class CommentRemoteImple @Inject constructor(
     private val store: FirebaseFirestore,
-) : CommentDataSource {
+) : CommentRemote {
 
     override suspend fun addComment(comment: Comment) {
         try {
@@ -26,7 +29,7 @@ class CommentDataSourceImple @Inject constructor(
                 .document(comment.postId)
                 .collection(COMMENTS)
                 .document(comment.id)
-                .set(comment)
+                .set(comment.toRemoteComment())
                 .await()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
@@ -53,7 +56,8 @@ class CommentDataSourceImple @Inject constructor(
                 .collection(COMMENTS)
                 .get()
                 .await()
-                .toObjects()
+                .toObjects(RemoteComment::class.java)
+                .map { it.toComment(postId) }
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }

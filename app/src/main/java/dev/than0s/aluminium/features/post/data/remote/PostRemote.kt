@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.post.data.data_source
+package dev.than0s.aluminium.features.post.data.remote
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -10,20 +10,21 @@ import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.features.post.data.mapper.RemotePost
 import dev.than0s.aluminium.features.post.data.mapper.toPost
 import dev.than0s.aluminium.core.domain.data_class.Post
+import dev.than0s.aluminium.features.post.data.mapper.toRemotePost
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-interface PostDataSource {
+interface PostRemote {
     suspend fun getPosts(userId: String?): List<Post>
     suspend fun addPost(post: Post)
     suspend fun deletePost(postId: String)
 }
 
-class PostDataSourceImple @Inject constructor(
+class PostRemoteImple @Inject constructor(
     private val store: FirebaseFirestore,
     private val cloud: FirebaseStorage,
 ) :
-    PostDataSource {
+    PostRemote {
 
     override suspend fun getPosts(userId: String?): List<Post> {
         return try {
@@ -33,13 +34,13 @@ class PostDataSourceImple @Inject constructor(
                     .get()
                     .await()
                     .toObjects<RemotePost>()
-                    .toPost()
+                    .map { it.toPost() }
             } else {
                 store.collection(POSTS)
                     .get()
                     .await()
                     .toObjects<RemotePost>()
-                    .toPost()
+                    .map { it.toPost() }
             }
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
@@ -52,12 +53,13 @@ class PostDataSourceImple @Inject constructor(
                 .child("$POSTS/${post.id}/0")
                 .putFile(post.file)
                 .await()
-                .storage.downloadUrl
+                .storage
+                .downloadUrl
                 .await()
                 .let {
                     store.collection(POSTS)
                         .document(post.id)
-                        .set(post.copy(file = it))
+                        .set(post.copy(file = it).toRemotePost())
                         .await()
                 }
         } catch (e: FirebaseFirestoreException) {

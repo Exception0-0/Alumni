@@ -1,6 +1,6 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.about
 
-import dev.than0s.aluminium.features.profile.domain.data_class.AboutInfo
+import dev.than0s.aluminium.core.domain.data_class.AboutInfo
 
 data class AboutState(
     val aboutInfo: AboutInfo = AboutInfo(),
