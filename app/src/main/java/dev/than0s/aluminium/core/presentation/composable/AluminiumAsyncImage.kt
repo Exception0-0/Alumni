@@ -9,17 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,13 +24,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import coil.compose.SubcomposeAsyncImage
 import com.valentinilk.shimmer.shimmer
 
@@ -57,12 +51,35 @@ fun AluminiumAsyncImage(
                 onDismissRequest = {
                     fullScreenState = false
                 },
-                sheetState = rememberModalBottomSheetState(true),
+                sheetState = rememberModalBottomSheetState(true, { false }),
                 dragHandle = null,
                 content = {
-                    PinchZoomImage(
-                        model = model,
-                    )
+                    Scaffold(
+                        topBar = {
+                            TopAppBar(
+                                title = {
+                                    contentDescription?.let {
+                                        Text(it)
+                                    }
+                                },
+                                navigationIcon = {
+                                    IconButton(onClick = {
+                                        fullScreenState = false
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = "back button"
+                                        )
+                                    }
+                                },
+                            )
+                        }
+                    ) { contentPadding ->
+                        PinchZoomImage(
+                            model = model,
+                            modifier = Modifier.padding(contentPadding)
+                        )
+                    }
                 }
             )
         }
@@ -120,7 +137,7 @@ private fun PinchZoomImage(
             },
             contentDescription = null,
             modifier = Modifier
-                .fillMaxSize()
+                .align(Alignment.Center)
                 .graphicsLayer {
                     scaleX = scale
                     scaleY = scale
