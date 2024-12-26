@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.auth.data.remote
 
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import dev.than0s.aluminium.core.data.remote.error.ServerException
@@ -22,6 +23,8 @@ class AuthRemoteImple @Inject constructor(
             auth.signInWithEmailAndPassword(email, password).await()
         } catch (e: FirebaseAuthException) {
             throw ServerException(e.message.toString())
+        } catch (e: FirebaseNetworkException) {
+            throw ServerException(e.message.toString())
         }
     }
 
@@ -29,6 +32,8 @@ class AuthRemoteImple @Inject constructor(
         try {
             auth.createUserWithEmailAndPassword(email, password).await()
         } catch (e: FirebaseAuthException) {
+            throw ServerException(e.message.toString())
+        } catch (e: FirebaseNetworkException) {
             throw ServerException(e.message.toString())
         }
     }
@@ -38,6 +43,8 @@ class AuthRemoteImple @Inject constructor(
             auth.signOut()
         } catch (e: FirebaseAuthException) {
             throw ServerException(e.message.toString())
+        } catch (e: FirebaseNetworkException) {
+            throw ServerException(e.message.toString())
         }
     }
 
@@ -45,6 +52,8 @@ class AuthRemoteImple @Inject constructor(
         try {
             auth.sendPasswordResetEmail(email).await()
         } catch (e: FirebaseAuthException) {
+            throw ServerException(e.message.toString())
+        } catch (e: FirebaseNetworkException) {
             throw ServerException(e.message.toString())
         }
     }

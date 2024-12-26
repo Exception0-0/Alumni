@@ -43,7 +43,7 @@ class SplashViewModel @Inject constructor(
                     }
 
                     when (currentUserRole) {
-                        null -> popAndOpen(Screen.SignInScreen)
+                        Role.Anonymous -> popAndOpen(Screen.SignInScreen)
                         Role.Admin -> popAndOpen(Screen.RegistrationRequestsScreen)
                         else -> {
                             if (hasUserProfileCreate()) {

@@ -24,6 +24,8 @@ class ForgetPasswordViewModel @Inject constructor(private val useCase: ForgetPas
         popScreen: () -> Unit,
     ) {
         viewModelScope.launch {
+            state = state.copy(isLoading = true)
+
             val forgetPasswordResult = useCase(state.email)
 
             forgetPasswordResult.let {
@@ -52,6 +54,7 @@ class ForgetPasswordViewModel @Inject constructor(private val useCase: ForgetPas
 
                 null -> {}
             }
+            state = state.copy(isLoading = false)
         }
     }
 
