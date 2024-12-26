@@ -59,6 +59,7 @@ private fun ForgetPasswordContent(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .wrapContentHeight()
