@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -170,6 +171,7 @@ private fun ContactInfoSection(
         onValueChange = { newValue ->
             onEvent(RegistrationEvents.OnEmailChange(newValue))
         },
+        keyboardType = KeyboardType.Email,
         supportingText = screenState.emailError?.message?.asString(),
         placeholder = "Email"
     )
@@ -207,6 +209,7 @@ private fun CollegeInfoSection(
         onValueChange = { newValue ->
             onEvent(RegistrationEvents.OnCollegeIdChange(newValue))
         },
+        keyboardType = KeyboardType.Number,
         supportingText = screenState.collageIdError?.message?.asString(),
         placeholder = "College Id"
     )
@@ -231,6 +234,7 @@ private fun CollegeInfoSection(
                 onValueChange = {
                     onEvent(RegistrationEvents.OnBatchFromChange(it))
                 },
+                keyboardType = KeyboardType.Number,
                 supportingText = screenState.batchFromError?.message?.asString(),
                 placeholder = "Batch - From",
                 modifier = Modifier.weight(0.3f)
@@ -241,6 +245,7 @@ private fun CollegeInfoSection(
                 onValueChange = {
                     onEvent(RegistrationEvents.OnBatchToChange(it))
                 },
+                keyboardType = KeyboardType.Number,
                 supportingText = screenState.batchToError?.message?.asString(),
                 placeholder = "Batch - To",
                 modifier = Modifier.weight(0.3f)

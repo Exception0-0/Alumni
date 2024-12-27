@@ -2,10 +2,7 @@ package dev.than0s.aluminium.features.auth.presentation.screens.sign_in
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -17,20 +14,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.core.presentation.composable.AluminiumClickableText
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingElevatedButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumPasswordTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingFilledButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimation
+import dev.than0s.aluminium.core.presentation.composable.AluminiumPasswordTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.spacing
 
 @Composable
@@ -76,6 +73,7 @@ private fun SignInScreenContent(
                 AluminiumTextField(
                     value = screenState.email,
                     enable = !screenState.isLoading,
+                    keyboardType = KeyboardType.Email,
                     supportingText = screenState.emailError?.message?.asString(),
                     onValueChange = { newValue ->
                         onEvent(SignInEvents.OnEmailChanged(newValue))
