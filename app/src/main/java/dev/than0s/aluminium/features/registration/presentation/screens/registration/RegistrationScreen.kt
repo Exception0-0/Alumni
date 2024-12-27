@@ -58,17 +58,18 @@ private fun RegistrationScreenContent(
     val isLastIndex = screenState.formIndex == registrationFormSectionList.lastIndex
     val isIndexZero = screenState.formIndex == 0
     Column(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .wrapContentHeight()
+            .padding(MaterialTheme.spacing.large)
     ) {
         AluminiumElevatedCard {
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(MaterialTheme.spacing.large)
+                modifier = Modifier.padding(MaterialTheme.spacing.large)
             ) {
                 AluminiumTitleText(
                     title = registrationFormSectionList[screenState.formIndex].name,
