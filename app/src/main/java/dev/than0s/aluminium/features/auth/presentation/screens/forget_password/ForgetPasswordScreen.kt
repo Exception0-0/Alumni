@@ -58,16 +58,11 @@ private fun ForgetPasswordContent(
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(vertical = MaterialTheme.spacing.large)
+                modifier = Modifier.padding(MaterialTheme.spacing.large)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    AluminiumTitleText(
-                        title = "Forget Password",
-                    )
-                }
+                AluminiumTitleText(
+                    title = "Forget Password",
+                )
 
                 AluminiumTextField(
                     value = state.email,
@@ -98,8 +93,6 @@ private fun ForgetPasswordContent(
                         Text("Forget Password")
                     }
                 )
-
-
             }
         }
 
@@ -114,9 +107,7 @@ private fun ForgetPasswordContent(
 @Composable
 private fun ForgetPasswordPreview() {
     ForgetPasswordContent(
-        state = ForgetPasswordState(
-            isLoading = true,
-        ),
+        state = ForgetPasswordState(),
         onEvent = {},
         popScreen = {}
     )
