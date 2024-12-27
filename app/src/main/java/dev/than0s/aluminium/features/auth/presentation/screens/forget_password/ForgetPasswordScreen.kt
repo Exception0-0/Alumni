@@ -1,10 +1,8 @@
 package dev.than0s.aluminium.features.auth.presentation.screens.forget_password
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,28 +10,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mail
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.presentation.composable.AluminiumFilledButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingElevatedButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingFilledButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimation
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
@@ -116,7 +104,7 @@ private fun ForgetPasswordContent(
         }
 
         AluminiumLottieAnimation(
-            lottieAnimation = R.raw.forget_password_animation,
+            lottieAnimation = R.raw.forget_password_animation_2,
             modifier = Modifier.size(150.dp)
         )
     }
@@ -126,7 +114,9 @@ private fun ForgetPasswordContent(
 @Composable
 private fun ForgetPasswordPreview() {
     ForgetPasswordContent(
-        state = ForgetPasswordState(),
+        state = ForgetPasswordState(
+            isLoading = true,
+        ),
         onEvent = {},
         popScreen = {}
     )
