@@ -15,6 +15,8 @@ sealed class RegistrationEvents {
     data class OnBatchToChange(val to: String) : RegistrationEvents()
     data class OnCourseChange(val course: Course) : RegistrationEvents()
     data class OnCollegeIdCardChange(val idCard: Uri?) : RegistrationEvents()
+    data object OnPreviousClick : RegistrationEvents()
+    data object OnNextClick : RegistrationEvents()
     data object OnRegisterClick : RegistrationEvents()
 
 }

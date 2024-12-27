@@ -10,45 +10,42 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Course
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.core.presentation.composable.AluminiumClickableText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDropdownMenu
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingFilledButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimation
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
-import dev.than0s.aluminium.ui.roundCorners
+import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
-
 
 @Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel = hiltViewModel(),
-    popAndOpen: (Screen) -> Unit,
 ) {
     RegistrationScreenContent(
         screenState = viewModel.screenState,
         onEvent = viewModel::onEvent,
-        popAndOpen = popAndOpen,
     )
 }
 
@@ -56,167 +53,145 @@ fun RegistrationScreen(
 private fun RegistrationScreenContent(
     screenState: RegistrationState,
     onEvent: (RegistrationEvents) -> Unit,
-    popAndOpen: (Screen) -> Unit,
 ) {
+    val isLastIndex = screenState.formIndex == registrationFormSectionList.lastIndex
+    val isIndexZero = screenState.formIndex == 0
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(MaterialTheme.spacing.small)
-            .verticalScroll(rememberScrollState())
+            .wrapContentHeight()
     ) {
+        AluminiumElevatedCard {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(MaterialTheme.spacing.large)
+            ) {
+                AluminiumTitleText(
+                    title = registrationFormSectionList[screenState.formIndex].name,
+                    fontSize = MaterialTheme.textSize.huge
+                )
 
-        RoleCard(
-            param = screenState.registrationForm,
-            onEvent = onEvent
-        )
+                registrationFormSectionList[screenState.formIndex].content(screenState, onEvent)
 
-        if (screenState.registrationForm.role != Role.Admin) {
-            CollegeInfoCard(
-                screenState = screenState,
-                onEvent = onEvent
-            )
-        }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
+                ) {
+                    IconButton(
+                        onClick = {
+                            onEvent(RegistrationEvents.OnPreviousClick)
+                        },
+                        enabled = !isIndexZero,
+                        content = {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "previous page"
+                            )
+                        }
+                    )
 
-        PersonalInfoCard(
-            screenState = screenState,
-            onEvent = onEvent
-        )
-
-        ContactInfoCard(
-            screenState = screenState,
-            onEvent = onEvent
-        )
-
-        AluminiumClickableText(
-            title = "Already registered?",
-            onClick = {
-                popAndOpen(Screen.SignInScreen)
-            }
-        )
-
-        AluminiumLoadingElevatedButton(
-            label = "Register",
-            circularProgressIndicatorState = screenState.isLoading,
-            onClick = {
-                onEvent(RegistrationEvents.OnRegisterClick)
-            }
-        )
-    }
-}
-
-
-@Composable
-private fun PersonalInfoCard(
-    screenState: RegistrationState,
-    onEvent: (RegistrationEvents) -> Unit
-) {
-    AluminiumElevatedCard {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.large)
-        ) {
-
-            AluminiumTitleText(
-                title = "Personal",
-                fontSize = MaterialTheme.textSize.huge
-            )
-
-            AluminiumTextField(
-                value = screenState.registrationForm.firstName,
-                onValueChange = { newValue ->
-                    onEvent(RegistrationEvents.OnFirstNameChange(newValue))
-                },
-                supportingText = screenState.firstNameError?.message?.asString(),
-                placeholder = "First Name"
-            )
-
-            AluminiumTextField(
-                value = screenState.registrationForm.middleName,
-                onValueChange = { newValue ->
-                    onEvent(RegistrationEvents.OnMiddleNameChange(newValue))
-                },
-                supportingText = screenState.middleNameError?.message?.asString(),
-                placeholder = "Middle Name"
-            )
-
-            AluminiumTextField(
-                value = screenState.registrationForm.lastName,
-                onValueChange = { newValue ->
-                    onEvent(RegistrationEvents.OnLastNameChange(newValue))
-                },
-                supportingText = screenState.lastNameError?.message?.asString(),
-                placeholder = "Last Name"
-            )
-        }
-    }
-}
-
-@Composable
-private fun ContactInfoCard(
-    screenState: RegistrationState,
-    onEvent: (RegistrationEvents) -> Unit
-) {
-    AluminiumElevatedCard {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.large)
-        ) {
-
-            AluminiumTitleText(
-                title = "Contacts",
-                fontSize = MaterialTheme.textSize.huge
-            )
-
-            AluminiumTextField(
-                value = screenState.registrationForm.email,
-                onValueChange = { newValue ->
-                    onEvent(RegistrationEvents.OnEmailChange(newValue))
-                },
-                supportingText = screenState.emailError?.message?.asString(),
-                placeholder = "Email"
-            )
-        }
-    }
-}
-
-@Composable
-private fun RoleCard(
-    param: RegistrationForm,
-    onEvent: (RegistrationEvents) -> Unit
-) {
-    AluminiumElevatedCard {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.large)
-        ) {
-
-            AluminiumTitleText(
-                title = "Select Role",
-                fontSize = MaterialTheme.textSize.huge
-            )
-
-            AluminiumDropdownMenu(
-                value = param.role.name,
-                placeHolder = "Role",
-                dropdownList = Role.entries.minus(Role.Anonymous),
-                onSelect = {
-                    onEvent(RegistrationEvents.OnRoleChange(it))
+                    IconButton(
+                        onClick = {
+                            onEvent(RegistrationEvents.OnNextClick)
+                        },
+                        enabled = !isLastIndex,
+                        content = {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = "next page"
+                            )
+                        }
+                    )
                 }
-            )
+                if (isLastIndex) {
+                    AluminiumLoadingFilledButton(
+                        isLoading = screenState.isLoading,
+                        enabled = !screenState.isLoading,
+                        onClick = {
+                            onEvent(RegistrationEvents.OnRegisterClick)
+                        },
+                        content = {
+                            Text("Register")
+                        }
+                    )
+                }
+            }
         }
+        AluminiumLottieAnimation(
+            lottieAnimation = R.raw.registration_animation,
+            modifier = Modifier.size(150.dp)
+        )
     }
 }
 
+
 @Composable
-private fun CollegeInfoCard(
+private fun PersonalInfoSection(
+    screenState: RegistrationState,
+    onEvent: (RegistrationEvents) -> Unit
+) {
+    AluminiumTextField(
+        value = screenState.registrationForm.firstName,
+        onValueChange = { newValue ->
+            onEvent(RegistrationEvents.OnFirstNameChange(newValue))
+        },
+        supportingText = screenState.firstNameError?.message?.asString(),
+        placeholder = "First Name"
+    )
+
+    AluminiumTextField(
+        value = screenState.registrationForm.middleName,
+        onValueChange = { newValue ->
+            onEvent(RegistrationEvents.OnMiddleNameChange(newValue))
+        },
+        supportingText = screenState.middleNameError?.message?.asString(),
+        placeholder = "Middle Name"
+    )
+
+    AluminiumTextField(
+        value = screenState.registrationForm.lastName,
+        onValueChange = { newValue ->
+            onEvent(RegistrationEvents.OnLastNameChange(newValue))
+        },
+        supportingText = screenState.lastNameError?.message?.asString(),
+        placeholder = "Last Name"
+    )
+}
+
+@Composable
+private fun ContactInfoSection(
+    screenState: RegistrationState,
+    onEvent: (RegistrationEvents) -> Unit
+) {
+    AluminiumTextField(
+        value = screenState.registrationForm.email,
+        onValueChange = { newValue ->
+            onEvent(RegistrationEvents.OnEmailChange(newValue))
+        },
+        supportingText = screenState.emailError?.message?.asString(),
+        placeholder = "Email"
+    )
+}
+
+@Composable
+private fun RoleSection(
+    screenState: RegistrationState,
+    onEvent: (RegistrationEvents) -> Unit
+) {
+    AluminiumDropdownMenu(
+        value = screenState.registrationForm.role.name,
+        placeHolder = "Role",
+        dropdownList = Role.entries.minus(Role.Anonymous),
+        onSelect = {
+            onEvent(RegistrationEvents.OnRoleChange(it))
+        }
+    )
+}
+
+@Composable
+private fun CollegeInfoSection(
     screenState: RegistrationState,
     onEvent: (RegistrationEvents) -> Unit
 ) {
@@ -227,86 +202,115 @@ private fun CollegeInfoCard(
             }
         }
 
-    AluminiumElevatedCard {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(MaterialTheme.spacing.large)
-        ) {
+    AluminiumTextField(
+        value = screenState.registrationForm.collegeId ?: "",
+        onValueChange = { newValue ->
+            onEvent(RegistrationEvents.OnCollegeIdChange(newValue))
+        },
+        supportingText = screenState.collageIdError?.message?.asString(),
+        placeholder = "College Id"
+    )
 
-            AluminiumTitleText(
-                title = "College",
-                fontSize = MaterialTheme.textSize.huge
+    if (screenState.registrationForm.role.let { it == Role.Student || it == Role.Alumni }) {
+        AluminiumDropdownMenu(
+            value = screenState.registrationForm.course?.name ?: Course.MCA.name,
+            placeHolder = "Course",
+            dropdownList = Course.entries,
+            onSelect = {
+                onEvent(RegistrationEvents.OnCourseChange(it))
+            }
+        )
+    }
+
+    if (screenState.registrationForm.role == Role.Alumni) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+        ) {
+            AluminiumTextField(
+                value = screenState.registrationForm.batchFrom ?: "",
+                onValueChange = {
+                    onEvent(RegistrationEvents.OnBatchFromChange(it))
+                },
+                supportingText = screenState.batchFromError?.message?.asString(),
+                placeholder = "Batch - From",
+                modifier = Modifier.weight(0.3f)
             )
 
             AluminiumTextField(
-                value = screenState.registrationForm.collegeId ?: "",
-                onValueChange = { newValue ->
-                    onEvent(RegistrationEvents.OnCollegeIdChange(newValue))
+                value = screenState.registrationForm.batchTo ?: "",
+                onValueChange = {
+                    onEvent(RegistrationEvents.OnBatchToChange(it))
                 },
-                supportingText = screenState.collageIdError?.message?.asString(),
-                placeholder = "College Id"
+                supportingText = screenState.batchToError?.message?.asString(),
+                placeholder = "Batch - To",
+                modifier = Modifier.weight(0.3f)
             )
-
-            if (screenState.registrationForm.role.let { it == Role.Student || it == Role.Alumni }) {
-                AluminiumDropdownMenu(
-                    value = screenState.registrationForm.course?.name ?: Course.MCA.name,
-                    placeHolder = "Course",
-                    dropdownList = Course.entries,
-                    onSelect = {
-                        onEvent(RegistrationEvents.OnCourseChange(it))
-                    }
-                )
-            }
-
-            if (screenState.registrationForm.role == Role.Alumni) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-                ) {
-                    AluminiumTextField(
-                        value = screenState.registrationForm.batchFrom ?: "",
-                        onValueChange = {
-                            onEvent(RegistrationEvents.OnBatchFromChange(it))
-                        },
-                        supportingText = screenState.batchFromError?.message?.asString(),
-                        placeholder = "Batch - From",
-                        modifier = Modifier.weight(0.3f)
-                    )
-
-                    AluminiumTextField(
-                        value = screenState.registrationForm.batchTo ?: "",
-                        onValueChange = {
-                            onEvent(RegistrationEvents.OnBatchToChange(it))
-                        },
-                        supportingText = screenState.batchToError?.message?.asString(),
-                        placeholder = "Batch - To",
-                        modifier = Modifier.weight(0.3f)
-                    )
-                }
-            }
-
-            if (screenState.registrationForm.idCardImage == null) {
-                AluminiumClickableText(
-                    title = "Add college Id image (optional)",
-                    onClick = {
-                        launcher.launch("image/*")
-                    }
-                )
-            } else {
-                AluminiumAsyncImage(
-                    model = screenState.registrationForm.idCardImage,
-                    contentDescription = "Id card image",
-                    modifier = Modifier
-                        .size(128.dp)
-                        .clickable {
-                            onEvent(RegistrationEvents.OnCollegeIdCardChange(null))
-                        }
-                )
-            }
         }
     }
+
+    if (screenState.registrationForm.idCardImage == null) {
+        AluminiumClickableText(
+            title = "Add college Id image (optional)",
+            onClick = {
+                launcher.launch("image/*")
+            }
+        )
+    } else {
+        AluminiumAsyncImage(
+            model = screenState.registrationForm.idCardImage,
+            contentDescription = "Id card image",
+            modifier = Modifier
+                .size(128.dp)
+                .clickable {
+                    onEvent(RegistrationEvents.OnCollegeIdCardChange(null))
+                }
+        )
+    }
 }
+
+private data class RegistrationFormSection(
+    val name: String,
+    val content: @Composable ((RegistrationState, (RegistrationEvents) -> Unit) -> Unit)
+)
+
+private val registrationFormSectionList = listOf(
+    RegistrationFormSection(
+        name = "Role",
+        content = { state, events ->
+            RoleSection(
+                screenState = state,
+                onEvent = events
+            )
+        }
+    ),
+    RegistrationFormSection(
+        name = "College",
+        content = { state, events ->
+            CollegeInfoSection(
+                screenState = state,
+                onEvent = events
+            )
+        }
+    ),
+    RegistrationFormSection(
+        name = "Personal",
+        content = { state, events ->
+            PersonalInfoSection(
+                screenState = state,
+                onEvent = events
+            )
+        }
+    ),
+    RegistrationFormSection(
+        name = "Contact",
+        content = { state, events ->
+            ContactInfoSection(
+                screenState = state,
+                onEvent = events
+            )
+        }
+    ),
+)
 
 @Preview(showSystemUi = true)
 @Composable
@@ -314,6 +318,5 @@ private fun RegistrationScreenPreview() {
     RegistrationScreenContent(
         screenState = RegistrationState(),
         onEvent = {},
-        popAndOpen = {}
     )
 }

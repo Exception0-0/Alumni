@@ -36,14 +36,11 @@ fun NavGraphHost(
         composable<Screen.SignInScreen> {
             SignInScreen(
                 openScreen = navController::openScreen,
-                popAndOpen = navController::popAndOpen,
                 restartApp = navController::restartApp
             )
         }
         composable<Screen.RegistrationScreen> {
-            RegistrationScreen(
-                popAndOpen = navController::popAndOpen
-            )
+            RegistrationScreen()
         }
         composable<Screen.SettingScreen> {
             SettingScreen(

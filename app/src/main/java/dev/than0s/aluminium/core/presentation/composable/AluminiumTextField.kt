@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.core.presentation.composable
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -26,6 +27,7 @@ fun AluminiumTextField(
     modifier: Modifier = Modifier,
     enable: Boolean = true,
     readOnly: Boolean = false,
+    singleLine: Boolean = true,
     keyboardType: KeyboardType = KeyboardType.Text,
     supportingText: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
@@ -40,6 +42,7 @@ fun AluminiumTextField(
         label = {
             Text(text = placeholder)
         },
+        singleLine = singleLine,
         isError = supportingText != null,
         supportingText = supportingText?.let {
             @Composable {

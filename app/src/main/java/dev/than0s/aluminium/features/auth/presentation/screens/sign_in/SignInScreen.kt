@@ -37,14 +37,12 @@ import dev.than0s.aluminium.ui.spacing
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
     openScreen: (Screen) -> Unit,
-    popAndOpen: (Screen) -> Unit,
     restartApp: () -> Unit
 ) {
     SignInScreenContent(
         screenState = viewModel.screenState,
         onEvent = viewModel::onEvent,
         openScreen = openScreen,
-        popAndOpen = popAndOpen,
         restartApp = restartApp
     )
 }
@@ -54,7 +52,6 @@ private fun SignInScreenContent(
     screenState: SignInState,
     onEvent: (SignInEvents) -> Unit,
     openScreen: (Screen) -> Unit,
-    popAndOpen: (Screen) -> Unit,
     restartApp: () -> Unit
 ) {
 
@@ -105,7 +102,7 @@ private fun SignInScreenContent(
                 AluminiumClickableText(
                     title = "Don't have an account?",
                     onClick = {
-                        popAndOpen(Screen.RegistrationScreen)
+                        openScreen(Screen.RegistrationScreen)
                     }
                 )
 
@@ -146,7 +143,6 @@ private fun SignInScreenPreview() {
         screenState = SignInState(),
         onEvent = {},
         openScreen = {},
-        popAndOpen = {},
         restartApp = {}
     )
 }

@@ -28,7 +28,7 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onEmailChange(email: String) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 email = email
             )
         )
@@ -36,7 +36,7 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onRoleChange(category: Role) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 role = category
             )
         )
@@ -44,7 +44,7 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onCollegeIdChange(rollNo: String) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 collegeId = rollNo
             )
         )
@@ -52,7 +52,7 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onFirstNameChange(firstName: String) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 firstName = firstName
             )
         )
@@ -60,7 +60,7 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onMiddleNameChange(middleName: String) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 middleName = middleName
             )
         )
@@ -68,7 +68,7 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onLastNameChange(lastName: String) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 lastName = lastName
             )
         )
@@ -76,7 +76,7 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onBatchFromChange(from: String) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 batchFrom = from
             )
         )
@@ -84,7 +84,7 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onBatchToChange(to: String) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 batchTo = to
             )
         )
@@ -92,7 +92,7 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onCollegeIdCardChange(uri: Uri?) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 idCardImage = uri
             )
         )
@@ -100,9 +100,21 @@ class RegistrationViewModel @Inject constructor(
 
     private fun onCourseChange(course: Course) {
         screenState = screenState.copy(
-            screenState.registrationForm.copy(
+            registrationForm = screenState.registrationForm.copy(
                 course = course
             )
+        )
+    }
+
+    private fun onNextClick() {
+        screenState = screenState.copy(
+            formIndex = screenState.formIndex + 1
+        )
+    }
+
+    private fun onPreviousClick() {
+        screenState = screenState.copy(
+            formIndex = screenState.formIndex - 1
         )
     }
 
@@ -159,6 +171,8 @@ class RegistrationViewModel @Inject constructor(
             is RegistrationEvents.OnCourseChange -> onCourseChange(event.course)
             is RegistrationEvents.OnCollegeIdCardChange -> onCollegeIdCardChange(event.idCard)
             is RegistrationEvents.OnRegisterClick -> onRegisterClick()
+            is RegistrationEvents.OnPreviousClick -> onPreviousClick()
+            is RegistrationEvents.OnNextClick -> onNextClick()
         }
     }
 }

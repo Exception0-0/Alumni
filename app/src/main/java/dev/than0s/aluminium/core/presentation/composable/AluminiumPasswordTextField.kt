@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.core.presentation.composable
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -18,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import dev.than0s.aluminium.ui.roundCorners
@@ -28,6 +30,7 @@ fun AluminiumPasswordTextField(
     onPasswordChange: (String) -> Unit,
     placeholder: String,
     enable: Boolean = true,
+    singleLine: Boolean = true,
     supportingText: String? = null,
     modifier: Modifier = Modifier,
 ) {
@@ -40,6 +43,8 @@ fun AluminiumPasswordTextField(
         label = {
             Text(text = placeholder)
         },
+        singleLine = singleLine,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         enabled = enable,
         isError = supportingText != null,
         supportingText = supportingText?.let {
