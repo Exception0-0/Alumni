@@ -35,6 +35,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumFilledButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingElevatedButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingFilledButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimation
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.ui.spacing
@@ -113,32 +114,12 @@ private fun ForgetPasswordContent(
 
             }
         }
-        AnimatedPreloader(
-            modifier = Modifier
-                .size(150.dp)
+
+        AluminiumLottieAnimation(
+            lottieAnimation = R.raw.forget_password_animation,
+            modifier = Modifier.size(150.dp)
         )
     }
-}
-
-@Composable
-private fun AnimatedPreloader(modifier: Modifier = Modifier) {
-    val preloaderLottieComposition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(
-            R.raw.forget_password_animation
-        )
-    )
-
-    val preloaderProgress by animateLottieCompositionAsState(
-        preloaderLottieComposition,
-        iterations = LottieConstants.IterateForever,
-        isPlaying = true
-    )
-
-    LottieAnimation(
-        composition = preloaderLottieComposition,
-        progress = preloaderProgress,
-        modifier = modifier
-    )
 }
 
 @Preview(showSystemUi = true)
