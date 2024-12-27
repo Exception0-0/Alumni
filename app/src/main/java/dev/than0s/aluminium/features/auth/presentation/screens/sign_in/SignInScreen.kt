@@ -125,6 +125,7 @@ private fun SignInScreenContent(
                             )
                         )
                     },
+                    enabled = !screenState.isLoading,
                     content = {
                         Text("Sign In")
                     }

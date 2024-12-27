@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.core.presentation.composable
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Mail
@@ -12,8 +13,10 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import dev.than0s.aluminium.ui.roundCorners
+import kotlinx.serialization.json.internal.readJson
 
 @Composable
 fun AluminiumTextField(
@@ -22,6 +25,8 @@ fun AluminiumTextField(
     placeholder: String,
     modifier: Modifier = Modifier,
     enable: Boolean = true,
+    readOnly: Boolean = false,
+    keyboardType: KeyboardType = KeyboardType.Text,
     supportingText: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -41,6 +46,7 @@ fun AluminiumTextField(
                 Text(text = supportingText)
             }
         },
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
@@ -49,9 +55,9 @@ fun AluminiumTextField(
         ),
         trailingIcon = trailingIcon,
         leadingIcon = leadingIcon,
+        readOnly = readOnly,
         modifier = modifier,
-
-        )
+    )
 }
 
 @Preview

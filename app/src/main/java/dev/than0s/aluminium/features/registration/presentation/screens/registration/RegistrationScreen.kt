@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.core.Course
 import dev.than0s.aluminium.core.Role
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.core.presentation.composable.AluminiumClickableText
@@ -189,7 +190,6 @@ private fun RoleCard(
     param: RegistrationForm,
     onEvent: (RegistrationEvents) -> Unit
 ) {
-
     AluminiumElevatedCard {
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
@@ -206,7 +206,7 @@ private fun RoleCard(
             AluminiumDropdownMenu(
                 value = param.role.name,
                 placeHolder = "Role",
-                dropdownList = Role.entries,
+                dropdownList = Role.entries.minus(Role.Anonymous),
                 onSelect = {
                     onEvent(RegistrationEvents.OnRoleChange(it))
                 }
@@ -249,7 +249,7 @@ private fun CollegeInfoCard(
                 placeholder = "College Id"
             )
 
-            if (screenState.registrationForm.role == Role.Student) {
+            if (screenState.registrationForm.role.let { it == Role.Student || it == Role.Alumni }) {
                 AluminiumDropdownMenu(
                     value = screenState.registrationForm.course?.name ?: Course.MCA.name,
                     placeHolder = "Course",
@@ -294,13 +294,11 @@ private fun CollegeInfoCard(
                     }
                 )
             } else {
-                AsyncImage(
+                AluminiumAsyncImage(
                     model = screenState.registrationForm.idCardImage,
-                    contentScale = ContentScale.Crop,
                     contentDescription = "Id card image",
                     modifier = Modifier
                         .size(128.dp)
-                        .clip(RoundedCornerShape(MaterialTheme.roundCorners.default))
                         .clickable {
                             onEvent(RegistrationEvents.OnCollegeIdCardChange(null))
                         }

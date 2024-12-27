@@ -19,7 +19,7 @@ import kotlin.enums.EnumEntries
 fun <T : Enum<T>> AluminiumDropdownMenu(
     value: String,
     placeHolder: String,
-    dropdownList: EnumEntries<T>,
+    dropdownList: List<T>,
     onSelect: (T) -> Unit,
 ) {
     var dropdownState by remember { mutableStateOf(false) }
