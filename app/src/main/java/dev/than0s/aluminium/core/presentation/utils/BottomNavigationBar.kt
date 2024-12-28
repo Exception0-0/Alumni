@@ -98,7 +98,7 @@ fun AluminiumBottomNavigationBar(
                             },
                             label = {
                                 Text(
-                                    text = getScreenName(item.screen::class.simpleName) ?: "Than0s"
+                                    text = item.screen.name
                                 )
                             }
                         )

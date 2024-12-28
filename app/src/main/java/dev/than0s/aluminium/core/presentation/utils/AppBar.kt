@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.core.presentation.utils
 
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,13 +11,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-
-private var customAppBar by mutableStateOf<TopAppBarItem?>(null)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,53 +22,53 @@ fun AluminiumTopAppBar(
     navController: NavHostController
 ) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val appBar = customAppBar ?: getDefaultTopAppBar(currentBackStackEntry)
-
-    TopAppBar(
-        title = appBar.title,
-        navigationIcon = {
-            IconButton(onClick = {
-                navController.popScreen()
-                removeCustomAppBar()
-            }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "back button"
-                )
-            }
-        },
-        actions = appBar.actions,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
+    val destination = currentBackStackEntry?.destination
+    getDefaultTopAppBar(destination)?.let {
+        TopAppBar(
+            title = {
+                Text(text = it.title)
+            },
+            navigationIcon = {
+                if (it.shouldHaveNavIcon) {
+                    IconButton(onClick = {
+                        navController.popScreen()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "back button"
+                        )
+                    }
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            )
         )
-    )
-}
-
-private fun removeCustomAppBar() {
-    if (customAppBar != null) {
-        customAppBar = null
     }
 }
 
-fun addCustomAppBar(appBar: TopAppBarItem) {
-    customAppBar = appBar
+private fun getDefaultTopAppBar(destination: NavDestination?): TopAppBarItem? {
+    return when {
+        destination == null -> null
+        destination.hasRoute<Screen.SignInScreen>() -> TopAppBarItem(
+            title = Screen.SignInScreen.name,
+            shouldHaveNavIcon = false
+        )
+
+        destination.hasRoute<Screen.ForgotPasswordScreen>() -> TopAppBarItem(
+            title = Screen.ForgotPasswordScreen.name
+        )
+
+        destination.hasRoute<Screen.RegistrationScreen>() -> TopAppBarItem(
+            title = Screen.RegistrationScreen.name
+        )
+
+        else -> null
+    }
 }
 
-private fun getDefaultTopAppBar(
-    currentBackStackEntry: NavBackStackEntry?
-): TopAppBarItem {
-    val className = getClassNameFromNavGraph(currentBackStackEntry?.destination)
-    return TopAppBarItem(
-        title = {
-            Text(
-                text = getScreenName(className) ?: "Than0s"
-            )
-        }
-    )
-}
-
-data class TopAppBarItem(
-    val title: @Composable () -> Unit = {},
-    val actions: @Composable (RowScope.() -> Unit) = {},
+private data class TopAppBarItem(
+    val title: String,
+    val shouldHaveNavIcon: Boolean = true,
 )
