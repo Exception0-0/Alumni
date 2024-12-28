@@ -2,6 +2,7 @@ package dev.than0s.aluminium.features.profile.presentation.screens.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -57,7 +58,12 @@ sealed class ProfileTabScreen {
 }
 
 fun NavHostController.replace(screen: ProfileTabScreen) {
-    popBackStack()
-    navigate(screen)
+    navigate(screen){
+        popUpTo(graph.findStartDestination().id){
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
 }
 
