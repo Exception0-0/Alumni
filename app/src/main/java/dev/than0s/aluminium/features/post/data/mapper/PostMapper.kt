@@ -3,6 +3,7 @@ package dev.than0s.aluminium.features.post.data.mapper
 import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
+import dev.than0s.aluminium.core.data.remote.getFirebaseTimestamp
 import dev.than0s.aluminium.core.domain.data_class.Post
 
 fun RemotePost.toPost(): Post = Post(
@@ -20,7 +21,7 @@ fun Post.toRemotePost() = RemotePost(
     file = file.toString(),
     title = title,
     description = description,
-    timestamp = Timestamp(timestamp, 0)
+    timestamp = getFirebaseTimestamp(timestamp)
 )
 
 data class RemotePost(
