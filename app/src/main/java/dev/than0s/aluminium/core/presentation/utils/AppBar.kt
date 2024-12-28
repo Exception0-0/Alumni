@@ -64,6 +64,19 @@ private fun getDefaultTopAppBar(destination: NavDestination?): TopAppBarItem? {
             title = Screen.RegistrationScreen.name
         )
 
+        destination.hasRoute<Screen.PostsScreen>() -> TopAppBarItem(
+            title = Screen.PostsScreen().name,
+            shouldHaveNavIcon = false
+        )
+
+        destination.hasRoute<Screen.ProfileScreen>() -> TopAppBarItem(
+            title = Screen.ProfileScreen("").name,
+        )
+
+        destination.hasRoute<Screen.SettingScreen>() -> TopAppBarItem(
+            title = Screen.SettingScreen.name,
+            shouldHaveNavIcon = false
+        )
         else -> null
     }
 }
