@@ -123,7 +123,7 @@ private fun RegistrationScreenContent(
         }
         AluminiumLottieAnimation(
             lottieAnimation = R.raw.registration_animation,
-            modifier = Modifier.size(150.dp)
+            modifier = Modifier.size(180.dp)
         )
     }
 }

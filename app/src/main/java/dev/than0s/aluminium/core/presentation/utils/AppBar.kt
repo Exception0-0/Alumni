@@ -61,8 +61,7 @@ fun addCustomAppBar(appBar: TopAppBarItem) {
 
 private fun getDefaultTopAppBar(
     currentBackStackEntry: NavBackStackEntry?
-): TopAppBarItem
-{
+): TopAppBarItem {
     val className = getClassNameFromNavGraph(currentBackStackEntry?.destination)
     return TopAppBarItem(
         title = {
