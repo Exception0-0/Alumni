@@ -279,13 +279,11 @@ private fun UpdateProfileDialog(
                     fontSize = MaterialTheme.textSize.gigantic,
                     fontWeight = FontWeight.W900
                 )
-                AsyncImage(
+                AluminiumAsyncImage(
                     model = screenState.dialogUser.coverImage,
-                    contentDescription = "user profile image",
+                    contentDescription = "user cover image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(MaterialTheme.spacing.medium))
-                        .background(color = colorResource(id = R.color.purple_500))
                         .height(100.dp)
                         .clickable {
                             imageSelectionState[COVER_IMAGE] = true
@@ -297,7 +295,7 @@ private fun UpdateProfileDialog(
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
                 ) {
 
-                    AsyncImage(
+                    AluminiumAsyncImage(
                         model = screenState.dialogUser.profileImage,
                         contentDescription = "user profile image",
                         contentScale = ContentScale.Crop,

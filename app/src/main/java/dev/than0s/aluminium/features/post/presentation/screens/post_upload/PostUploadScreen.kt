@@ -72,7 +72,6 @@ private fun PostUploadScreenContent(
                 )
                 AluminiumAsyncImage(
                     model = screenStates.post.file,
-                    contentScale = ContentScale.None,
                     modifier = Modifier
                         .height(450.dp)
                         .width(360.dp)
