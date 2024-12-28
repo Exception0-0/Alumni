@@ -111,6 +111,8 @@ fun NavHostController.popAndOpen(screen: Screen) {
 
 fun NavHostController.restartApp() {
     navigate(Screen.SplashScreen) {
-        popUpTo(0)
+        popUpTo(graph.id) {
+            inclusive = true
+        }
     }
 }
