@@ -11,12 +11,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.domain.data_class.ContactInfo
+import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.profile.domain.use_cases.GetContactInfoUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetContactInfoUseCase
-import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileTabScreen
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +27,7 @@ class ContactViewModel @Inject constructor(
     private val setContactInfoUseCase: SetContactInfoUseCase,
 ) : ViewModel() {
 
-    val contactScreenArgs = savedStateHandle.toRoute<ProfileTabScreen.ContactScreen>()
+    val contactScreenArgs = savedStateHandle.toRoute<Screen.ProfileTabScreen.ContactScreen>()
     var screenState by mutableStateOf(ContactState())
 
     init {

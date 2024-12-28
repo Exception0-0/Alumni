@@ -9,11 +9,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.core.Resource
+import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.profile.domain.use_cases.GetAboutInfoUseCase
-import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileTabScreen
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ class AboutViewModel @Inject constructor(
     private val getAboutInfoUseCase: GetAboutInfoUseCase,
 ) : ViewModel() {
 
-    private val aboutScreenArgs = savedStateHandle.toRoute<ProfileTabScreen.AboutScreen>()
+    private val aboutScreenArgs = savedStateHandle.toRoute<Screen.ProfileTabScreen.AboutScreen>()
     var screenState by mutableStateOf(AboutState())
 
     init {

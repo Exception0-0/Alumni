@@ -46,21 +46,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
+import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
+import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
+import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.asString
+import dev.than0s.aluminium.core.presentation.utils.replace
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
-import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileTabScreen
-import dev.than0s.aluminium.features.profile.presentation.screens.util.replace
 import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -345,7 +344,7 @@ data class TabItem(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val screen: (String) -> ProfileTabScreen,
+    val screen: (String) -> Screen,
 )
 
 private val tabRowItemList = listOf(
@@ -354,7 +353,7 @@ private val tabRowItemList = listOf(
         selectedIcon = Icons.Filled.Info,
         unselectedIcon = Icons.Outlined.Info,
         screen = { userId ->
-            ProfileTabScreen.AboutScreen(
+            Screen.ProfileTabScreen.AboutScreen(
                 userId = userId
             )
         }
@@ -364,7 +363,7 @@ private val tabRowItemList = listOf(
         selectedIcon = Icons.Filled.AccountBox,
         unselectedIcon = Icons.Outlined.AccountBox,
         screen = { userId ->
-            ProfileTabScreen.ContactScreen(
+            Screen.ProfileTabScreen.ContactScreen(
                 userId = userId
             )
         }
@@ -374,7 +373,7 @@ private val tabRowItemList = listOf(
         selectedIcon = Icons.Filled.GridView,
         unselectedIcon = Icons.Outlined.GridView,
         screen = { userId ->
-            ProfileTabScreen.PostsScreen(
+            Screen.ProfileTabScreen.PostsScreen(
                 userId = userId
             )
         }

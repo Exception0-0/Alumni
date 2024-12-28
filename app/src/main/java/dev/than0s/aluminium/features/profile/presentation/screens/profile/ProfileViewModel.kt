@@ -24,7 +24,6 @@ import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import dev.than0s.aluminium.features.profile.domain.use_cases.SetProfileUseCase
-import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileTabScreen
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

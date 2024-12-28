@@ -19,7 +19,7 @@ import dev.than0s.aluminium.core.domain.use_case.AddLikeUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetCurrentUserLikeStatusUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetPostsUseCase
 import dev.than0s.aluminium.core.domain.use_case.RemoveLikeUseCase
-import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileTabScreen
+import dev.than0s.aluminium.core.presentation.utils.Screen
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,7 +31,7 @@ class PostsViewModel @Inject constructor(
     private val addLikeUseCase: AddLikeUseCase,
     private val getCurrentUserLikeStatusUseCase: GetCurrentUserLikeStatusUseCase,
 ) : ViewModel() {
-    private val postsScreenArgs = savedStateHandle.toRoute<ProfileTabScreen.PostsScreen>()
+    private val postsScreenArgs = savedStateHandle.toRoute<Screen.ProfileTabScreen.PostsScreen>()
     var screenState by mutableStateOf(PostsState())
     val likeMap = mutableStateMapOf<String, Like?>()
 

@@ -2,6 +2,7 @@ package dev.than0s.aluminium.core.presentation.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -107,6 +108,16 @@ fun NavHostController.popScreen() {
 fun NavHostController.popAndOpen(screen: Screen) {
     popBackStack()
     navigate(screen)
+}
+
+fun NavHostController.replace(screen: Screen) {
+    navigate(screen) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
 }
 
 fun NavHostController.restartApp() {

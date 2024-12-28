@@ -2,7 +2,6 @@ package dev.than0s.aluminium.features.profile.presentation.screens.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,7 +9,6 @@ import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.features.profile.presentation.screens.about.AboutScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.contact.ContactScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.post.PostsScreen
-import kotlinx.serialization.Serializable
 
 @Composable
 fun ProfileNavHost(
@@ -21,18 +19,18 @@ fun ProfileNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = ProfileTabScreen.AboutScreen(
+        startDestination = Screen.ProfileTabScreen.AboutScreen(
             userId = userId
         ),
         modifier = modifier
     ) {
-        composable<ProfileTabScreen.AboutScreen> {
+        composable<Screen.ProfileTabScreen.AboutScreen> {
             AboutScreen()
         }
-        composable<ProfileTabScreen.ContactScreen> {
+        composable<Screen.ProfileTabScreen.ContactScreen> {
             ContactScreen()
         }
-        composable<ProfileTabScreen.PostsScreen> {
+        composable<Screen.ProfileTabScreen.PostsScreen> {
             PostsScreen(
                 openScreen = openScreen
             )
@@ -40,30 +38,4 @@ fun ProfileNavHost(
     }
 }
 
-sealed class ProfileTabScreen {
-    @Serializable
-    data class AboutScreen(
-        val userId: String
-    ) : ProfileTabScreen()
-
-    @Serializable
-    data class ContactScreen(
-        val userId: String
-    ) : ProfileTabScreen()
-
-    @Serializable
-    data class PostsScreen(
-        val userId: String
-    ) : ProfileTabScreen()
-}
-
-fun NavHostController.replace(screen: ProfileTabScreen) {
-    navigate(screen){
-        popUpTo(graph.findStartDestination().id){
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
-    }
-}
 

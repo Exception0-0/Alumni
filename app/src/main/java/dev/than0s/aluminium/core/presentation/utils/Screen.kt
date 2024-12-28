@@ -55,6 +55,23 @@ sealed class Screen {
     data class ChatDetailScreen(
         val userId: String
     ) : Screen()
+
+    class ProfileTabScreen {
+        @Serializable
+        data class AboutScreen(
+            val userId: String
+        ) : Screen()
+
+        @Serializable
+        data class ContactScreen(
+            val userId: String
+        ) : Screen()
+
+        @Serializable
+        data class PostsScreen(
+            val userId: String
+        ) : Screen()
+    }
 }
 
 fun getScreenName(screenClassName: String?): String? {
