@@ -37,7 +37,6 @@ fun AboutContent(
     } else {
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
-            modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             CardInfoFormat(
                 title = "Role",

@@ -7,7 +7,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -16,6 +15,8 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.ui.textSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +29,14 @@ fun AluminiumTopAppBar(
     getDefaultTopAppBar(destination)?.let {
         LargeTopAppBar(
             title = {
-                Text(text = it.title)
+                AluminiumTitleText(
+                    title = it.title,
+                    fontSize = if (scrollBehavior.state.collapsedFraction == 1f) {
+                        MaterialTheme.textSize.huge
+                    } else {
+                        MaterialTheme.textSize.gigantic
+                    }
+                )
             },
             navigationIcon = {
                 if (it.shouldHaveNavIcon) {
@@ -43,7 +51,6 @@ fun AluminiumTopAppBar(
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
             scrollBehavior = scrollBehavior

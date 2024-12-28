@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.GridView
@@ -30,7 +32,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
@@ -58,6 +61,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.asString
+import dev.than0s.aluminium.core.presentation.utils.getClassNameFromNavGraph
 import dev.than0s.aluminium.core.presentation.utils.replace
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
 import dev.than0s.aluminium.ui.roundCorners
@@ -94,61 +98,54 @@ private fun ProfileScreenContent(
     if (screenState.isLoading) {
         AluminumCircularLoading()
     } else {
-
-        AluminiumAsyncImage(
-            model = screenState.user.coverImage,
-            contentDescription = "Cover Image",
-            onTapFullScreen = true,
-            modifier = Modifier
-                .background(color = colorResource(id = R.color.purple_500))
-                .height(128.dp)
-        )
-
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.spacing.medium)
-                .padding(top = MaterialTheme.spacing.extraLarge)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
         ) {
-            AluminiumAsyncImage(
-                model = screenState.user.profileImage,
-                onTapFullScreen = true,
+            ProfileAndCoverShower(
+                screenState = screenState
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
                 modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape),
-            )
-            AluminiumTitleText(
-                title = "${screenState.user.firstName} ${screenState.user.lastName}",
-                fontSize = MaterialTheme.textSize.large,
-            )
-            AluminiumDescriptionText(
-                description = screenState.user.bio,
-            )
-
-            if (userId == currentUserId) {
-                AluminiumElevatedButton(
-                    label = "Edit Profile",
-                    onClick = {
-                        onEvent(ProfileEvents.OnEditProfileClick)
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                    .padding(
+                        horizontal = MaterialTheme.spacing.medium
+                    )
+            ) {
+                AluminiumTitleText(
+                    title = "${screenState.user.firstName} ${screenState.user.lastName}",
+                    fontSize = MaterialTheme.textSize.large,
                 )
-            } else {
-                AluminiumElevatedButton(
-                    label = "Message",
-                    onClick = {
-                        openScreen(Screen.ChatDetailScreen(userId))
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                AluminiumDescriptionText(
+                    description = screenState.user.bio,
+                )
+
+                if (userId == currentUserId) {
+                    AluminiumElevatedButton(
+                        label = "Edit Profile",
+                        onClick = {
+                            onEvent(ProfileEvents.OnEditProfileClick)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    AluminiumElevatedButton(
+                        label = "Message",
+                        onClick = {
+                            openScreen(Screen.ChatDetailScreen(userId))
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                ProfileTabRow(
+                    screenState = screenState,
+                    onEvent = onEvent,
+                    openScreen = openScreen
                 )
             }
-
-            ProfileTabRow(
-                screenState = screenState,
-                onEvent = onEvent,
-                openScreen = openScreen
-            )
         }
     }
 }
@@ -160,20 +157,16 @@ private fun ProfileTabRow(
     openScreen: (Screen) -> Unit,
 ) {
     val navController = rememberNavController()
-    LaunchedEffect(key1 = screenState.tabRowSelectedIndex) {
-        navController.replace(
-            screen = tabRowItemList[screenState.tabRowSelectedIndex].screen(screenState.user.id)
-        )
-    }
+
     TabRow(
-        selectedTabIndex = screenState.tabRowSelectedIndex
+        selectedTabIndex = 0
     ) {
-        tabRowItemList.forEachIndexed { index, tabItem ->
-            val isSelected = index == screenState.tabRowSelectedIndex
+        tabRowItemList.forEachIndexed { index,tabItem ->
+            val isSelected = index == 0
             Tab(
                 selected = isSelected,
                 onClick = {
-                    onEvent(ProfileEvents.OnTabChanged(index))
+                    navController.replace(tabItem.screen(screenState.user.id))
                 },
                 text = {
                     Text(text = tabItem.title)
@@ -207,6 +200,38 @@ private fun ProfileTabRow(
     }
 }
 
+@Composable
+private fun ProfileAndCoverShower(
+    screenState: ProfileState
+) {
+    Box {
+        AluminiumAsyncImage(
+            model = screenState.user.coverImage,
+            contentDescription = "Cover Image",
+            onTapFullScreen = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(128.dp)
+                .align(Alignment.TopCenter)
+        )
+        Box(
+            modifier = Modifier.padding(
+                top = 84.dp,
+                start = MaterialTheme.spacing.medium
+            )
+        ) {
+            AluminiumAsyncImage(
+                model = screenState.user.profileImage,
+                onTapFullScreen = true,
+                contentDescription = "Profile Image",
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .align(Alignment.TopStart)
+            )
+        }
+    }
+}
 
 @Composable
 private fun UpdateProfileDialog(
@@ -349,7 +374,7 @@ data class TabItem(
 
 private val tabRowItemList = listOf(
     TabItem(
-        title = "About",
+        title = Screen.ProfileTabScreen.AboutScreen("").name,
         selectedIcon = Icons.Filled.Info,
         unselectedIcon = Icons.Outlined.Info,
         screen = { userId ->
@@ -359,7 +384,7 @@ private val tabRowItemList = listOf(
         }
     ),
     TabItem(
-        title = "Contacts",
+        title = Screen.ProfileTabScreen.ContactScreen("").name,
         selectedIcon = Icons.Filled.AccountBox,
         unselectedIcon = Icons.Outlined.AccountBox,
         screen = { userId ->
@@ -369,7 +394,7 @@ private val tabRowItemList = listOf(
         }
     ),
     TabItem(
-        title = "Posts",
+        title = Screen.ProfileTabScreen.PostsScreen("").name,
         selectedIcon = Icons.Filled.GridView,
         unselectedIcon = Icons.Outlined.GridView,
         screen = { userId ->

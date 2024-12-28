@@ -63,7 +63,6 @@ private fun ContactsContent(
     } else {
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
-            modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             CardInfoFormat(
                 title = "Email",

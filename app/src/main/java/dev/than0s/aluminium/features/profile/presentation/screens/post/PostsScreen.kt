@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,18 +24,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.domain.data_class.Like
+import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.domain.data_class.Post
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumFloatingActionButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLinearLoading
+import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
@@ -84,6 +86,7 @@ private fun PostsContent(
             modifier = Modifier.fillMaxSize()
         ) {
             LazyVerticalGrid(
+                modifier = Modifier.height(500.dp),
                 columns = GridCells.Adaptive(MaterialTheme.Size.default),
                 content = {
                     items(screenState.postList) {
@@ -96,12 +99,17 @@ private fun PostsContent(
                     }
                 }
             )
-            AluminiumElevatedButton(
-                icon = Icons.Default.Add,
+            AluminiumFloatingActionButton(
                 onClick = {
                     openScreen(Screen.PostUploadScreen)
                 },
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier.align(Alignment.BottomEnd),
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Post"
+                    )
+                }
             )
         }
     }
