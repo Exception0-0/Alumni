@@ -107,6 +107,7 @@ private fun ColorThemeDialog(
                                             theme = it
                                         )
                                     )
+                                    onEvent(AppearanceScreenEvents.OnColorThemeDialogDismissRequest)
                                 }
                             )
                         }
