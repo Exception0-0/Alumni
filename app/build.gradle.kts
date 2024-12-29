@@ -112,6 +112,9 @@ dependencies {
 
     // lottie animation
     implementation("com.airbnb.android:lottie-compose:4.0.0")
+
+    // data store preference
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }
 
 // Allow references to generated code

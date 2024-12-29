@@ -38,6 +38,9 @@ sealed class Screen(
     data object CreateProfileScreen : Screen(name = "Create Profile")
 
     @Serializable
+    data object AppearanceScreen : Screen(name = "Appearance")
+
+    @Serializable
     data class PostsScreen(
         val userId: String? = null,
     ) : Screen("Posts")

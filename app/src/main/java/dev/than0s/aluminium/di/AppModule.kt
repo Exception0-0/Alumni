@@ -1,5 +1,9 @@
 package dev.than0s.aluminium.di
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -14,15 +18,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.than0s.aluminium.features.auth.data.remote.AuthRemote
 import dev.than0s.aluminium.features.auth.data.remote.AuthRemoteImple
-import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSource
-import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryImple
 import dev.than0s.aluminium.features.auth.data.repository.AuthRepositoryImple
-import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
 import dev.than0s.aluminium.features.post.data.remote.CommentRemote
 import dev.than0s.aluminium.features.post.data.remote.CommentRemoteImple
-import dev.than0s.aluminium.features.post.data.remote.LikeRemote
 import dev.than0s.aluminium.features.post.data.remote.LikeDataSourceImple
+import dev.than0s.aluminium.features.post.data.remote.LikeRemote
 import dev.than0s.aluminium.features.post.data.remote.PostRemote
 import dev.than0s.aluminium.features.post.data.remote.PostRemoteImple
 import dev.than0s.aluminium.features.post.data.repositories.CommentRepositoryImple
@@ -33,17 +34,23 @@ import dev.than0s.aluminium.features.post.domain.repository.LikeRepository
 import dev.than0s.aluminium.features.post.domain.repository.PostRepository
 import dev.than0s.aluminium.features.profile.data.remote.ContactRemote
 import dev.than0s.aluminium.features.profile.data.remote.ContactRemoteImple
-import dev.than0s.aluminium.features.registration.data.remote.RegisterDataSource
-import dev.than0s.aluminium.features.registration.data.repositories.RegistrationRepositoryImple
-import dev.than0s.aluminium.features.registration.domain.repository.RegistrationRepository
 import dev.than0s.aluminium.features.profile.data.remote.ProfileDataSource
 import dev.than0s.aluminium.features.profile.data.remote.ProfileDataSourceImple
 import dev.than0s.aluminium.features.profile.data.repositories.ContactRepositoryImple
 import dev.than0s.aluminium.features.profile.data.repositories.ProfileRepositoryImple
 import dev.than0s.aluminium.features.profile.domain.repository.ContactRepository
 import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
+import dev.than0s.aluminium.features.registration.data.remote.RegisterDataSource
 import dev.than0s.aluminium.features.registration.data.remote.RegisterDataSourceImple
+import dev.than0s.aluminium.features.registration.data.repositories.RegistrationRepositoryImple
+import dev.than0s.aluminium.features.registration.domain.repository.RegistrationRepository
+import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSource
 import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSourceImple
+import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryImple
+import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
+
+// singleton data_store
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @Module
 @InstallIn(SingletonComponent::class)

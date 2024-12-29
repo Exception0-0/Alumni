@@ -17,6 +17,7 @@ import dev.than0s.aluminium.features.profile.presentation.screens.profile.Profil
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
 import dev.than0s.aluminium.features.registration.presentation.screens.registration.RegistrationScreen
 import dev.than0s.aluminium.features.registration.presentation.screens.registration_requests.RegistrationRequestsScreen
+import dev.than0s.aluminium.features.settings.screens.appearance.AppearanceScreen
 import dev.than0s.aluminium.features.splash.presentation.splash.SplashScreen
 
 @Composable
@@ -26,7 +27,7 @@ fun NavGraphHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen,
+        startDestination = Screen.AppearanceScreen,
         modifier = modifier
     ) {
         composable<Screen.SplashScreen> {
@@ -85,6 +86,9 @@ fun NavGraphHost(
             CreateProfileScreen(
                 restartApp = navController::restartApp
             )
+        }
+        composable<Screen.AppearanceScreen> {
+            AppearanceScreen()
         }
         composable<Screen.ChatListScreen> {
 //            ChatListScreen(
