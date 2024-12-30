@@ -79,42 +79,44 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     // hilt
-    implementation("com.google.dagger:hilt-android:2.49")
-    kapt("com.google.dagger:hilt-android-compiler:2.47")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 
     // navigation
-    implementation("androidx.navigation:navigation-compose:2.8.2")
+    implementation(libs.androidx.navigation.compose)
 
-    val lifecycle_version = "2.8.4"
 
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation(libs.kotlinx.coroutines.android)
 
     // Hilt navigation
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.androidx.hilt.navigation.compose)
 
     //
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
     // image loading
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.coil.compose)
 
-    implementation("androidx.compose.material:material-icons-extended:1.7.3")
+    implementation(libs.androidx.material.icons.extended)
 
     // shimmer effect
-    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.1")
+    implementation(libs.compose.shimmer)
 
     // lottie animation
-    implementation("com.airbnb.android:lottie-compose:4.0.0")
+    implementation(libs.lottie.compose)
 
     // data store preference
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation(libs.androidx.datastore.preferences)
+
+    // remember preference
+    implementation(libs.compose.remember.preference)
 }
 
 // Allow references to generated code

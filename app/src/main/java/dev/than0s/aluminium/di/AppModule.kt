@@ -49,9 +49,6 @@ import dev.than0s.aluminium.features.splash.data.data_source.AccountDataSourceIm
 import dev.than0s.aluminium.features.splash.data.repositories.AccountRepositoryImple
 import dev.than0s.aluminium.features.splash.domain.repository.AccountRepository
 
-// singleton data_store
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {

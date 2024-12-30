@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.features.settings.screens.appearance
 
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,18 +16,18 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.burnoo.compose.rememberpreference.rememberStringPreference
 import dev.than0s.aluminium.core.presentation.composable.AluminiumSurface
+import dev.than0s.aluminium.core.presentation.ui.COLOR_THEME
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
-import dev.than0s.aluminium.core.presentation.ui.getCurrentColorTheme
 import dev.than0s.aluminium.ui.spacing
 
 @Composable
@@ -46,17 +45,32 @@ private fun AppearanceScreenContent(
     screenState: AppearanceScreenState,
     onEvent: (AppearanceScreenEvents) -> Unit
 ) {
-    val context = LocalContext.current
-    val currentColorTheme by
-    getCurrentColorTheme(context).collectAsStateWithLifecycle(ColorTheme.System)
-
-    ColorThemeDialog(
-        currentColorTheme = currentColorTheme,
-        screenState = screenState,
-        context = context,
-        onEvent = onEvent
+    var storeColorTheme by rememberStringPreference(
+        keyName = COLOR_THEME,
+        initialValue = ColorTheme.System.name,
+        defaultValue = ColorTheme.System.name
     )
 
+    ColorThemeDialog(
+        currentColorTheme = ColorTheme.valueOf(storeColorTheme),
+        screenState = screenState,
+        onEvent = onEvent,
+        onColorThemeChanged = { theme: ColorTheme ->
+            storeColorTheme = theme.name
+        },
+    )
+
+    ThemeColumn(
+        currentColorTheme = storeColorTheme,
+        onEvent = onEvent
+    )
+}
+
+@Composable
+private fun ThemeColumn(
+    currentColorTheme: String,
+    onEvent: (AppearanceScreenEvents) -> Unit
+) {
     Column {
         ListItem(
             headlineContent = {
@@ -69,7 +83,7 @@ private fun AppearanceScreenContent(
                 )
             },
             supportingContent = {
-                Text(currentColorTheme.name)
+                Text(currentColorTheme)
             },
             modifier = Modifier.clickable {
                 onEvent(AppearanceScreenEvents.OnColorThemeDialogShowRequest)
@@ -82,7 +96,7 @@ private fun AppearanceScreenContent(
 private fun ColorThemeDialog(
     currentColorTheme: ColorTheme,
     screenState: AppearanceScreenState,
-    context: Context,
+    onColorThemeChanged: (ColorTheme) -> Unit,
     onEvent: (AppearanceScreenEvents) -> Unit
 ) {
     if (screenState.colorThemeDialog) {
@@ -101,12 +115,7 @@ private fun ColorThemeDialog(
                                 colorTheme = it,
                                 isSelected = isSelected,
                                 onClick = {
-                                    onEvent(
-                                        AppearanceScreenEvents.OnColorThemeChanged(
-                                            context = context,
-                                            theme = it
-                                        )
-                                    )
+                                    onColorThemeChanged(it)
                                     onEvent(AppearanceScreenEvents.OnColorThemeDialogDismissRequest)
                                 }
                             )
