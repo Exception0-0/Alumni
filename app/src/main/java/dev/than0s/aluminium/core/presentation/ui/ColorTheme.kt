@@ -1,5 +1,20 @@
 package dev.than0s.aluminium.core.presentation.ui
 
+import androidx.compose.runtime.Composable
+import dev.burnoo.compose.rememberpreference.rememberStringPreference
+
+
+@Composable
+fun getCurrentColorTheme(): ColorTheme {
+    return rememberStringPreference(
+        keyName = COLOR_THEME,
+        initialValue = ColorTheme.System.name,
+        defaultValue = ColorTheme.System.name
+    ).value.let {
+        ColorTheme.valueOf(it)
+    }
+}
+
 enum class ColorTheme {
     System,
     Dark,

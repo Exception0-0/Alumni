@@ -4,9 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -18,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import dev.than0s.aluminium.core.presentation.ui.ColorTheme
+import dev.than0s.aluminium.core.presentation.ui.getCurrentColorTheme
 import dev.than0s.aluminium.core.presentation.utils.AluminiumBottomNavigationBar
 import dev.than0s.aluminium.core.presentation.utils.AluminiumTopAppBar
 import dev.than0s.aluminium.core.presentation.utils.NavGraphHost
@@ -32,10 +33,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AluminiumTheme {
+            val darkTheme = when (getCurrentColorTheme()) {
+                ColorTheme.System -> isSystemInDarkTheme()
+                ColorTheme.Dark -> true
+                ColorTheme.Light -> false
+            }
+            AluminiumTheme(
+                darkTheme = darkTheme
+            ) {
                 val navController = rememberNavController()
                 val snackbarHostState = remember { SnackbarHostState() }
-                val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+                val scrollBehavior =
+                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
                 SnackbarLogic(
                     snackbarHostState = snackbarHostState

@@ -1,7 +1,6 @@
 package dev.than0s.aluminium.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -10,9 +9,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
-import dev.burnoo.compose.rememberpreference.rememberStringPreference
-import dev.than0s.aluminium.core.presentation.ui.COLOR_THEME
-import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.ui.Elevation
 import dev.than0s.aluminium.ui.LocalElevation
 import dev.than0s.aluminium.ui.LocalRoundCorners
@@ -48,15 +44,12 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun AluminiumTheme(
+    darkTheme: Boolean = false,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val darkTheme = when (getCurrentColorTheme()) {
-        ColorTheme.System -> isSystemInDarkTheme()
-        ColorTheme.Dark -> true
-        ColorTheme.Light -> false
-    }
+
 
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -80,16 +73,5 @@ fun AluminiumTheme(
             typography = Typography,
             content = content
         )
-    }
-}
-
-@Composable
-private fun getCurrentColorTheme(): ColorTheme {
-    return rememberStringPreference(
-        keyName = COLOR_THEME,
-        initialValue = ColorTheme.System.name,
-        defaultValue = ColorTheme.System.name
-    ).value.let {
-        ColorTheme.valueOf(it)
     }
 }
