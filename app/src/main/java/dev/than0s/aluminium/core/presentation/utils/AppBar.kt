@@ -88,6 +88,10 @@ private fun getDefaultTopAppBar(destination: NavDestination?): TopAppBarItem? {
             shouldHaveNavIcon = false
         )
 
+        destination.hasRoute<Screen.AppearanceScreen>() -> TopAppBarItem(
+            title = Screen.AppearanceScreen.name,
+        )
+
         else -> null
     }
 }

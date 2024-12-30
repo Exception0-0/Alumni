@@ -16,7 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AddAPhoto
-import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -48,42 +48,12 @@ fun SettingScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     openScreen: (Screen) -> Unit,
 ) {
-    initOptionList(openScreen)
     SettingScreenContent(
         screenState = viewModel.screenState,
         onEvent = viewModel::onEvent,
         openScreen = openScreen,
     )
 }
-
-fun initOptionList(openScreen: (Screen) -> Unit) {
-    settingsOptionList = listOf(
-        if (currentUserRole != Role.Admin) {
-            SettingsOptions(
-                title = "Add Post",
-                icon = Icons.Default.AddAPhoto,
-                onClick = {
-                    openScreen(Screen.PostUploadScreen)
-                }
-            )
-        } else
-            SettingsOptions(
-                title = "Security",
-                icon = Icons.Default.Security,
-                onClick = {
-
-                }
-            ),
-        SettingsOptions(
-            title = "Log Out",
-            icon = Icons.AutoMirrored.Filled.ExitToApp,
-            onClick = {
-                openScreen(Screen.SignOutScreen)
-            }
-        )
-    )
-}
-
 
 @Composable
 private fun SettingScreenContent(
@@ -112,7 +82,7 @@ private fun SettingScreenContent(
 
             AluminiumElevatedCard(
                 onClick = {
-                    option.onClick()
+                    openScreen(option.screen)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -214,12 +184,28 @@ fun ShimmerProfileCard() {
     }
 }
 
-var settingsOptionList: List<SettingsOptions> = emptyList()
+val settingsOptionList = listOf(
+    SettingsOptions(
+        title = "Add Post",
+        icon = Icons.Default.AddAPhoto,
+        screen = Screen.PostUploadScreen
+    ),
+    SettingsOptions(
+        title = "Appearance",
+        icon = Icons.Default.Palette,
+        screen = Screen.AppearanceScreen
+    ),
+    SettingsOptions(
+        title = "Log Out",
+        icon = Icons.AutoMirrored.Filled.ExitToApp,
+        screen = Screen.SignOutScreen
+    )
+)
 
 data class SettingsOptions(
     val title: String,
     val icon: ImageVector,
-    val onClick: () -> Unit
+    val screen: Screen
 )
 
 @Preview(showSystemUi = true)

@@ -27,7 +27,7 @@ fun NavGraphHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.AppearanceScreen,
+        startDestination = Screen.SplashScreen,
         modifier = modifier
     ) {
         composable<Screen.SplashScreen> {
