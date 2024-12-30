@@ -28,6 +28,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.burnoo.compose.rememberpreference.rememberStringPreference
+import dev.than0s.aluminium.core.presentation.composable.AluminiumGroupTitle
 import dev.than0s.aluminium.core.presentation.composable.AluminiumSurface
 import dev.than0s.aluminium.core.presentation.composable.AluminiumSwitch
 import dev.than0s.aluminium.core.presentation.ui.COLOR_THEME
@@ -100,6 +101,9 @@ private fun ThemeColumn(
     onEvent: (AppearanceScreenEvents) -> Unit
 ) {
     Column {
+        AluminiumGroupTitle(
+            title = "theme"
+        )
         ListItem(
             headlineContent = {
                 Text(text = "Enable dynamic theme")
