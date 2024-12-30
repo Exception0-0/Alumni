@@ -10,6 +10,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Contrast
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumSurface
 import dev.than0s.aluminium.core.presentation.composable.AluminiumSwitch
 import dev.than0s.aluminium.core.presentation.ui.COLOR_THEME
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
+import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
 import dev.than0s.aluminium.core.presentation.ui.PURE_BLACK
 import dev.than0s.aluminium.ui.spacing
 
@@ -59,6 +61,11 @@ private fun AppearanceScreenContent(
         initialValue = false,
         defaultValue = false,
     )
+    var isDynamicTheme by rememberBooleanPreference(
+        keyName = DYNAMIC_THEME,
+        initialValue = false,
+        defaultValue = false,
+    )
 
     ColorThemeDialog(
         currentColorTheme = ColorTheme.valueOf(storeColorTheme),
@@ -72,8 +79,12 @@ private fun AppearanceScreenContent(
     ThemeColumn(
         currentColorTheme = storeColorTheme,
         isPureBlack = isPureBlack,
+        isDynamicTheme = isDynamicTheme,
         onPureBlackChange = { value ->
             isPureBlack = value
+        },
+        onDynamicThemeChange = { value ->
+            isDynamicTheme = value
         },
         onEvent = onEvent
     )
@@ -83,10 +94,31 @@ private fun AppearanceScreenContent(
 private fun ThemeColumn(
     currentColorTheme: String,
     isPureBlack: Boolean,
+    isDynamicTheme: Boolean,
     onPureBlackChange: (Boolean) -> Unit,
+    onDynamicThemeChange: (Boolean) -> Unit,
     onEvent: (AppearanceScreenEvents) -> Unit
 ) {
     Column {
+        ListItem(
+            headlineContent = {
+                Text(text = "Enable dynamic theme")
+            },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.Default.Palette,
+                    contentDescription = "Dynamic theme"
+                )
+            },
+            trailingContent = {
+                AluminiumSwitch(
+                    checked = isDynamicTheme,
+                    onCheckedChange = {
+                        onDynamicThemeChange(it)
+                    },
+                )
+            },
+        )
         ListItem(
             headlineContent = {
                 Text(text = "Color Theme")
@@ -106,7 +138,7 @@ private fun ThemeColumn(
         )
         ListItem(
             headlineContent = {
-                Text(text = "Pure Black")
+                Text(text = "Pure black")
             },
             leadingContent = {
                 Icon(
@@ -121,7 +153,7 @@ private fun ThemeColumn(
                         onPureBlackChange(it)
                     },
                 )
-            }
+            },
         )
     }
 }

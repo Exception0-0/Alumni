@@ -23,3 +23,4 @@ enum class ColorTheme {
 
 const val COLOR_THEME = "color_theme"
 const val PURE_BLACK = "pure_black"
+const val DYNAMIC_THEME = "dynamic_theme"

@@ -16,7 +16,6 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.compose.rememberNavController
 import com.t8rin.dynamic.theme.ColorTuple
@@ -25,6 +24,7 @@ import com.t8rin.dynamic.theme.rememberDynamicThemeState
 import dagger.hilt.android.AndroidEntryPoint
 import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
+import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
 import dev.than0s.aluminium.core.presentation.ui.PURE_BLACK
 import dev.than0s.aluminium.core.presentation.ui.getCurrentColorTheme
 import dev.than0s.aluminium.core.presentation.utils.AluminiumBottomNavigationBar
@@ -50,6 +50,11 @@ class MainActivity : ComponentActivity() {
                 defaultValue = false,
                 initialValue = false
             )
+            val isDynamicTheme by rememberBooleanPreference(
+                keyName = DYNAMIC_THEME,
+                initialValue = false,
+                defaultValue = false,
+            )
 
             DynamicTheme(
                 state = rememberDynamicThemeState(),
@@ -57,6 +62,7 @@ class MainActivity : ComponentActivity() {
                 defaultColorTuple = ColorTuple(
                     primary = MaterialTheme.colorScheme.primary
                 ),
+                dynamicColor = isDynamicTheme,
                 amoledMode = pureBlack
             ) {
                 val navController = rememberNavController()
