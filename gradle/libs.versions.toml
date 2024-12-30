@@ -4,6 +4,7 @@ coilCompose = "2.7.0"
 composeRememberPreference = "1.1.0"
 composeShimmer = "1.3.1"
 datastorePreferences = "1.1.1"
+dynamictheme = "1.0.3"
 firebaseDatabase = "21.0.0"
 hiltAndroid = "2.49"
 hiltAndroidCompiler = "2.47"
@@ -41,6 +42,7 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 compose-remember-preference = { module = "dev.burnoo:compose-remember-preference", version.ref = "composeRememberPreference" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
+dynamictheme = { module = "com.github.t8rin:dynamictheme", version.ref = "dynamictheme" }
 firebase-database = { module = "com.google.firebase:firebase-database", version.ref = "firebaseDatabase" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }

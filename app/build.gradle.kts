@@ -117,6 +117,9 @@ dependencies {
 
     // remember preference
     implementation(libs.compose.remember.preference)
+
+    // dynamic theme
+    implementation(libs.dynamictheme)
 }
 
 // Allow references to generated code

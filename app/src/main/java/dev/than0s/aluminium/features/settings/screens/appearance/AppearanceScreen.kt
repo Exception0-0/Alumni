@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Contrast
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -24,10 +25,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.burnoo.compose.rememberpreference.rememberStringPreference
 import dev.than0s.aluminium.core.presentation.composable.AluminiumSurface
+import dev.than0s.aluminium.core.presentation.composable.AluminiumSwitch
 import dev.than0s.aluminium.core.presentation.ui.COLOR_THEME
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
+import dev.than0s.aluminium.core.presentation.ui.PURE_BLACK
 import dev.than0s.aluminium.ui.spacing
 
 @Composable
@@ -50,6 +54,11 @@ private fun AppearanceScreenContent(
         initialValue = ColorTheme.System.name,
         defaultValue = ColorTheme.System.name
     )
+    var isPureBlack by rememberBooleanPreference(
+        keyName = PURE_BLACK,
+        initialValue = false,
+        defaultValue = false,
+    )
 
     ColorThemeDialog(
         currentColorTheme = ColorTheme.valueOf(storeColorTheme),
@@ -62,6 +71,10 @@ private fun AppearanceScreenContent(
 
     ThemeColumn(
         currentColorTheme = storeColorTheme,
+        isPureBlack = isPureBlack,
+        onPureBlackChange = { value ->
+            isPureBlack = value
+        },
         onEvent = onEvent
     )
 }
@@ -69,6 +82,8 @@ private fun AppearanceScreenContent(
 @Composable
 private fun ThemeColumn(
     currentColorTheme: String,
+    isPureBlack: Boolean,
+    onPureBlackChange: (Boolean) -> Unit,
     onEvent: (AppearanceScreenEvents) -> Unit
 ) {
     Column {
@@ -83,10 +98,29 @@ private fun ThemeColumn(
                 )
             },
             supportingContent = {
-                Text(currentColorTheme)
+                Text(text = currentColorTheme)
             },
             modifier = Modifier.clickable {
                 onEvent(AppearanceScreenEvents.OnColorThemeDialogShowRequest)
+            }
+        )
+        ListItem(
+            headlineContent = {
+                Text(text = "Pure Black")
+            },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.Default.Contrast,
+                    contentDescription = "Pure Black"
+                )
+            },
+            trailingContent = {
+                AluminiumSwitch(
+                    checked = isPureBlack,
+                    onCheckedChange = {
+                        onPureBlackChange(it)
+                    },
+                )
             }
         )
     }

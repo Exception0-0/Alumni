@@ -7,23 +7,30 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.compose.rememberNavController
+import com.t8rin.dynamic.theme.ColorTuple
+import com.t8rin.dynamic.theme.DynamicTheme
+import com.t8rin.dynamic.theme.rememberDynamicThemeState
 import dagger.hilt.android.AndroidEntryPoint
+import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
+import dev.than0s.aluminium.core.presentation.ui.PURE_BLACK
 import dev.than0s.aluminium.core.presentation.ui.getCurrentColorTheme
 import dev.than0s.aluminium.core.presentation.utils.AluminiumBottomNavigationBar
 import dev.than0s.aluminium.core.presentation.utils.AluminiumTopAppBar
 import dev.than0s.aluminium.core.presentation.utils.NavGraphHost
 import dev.than0s.aluminium.core.presentation.utils.SnackbarLogic
-import dev.than0s.aluminium.ui.theme.AluminiumTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -38,8 +45,19 @@ class MainActivity : ComponentActivity() {
                 ColorTheme.Dark -> true
                 ColorTheme.Light -> false
             }
-            AluminiumTheme(
-                darkTheme = darkTheme
+            val pureBlack by rememberBooleanPreference(
+                keyName = PURE_BLACK,
+                defaultValue = false,
+                initialValue = false
+            )
+
+            DynamicTheme(
+                state = rememberDynamicThemeState(),
+                isDarkTheme = darkTheme,
+                defaultColorTuple = ColorTuple(
+                    primary = MaterialTheme.colorScheme.primary
+                ),
+                amoledMode = pureBlack
             ) {
                 val navController = rememberNavController()
                 val snackbarHostState = remember { SnackbarHostState() }
