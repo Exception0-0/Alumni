@@ -10,7 +10,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
@@ -27,15 +30,19 @@ fun AluminiumTopAppBar(
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val destination = currentBackStackEntry?.destination
     getDefaultTopAppBar(destination)?.let {
+        val collapsedFraction by derivedStateOf {
+            scrollBehavior.state.collapsedFraction
+        }
+        val titleSize = lerp(
+            start = MaterialTheme.textSize.extraLarge.value,
+            stop = MaterialTheme.textSize.gigantic.value,
+            fraction = 1f - collapsedFraction
+        ).sp
         LargeTopAppBar(
             title = {
                 AluminiumTitleText(
                     title = it.title,
-                    fontSize = if (scrollBehavior.state.collapsedFraction == 1f) {
-                        MaterialTheme.textSize.huge
-                    } else {
-                        MaterialTheme.textSize.gigantic
-                    }
+                    fontSize = titleSize
                 )
             },
             navigationIcon = {
