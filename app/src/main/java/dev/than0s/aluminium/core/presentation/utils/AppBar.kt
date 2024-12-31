@@ -1,7 +1,9 @@
 package dev.than0s.aluminium.core.presentation.utils
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,7 +31,10 @@ fun AluminiumTopAppBar(
 ) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val destination = currentBackStackEntry?.destination
-    getDefaultTopAppBar(destination)?.let {
+    getDefaultTopAppBar(
+        destination = destination,
+        openScreen = navController::openScreen
+    )?.let {
         val collapsedFraction by derivedStateOf {
             scrollBehavior.state.collapsedFraction
         }
@@ -57,6 +62,7 @@ fun AluminiumTopAppBar(
                     }
                 }
             },
+            actions = it.actions,
             colors = TopAppBarDefaults.topAppBarColors(
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
@@ -65,12 +71,28 @@ fun AluminiumTopAppBar(
     }
 }
 
-private fun getDefaultTopAppBar(destination: NavDestination?): TopAppBarItem? {
+private fun getDefaultTopAppBar(
+    destination: NavDestination?,
+    openScreen: (Screen) -> Unit
+): TopAppBarItem? {
     return when {
         destination == null -> null
         destination.hasRoute<Screen.SignInScreen>() -> TopAppBarItem(
             title = Screen.SignInScreen.name,
-            shouldHaveNavIcon = false
+            shouldHaveNavIcon = false,
+            actions = {
+                IconButton(
+                    onClick = {
+                        openScreen(Screen.AppearanceScreen)
+                    },
+                    content = {
+                        Icon(
+                            imageVector = Icons.Default.Palette,
+                            contentDescription = "Appearance"
+                        )
+                    }
+                )
+            }
         )
 
         destination.hasRoute<Screen.ForgotPasswordScreen>() -> TopAppBarItem(
@@ -106,4 +128,5 @@ private fun getDefaultTopAppBar(destination: NavDestination?): TopAppBarItem? {
 private data class TopAppBarItem(
     val title: String,
     val shouldHaveNavIcon: Boolean = true,
+    val actions: @Composable (RowScope.() -> Unit) = {},
 )
