@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "dev.than0s.aluminium"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "dev.than0s.aluminium"
