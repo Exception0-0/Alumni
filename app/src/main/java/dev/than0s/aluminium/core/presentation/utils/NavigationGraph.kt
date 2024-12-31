@@ -106,11 +106,11 @@ fun NavHostController.openScreen(screen: Screen) {
 }
 
 fun NavHostController.popScreen() {
-    popBackStack()
+    navigateUp()
 }
 
 fun NavHostController.popAndOpen(screen: Screen) {
-    popBackStack()
+    navigateUp()
     navigate(screen)
 }
 
