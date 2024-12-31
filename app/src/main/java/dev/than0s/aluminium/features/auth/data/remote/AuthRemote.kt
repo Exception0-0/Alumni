@@ -11,7 +11,7 @@ interface AuthRemote {
     suspend fun signIn(email: String, password: String)
     suspend fun signUp(email: String, password: String)
     suspend fun forgetPassword(email: String)
-    suspend fun signOut()
+    fun signOut()
 }
 
 class AuthRemoteImple @Inject constructor(
@@ -38,7 +38,7 @@ class AuthRemoteImple @Inject constructor(
         }
     }
 
-    override suspend fun signOut() {
+    override fun signOut() {
         try {
             auth.signOut()
         } catch (e: FirebaseAuthException) {

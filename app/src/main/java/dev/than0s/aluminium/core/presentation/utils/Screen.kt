@@ -26,9 +26,6 @@ sealed class Screen(
     data object PostUploadScreen : Screen(name = "Post Upload")
 
     @Serializable
-    data object SignOutScreen : Screen(name = "Sign Out")
-
-    @Serializable
     data object ForgotPasswordScreen : Screen(name = "Forgot Password")
 
     @Serializable

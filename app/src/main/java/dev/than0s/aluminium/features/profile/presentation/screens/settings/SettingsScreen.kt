@@ -1,9 +1,9 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,9 +15,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,11 +46,13 @@ import dev.than0s.aluminium.ui.textSize
 fun SettingScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     openScreen: (Screen) -> Unit,
+    restartApp: () -> Unit,
 ) {
     SettingScreenContent(
         screenState = viewModel.screenState,
         onEvent = viewModel::onEvent,
         openScreen = openScreen,
+        restartApp = restartApp,
     )
 }
 
@@ -60,6 +61,7 @@ private fun SettingScreenContent(
     screenState: SettingsState,
     onEvent: (SettingsEvents) -> Unit,
     openScreen: (Screen) -> Unit,
+    restartApp: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,30 +80,38 @@ private fun SettingScreenContent(
             )
         }
 
-        settingsOptionList.forEach { option ->
-
-            AluminiumElevatedCard(
-                onClick = {
-                    openScreen(option.screen)
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    verticalAlignment = CenterVertically,
-                    modifier = Modifier.padding(MaterialTheme.spacing.medium)
-
-                ) {
-                    Icon(
-                        imageVector = option.icon,
-                        contentDescription = option.icon.name,
-                    )
-                    Spacer(
-                        modifier = Modifier.width(MaterialTheme.spacing.medium)
-                    )
-                    Text(text = option.title)
-                }
+        ListItem(
+            headlineContent = {
+                Text(text = "Appearance")
+            },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.Default.Palette,
+                    contentDescription = "Appearance"
+                )
+            },
+            modifier = Modifier.clickable {
+                openScreen(Screen.AppearanceScreen)
             }
-        }
+        )
+        ListItem(
+            headlineContent = {
+                Text(text = "Log out")
+            },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                    contentDescription = "Log out"
+                )
+            },
+            modifier = Modifier.clickable {
+                onEvent(
+                    SettingsEvents.OnSignOut(
+                        restartApp = restartApp
+                    )
+                )
+            }
+        )
     }
 }
 
@@ -184,36 +194,13 @@ fun ShimmerProfileCard() {
     }
 }
 
-val settingsOptionList = listOf(
-    SettingsOptions(
-        title = "Add Post",
-        icon = Icons.Default.AddAPhoto,
-        screen = Screen.PostUploadScreen
-    ),
-    SettingsOptions(
-        title = "Appearance",
-        icon = Icons.Default.Palette,
-        screen = Screen.AppearanceScreen
-    ),
-    SettingsOptions(
-        title = "Log Out",
-        icon = Icons.AutoMirrored.Filled.ExitToApp,
-        screen = Screen.SignOutScreen
-    )
-)
-
-data class SettingsOptions(
-    val title: String,
-    val icon: ImageVector,
-    val screen: Screen
-)
-
 @Preview(showSystemUi = true)
 @Composable
 private fun SettingScreenPreview() {
     SettingScreenContent(
         screenState = SettingsState(),
         onEvent = {},
-        openScreen = {}
+        openScreen = {},
+        restartApp = {}
     )
 }

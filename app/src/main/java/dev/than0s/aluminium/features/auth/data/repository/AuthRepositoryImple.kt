@@ -57,7 +57,7 @@ class AuthRepositoryImple @Inject constructor(private val dataSource: AuthRemote
         }
     }
 
-    override suspend fun signOut(): SimpleResource {
+    override fun signOut(): SimpleResource {
         return try {
             dataSource.signOut()
             Resource.Success(Unit)

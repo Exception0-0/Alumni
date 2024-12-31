@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
-import dev.than0s.aluminium.features.auth.presentation.screens.sign_out.SignOutScreen
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
@@ -47,6 +46,7 @@ fun NavGraphHost(
         composable<Screen.SettingScreen> {
             SettingScreen(
                 openScreen = navController::openScreen,
+                restartApp = navController::restartApp
             )
         }
         composable<Screen.RegistrationRequestsScreen> {
@@ -55,11 +55,6 @@ fun NavGraphHost(
         composable<Screen.PostUploadScreen> {
             PostUploadScreen(
                 popScreen = navController::popScreen
-            )
-        }
-        composable<Screen.SignOutScreen> {
-            SignOutScreen(
-                restartApp = navController::restartApp
             )
         }
         composable<Screen.ForgotPasswordScreen> {
@@ -91,7 +86,7 @@ fun NavGraphHost(
             AppearanceScreen()
         }
         composable<Screen.ChatListScreen> {
-//            ChatListScreen(
+//            ChatListScreen(it
 //                openScreen = navController::openScreen
 //            )
         }
