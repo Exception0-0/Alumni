@@ -47,9 +47,9 @@ class ContactViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    result.data?.let {
-                        screenState = screenState.copy(contactInfo = it)
-                    }
+                    screenState = screenState.copy(
+                        contactInfo = result.data ?: ContactInfo(userId = contactScreenArgs.userId)
+                    )
                 }
             }
             screenState = screenState.copy(isLoading = false)
@@ -58,6 +58,8 @@ class ContactViewModel @Inject constructor(
 
     private fun onContactInfoUpdateClick() {
         viewModelScope.launch {
+            screenState = screenState.copy(isUpdating = true)
+
             val setContactInfoResult = setContactInfoUseCase(screenState.dialogContactInfo)
 
             setContactInfoResult.let {
@@ -89,6 +91,7 @@ class ContactViewModel @Inject constructor(
 
                 null -> {}
             }
+            screenState = screenState.copy(isUpdating = false)
         }
     }
 
