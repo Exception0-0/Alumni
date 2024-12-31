@@ -40,7 +40,7 @@ fun RemoteRegistrationForm.toRegistrationForm(): RegistrationForm = Registration
 data class RemoteRegistrationForm(
     val id: String = "",
     val role: Role = Role.Student,
-    val collegeId: String? = null,
+    val collegeId: String = "",
     val email: String = "",
     val firstName: String = "",
     val middleName: String = "",

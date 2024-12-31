@@ -1,7 +1,7 @@
 package dev.than0s.aluminium.features.registration.domain.use_cases
 
-import dev.than0s.aluminium.core.domain.util.isValidEmail
 import dev.than0s.aluminium.core.domain.util.generateUniqueId
+import dev.than0s.aluminium.core.domain.util.isValidEmail
 import dev.than0s.aluminium.core.presentation.error.TextFieldError
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.features.registration.domain.data_class.SubmitRegistrationResult
@@ -35,7 +35,7 @@ class SubmitRegistrationUseCase @Inject constructor(private val repository: Regi
             if (it.isBlank()) TextFieldError.FieldEmpty
             else null
         }
-        val rollNoError = form.collegeId?.let {
+        val rollNoError = form.collegeId.let {
             if (it.isBlank()) TextFieldError.FieldEmpty
             else null
         }

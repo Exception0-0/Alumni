@@ -8,7 +8,7 @@ import dev.than0s.aluminium.core.Role
 data class RegistrationForm(
     @DocumentId val id: String = "",
     val role: Role = Role.Student,
-    val collegeId: String? = null,
+    val collegeId: String = "",
     val course: Course? = null,
     val email: String = "",
     val firstName: String = "",
