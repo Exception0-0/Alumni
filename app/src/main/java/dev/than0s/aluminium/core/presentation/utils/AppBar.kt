@@ -108,9 +108,12 @@ private fun getDefaultTopAppBar(
             shouldHaveNavIcon = false
         )
 
-        destination.hasRoute<Screen.ProfileScreen>() -> TopAppBarItem(
-            title = Screen.ProfileScreen("").name,
-        )
+        destination.hasRoute<Screen.ProfileScreen>() or
+                destination.hasRoute<Screen.UpdateProfileDialog>() -> {
+            TopAppBarItem(
+                title = Screen.ProfileScreen("").name,
+            )
+        }
 
         destination.hasRoute<Screen.SettingScreen>() -> TopAppBarItem(
             title = Screen.SettingScreen.name,
