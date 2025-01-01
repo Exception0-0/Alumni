@@ -45,9 +45,11 @@ import dev.than0s.aluminium.ui.textSize
 @Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel = hiltViewModel(),
+    popScreen: () -> Unit,
 ) {
     RegistrationScreenContent(
         screenState = viewModel.screenState,
+        popScreen = popScreen,
         onEvent = viewModel::onEvent,
     )
 }
@@ -55,6 +57,7 @@ fun RegistrationScreen(
 @Composable
 private fun RegistrationScreenContent(
     screenState: RegistrationState,
+    popScreen: () -> Unit,
     onEvent: (RegistrationEvents) -> Unit,
 ) {
     val isLastIndex = screenState.formIndex == registrationFormSectionList.lastIndex
@@ -115,7 +118,11 @@ private fun RegistrationScreenContent(
                         isLoading = screenState.isLoading,
                         enabled = !screenState.isLoading,
                         onClick = {
-                            onEvent(RegistrationEvents.OnRegisterClick)
+                            onEvent(
+                                RegistrationEvents.OnRegisterClick(
+                                    onSuccess = popScreen
+                                )
+                            )
                         },
                         content = {
                             Text("Register")
@@ -327,5 +334,6 @@ private fun RegistrationScreenPreview() {
     RegistrationScreenContent(
         screenState = RegistrationState(),
         onEvent = {},
+        popScreen = {}
     )
 }

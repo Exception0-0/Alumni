@@ -118,7 +118,9 @@ class RegistrationViewModel @Inject constructor(
         )
     }
 
-    private fun onRegisterClick() {
+    private fun onRegisterClick(
+        onSuccess: () -> Unit
+    ) {
         viewModelScope.launch {
             screenState = screenState.copy(isLoading = true)
 
@@ -149,6 +151,7 @@ class RegistrationViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.successfully_register)
                         )
                     )
+                    onSuccess()
                 }
 
                 null -> {}
@@ -170,7 +173,7 @@ class RegistrationViewModel @Inject constructor(
             is RegistrationEvents.OnBatchToChange -> onBatchToChange(event.to)
             is RegistrationEvents.OnCourseChange -> onCourseChange(event.course)
             is RegistrationEvents.OnCollegeIdCardChange -> onCollegeIdCardChange(event.idCard)
-            is RegistrationEvents.OnRegisterClick -> onRegisterClick()
+            is RegistrationEvents.OnRegisterClick -> onRegisterClick(event.onSuccess)
             is RegistrationEvents.OnPreviousClick -> onPreviousClick()
             is RegistrationEvents.OnNextClick -> onNextClick()
         }

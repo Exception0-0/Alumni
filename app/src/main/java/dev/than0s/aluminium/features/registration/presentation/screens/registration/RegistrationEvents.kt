@@ -17,6 +17,7 @@ sealed class RegistrationEvents {
     data class OnCollegeIdCardChange(val idCard: Uri?) : RegistrationEvents()
     data object OnPreviousClick : RegistrationEvents()
     data object OnNextClick : RegistrationEvents()
-    data object OnRegisterClick : RegistrationEvents()
-
+    data class OnRegisterClick(
+        val onSuccess: () -> Unit,
+    ) : RegistrationEvents()
 }

@@ -42,7 +42,9 @@ fun NavGraphHost(
             )
         }
         composable<Screen.RegistrationScreen> {
-            RegistrationScreen()
+            RegistrationScreen(
+                popScreen = navController::popScreen
+            )
         }
         composable<Screen.SettingScreen> {
             SettingScreen(
