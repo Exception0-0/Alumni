@@ -12,8 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLinearLoading
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormat
+import dev.than0s.aluminium.core.presentation.composable.CardInfoFormatShimmer
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.spacing
 
@@ -38,7 +38,7 @@ private fun ContactsContent(
     onEvents: (ContactEvents) -> Unit
 ) {
     if (screenState.isLoading) {
-        AluminiumLinearLoading()
+        LoadingShimmerEffect()
     } else {
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
@@ -68,6 +68,17 @@ private fun ContactsContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun LoadingShimmerEffect() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large)
+    ) {
+        CardInfoFormatShimmer()
+        CardInfoFormatShimmer()
+        CardInfoFormatShimmer()
     }
 }
 
