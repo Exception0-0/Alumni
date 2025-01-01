@@ -185,13 +185,13 @@ fun ShimmerProfileCard() {
             ) {
                 ShimmerBackground(
                     modifier = Modifier
-                        .height(MaterialTheme.textSize.gigantic.value.dp)
+                        .height(MaterialTheme.Size.extraSmall)
                         .width(MaterialTheme.Size.medium)
                 )
                 ShimmerBackground(
                     modifier = Modifier
-                        .height(MaterialTheme.textSize.small.value.dp)
-                        .width(MaterialTheme.Size.small)
+                        .height(16.dp)
+                        .width(MaterialTheme.Size.large)
                 )
             }
         }
