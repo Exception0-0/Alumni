@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
@@ -34,8 +35,8 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumFloatingActionButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLinearLoading
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
@@ -78,29 +79,30 @@ private fun PostsContent(
             }
         )
     }
-
-    if (screenState.isLoading) {
-        AluminiumLinearLoading()
-    } else {
-        Scaffold(
-            contentWindowInsets = WindowInsets(0.dp),
-            modifier = Modifier
-                .height(400.dp)
-                .fillMaxWidth(),
-            floatingActionButton = {
-                AluminiumFloatingActionButton(
-                    onClick = {
-                        openScreen(Screen.PostUploadScreen)
-                    },
-                    content = {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add Post"
-                        )
-                    }
-                )
-            }
-        ) { contentPadding ->
+    Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
+        modifier = Modifier
+            .height(400.dp)
+            .fillMaxWidth(),
+        floatingActionButton = {
+            AluminiumFloatingActionButton(
+                onClick = {
+                    openScreen(Screen.PostUploadScreen)
+                },
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Post"
+                    )
+                }
+            )
+        }
+    ) { contentPadding ->
+        if (screenState.isLoading) {
+            LoadingShimmerEffect(
+                modifier = Modifier.padding(contentPadding)
+            )
+        } else {
             LazyVerticalGrid(
                 modifier = Modifier
                     .padding(contentPadding),
@@ -238,6 +240,30 @@ private fun PostStatus(
             )
         }
     }
+}
+
+@Composable
+private fun LoadingShimmerEffect(
+    modifier: Modifier = Modifier
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(MaterialTheme.Size.default),
+        modifier = modifier
+    ) {
+        items(16) {
+            PostShimmerCard()
+        }
+    }
+}
+
+@Composable
+private fun PostShimmerCard() {
+    ShimmerBackground(
+        modifier = Modifier
+            .shimmer()
+            .size(MaterialTheme.Size.medium)
+            .padding(MaterialTheme.spacing.extraSmall)
+    )
 }
 
 @Preview(showSystemUi = true)
