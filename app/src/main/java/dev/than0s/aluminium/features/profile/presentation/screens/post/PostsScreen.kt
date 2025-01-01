@@ -1,10 +1,9 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.post
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,6 +19,7 @@ import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -82,11 +82,28 @@ private fun PostsContent(
     if (screenState.isLoading) {
         AluminiumLinearLoading()
     } else {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Scaffold(
+            contentWindowInsets = WindowInsets(0.dp),
+            modifier = Modifier
+                .height(400.dp)
+                .fillMaxWidth(),
+            floatingActionButton = {
+                AluminiumFloatingActionButton(
+                    onClick = {
+                        openScreen(Screen.PostUploadScreen)
+                    },
+                    content = {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add Post"
+                        )
+                    }
+                )
+            }
+        ) { contentPadding ->
             LazyVerticalGrid(
-                modifier = Modifier.height(500.dp),
+                modifier = Modifier
+                    .padding(contentPadding),
                 columns = GridCells.Adaptive(MaterialTheme.Size.default),
                 content = {
                     items(screenState.postList) {
@@ -97,18 +114,6 @@ private fun PostsContent(
                             }
                         )
                     }
-                }
-            )
-            AluminiumFloatingActionButton(
-                onClick = {
-                    openScreen(Screen.PostUploadScreen)
-                },
-                modifier = Modifier.align(Alignment.BottomEnd),
-                content = {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Post"
-                    )
                 }
             )
         }
@@ -125,9 +130,7 @@ private fun PostPreviewCard(
             onClick(post.id)
         },
         modifier = Modifier
-            .size(
-                MaterialTheme.Size.medium
-            )
+            .size(MaterialTheme.Size.medium)
             .padding(MaterialTheme.spacing.extraSmall)
     ) {
         AluminiumAsyncImage(
@@ -190,7 +193,6 @@ private fun PostStatus(
     openScreen: (Screen) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
