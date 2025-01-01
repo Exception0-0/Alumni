@@ -29,7 +29,7 @@ sealed class Screen(
     data object ForgotPasswordScreen : Screen(name = "Forgot Password")
 
     @Serializable
-    data object ChatListScreen : Screen(name = "Chat List")
+    data object ChatsScreen : Screen(name = "Chats")
 
     @Serializable
     data object AppearanceScreen : Screen(name = "Appearance")
@@ -41,9 +41,9 @@ sealed class Screen(
     data object UpdateContactDialog : Screen(name = "Update Contact")
 
     @Serializable
-    data class PostsScreen(
+    data class HomeScreen(
         val userId: String? = null,
-    ) : Screen("Posts")
+    ) : Screen("Home")
 
     @Serializable
     data class ProfileScreen(

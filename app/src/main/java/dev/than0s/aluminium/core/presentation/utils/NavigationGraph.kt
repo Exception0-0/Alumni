@@ -66,7 +66,7 @@ fun NavGraphHost(
                 popScreen = navController::popScreen
             )
         }
-        composable<Screen.PostsScreen> {
+        composable<Screen.HomeScreen> {
             PostsScreen(
                 openScreen = navController::openScreen
             )
@@ -94,7 +94,7 @@ fun NavGraphHost(
         composable<Screen.AppearanceScreen> {
             AppearanceScreen()
         }
-        composable<Screen.ChatListScreen> {
+        composable<Screen.ChatsScreen> {
 //            ChatListScreen(it
 //                openScreen = navController::openScreen
 //            )

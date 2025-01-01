@@ -45,7 +45,6 @@ fun AluminiumTextField(
             Text(text = placeholder)
         },
         singleLine = singleLine,
-
         isError = supportingText != null,
         supportingText = supportingText?.let {
             @Composable {

@@ -49,7 +49,7 @@ class SplashViewModel @Inject constructor(
                         Role.Admin -> popAndOpen(Screen.RegistrationRequestsScreen)
                         else -> {
                             if (hasUserProfileCreate()) {
-                                popAndOpen(Screen.PostsScreen())
+                                popAndOpen(Screen.HomeScreen())
                             } else {
                                 popAndOpen(Screen.UpdateProfileDialog)
                             }

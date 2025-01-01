@@ -5,10 +5,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.AppRegistration
-import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AppRegistration
-import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -21,6 +21,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import dev.than0s.aluminium.core.Role
+import dev.than0s.aluminium.core.currentUserRole
 
 private var customNavbar by mutableStateOf<(@Composable (RowScope.() -> Unit))?>(null)
 
@@ -37,12 +39,12 @@ private val bottomNavItems = listOf(
         Icons.Outlined.AppRegistration,
     ),
     BottomNavigationItem(
-        Screen.PostsScreen(),
-        Icons.Filled.Face,
-        Icons.Outlined.Face,
+        Screen.HomeScreen(),
+        Icons.Filled.Home,
+        Icons.Outlined.Home,
     ),
     BottomNavigationItem(
-        Screen.ChatListScreen,
+        Screen.ChatsScreen,
         Icons.AutoMirrored.Filled.Chat,
         Icons.AutoMirrored.Outlined.Chat,
     ),
@@ -60,11 +62,22 @@ private fun isGiveScreenHaveBottomBar(screenClassName: String?): Boolean {
 }
 
 private fun shouldShowOption(screen: Screen): Boolean {
-    return true
-}
+    return when (screen) {
+        is Screen.HomeScreen -> {
+            currentUserRole != Role.Admin
+        }
 
-private fun getDefaultBottomBar() {
+        is Screen.ChatsScreen -> {
+            currentUserRole != Role.Admin
+        }
 
+        is Screen.RegistrationRequestsScreen -> {
+            currentUserRole == Role.Admin
+        }
+
+        is Screen.SettingScreen -> true
+        else -> false
+    }
 }
 
 @Composable

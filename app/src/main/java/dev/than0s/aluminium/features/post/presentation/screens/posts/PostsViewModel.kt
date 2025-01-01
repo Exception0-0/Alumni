@@ -38,7 +38,7 @@ class PostsViewModel @Inject constructor(
     private val getCurrentUserLikeStatusUseCase: GetCurrentUserLikeStatusUseCase,
 ) : ViewModel() {
 
-    private val postScreenArgs = savedStateHandle.toRoute<Screen.PostsScreen>()
+    private val postScreenArgs = savedStateHandle.toRoute<Screen.HomeScreen>()
     val userMap = mutableStateMapOf<String, User>()
     val likeMap = mutableStateMapOf<String, Like?>()
     var screenState by mutableStateOf(PostsState())

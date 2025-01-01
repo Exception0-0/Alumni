@@ -103,8 +103,8 @@ private fun getDefaultTopAppBar(
             title = Screen.RegistrationScreen.name
         )
 
-        destination.hasRoute<Screen.PostsScreen>() -> TopAppBarItem(
-            title = Screen.PostsScreen().name,
+        destination.hasRoute<Screen.HomeScreen>() -> TopAppBarItem(
+            title = Screen.HomeScreen().name,
             shouldHaveNavIcon = false
         )
 
@@ -123,6 +123,11 @@ private fun getDefaultTopAppBar(
 
         destination.hasRoute<Screen.AppearanceScreen>() -> TopAppBarItem(
             title = Screen.AppearanceScreen.name,
+        )
+
+        destination.hasRoute<Screen.ChatsScreen>() -> TopAppBarItem(
+            title = Screen.ChatsScreen.name,
+            shouldHaveNavIcon = false
         )
 
         else -> null
