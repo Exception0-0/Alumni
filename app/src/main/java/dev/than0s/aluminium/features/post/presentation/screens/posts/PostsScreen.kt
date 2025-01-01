@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.HorizontalDivider
@@ -75,12 +76,19 @@ private fun PostsScreenContent(
                     post = post,
                     user = userMap[post.userId],
                     likeStatus = likeMap[post.id],
-                    onEvent = onEvent,
                     onCommentClick = {
                         openScreen(Screen.CommentsScreen(post.id))
                     },
                     onProfileClick = {
                         openScreen(Screen.ProfileScreen(post.userId))
+                    },
+                    onLikeClick = {
+                        onEvent(
+                            PostsEvents.OnLikeClick(
+                                postId = post.id,
+                                hasLike = likeMap[post.id] != null
+                            )
+                        )
                     }
                 )
                 HorizontalDivider(
@@ -99,7 +107,7 @@ fun PostCard(
     likeStatus: Like?,
     onCommentClick: () -> Unit,
     onProfileClick: () -> Unit,
-    onEvent: (PostsEvents) -> Unit,
+    onLikeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -121,9 +129,8 @@ fun PostCard(
         )
 
         PostStatus(
-            postId = post.id,
             isLiked = likeStatus != null,
-            onEvent = onEvent,
+            onLikeClick = onLikeClick,
             onCommentClick = onCommentClick,
             modifier = Modifier.padding(
                 start = MaterialTheme.spacing.small
@@ -167,6 +174,17 @@ private fun UserDetail(
                 text = "${user.firstName} ${user.lastName}",
             )
         },
+        trailingContent = {
+            IconButton(
+                onClick = {},
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "more"
+                    )
+                }
+            )
+        },
         modifier = modifier.clickable {
             onProfileClick()
         }
@@ -175,9 +193,8 @@ private fun UserDetail(
 
 @Composable
 private fun PostStatus(
-    postId: String,
     isLiked: Boolean,
-    onEvent: (PostsEvents) -> Unit,
+    onLikeClick: () -> Unit,
     onCommentClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -191,9 +208,7 @@ private fun PostStatus(
                     contentDescription = "like button"
                 )
             },
-            onClick = {
-                onEvent(PostsEvents.OnLikeClick(postId, isLiked))
-            },
+            onClick = onLikeClick,
         )
 
         IconButton(
