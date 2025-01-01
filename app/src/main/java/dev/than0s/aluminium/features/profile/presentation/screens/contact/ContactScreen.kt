@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.MaterialTheme
@@ -56,7 +57,7 @@ private fun ContactsContent(
             CardInfoFormat(
                 title = "Social Handles",
                 info = screenState.contactInfo.socialHandles ?: "No social handles added yet",
-                icon = Icons.Outlined.Star,
+                icon = Icons.Outlined.Link,
             )
 
             if (isCurrentUser) {

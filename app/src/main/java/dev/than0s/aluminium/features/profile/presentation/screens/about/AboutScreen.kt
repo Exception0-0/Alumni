@@ -3,9 +3,9 @@ package dev.than0s.aluminium.features.profile.presentation.screens.about
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Phone
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.School
+import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,20 +37,20 @@ fun AboutContent(
             CardInfoFormat(
                 title = "Role",
                 info = screenState.aboutInfo.role.name,
-                icon = Icons.Outlined.Email,
+                icon = Icons.Outlined.WorkOutline,
             )
             screenState.aboutInfo.course?.let {
                 CardInfoFormat(
                     title = "Course",
                     info = it.name,
-                    icon = Icons.Outlined.Phone,
+                    icon = Icons.Outlined.School,
                 )
             }
             screenState.aboutInfo.batchFrom?.let {
                 CardInfoFormat(
                     title = "Batch",
                     info = "${screenState.aboutInfo.batchFrom} - ${screenState.aboutInfo.batchTo}",
-                    icon = Icons.Outlined.Star,
+                    icon = Icons.Outlined.DateRange,
                 )
             }
         }
