@@ -120,6 +120,9 @@ dependencies {
 
     // dynamic theme
     implementation(libs.dynamictheme)
+
+    // pretty time
+    implementation (libs.prettytime)
 }
 
 // Allow references to generated code

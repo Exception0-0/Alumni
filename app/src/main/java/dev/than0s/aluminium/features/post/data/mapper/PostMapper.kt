@@ -12,7 +12,7 @@ fun RemotePost.toPost(): Post = Post(
     file = Uri.parse(file),
     title = title,
     description = description,
-    timestamp = timestamp.seconds,
+    timestamp = timestamp.toDate().time,
 )
 
 fun Post.toRemotePost() = RemotePost(

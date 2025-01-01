@@ -24,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +34,7 @@ import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
+import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.spacing
 
@@ -136,9 +136,8 @@ fun PostCard(
                 horizontal = MaterialTheme.spacing.medium
             )
         )
-
         Text(
-            text = "10:30pm",
+            text = PrettyTimeUtils.getPrettyTime(post.timestamp),
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(
                 horizontal = MaterialTheme.spacing.medium
