@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.features.profile.presentation.screens.create_profile
+package dev.than0s.aluminium.features.profile.presentation.dialogs.update_profile
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
+import dev.than0s.aluminium.core.currentUserId
+import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
@@ -17,13 +19,40 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateProfileScreenViewModel @Inject constructor(
+class UpdateProfileDialogViewModel @Inject constructor(
     private val updateProfileUseCase: SetProfileUseCase,
+    private val getUserUserCase: GetUserUseCase
 ) : ViewModel() {
-    var screenState by mutableStateOf(CreateProfileScreenState())
+    var screenState by mutableStateOf(UpdateProfileDialogState())
 
-    private fun onSaveProfileClick(
-        restartApp: () -> Unit,
+    init {
+        loadProfile()
+    }
+
+    private fun loadProfile() {
+        viewModelScope.launch {
+            screenState = screenState.copy(isLoading = true)
+            when (val result = getUserUserCase(currentUserId!!)) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.uiText ?: UiText.unknownError()
+                        )
+                    )
+                }
+
+                is Resource.Success -> {
+                    screenState = screenState.copy(
+                        userProfile = result.data!!
+                    )
+                }
+            }
+            screenState = screenState.copy(isLoading = false)
+        }
+    }
+
+    private fun onUpdateProfileClick(
+        onSuccessful: () -> Unit,
     ) {
         viewModelScope.launch {
             screenState = screenState.copy(isLoading = true)
@@ -54,7 +83,7 @@ class CreateProfileScreenViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.profile_create_successfully)
                         )
                     )
-                    restartApp()
+                    onSuccessful()
                 }
 
                 null -> {}
@@ -94,29 +123,31 @@ class CreateProfileScreenViewModel @Inject constructor(
         )
     }
 
-    fun onEvent(event: CreateProfileEvents) {
+    fun onEvent(event: UpdateProfileDialogEvents) {
         when (event) {
-            is CreateProfileEvents.OnFirstNameChanged -> {
+            is UpdateProfileDialogEvents.OnFirstNameChanged -> {
                 onFirstNameChange(event.name)
             }
 
-            is CreateProfileEvents.OnLastNameChanged -> {
+            is UpdateProfileDialogEvents.OnLastNameChanged -> {
                 onLastNameChange(event.name)
             }
 
-            is CreateProfileEvents.OnBioChanged -> {
+            is UpdateProfileDialogEvents.OnBioChanged -> {
                 onBioChange(event.name)
             }
 
-            is CreateProfileEvents.OnProfileSaveClick -> {
-                onSaveProfileClick(event.restartApp)
+            is UpdateProfileDialogEvents.OnProfileUpdateClick -> {
+                onUpdateProfileClick(
+                    onSuccessful = event.onSuccessful
+                )
             }
 
-            is CreateProfileEvents.OnCoverImageChanged -> {
+            is UpdateProfileDialogEvents.OnCoverImageChanged -> {
                 onCoverImageChange(event.uri)
             }
 
-            is CreateProfileEvents.OnProfileImageChanged -> {
+            is UpdateProfileDialogEvents.OnProfileImageChanged -> {
                 onProfileImageChange(event.uri)
             }
         }

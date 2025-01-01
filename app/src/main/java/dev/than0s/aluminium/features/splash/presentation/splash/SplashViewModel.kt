@@ -51,7 +51,7 @@ class SplashViewModel @Inject constructor(
                             if (hasUserProfileCreate()) {
                                 popAndOpen(Screen.PostsScreen())
                             } else {
-                                popAndOpen(Screen.CreateProfileScreen)
+                                popAndOpen(Screen.UpdateProfileDialog)
                             }
                         }
                     }

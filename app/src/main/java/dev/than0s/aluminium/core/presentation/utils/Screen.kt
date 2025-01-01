@@ -32,10 +32,10 @@ sealed class Screen(
     data object ChatListScreen : Screen(name = "Chat List")
 
     @Serializable
-    data object CreateProfileScreen : Screen(name = "Create Profile")
+    data object AppearanceScreen : Screen(name = "Appearance")
 
     @Serializable
-    data object AppearanceScreen : Screen(name = "Appearance")
+    data object UpdateProfileDialog : Screen(name = "Update Profile")
 
     @Serializable
     data class PostsScreen(

@@ -6,12 +6,13 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
-import dev.than0s.aluminium.features.profile.presentation.screens.create_profile.CreateProfileScreen
+import dev.than0s.aluminium.features.profile.presentation.dialogs.update_profile.UpdateProfileDialog
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
 import dev.than0s.aluminium.features.registration.presentation.screens.registration.RegistrationScreen
@@ -77,9 +78,9 @@ fun NavGraphHost(
                 openScreen = navController::openScreen
             )
         }
-        composable<Screen.CreateProfileScreen> {
-            CreateProfileScreen(
-                restartApp = navController::restartApp
+        dialog<Screen.UpdateProfileDialog> {
+            UpdateProfileDialog(
+                popScreen = navController::popScreen
             )
         }
         composable<Screen.AppearanceScreen> {

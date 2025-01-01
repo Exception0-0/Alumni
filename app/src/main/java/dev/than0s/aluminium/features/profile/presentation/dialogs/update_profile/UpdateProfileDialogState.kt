@@ -1,9 +1,9 @@
-package dev.than0s.aluminium.features.profile.presentation.screens.create_profile
+package dev.than0s.aluminium.features.profile.presentation.dialogs.update_profile
 
-import dev.than0s.aluminium.core.domain.error.Error
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.domain.error.Error
 
-data class CreateProfileScreenState(
+data class UpdateProfileDialogState(
     val isLoading: Boolean = false,
     val userProfile: User = User(),
     val firstNameError: Error? = null,
