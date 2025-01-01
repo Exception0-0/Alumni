@@ -46,7 +46,6 @@ fun AluminiumAsyncImage(
     onTapFullScreen: Boolean = false,
 ) {
     var _modifier = modifier
-        .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
 
     if (onTapFullScreen) {
         var fullScreenState by rememberSaveable { mutableStateOf(false) }
