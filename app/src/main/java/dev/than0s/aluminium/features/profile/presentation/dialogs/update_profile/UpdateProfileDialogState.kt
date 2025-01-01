@@ -5,6 +5,7 @@ import dev.than0s.aluminium.core.domain.error.Error
 
 data class UpdateProfileDialogState(
     val isLoading: Boolean = false,
+    val isUpdating: Boolean = false,
     val userProfile: User = User(),
     val firstNameError: Error? = null,
     val lastNameError: Error? = null,

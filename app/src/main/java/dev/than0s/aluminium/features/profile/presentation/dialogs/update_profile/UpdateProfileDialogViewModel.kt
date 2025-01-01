@@ -55,7 +55,7 @@ class UpdateProfileDialogViewModel @Inject constructor(
         onSuccessful: () -> Unit,
     ) {
         viewModelScope.launch {
-            screenState = screenState.copy(isLoading = true)
+            screenState = screenState.copy(isUpdating = true)
             val updateProfileResult = updateProfileUseCase(screenState.userProfile)
 
             updateProfileResult.let {
@@ -89,7 +89,7 @@ class UpdateProfileDialogViewModel @Inject constructor(
                 null -> {}
             }
 
-            screenState = screenState.copy(isLoading = false)
+            screenState = screenState.copy(isUpdating = false)
         }
     }
 
