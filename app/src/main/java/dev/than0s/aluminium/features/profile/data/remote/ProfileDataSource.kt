@@ -26,7 +26,7 @@ import javax.inject.Inject
 interface ProfileDataSource {
     suspend fun setUserProfile(user: User)
     suspend fun getAboutInfo(userId: String): AboutInfo
-    suspend fun getUserProfile(userId: String): User
+    suspend fun getUserProfile(userId: String): User?
 }
 
 class ProfileDataSourceImple @Inject constructor(
@@ -74,14 +74,14 @@ class ProfileDataSourceImple @Inject constructor(
         }
     }
 
-    override suspend fun getUserProfile(userId: String): User {
+    override suspend fun getUserProfile(userId: String): User? {
         return try {
             store.collection(PROFILE)
                 .document(userId)
                 .get()
                 .await()
-                .toObject(RemoteUser::class.java)!!
-                .toUser()
+                .toObject(RemoteUser::class.java)
+                ?.toUser()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }

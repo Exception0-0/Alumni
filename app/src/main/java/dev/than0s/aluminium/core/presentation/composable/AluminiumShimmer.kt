@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import dev.than0s.aluminium.ui.roundCorners
 
-private val ShimmerColor = Color(0xFFE0E0E0)
+val ShimmerColor = Color(0xFF7D7D7D)
 
 @Composable
 fun ShimmerBackground(

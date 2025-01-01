@@ -42,9 +42,11 @@ class UpdateProfileDialogViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    screenState = screenState.copy(
-                        userProfile = result.data!!
-                    )
+                    result.data?.let {
+                        screenState = screenState.copy(
+                            userProfile = it
+                        )
+                    }
                 }
             }
             screenState = screenState.copy(isLoading = false)

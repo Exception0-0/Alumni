@@ -7,6 +7,6 @@ import dev.than0s.aluminium.core.domain.data_class.User
 
 interface ProfileRepository {
     suspend fun setUserProfile(profile: User): SimpleResource
-    suspend fun getUserProfile(userId: String): Resource<User>
+    suspend fun getUserProfile(userId: String): Resource<User?>
     suspend fun getAboutInfo(userId: String): Resource<AboutInfo>
 }

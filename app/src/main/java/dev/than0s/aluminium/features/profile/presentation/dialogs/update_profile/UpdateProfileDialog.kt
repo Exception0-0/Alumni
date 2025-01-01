@@ -106,7 +106,7 @@ private fun UpdateProfileDialogContent(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .height(100.dp)
-                        .clickable {
+                        .clickable(enabled = !screenState.isUpdating) {
                             imageSelectionState[COVER_IMAGE] = true
                             pickMedia.launch(
                                 input = PickVisualMediaRequest(
@@ -127,7 +127,7 @@ private fun UpdateProfileDialogContent(
                         modifier = Modifier
                             .size(100.dp)
                             .clip(CircleShape)
-                            .clickable {
+                            .clickable(enabled = !screenState.isUpdating) {
                                 imageSelectionState[PROFILE_IMAGE] = true
                                 pickMedia.launch(
                                     input = PickVisualMediaRequest(

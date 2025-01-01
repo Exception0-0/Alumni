@@ -6,7 +6,7 @@ import dev.than0s.aluminium.features.profile.domain.repository.ProfileRepository
 import javax.inject.Inject
 
 class GetUserUseCase @Inject constructor(private val repository: ProfileRepository) {
-    suspend operator fun invoke(userId: String): Resource<User> {
+    suspend operator fun invoke(userId: String): Resource<User?> {
         return repository.getUserProfile(userId)
     }
 }

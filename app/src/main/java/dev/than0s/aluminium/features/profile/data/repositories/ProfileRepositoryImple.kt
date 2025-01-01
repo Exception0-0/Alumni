@@ -30,7 +30,7 @@ class ProfileRepositoryImple @Inject constructor(private val dataSource: Profile
         }
     }
 
-    override suspend fun getUserProfile(userId: String): Resource<User> {
+    override suspend fun getUserProfile(userId: String): Resource<User?> {
         return try {
             Resource.Success(dataSource.getUserProfile(userId))
         } catch (e: ServerException) {

@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.core.presentation.composable
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -44,7 +45,8 @@ fun AluminiumAsyncImage(
     contentScale: ContentScale = ContentScale.Crop,
     onTapFullScreen: Boolean = false,
 ) {
-    var _modifier = modifier.clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
+    var _modifier = modifier
+        .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
 
     if (onTapFullScreen) {
         var fullScreenState by rememberSaveable { mutableStateOf(false) }
