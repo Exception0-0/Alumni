@@ -12,18 +12,18 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AluminiumLoadingTextButton(
     label: String,
-    circularProgressIndicatorState: Boolean,
+    isLoading: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TextButton(
         onClick = onClick,
-        enabled = !circularProgressIndicatorState,
+        enabled = !isLoading,
         modifier = modifier
     ) {
-        if (circularProgressIndicatorState) {
+        if (isLoading) {
             CircularProgressIndicator(
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(24.dp),
                 color = MaterialTheme.colorScheme.secondary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )

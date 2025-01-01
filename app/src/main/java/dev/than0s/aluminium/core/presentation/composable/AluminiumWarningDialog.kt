@@ -82,7 +82,7 @@ fun AluminiumAlertDialog(
                 onClick = {
                     onConfirmation()
                 },
-                circularProgressIndicatorState = circularProgressIndicatorState,
+                isLoading = circularProgressIndicatorState,
                 label = "Confirm"
             )
         },

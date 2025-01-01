@@ -178,7 +178,7 @@ private fun UpdateProfileDialogContent(
 
                     AluminiumLoadingTextButton(
                         label = "Update",
-                        circularProgressIndicatorState = screenState.isUpdating,
+                        isLoading = screenState.isUpdating,
                         onClick = {
                             onEvent(
                                 UpdateProfileDialogEvents.OnProfileUpdateClick(

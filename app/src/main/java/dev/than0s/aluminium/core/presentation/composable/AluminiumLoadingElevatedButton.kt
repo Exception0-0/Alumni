@@ -26,7 +26,7 @@ fun AluminiumLoadingElevatedButton(
     ) {
         if (circularProgressIndicatorState) {
             CircularProgressIndicator(
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(24.dp),
                 color = MaterialTheme.colorScheme.secondary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
