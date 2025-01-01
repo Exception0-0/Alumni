@@ -12,6 +12,7 @@ import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScr
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
+import dev.than0s.aluminium.features.profile.presentation.dialogs.update_contacts.UpdateContactScreen
 import dev.than0s.aluminium.features.profile.presentation.dialogs.update_profile.UpdateProfileDialog
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
@@ -82,6 +83,11 @@ fun NavGraphHost(
         }
         dialog<Screen.UpdateProfileDialog> {
             UpdateProfileDialog(
+                popScreen = navController::popScreen
+            )
+        }
+        dialog<Screen.UpdateContactDialog> {
+            UpdateContactScreen(
                 popScreen = navController::popScreen
             )
         }

@@ -28,7 +28,9 @@ fun ProfileNavHost(
             AboutScreen()
         }
         composable<Screen.ProfileTabScreen.ContactScreen> {
-            ContactScreen()
+            ContactScreen(
+                openScreen = openScreen
+            )
         }
         composable<Screen.ProfileTabScreen.PostsScreen> {
             PostsScreen(

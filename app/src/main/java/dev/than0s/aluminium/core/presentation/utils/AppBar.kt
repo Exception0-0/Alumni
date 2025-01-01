@@ -109,7 +109,8 @@ private fun getDefaultTopAppBar(
         )
 
         destination.hasRoute<Screen.ProfileScreen>() or
-                destination.hasRoute<Screen.UpdateProfileDialog>() -> {
+                destination.hasRoute<Screen.UpdateProfileDialog>() or
+                destination.hasRoute<Screen.UpdateContactDialog>() -> {
             TopAppBarItem(
                 title = Screen.ProfileScreen("").name,
             )
