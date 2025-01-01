@@ -36,7 +36,6 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
-import dev.than0s.aluminium.core.presentation.composable.ShimmerCircularBackground
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.roundCorners
@@ -218,8 +217,9 @@ private fun LoadingShimmerEffect() {
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         ) {
 
-            ShimmerCircularBackground(
+            ShimmerBackground(
                 modifier = Modifier
+                    .clip(shape = CircleShape)
                     .size(100.dp)
             )
             Column(
