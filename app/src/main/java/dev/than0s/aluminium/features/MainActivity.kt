@@ -31,6 +31,8 @@ import dev.than0s.aluminium.core.presentation.utils.AluminiumBottomNavigationBar
 import dev.than0s.aluminium.core.presentation.utils.AluminiumTopAppBar
 import dev.than0s.aluminium.core.presentation.utils.NavGraphHost
 import dev.than0s.aluminium.core.presentation.utils.SnackbarLogic
+import dev.than0s.aluminium.ui.theme.Primary
+import dev.than0s.aluminium.ui.theme.Secondary
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -55,12 +57,13 @@ class MainActivity : ComponentActivity() {
                 initialValue = false,
                 defaultValue = false,
             )
-
+            MaterialTheme.colorScheme
             DynamicTheme(
                 state = rememberDynamicThemeState(),
                 isDarkTheme = darkTheme,
                 defaultColorTuple = ColorTuple(
-                    primary = MaterialTheme.colorScheme.primary
+                    primary = Primary,
+                    secondary = Secondary
                 ),
                 dynamicColor = isDynamicTheme,
                 amoledMode = pureBlack
