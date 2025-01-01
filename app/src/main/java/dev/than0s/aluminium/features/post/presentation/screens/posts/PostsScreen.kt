@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,34 +12,35 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.domain.data_class.Like
+import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
-import dev.than0s.aluminium.ui.roundCorners
+import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.spacing
-import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun PostsScreen(
@@ -76,7 +76,7 @@ private fun PostsScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    PostItem(
+                    PostCard(
                         post = post,
                         userMap = userMap,
                         likeMap = likeMap,
@@ -92,7 +92,7 @@ private fun PostsScreenContent(
 
 
 @Composable
-fun PostItem(
+fun PostCard(
     post: Post,
     userMap: Map<String, User>,
     likeMap: Map<String, Like?>,
@@ -112,19 +112,12 @@ fun PostItem(
             .width(360.dp)
     ) {
 
-        AluminiumCard(
-            modifier = Modifier
-                .clip(shape = RoundedCornerShape(MaterialTheme.roundCorners.default))
-                .clickable {
-                    openScreen(Screen.ProfileScreen(post.userId))
-                }
-        ) {
-            UserDetail(
-                user = user ?: User(),
-                modifier = Modifier
-                    .padding(MaterialTheme.spacing.small)
-            )
-        }
+        UserDetail(
+            user = user ?: User(),
+            modifier = Modifier.clickable {
+                openScreen(Screen.ProfileScreen(post.userId))
+            }
+        )
 
         AluminiumTitleText(
             title = post.title,
@@ -141,41 +134,46 @@ fun PostItem(
                 .height(450.dp)
                 .width(360.dp)
         )
-
-        AluminiumCard {
-            PostStatus(
-                postId = post.id,
-                isLiked = like != null,
-                onEvent = onEvent,
-                openScreen = openScreen,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(MaterialTheme.spacing.small)
-            )
-        }
+        PostStatus(
+            postId = post.id,
+            isLiked = like != null,
+            onEvent = onEvent,
+            openScreen = openScreen,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(MaterialTheme.spacing.small)
+        )
     }
 }
 
 @Composable
 private fun UserDetail(
     user: User,
-    modifier: Modifier = Modifier,
+    modifier: Modifier
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-    ) {
-        AluminiumAsyncImage(
-            model = user.profileImage,
-            onTapFullScreen = true,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-        )
-        Spacer(modifier = Modifier.padding(MaterialTheme.spacing.extraSmall))
-        AluminiumTitleText(
-            title = "${user.firstName} ${user.lastName}",
-            fontSize = MaterialTheme.textSize.large
+    AluminiumCard {
+        ListItem(
+            headlineContent = {
+                Text(
+                    text = "${user.firstName} ${user.lastName}",
+                )
+            },
+            leadingContent = {
+                AluminiumAsyncImage(
+                    model = user.profileImage,
+                    onTapFullScreen = true,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                )
+            },
+            supportingContent = {
+                AluminiumDescriptionText(
+                    description = "10:30pm"
+                )
+            },
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+            modifier = modifier
         )
     }
 }
@@ -188,17 +186,12 @@ private fun PostStatus(
     openScreen: (Screen) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        modifier = modifier.padding(MaterialTheme.spacing.extraSmall)
-    ) {
-
+//    AluminiumCard {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
         ) {
+
             IconButton(
                 content = {
                     Icon(
@@ -210,30 +203,20 @@ private fun PostStatus(
                     onEvent(PostsEvents.OnLikeClick(postId, isLiked))
                 },
             )
-            AluminiumTitleText(
-                title = "Like",
-                fontSize = MaterialTheme.textSize.small
-            )
-        }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
-        ) {
-            IconButton(onClick = {
-                openScreen(Screen.CommentsScreen(postId))
-            }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.Comment,
-                    contentDescription = "comment button",
-                )
-            }
-            AluminiumTitleText(
-                title = "Comments",
-                fontSize = MaterialTheme.textSize.small
+            IconButton(
+                onClick = {
+                    openScreen(Screen.CommentsScreen(postId))
+                },
+                content = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.Comment,
+                        contentDescription = "comment button",
+                    )
+                }
             )
         }
-    }
+//    }
 }
 
 @Preview(showSystemUi = true)
