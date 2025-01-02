@@ -2,6 +2,7 @@ package dev.than0s.aluminium.features.post.presentation.screens.posts
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,8 +14,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -25,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -142,9 +146,6 @@ fun PostCard(
             isLiked = likeStatus != null,
             onLikeClick = onLikeClick,
             onCommentClick = onCommentClick,
-            modifier = Modifier.padding(
-                start = MaterialTheme.spacing.small
-            )
         )
 
         AluminiumDescriptionText(
@@ -206,30 +207,54 @@ private fun PostStatus(
     isLiked: Boolean,
     onLikeClick: () -> Unit,
     onCommentClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = MaterialTheme.spacing.small)
     ) {
-        IconButton(
-            content = {
-                Icon(
-                    imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
-                    contentDescription = "like button"
-                )
-            },
-            onClick = onLikeClick,
-        )
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+        ) {
+            IconButton(
+                content = {
+                    Icon(
+                        imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
+                        contentDescription = "like button"
+                    )
+                },
+                onClick = onLikeClick,
+            )
 
-        IconButton(
-            onClick = onCommentClick,
-            content = {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.Comment,
-                    contentDescription = "comment button",
-                )
-            }
-        )
+            IconButton(
+                onClick = onCommentClick,
+                content = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.Comment,
+                        contentDescription = "comment button",
+                    )
+                }
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+        ) {
+
+            IconButton(
+                content = {
+                    Icon(
+                        imageVector = if (isLiked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
+                        contentDescription = "save button"
+                    )
+                },
+                onClick = {},
+            )
+        }
+
     }
 }
 
