@@ -26,4 +26,6 @@
     <string name="file_not_picked_error">file not picked yet!</string>
     <string name="post_delete_successfully">post deleted successfully</string>
     <string name="profile_create_successfully">profile create successfully</string>
+    <string name="post_delete">Post Delete</string>
+    <string name="delete_alert_message">you can\'t revert this operation, so think before delete.</string>
 </resources>

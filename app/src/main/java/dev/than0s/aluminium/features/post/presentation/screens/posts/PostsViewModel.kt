@@ -12,18 +12,18 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
-import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.core.presentation.utils.SnackbarController
-import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
-import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.domain.use_case.AddLikeUseCase
-import dev.than0s.aluminium.features.post.domain.use_cases.DeletePostUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetCurrentUserLikeStatusUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetPostsUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import dev.than0s.aluminium.core.domain.use_case.RemoveLikeUseCase
+import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.SnackbarController
+import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
+import dev.than0s.aluminium.core.presentation.utils.UiText
+import dev.than0s.aluminium.features.post.domain.use_cases.DeletePostUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -144,15 +144,19 @@ class PostsViewModel @Inject constructor(
         }
     }
 
-    private fun onPostDeleteClick(postId: String) {
+    private fun deletePost() {
         viewModelScope.launch {
-            when (val result = deletePostUseCase(postId)) {
+            screenState = screenState.copy(
+                isDeleting = true
+            )
+            when (val result = deletePostUseCase(screenState.deletePostId!!)) {
                 is Resource.Success -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
                             message = UiText.StringResource(R.string.post_delete_successfully)
                         )
                     )
+                    dismissPostDeleteDialog()
                     loadPosts()
                 }
 
@@ -164,21 +168,32 @@ class PostsViewModel @Inject constructor(
                     )
                 }
             }
+            screenState = screenState.copy(
+                isDeleting = false
+            )
         }
+    }
+
+    private fun showPostDeleteDialog(postId: String) {
+        screenState = screenState.copy(deletePostId = postId)
+    }
+
+    private fun dismissPostDeleteDialog() {
+        screenState = screenState.copy(deletePostId = null)
     }
 
     fun onEvent(event: PostsEvents) {
         when (event) {
             is PostsEvents.OnLikeClick -> {
-                if (event.hasLike) {
+                if (likeMap[event.postId] != null) {
                     removeLike(event.postId)
                 } else {
                     addLike(event.postId)
                 }
             }
 
-            is PostsEvents.OnPostDeleteClick -> {
-                onPostDeleteClick(event.postId)
+            is PostsEvents.DeletePost -> {
+                deletePost()
             }
 
             is PostsEvents.GetUser -> {
@@ -191,6 +206,14 @@ class PostsViewModel @Inject constructor(
 
             is PostsEvents.LoadPosts -> {
                 loadPosts()
+            }
+
+            is PostsEvents.ShowPostDeleteDialog -> {
+                showPostDeleteDialog(postId = event.postId)
+            }
+
+            is PostsEvents.DismissPostDeleteDialog -> {
+                dismissPostDeleteDialog()
             }
         }
     }
