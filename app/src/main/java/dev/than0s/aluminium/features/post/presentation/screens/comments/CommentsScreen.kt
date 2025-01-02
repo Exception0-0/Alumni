@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
@@ -169,10 +169,11 @@ private fun CommentScreenContent(
                     onValueChange = {
                         onEvent(CommentEvents.OnCommentChanged(it))
                     },
+                    enable = !screenState.isCommentAdding,
                     supportingText = screenState.commentError?.message?.asString(),
                     trailingIcon = {
                         AluminiumLoadingIconButton(
-                            icon = Icons.AutoMirrored.Rounded.Send,
+                            icon = Icons.AutoMirrored.Filled.Send,
                             circularProgressIndicatorState = screenState.isCommentAdding,
                             onClick = {
                                 onEvent(CommentEvents.OnAddCommentClick)
@@ -342,11 +343,10 @@ private fun CommentPreviewShimmer() {
 @Preview(showSystemUi = true)
 @Composable
 private fun CommentScreenPreview() {
-//    CommentScreenContent(
-//        screenState = CommentState(),
-//        userMap = emptyMap(),
-//        onEvent = {},
-//        openScreen = {}
-//    )
-    CommentPreviewShimmer()
+    CommentScreenContent(
+        screenState = CommentState(),
+        userMap = emptyMap(),
+        onEvent = {},
+        openScreen = {}
+    )
 }
