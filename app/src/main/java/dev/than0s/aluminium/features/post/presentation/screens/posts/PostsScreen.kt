@@ -5,13 +5,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.Bookmark
@@ -48,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Like
@@ -56,9 +61,10 @@ import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
+import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.spacing
 
 @Composable
@@ -97,7 +103,7 @@ private fun PostsScreenContent(
     }
 
     if (screenState.isLoading) {
-        AluminumCircularLoading()
+        ShimmerPostList()
     } else {
         PullToRefreshBox(
             isRefreshing = false,
@@ -381,18 +387,120 @@ private fun PostDeleteDialog(
 }
 
 @Composable
-private fun PostBoxShimmer(){
+private fun ShimmerPostList() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        for (i in 1..10) {
+            PostBoxShimmer()
+        }
+    }
+}
 
+@Composable
+private fun PostBoxShimmer() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+        modifier = Modifier
+            .padding(bottom = MaterialTheme.spacing.small)
+            .shimmer()
+    ) {
+        ListItem(
+            headlineContent = {
+                ShimmerBackground(
+                    modifier = Modifier
+                        .height(16.dp)
+                        .width(MaterialTheme.Size.medium)
+                )
+            },
+            leadingContent = {
+                ShimmerBackground(
+                    modifier = Modifier
+                        .clip(shape = CircleShape)
+                        .size(32.dp)
+                )
+            },
+            trailingContent = {
+                ShimmerBackground(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(16.dp)
+                )
+            }
+        )
+        ShimmerBackground(
+            modifier = Modifier
+                .height(450.dp)
+                .fillMaxWidth()
+        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = MaterialTheme.spacing.medium,
+                    vertical = MaterialTheme.spacing.small
+                )
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+            ) {
+                ShimmerBackground(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(16.dp)
+                )
+                ShimmerBackground(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(16.dp)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+            ) {
+                ShimmerBackground(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(16.dp)
+                )
+            }
+        }
+        ShimmerBackground(
+            modifier = Modifier
+                .height(16.dp)
+                .width(MaterialTheme.Size.large)
+                .padding(horizontal = MaterialTheme.spacing.medium)
+        )
+        ShimmerBackground(
+            modifier = Modifier
+                .height(16.dp)
+                .width(MaterialTheme.Size.medium)
+                .padding(horizontal = MaterialTheme.spacing.medium)
+        )
+        ShimmerBackground(
+            modifier = Modifier
+                .height(16.dp)
+                .width(MaterialTheme.Size.small)
+                .padding(horizontal = MaterialTheme.spacing.medium)
+        )
+    }
 }
 
 @Preview(showSystemUi = true)
 @Composable
 private fun PostsScreenPreview() {
-    PostsScreenContent(
-        screenState = PostsState(),
-        userMap = emptyMap(),
-        likeMap = emptyMap(),
-        onEvent = {},
-        openScreen = {}
-    )
+//    PostsScreenContent(
+//        screenState = PostsState(),
+//        userMap = emptyMap(),
+//        likeMap = emptyMap(),
+//        onEvent = {},
+//        openScreen = {}
+//    )
+    PostBoxShimmer()
 }
