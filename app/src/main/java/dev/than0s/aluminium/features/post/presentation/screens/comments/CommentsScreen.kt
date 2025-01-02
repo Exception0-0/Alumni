@@ -1,12 +1,8 @@
 package dev.than0s.aluminium.features.post.presentation.screens.comments
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,8 +12,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Send
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Report
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -28,7 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +40,6 @@ import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingIconButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
@@ -65,7 +62,6 @@ fun CommentScreen(
     )
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun CommentScreenContent(
     screenState: CommentState,
@@ -120,13 +116,13 @@ private fun CommentScreenContent(
                             )
                         },
                         trailingContent = {
-                            IconButton(
-                                onClick = {},
-                                content = {
-                                    Icon(
-                                        imageVector = Icons.Default.MoreVert,
-                                        contentDescription = "more"
-                                    )
+                            CommentMenu(
+                                comment = comment,
+                                onProfileClick = {
+                                    openScreen(Screen.ProfileScreen(comment.userId))
+                                },
+                                onDeleteClick = {
+
                                 }
                             )
                         }
@@ -159,145 +155,70 @@ private fun CommentScreenContent(
 }
 
 @Composable
-private fun CommentPreview(
-    comment: Comment,
-    userMap: Map<String, User>,
-    onEvent: (CommentEvents) -> Unit,
-    onProfileClick: () -> Unit
-) {
-
-    AluminiumElevatedCard(
-        modifier = Modifier
-            .padding(horizontal = MaterialTheme.spacing.small)
-            .fillMaxWidth()
-    ) {
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.spacing.small)
-        ) {
-            Row(
-                verticalAlignment = Alignment.Top,
-                modifier = Modifier
-                    .clickable {
-                        onProfileClick()
-                    }
-            ) {
-
-                Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
-                ) {
-                }
-            }
-            if (comment.id == currentUserId) {
-                CommentMenu(
-                    onRemoveCommentClick = {
-                        onEvent(CommentEvents.OnCommentRemovedClick(comment))
-                    }
-                )
-            }
-        }
-    }
-}
-
-@Composable
 private fun CommentMenu(
-    onRemoveCommentClick: () -> Unit
+    comment: Comment,
+    onProfileClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
-    var dropDownMenuState by rememberSaveable { mutableStateOf(false) }
-    Column {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
         IconButton(
             onClick = {
-                dropDownMenuState = !dropDownMenuState
+                expanded = !expanded
             },
             content = {
                 Icon(
-                    imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "menu",
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "more"
                 )
             }
         )
         DropdownMenu(
-            expanded = dropDownMenuState,
+            expanded = expanded,
             onDismissRequest = {
-                dropDownMenuState = false
+                expanded = false
             }
         ) {
             DropdownMenuItem(
                 text = {
-                    Text("Delete")
-                },
-                onClick = {
-                    onRemoveCommentClick()
-                    dropDownMenuState = false
+                    Text("Profile")
                 },
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Rounded.Delete,
-                        contentDescription = "comment delete"
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Profile"
                     )
-                }
+                },
+                onClick = onProfileClick
+            )
+            DropdownMenuItem(
+                text = {
+                    Text("Delete")
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete"
+                    )
+                },
+                enabled = comment.userId == currentUserId,
+                onClick = onDeleteClick
+            )
+            DropdownMenuItem(
+                text = {
+                    Text("Report")
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Report,
+                        contentDescription = "Report"
+                    )
+                },
+                onClick = {}
             )
         }
     }
 }
-
-//@Composable
-//private fun ShimmerCommentCard() {
-//    AluminiumElevatedCard(
-//        modifier = Modifier
-//            .padding(horizontal = MaterialTheme.spacing.small)
-//            .fillMaxWidth()
-//            .shimmer()
-//    ) {
-//        Row(
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(MaterialTheme.spacing.small)
-//        ) {
-//            Row(
-//                verticalAlignment = Alignment.Top,
-//            ) {
-//                ShimmerBackground(
-//                    modifier = ProfileImageModifier.small
-//                )
-//                Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
-//                Column(
-//                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
-//                ) {
-//                    ShimmerBackground(
-//                        modifier = Modifier
-//                            .height(MaterialTheme.textSize.small.value.dp)
-//                            .width(MaterialTheme.Size.small)
-//                    )
-//                    ShimmerBackground(
-//                        modifier = Modifier
-//                            .height(MaterialTheme.textSize.small.value.dp)
-//                            .width(MaterialTheme.Size.medium)
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//private fun ShimmerCommentList() {
-//    Column(
-//        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-//        modifier = Modifier
-//            .verticalScroll(rememberScrollState())
-//    ) {
-//        for (i in 1..10) {
-//            ShimmerCommentCard()
-//        }
-//    }
-//}
 
 @Preview(showSystemUi = true)
 @Composable
