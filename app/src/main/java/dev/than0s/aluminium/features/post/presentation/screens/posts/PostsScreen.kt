@@ -16,12 +16,14 @@ import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.ThumbUp
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +55,7 @@ fun PostsScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PostsScreenContent(
     screenState: PostsState,
@@ -64,36 +67,43 @@ private fun PostsScreenContent(
     if (screenState.isLoading) {
         AluminumCircularLoading()
     } else {
-        LazyColumn {
-            items(screenState.postList) { post ->
-                if (!userMap.containsKey(post.userId)) {
-                    onEvent(PostsEvents.GetUser(post.userId))
-                }
-                if (!likeMap.containsKey(post.id)) {
-                    onEvent(PostsEvents.GetLike(post.id))
-                }
-                PostCard(
-                    post = post,
-                    user = userMap[post.userId],
-                    likeStatus = likeMap[post.id],
-                    onCommentClick = {
-                        openScreen(Screen.CommentsScreen(post.id))
-                    },
-                    onProfileClick = {
-                        openScreen(Screen.ProfileScreen(post.userId))
-                    },
-                    onLikeClick = {
-                        onEvent(
-                            PostsEvents.OnLikeClick(
-                                postId = post.id,
-                                hasLike = likeMap[post.id] != null
-                            )
-                        )
+        PullToRefreshBox(
+            isRefreshing = false,
+            onRefresh = {
+                onEvent(PostsEvents.LoadPosts)
+            },
+        ) {
+            LazyColumn {
+                items(screenState.postList) { post ->
+                    if (!userMap.containsKey(post.userId)) {
+                        onEvent(PostsEvents.GetUser(post.userId))
                     }
-                )
-                HorizontalDivider(
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    if (!likeMap.containsKey(post.id)) {
+                        onEvent(PostsEvents.GetLike(post.id))
+                    }
+                    PostCard(
+                        post = post,
+                        user = userMap[post.userId],
+                        likeStatus = likeMap[post.id],
+                        onCommentClick = {
+                            openScreen(Screen.CommentsScreen(post.id))
+                        },
+                        onProfileClick = {
+                            openScreen(Screen.ProfileScreen(post.userId))
+                        },
+                        onLikeClick = {
+                            onEvent(
+                                PostsEvents.OnLikeClick(
+                                    postId = post.id,
+                                    hasLike = likeMap[post.id] != null
+                                )
+                            )
+                        }
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }
