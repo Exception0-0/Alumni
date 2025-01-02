@@ -489,18 +489,21 @@ private fun PostBoxShimmer() {
                 .width(MaterialTheme.Size.small)
                 .padding(horizontal = MaterialTheme.spacing.medium)
         )
+        HorizontalDivider(
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
 private fun PostsScreenPreview() {
-//    PostsScreenContent(
-//        screenState = PostsState(),
-//        userMap = emptyMap(),
-//        likeMap = emptyMap(),
-//        onEvent = {},
-//        openScreen = {}
-//    )
-    PostBoxShimmer()
+    PostsScreenContent(
+        screenState = PostsState(),
+        userMap = emptyMap(),
+        likeMap = emptyMap(),
+        onEvent = {},
+        openScreen = {}
+    )
+//    PostBoxShimmer()
 }
