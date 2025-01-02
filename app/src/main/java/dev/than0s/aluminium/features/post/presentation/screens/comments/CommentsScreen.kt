@@ -16,6 +16,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Report
+import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -23,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,16 +34,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingIconButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
@@ -69,6 +75,17 @@ private fun CommentScreenContent(
     onEvent: (CommentEvents) -> Unit,
     openScreen: (Screen) -> Unit,
 ) {
+    if (screenState.deleteCommentId != null) {
+        CommentDeleteDialog(
+            isDeleting = screenState.isDeleting,
+            onDismissRequest = {
+                onEvent(CommentEvents.DismissCommentDeleteDialog)
+            },
+            onConfirmation = {
+                onEvent(CommentEvents.DeleteComment)
+            }
+        )
+    }
     if (screenState.isLoading) {
         AluminumCircularLoading()
     } else {
@@ -99,11 +116,13 @@ private fun CommentScreenContent(
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
                             ) {
-                                Text(
-                                    text = "${userProfile?.firstName} ${userProfile?.lastName}",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = MaterialTheme.textSize.medium,
-                                )
+                                userProfile?.let {
+                                    Text(
+                                        text = "${it.firstName} ${it.lastName}",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = MaterialTheme.textSize.medium,
+                                    )
+                                }
                                 Text(
                                     text = PrettyTimeUtils.getPrettyTime(comment.timestamp),
                                     fontSize = MaterialTheme.textSize.extraSmall
@@ -122,7 +141,7 @@ private fun CommentScreenContent(
                                     openScreen(Screen.ProfileScreen(comment.userId))
                                 },
                                 onDeleteClick = {
-
+                                    onEvent(CommentEvents.ShowCommentDeleteDialog(comment.id))
                                 }
                             )
                         }
@@ -218,6 +237,51 @@ private fun CommentMenu(
             )
         }
     }
+}
+
+@Composable
+private fun CommentDeleteDialog(
+    isDeleting: Boolean,
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+) {
+    AlertDialog(
+        icon = {
+            Icon(Icons.Default.WarningAmber, contentDescription = "warning")
+        },
+        title = {
+            Text(text = stringResource(R.string.comment_delete))
+        },
+        text = {
+            Text(text = stringResource(R.string.delete_alert_message))
+        },
+        onDismissRequest = {},
+        confirmButton = {
+            AluminiumLoadingTextButton(
+                label = "Confirm",
+                isLoading = isDeleting,
+                onClick = {
+                    onConfirmation()
+                }
+            )
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                },
+                content = {
+                    Text("Dismiss")
+                },
+                enabled = !isDeleting
+            )
+        }
+    )
+}
+
+@Composable
+private fun CommentPreviewShimmer() {
+
 }
 
 @Preview(showSystemUi = true)

@@ -12,16 +12,15 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
+import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
-import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.features.post.domain.use_cases.AddCommentUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.GetCommentUseCase
 import dev.than0s.aluminium.features.post.domain.use_cases.RemoveCommentUseCase
-import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -129,8 +128,11 @@ class CommentsViewModel @Inject constructor(
         }
     }
 
-    private fun onRemoveCommentClick(comment: Comment) {
+    private fun deleteComment() {
         viewModelScope.launch {
+            screenState = screenState.copy(isDeleting = true)
+
+            val comment = screenState.commentList.find { it.id == screenState.deleteCommentId!! }!!
             when (val result = removeCommentUseCase(comment)) {
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
@@ -149,6 +151,8 @@ class CommentsViewModel @Inject constructor(
                     loadComments()
                 }
             }
+            dismissCommentDeleteDialog()
+            screenState = screenState.copy(isDeleting = false)
         }
     }
 
@@ -168,6 +172,18 @@ class CommentsViewModel @Inject constructor(
         }
     }
 
+    private fun showCommentDeleteDialog(commentId: String) {
+        screenState = screenState.copy(
+            deleteCommentId = commentId
+        )
+    }
+
+    private fun dismissCommentDeleteDialog() {
+        screenState = screenState.copy(
+            deleteCommentId = null
+        )
+    }
+
     fun onEvent(event: CommentEvents) {
         when (event) {
             is CommentEvents.OnCommentChanged -> {
@@ -178,10 +194,6 @@ class CommentsViewModel @Inject constructor(
                 onAddCommentClick()
             }
 
-            is CommentEvents.OnCommentRemovedClick -> {
-                onRemoveCommentClick(event.comment)
-            }
-
             is CommentEvents.LoadComments -> {
                 loadComments()
             }
@@ -189,6 +201,19 @@ class CommentsViewModel @Inject constructor(
             is CommentEvents.GetUser -> {
                 userMap.getUser(event.userId)
             }
+
+            CommentEvents.DeleteComment -> {
+                deleteComment()
+            }
+
+            CommentEvents.DismissCommentDeleteDialog -> {
+                dismissCommentDeleteDialog()
+            }
+
+            is CommentEvents.ShowCommentDeleteDialog -> {
+                showCommentDeleteDialog(event.postId)
+            }
         }
     }
+
 }
