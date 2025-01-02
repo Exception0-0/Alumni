@@ -1,46 +1,27 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.post
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Comment
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.ThumbUp
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
-import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumCard
-import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.presentation.composable.AluminiumFloatingActionButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.ui.Size
+import dev.than0s.aluminium.ui.roundCorners
 import dev.than0s.aluminium.ui.spacing
-import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun PostsScreen(
@@ -49,8 +30,6 @@ fun PostsScreen(
 ) {
     PostsContent(
         screenState = viewModel.screenState,
-        likeMap = viewModel.likeMap,
-        openScreen = openScreen,
         onEvent = viewModel::onEvent,
     )
 }
@@ -58,187 +37,42 @@ fun PostsScreen(
 @Composable
 private fun PostsContent(
     screenState: PostsState,
-    likeMap: Map<String, Like?>,
-    openScreen: (Screen) -> Unit,
     onEvent: (PostsEvents) -> Unit,
 ) {
-    if (screenState.postDialog != null) {
-        Dialog(
-            onDismissRequest = {
-                onEvent(PostsEvents.OnPostDialogDismissRequest)
-            },
+    if (screenState.isLoading) {
+        LoadingShimmerEffect(
+            modifier = Modifier.height(350.dp)
+        )
+    } else {
+        LazyVerticalGrid(
+            modifier = Modifier
+                .height(350.dp),
+            columns = GridCells.Adaptive(100.dp),
             content = {
-                AluminiumElevatedCard {
-                    PostDetailCard(
-                        post = screenState.postList.find { it.id == screenState.postDialog }!!,
-                        onEvent = onEvent,
-                        likeMap = likeMap,
-                        openScreen = openScreen
+                items(screenState.postList) {
+                    PostImagePreview(
+                        post = it
                     )
                 }
             }
         )
     }
-    Scaffold(
-        contentWindowInsets = WindowInsets(0.dp),
-        modifier = Modifier
-            .height(400.dp)
-            .fillMaxWidth(),
-        floatingActionButton = {
-            AluminiumFloatingActionButton(
-                onClick = {
-                    openScreen(Screen.PostUploadScreen)
-                },
-                content = {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Post"
-                    )
-                }
-            )
-        }
-    ) { contentPadding ->
-        if (screenState.isLoading) {
-            LoadingShimmerEffect(
-                modifier = Modifier.padding(contentPadding)
-            )
-        } else {
-            LazyVerticalGrid(
-                modifier = Modifier
-                    .padding(contentPadding),
-                columns = GridCells.Adaptive(MaterialTheme.Size.default),
-                content = {
-                    items(screenState.postList) {
-                        PostPreviewCard(
-                            post = it,
-                            onClick = { postId ->
-                                onEvent(PostsEvents.OnPostClick(postId))
-                            }
-                        )
-                    }
-                }
-            )
-        }
-    }
 }
 
 @Composable
-private fun PostPreviewCard(
-    post: Post,
-    onClick: (String) -> Unit
-) {
-    AluminiumCard(
-        onClick = {
-            onClick(post.id)
-        },
+private fun PostImagePreview(post: Post) {
+    Box(
         modifier = Modifier
-            .size(MaterialTheme.Size.medium)
-            .padding(MaterialTheme.spacing.extraSmall)
+            .size(100.dp)
+            .padding(MaterialTheme.spacing.default)
     ) {
         AluminiumAsyncImage(
             model = post.file,
             onTapFullScreen = false,
-            modifier = Modifier
-        )
-    }
-}
-
-@Composable
-private fun PostDetailCard(
-    post: Post,
-    likeMap: Map<String, Like?>,
-    openScreen: (Screen) -> Unit,
-    onEvent: (PostsEvents) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    onEvent(PostsEvents.GetLike(post.id))
-    val like = likeMap[post.id]
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        modifier = modifier
-            .padding(MaterialTheme.spacing.medium)
-            .fillMaxWidth()
-    ) {
-
-        AluminiumTitleText(
-            title = post.title,
-        )
-
-        AluminiumDescriptionText(
-            description = post.description,
-        )
-
-        AluminiumAsyncImage(
-            model = post.file,
-        )
-
-        AluminiumCard {
-            PostStatus(
-                postId = post.id,
-                isLiked = like != null,
-                onEvent = onEvent,
-                openScreen = openScreen,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(MaterialTheme.spacing.small)
+            modifier = Modifier.clip(
+                shape = RoundedCornerShape(MaterialTheme.roundCorners.default)
             )
-        }
-    }
-}
-
-@Composable
-private fun PostStatus(
-    postId: String,
-    isLiked: Boolean,
-    onEvent: (PostsEvents) -> Unit,
-    openScreen: (Screen) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        modifier = modifier.padding(MaterialTheme.spacing.extraSmall)
-    ) {
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
-        ) {
-            IconButton(
-                content = {
-                    Icon(
-                        imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
-                        contentDescription = "like button"
-                    )
-                },
-                onClick = {
-                    onEvent(PostsEvents.OnLikeClick(postId, isLiked))
-                },
-            )
-            AluminiumTitleText(
-                title = "Like",
-                fontSize = MaterialTheme.textSize.small
-            )
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
-        ) {
-            IconButton(onClick = {
-                openScreen(Screen.CommentsScreen(postId))
-            }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.Comment,
-                    contentDescription = "comment button",
-                )
-            }
-            AluminiumTitleText(
-                title = "Comments",
-                fontSize = MaterialTheme.textSize.small
-            )
-        }
+        )
     }
 }
 
@@ -247,7 +81,7 @@ private fun LoadingShimmerEffect(
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(MaterialTheme.Size.default),
+        columns = GridCells.Adaptive(100.dp),
         modifier = modifier
     ) {
         items(16) {
@@ -261,8 +95,8 @@ private fun PostShimmerCard() {
     ShimmerBackground(
         modifier = Modifier
             .shimmer()
-            .size(MaterialTheme.Size.medium)
-            .padding(MaterialTheme.spacing.extraSmall)
+            .size(100.dp)
+            .padding(MaterialTheme.spacing.default)
     )
 }
 
@@ -271,8 +105,6 @@ private fun PostShimmerCard() {
 private fun Preview() {
     PostsContent(
         screenState = PostsState(),
-        likeMap = emptyMap(),
-        openScreen = {},
         onEvent = {}
     )
 }

@@ -156,10 +156,7 @@ private fun ProfileTabRow(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                horizontal = MaterialTheme.spacing.small,
-                vertical = MaterialTheme.spacing.large
-            )
+            .padding(MaterialTheme.spacing.small)
     ) {
         ProfileNavHost(
             userId = screenState.user.id,
