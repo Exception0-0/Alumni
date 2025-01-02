@@ -33,7 +33,6 @@ import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumClickableText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDropdownMenu
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingFilledButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimation
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
@@ -71,64 +70,62 @@ private fun RegistrationScreenContent(
             .padding(MaterialTheme.spacing.large)
             .verticalScroll(rememberScrollState())
     ) {
-        AluminiumElevatedCard {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(MaterialTheme.spacing.large)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(MaterialTheme.spacing.large)
+        ) {
+            AluminiumTitleText(
+                title = registrationFormSectionList[screenState.formIndex].name,
+                fontSize = MaterialTheme.textSize.huge
+            )
+
+            registrationFormSectionList[screenState.formIndex].content(screenState, onEvent)
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
             ) {
-                AluminiumTitleText(
-                    title = registrationFormSectionList[screenState.formIndex].name,
-                    fontSize = MaterialTheme.textSize.huge
+                IconButton(
+                    onClick = {
+                        onEvent(RegistrationEvents.OnPreviousClick)
+                    },
+                    enabled = !isIndexZero,
+                    content = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "previous page"
+                        )
+                    }
                 )
 
-                registrationFormSectionList[screenState.formIndex].content(screenState, onEvent)
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
-                ) {
-                    IconButton(
-                        onClick = {
-                            onEvent(RegistrationEvents.OnPreviousClick)
-                        },
-                        enabled = !isIndexZero,
-                        content = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "previous page"
+                IconButton(
+                    onClick = {
+                        onEvent(RegistrationEvents.OnNextClick)
+                    },
+                    enabled = !isLastIndex,
+                    content = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = "next page"
+                        )
+                    }
+                )
+            }
+            if (isLastIndex) {
+                AluminiumLoadingFilledButton(
+                    isLoading = screenState.isLoading,
+                    enabled = !screenState.isLoading,
+                    onClick = {
+                        onEvent(
+                            RegistrationEvents.OnRegisterClick(
+                                onSuccess = popScreen
                             )
-                        }
-                    )
-
-                    IconButton(
-                        onClick = {
-                            onEvent(RegistrationEvents.OnNextClick)
-                        },
-                        enabled = !isLastIndex,
-                        content = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = "next page"
-                            )
-                        }
-                    )
-                }
-                if (isLastIndex) {
-                    AluminiumLoadingFilledButton(
-                        isLoading = screenState.isLoading,
-                        enabled = !screenState.isLoading,
-                        onClick = {
-                            onEvent(
-                                RegistrationEvents.OnRegisterClick(
-                                    onSuccess = popScreen
-                                )
-                            )
-                        },
-                        content = {
-                            Text("Register")
-                        }
-                    )
-                }
+                        )
+                    },
+                    content = {
+                        Text("Register")
+                    }
+                )
             }
         }
         AluminiumLottieAnimation(

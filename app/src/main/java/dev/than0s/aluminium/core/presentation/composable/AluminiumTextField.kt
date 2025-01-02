@@ -61,7 +61,8 @@ fun AluminiumTextField(
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent
         ),
         trailingIcon = trailingIcon,
         leadingIcon = leadingIcon,

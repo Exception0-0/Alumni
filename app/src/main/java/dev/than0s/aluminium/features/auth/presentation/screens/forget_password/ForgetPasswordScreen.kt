@@ -2,9 +2,7 @@ package dev.than0s.aluminium.features.auth.presentation.screens.forget_password
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -23,12 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingFilledButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimation
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.spacing
 
 @Composable
@@ -58,46 +55,44 @@ private fun ForgetPasswordContent(
             .padding(MaterialTheme.spacing.large)
             .verticalScroll(rememberScrollState())
     ) {
-        AluminiumElevatedCard {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(MaterialTheme.spacing.large)
-            ) {
-                AluminiumTitleText(
-                    title = "Forget Password",
-                )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(MaterialTheme.spacing.large)
+        ) {
+            AluminiumTitleText(
+                title = "Forget Password",
+            )
 
-                AluminiumTextField(
-                    value = state.email,
-                    onValueChange = { newValue ->
-                        onEvent(ForgetPasswordEvents.OnEmailChange(newValue))
-                    },
-                    supportingText = state.emailError?.message?.asString(),
-                    keyboardType = KeyboardType.Email,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Mail,
-                            contentDescription = "Mail icon"
+            AluminiumTextField(
+                value = state.email,
+                onValueChange = { newValue ->
+                    onEvent(ForgetPasswordEvents.OnEmailChange(newValue))
+                },
+                supportingText = state.emailError?.message?.asString(),
+                keyboardType = KeyboardType.Email,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Mail,
+                        contentDescription = "Mail icon"
+                    )
+                },
+                placeholder = "Email"
+            )
+            AluminiumLoadingFilledButton(
+                isLoading = state.isLoading,
+                onClick = {
+                    onEvent(
+                        ForgetPasswordEvents.OnForgetPasswordClick(
+                            popScreen = popScreen
                         )
-                    },
-                    placeholder = "Email"
-                )
-                AluminiumLoadingFilledButton(
-                    isLoading = state.isLoading,
-                    onClick = {
-                        onEvent(
-                            ForgetPasswordEvents.OnForgetPasswordClick(
-                                popScreen = popScreen
-                            )
-                        )
-                    },
-                    enabled = !state.isLoading,
-                    content = {
-                        Text("Forget Password")
-                    }
-                )
-            }
+                    )
+                },
+                enabled = !state.isLoading,
+                content = {
+                    Text("Forget Password")
+                }
+            )
         }
 
         AluminiumLottieAnimation(
