@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -27,6 +26,7 @@ import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
 import dev.than0s.aluminium.core.presentation.ui.PURE_BLACK
 import dev.than0s.aluminium.core.presentation.ui.getCurrentColorTheme
+import dev.than0s.aluminium.core.presentation.utils.AluminiumActionButton
 import dev.than0s.aluminium.core.presentation.utils.AluminiumBottomNavigationBar
 import dev.than0s.aluminium.core.presentation.utils.AluminiumTopAppBar
 import dev.than0s.aluminium.core.presentation.utils.NavGraphHost
@@ -90,6 +90,9 @@ class MainActivity : ComponentActivity() {
                     },
                     bottomBar = {
                         AluminiumBottomNavigationBar(navController)
+                    },
+                    floatingActionButton = {
+                        AluminiumActionButton(navController)
                     },
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
