@@ -152,12 +152,11 @@ fun PostBox(
     onProfileClick: () -> Unit,
     onLikeClick: () -> Unit,
     onDeleteClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
-        modifier = modifier.padding(
-            vertical = MaterialTheme.spacing.small
+        modifier = Modifier.padding(
+            bottom = MaterialTheme.spacing.small
         )
     ) {
         TopSection(
@@ -379,6 +378,11 @@ private fun PostDeleteDialog(
             )
         }
     )
+}
+
+@Composable
+private fun PostBoxShimmer(){
+
 }
 
 @Preview(showSystemUi = true)
