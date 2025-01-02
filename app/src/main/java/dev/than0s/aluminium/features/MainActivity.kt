@@ -57,7 +57,6 @@ class MainActivity : ComponentActivity() {
                 initialValue = false,
                 defaultValue = false,
             )
-            MaterialTheme.colorScheme
             DynamicTheme(
                 state = rememberDynamicThemeState(),
                 isDarkTheme = darkTheme,
