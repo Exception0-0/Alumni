@@ -101,16 +101,15 @@ private fun PostsScreenContent(
             }
         )
     }
-
-    if (screenState.isLoading) {
-        ShimmerPostList()
-    } else {
-        PullToRefreshBox(
-            isRefreshing = false,
-            onRefresh = {
-                onEvent(PostsEvents.LoadPosts)
-            },
-        ) {
+    PullToRefreshBox(
+        isRefreshing = screenState.isLoading,
+        onRefresh = {
+            onEvent(PostsEvents.LoadPosts)
+        },
+    ) {
+        if (screenState.isLoading) {
+            ShimmerPostList()
+        } else {
             LazyColumn {
                 items(screenState.postList) { post ->
                     if (!userMap.containsKey(post.userId)) {
