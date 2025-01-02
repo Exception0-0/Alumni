@@ -25,5 +25,5 @@ fun RemoteComment.toComment(postId: String) = Comment(
     postId = postId,
     userId = userId,
     message = message,
-    timestamp = timestamp.seconds
+    timestamp = timestamp.toDate().time
 )

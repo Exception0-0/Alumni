@@ -130,6 +130,10 @@ private fun getDefaultTopAppBar(
             shouldHaveNavIcon = false
         )
 
+        destination.hasRoute<Screen.CommentsScreen>() -> TopAppBarItem(
+            title = Screen.CommentsScreen("").name
+        )
+
         else -> null
     }
 }

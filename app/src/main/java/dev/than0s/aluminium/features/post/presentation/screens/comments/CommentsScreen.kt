@@ -1,10 +1,13 @@
 package dev.than0s.aluminium.features.post.presentation.screens.comments
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,9 +22,8 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,21 +33,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.core.presentation.utils.asString
+import dev.than0s.aluminium.core.currentUserId
+import dev.than0s.aluminium.core.domain.data_class.Comment
+import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingIconButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingIconButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.currentUserId
-import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
-import dev.than0s.aluminium.core.domain.data_class.Comment
+import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
+import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
 
@@ -57,63 +60,100 @@ fun CommentScreen(
     CommentScreenContent(
         screenState = viewModel.screenState,
         userMap = viewModel.userMap,
-        onEvents = viewModel::onEvent,
+        onEvent = viewModel::onEvent,
         openScreen = openScreen
     )
 }
 
-
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun CommentScreenContent(
     screenState: CommentState,
     userMap: Map<String, User>,
-    onEvents: (CommentEvents) -> Unit,
+    onEvent: (CommentEvents) -> Unit,
     openScreen: (Screen) -> Unit,
 ) {
     if (screenState.isLoading) {
         AluminumCircularLoading()
     } else {
-        Scaffold(
-            bottomBar = {
-                Surface(
-                    modifier = Modifier.padding(MaterialTheme.spacing.medium)
-                ) {
-                    AluminiumTextField(
-                        value = screenState.comment.message,
-                        placeholder = "Comment",
-                        onValueChange = {
-                            onEvents(CommentEvents.OnCommentChanged(it))
-                        },
-                        supportingText = screenState.commentError?.message?.asString(),
-                        trailingIcon = {
-                            AluminiumLoadingIconButton(
-                                icon = Icons.AutoMirrored.Rounded.Send,
-                                circularProgressIndicatorState = screenState.isCommentAdding,
-                                onClick = {
-                                    onEvents(CommentEvents.OnAddCommentClick)
-                                },
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-        ) { contentPadding ->
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                modifier = Modifier.padding(contentPadding)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.TopCenter)
             ) {
                 items(screenState.commentList) { comment ->
-                    CommentPreview(
-                        comment = comment,
-                        userMap = userMap,
-                        onEvent = onEvents,
-                        onProfileClick = {
-                            openScreen(Screen.ProfileScreen(userId = comment.userId))
+                    if (!userMap.containsKey(comment.userId)) {
+                        onEvent(CommentEvents.GetUser(comment.userId))
+                    }
+                    val userProfile = userMap[comment.userId]
+                    ListItem(
+                        leadingContent = {
+                            AluminiumAsyncImage(
+                                model = userProfile?.profileImage,
+                                contentDescription = "Profile Image",
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .clip(CircleShape),
+                            )
+                        },
+                        headlineContent = {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+                            ) {
+                                Text(
+                                    text = "${userProfile?.firstName} ${userProfile?.lastName}",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = MaterialTheme.textSize.medium,
+                                )
+                                Text(
+                                    text = PrettyTimeUtils.getPrettyTime(comment.timestamp),
+                                    fontSize = MaterialTheme.textSize.extraSmall
+                                )
+                            }
+                        },
+                        supportingContent = {
+                            AluminiumDescriptionText(
+                                description = comment.message,
+                            )
+                        },
+                        trailingContent = {
+                            IconButton(
+                                onClick = {},
+                                content = {
+                                    Icon(
+                                        imageVector = Icons.Default.MoreVert,
+                                        contentDescription = "more"
+                                    )
+                                }
+                            )
                         }
                     )
                 }
             }
+            AluminiumTextField(
+                value = screenState.comment.message,
+                placeholder = "comment message...",
+                onValueChange = {
+                    onEvent(CommentEvents.OnCommentChanged(it))
+                },
+                supportingText = screenState.commentError?.message?.asString(),
+                trailingIcon = {
+                    AluminiumLoadingIconButton(
+                        icon = Icons.AutoMirrored.Rounded.Send,
+                        circularProgressIndicatorState = screenState.isCommentAdding,
+                        onClick = {
+                            onEvent(CommentEvents.OnAddCommentClick)
+                        },
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.spacing.small)
+                    .align(Alignment.BottomCenter)
+            )
         }
     }
 }
@@ -125,8 +165,6 @@ private fun CommentPreview(
     onEvent: (CommentEvents) -> Unit,
     onProfileClick: () -> Unit
 ) {
-    onEvent(CommentEvents.GetUser(comment.userId))
-    val userProfile = userMap[comment.userId]
 
     AluminiumElevatedCard(
         modifier = Modifier
@@ -147,26 +185,12 @@ private fun CommentPreview(
                         onProfileClick()
                     }
             ) {
-                AluminiumAsyncImage(
-                    model = userProfile?.profileImage,
-                    contentDescription = "Profile Image",
-                    modifier = Modifier
-                        .size(20.dp)
-                        .clip(CircleShape),
-                )
 
                 Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
 
                 Column(
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
                 ) {
-                    AluminiumTitleText(
-                        title = "${userProfile?.firstName} ${userProfile?.lastName}",
-                        fontSize = MaterialTheme.textSize.small
-                    )
-                    AluminiumDescriptionText(
-                        description = comment.message,
-                    )
                 }
             }
             if (comment.id == currentUserId) {
@@ -281,7 +305,7 @@ private fun CommentScreenPreview() {
     CommentScreenContent(
         screenState = CommentState(),
         userMap = emptyMap(),
-        onEvents = {},
+        onEvent = {},
         openScreen = {}
     )
 }
