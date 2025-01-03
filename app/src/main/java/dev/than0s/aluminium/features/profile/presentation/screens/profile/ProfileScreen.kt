@@ -42,6 +42,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.replace
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
+import dev.than0s.aluminium.ui.coverHeight
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
@@ -179,7 +180,7 @@ private fun ProfileAndCoverShower(
             onTapFullScreen = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(128.dp)
+                .height(MaterialTheme.coverHeight.default)
                 .align(Alignment.TopCenter)
         )
         Box(
