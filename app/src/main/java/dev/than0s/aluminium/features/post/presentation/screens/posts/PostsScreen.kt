@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -110,7 +111,9 @@ private fun PostsScreenContent(
         if (screenState.isLoading) {
             ShimmerPostList()
         } else {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.surface)
+            ) {
                 items(screenState.postList) { post ->
                     if (!userMap.containsKey(post.userId)) {
                         onEvent(PostsEvents.GetUser(post.userId))

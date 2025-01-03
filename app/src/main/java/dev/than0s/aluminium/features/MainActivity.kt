@@ -17,9 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.compose.rememberNavController
-import com.t8rin.dynamic.theme.ColorTuple
-import com.t8rin.dynamic.theme.DynamicTheme
-import com.t8rin.dynamic.theme.rememberDynamicThemeState
 import dagger.hilt.android.AndroidEntryPoint
 import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
@@ -31,9 +28,7 @@ import dev.than0s.aluminium.core.presentation.utils.AluminiumBottomNavigationBar
 import dev.than0s.aluminium.core.presentation.utils.AluminiumTopAppBar
 import dev.than0s.aluminium.core.presentation.utils.NavGraphHost
 import dev.than0s.aluminium.core.presentation.utils.SnackbarLogic
-import dev.than0s.aluminium.ui.theme.Primary
-import dev.than0s.aluminium.ui.theme.Secondary
-import dev.than0s.aluminium.ui.theme.Tertiary
+import dev.than0s.aluminium.ui.theme.AluminiumTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -58,16 +53,20 @@ class MainActivity : ComponentActivity() {
                 initialValue = false,
                 defaultValue = false,
             )
-            DynamicTheme(
-                state = rememberDynamicThemeState(),
-                isDarkTheme = darkTheme,
-                defaultColorTuple = ColorTuple(
-                    primary = Primary,
-                    secondary = Secondary,
-                    tertiary = Tertiary
-                ),
-                dynamicColor = isDynamicTheme,
-                amoledMode = pureBlack
+//            DynamicTheme(
+//                state = rememberDynamicThemeState(),
+//                isDarkTheme = darkTheme,
+//                defaultColorTuple = ColorTuple(
+//                    primary = Primary,
+//                    secondary = Secondary,
+//                    tertiary = Tertiary
+//                ),
+//                dynamicColor = isDynamicTheme,
+//                amoledMode = pureBlack
+//            ) {
+            AluminiumTheme(
+                darkTheme = darkTheme,
+                dynamicColor = isDynamicTheme
             ) {
                 val navController = rememberNavController()
                 val snackbarHostState = remember { SnackbarHostState() }
