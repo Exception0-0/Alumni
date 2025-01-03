@@ -21,10 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingFilledButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimation
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingFilledButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLottieAnimation
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.padding
 

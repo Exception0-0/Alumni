@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.core.presentation.composable
+package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

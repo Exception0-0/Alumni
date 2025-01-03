@@ -20,11 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingElevatedButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
 import dev.than0s.aluminium.ui.padding
 
 @Composable

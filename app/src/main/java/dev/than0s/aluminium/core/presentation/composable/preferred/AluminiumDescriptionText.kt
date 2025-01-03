@@ -1,10 +1,9 @@
-package dev.than0s.aluminium.core.presentation.composable
+package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import dev.than0s.aluminium.ui.textSize
 

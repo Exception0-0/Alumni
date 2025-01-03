@@ -34,11 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import dev.than0s.aluminium.core.currentUserId
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumDescriptionText
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminumCircularLoading
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.replace
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost

@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.core.presentation.composable
+package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape

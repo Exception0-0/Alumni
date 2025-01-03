@@ -9,7 +9,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import dev.than0s.aluminium.core.presentation.composable.AluminiumFloatingActionButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumFloatingActionButton
 
 @Composable
 fun AluminiumActionButton(

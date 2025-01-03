@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumSurface
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
-import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingTextButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumSurface
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.padding

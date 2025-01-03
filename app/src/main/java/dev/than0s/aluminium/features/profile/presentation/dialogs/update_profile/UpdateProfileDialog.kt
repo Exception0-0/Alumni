@@ -32,10 +32,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingTextButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.roundedCorners

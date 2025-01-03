@@ -34,10 +34,10 @@ import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.presentation.composable.AluminiumGroupTitle
-import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumGroupTitle
+import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.padding

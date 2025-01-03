@@ -49,13 +49,13 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingIconButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimation
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumDescriptionText
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingIconButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingTextButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLottieAnimation
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.asString
@@ -346,14 +346,13 @@ private fun CommentPreviewShimmer() {
             ShimmerBackground(
                 modifier = Modifier
                     .height(16.dp)
-                    .padding(top = MaterialTheme.padding.small)
                     .width(MaterialTheme.Size.large)
             )
         },
         trailingContent = {
             ShimmerBackground(
                 modifier = Modifier
-                    .size(16.dp)
+                    .size(26.dp)
             )
         },
         modifier = Modifier.shimmer()
@@ -363,10 +362,11 @@ private fun CommentPreviewShimmer() {
 @Preview(showSystemUi = true)
 @Composable
 private fun CommentScreenPreview() {
-    CommentScreenContent(
-        screenState = CommentState(),
-        userMap = emptyMap(),
-        onEvent = {},
-        openScreen = {}
-    )
+//    CommentScreenContent(
+//        screenState = CommentState(),
+//        userMap = emptyMap(),
+//        onEvent = {},
+//        openScreen = {}
+//    )
+    CommentPreviewShimmer()
 }

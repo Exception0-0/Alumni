@@ -23,10 +23,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Role
-import dev.than0s.aluminium.core.presentation.composable.AluminiumAlertDialog
-import dev.than0s.aluminium.core.presentation.composable.AluminiumClickableText
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
-import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAlertDialog
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumClickableText
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.ui.roundedCorners
 import dev.than0s.aluminium.ui.padding

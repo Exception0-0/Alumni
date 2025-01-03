@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.core.presentation.composable
+package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.MaterialTheme

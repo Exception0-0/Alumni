@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.core.presentation.composable
+package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlin.enums.EnumEntries
 
 @Composable
 fun <T : Enum<T>> AluminiumDropdownMenu(

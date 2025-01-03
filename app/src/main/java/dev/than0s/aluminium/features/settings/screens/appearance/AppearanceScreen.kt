@@ -31,9 +31,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.burnoo.compose.rememberpreference.rememberStringPreference
-import dev.than0s.aluminium.core.presentation.composable.AluminiumGroupTitle
-import dev.than0s.aluminium.core.presentation.composable.AluminiumSurface
-import dev.than0s.aluminium.core.presentation.composable.AluminiumSwitch
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumGroupTitle
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumSurface
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumSwitch
 import dev.than0s.aluminium.core.presentation.ui.COLOR_THEME
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME

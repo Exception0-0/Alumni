@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.currentUserId
-import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumElevatedButton
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormat
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormatShimmer
 import dev.than0s.aluminium.core.presentation.utils.Screen

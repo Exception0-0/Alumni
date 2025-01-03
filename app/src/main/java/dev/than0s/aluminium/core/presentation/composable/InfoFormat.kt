@@ -18,6 +18,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.shimmer
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumDescriptionText
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumElevatedCard
+import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize

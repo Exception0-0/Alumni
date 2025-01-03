@@ -1,22 +1,20 @@
-package dev.than0s.aluminium.core.presentation.composable
+package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
-fun AluminiumFloatingActionButton(
-    onClick: () -> Unit,
+fun AluminiumSurface(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    FloatingActionButton(
-        onClick = onClick,
+    Surface(
         shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
-        content = content,
-        modifier = modifier
+        modifier = modifier,
+        content = content
     )
 }

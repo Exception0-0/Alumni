@@ -1,38 +1,34 @@
-package dev.than0s.aluminium.core.presentation.composable
+package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AluminiumLoadingIconButton(
-    icon: ImageVector,
-    circularProgressIndicatorState: Boolean,
+fun AluminiumLoadingTextButton(
+    label: String,
+    isLoading: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    IconButton(
+    TextButton(
         onClick = onClick,
-        enabled = !circularProgressIndicatorState,
+        enabled = !isLoading,
         modifier = modifier
     ) {
-        if (circularProgressIndicatorState) {
+        if (isLoading) {
             CircularProgressIndicator(
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(24.dp),
                 color = MaterialTheme.colorScheme.secondary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
         } else {
-            Icon(
-                imageVector = icon,
-                contentDescription = icon.name
-            )
+            Text(text = label)
         }
     }
 }
