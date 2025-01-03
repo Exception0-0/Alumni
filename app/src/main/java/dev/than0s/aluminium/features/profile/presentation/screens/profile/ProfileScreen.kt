@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,6 +71,7 @@ private fun ProfileScreenContent(
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
             modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
