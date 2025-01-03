@@ -11,13 +11,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import dev.than0s.aluminium.ui.LocalProfileSize
 import dev.than0s.aluminium.ui.LocalRoundCorners
 import dev.than0s.aluminium.ui.LocalSize
 import dev.than0s.aluminium.ui.LocalSpacing
 import dev.than0s.aluminium.ui.LocalTextSize
+import dev.than0s.aluminium.ui.Padding
+import dev.than0s.aluminium.ui.ProfileSize
 import dev.than0s.aluminium.ui.RoundedCorners
 import dev.than0s.aluminium.ui.Size
-import dev.than0s.aluminium.ui.Padding
 import dev.than0s.aluminium.ui.TextSize
 
 private val DarkColorScheme = darkColorScheme(
@@ -62,7 +64,8 @@ fun AluminiumTheme(
         LocalSpacing provides Padding(),
         LocalTextSize provides TextSize(),
         LocalRoundCorners provides RoundedCorners(),
-        LocalSize provides Size()
+        LocalSize provides Size(),
+        LocalProfileSize provides ProfileSize(),
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

@@ -67,6 +67,7 @@ import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.profileSize
 
 @Composable
 fun PostsScreen(
@@ -218,7 +219,7 @@ private fun TopSection(
                 model = user.profileImage,
                 onTapFullScreen = true,
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(MaterialTheme.profileSize.medium)
                     .clip(CircleShape)
             )
         },
