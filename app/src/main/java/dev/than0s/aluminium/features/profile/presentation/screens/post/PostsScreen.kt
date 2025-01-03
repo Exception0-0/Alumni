@@ -64,7 +64,7 @@ private fun PostImagePreview(post: Post) {
     Box(
         modifier = Modifier
             .size(100.dp)
-            .padding(MaterialTheme.spacing.default)
+            .padding(MaterialTheme.spacing.verySmall)
     ) {
         AluminiumAsyncImage(
             model = post.file,
@@ -96,7 +96,7 @@ private fun PostShimmerCard() {
         modifier = Modifier
             .shimmer()
             .size(100.dp)
-            .padding(MaterialTheme.spacing.default)
+            .padding(MaterialTheme.spacing.verySmall)
     )
 }
 
