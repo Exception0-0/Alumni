@@ -11,8 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import dev.than0s.aluminium.ui.Elevation
-import dev.than0s.aluminium.ui.LocalElevation
 import dev.than0s.aluminium.ui.LocalRoundCorners
 import dev.than0s.aluminium.ui.LocalSize
 import dev.than0s.aluminium.ui.LocalSpacing
@@ -62,7 +60,6 @@ fun AluminiumTheme(
 
     CompositionLocalProvider(
         LocalSpacing provides Padding(),
-        LocalElevation provides Elevation(),
         LocalTextSize provides TextSize(),
         LocalRoundCorners provides RoundCorners(),
         LocalSize provides Size()
