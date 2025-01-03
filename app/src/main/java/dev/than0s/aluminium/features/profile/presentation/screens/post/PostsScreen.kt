@@ -20,7 +20,7 @@ import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.ui.roundCorners
+import dev.than0s.aluminium.ui.roundedCorners
 import dev.than0s.aluminium.ui.spacing
 
 @Composable
@@ -70,7 +70,7 @@ private fun PostImagePreview(post: Post) {
             model = post.file,
             onTapFullScreen = false,
             modifier = Modifier.clip(
-                shape = RoundedCornerShape(MaterialTheme.roundCorners.default)
+                shape = RoundedCornerShape(MaterialTheme.roundedCorners.default)
             )
         )
     }

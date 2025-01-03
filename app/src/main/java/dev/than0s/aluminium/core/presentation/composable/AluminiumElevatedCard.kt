@@ -6,7 +6,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import dev.than0s.aluminium.ui.roundCorners
+import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
 fun AluminiumElevatedCard(
@@ -16,7 +16,7 @@ fun AluminiumElevatedCard(
 ) {
     ElevatedCard(
         onClick = onClick,
-        shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
+        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
         content = content,
         modifier = modifier
     )
@@ -28,7 +28,7 @@ fun AluminiumElevatedCard(
     content: @Composable (ColumnScope.() -> Unit),
 ) {
     ElevatedCard(
-        shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
+        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
         content = content,
         modifier = modifier
     )

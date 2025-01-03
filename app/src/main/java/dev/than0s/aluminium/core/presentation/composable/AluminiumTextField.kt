@@ -18,7 +18,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import dev.than0s.aluminium.ui.roundCorners
+import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
 fun AluminiumTextField(
@@ -57,7 +57,7 @@ fun AluminiumTextField(
         },
         visualTransformation = visualTransformation,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
+        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,

@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.than0s.aluminium.ui.roundCorners
+import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
 fun AluminiumLoadingElevatedButton(
@@ -21,7 +21,7 @@ fun AluminiumLoadingElevatedButton(
     ElevatedButton(
         onClick = onClick,
         enabled = !circularProgressIndicatorState,
-        shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
+        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
         modifier = modifier
     ) {
         if (circularProgressIndicatorState) {

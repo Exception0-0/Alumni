@@ -5,7 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import dev.than0s.aluminium.ui.roundCorners
+import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
 fun AluminiumSurface(
@@ -13,7 +13,7 @@ fun AluminiumSurface(
     content: @Composable () -> Unit,
 ) {
     Surface(
-        shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
+        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
         modifier = modifier,
         content = content
     )

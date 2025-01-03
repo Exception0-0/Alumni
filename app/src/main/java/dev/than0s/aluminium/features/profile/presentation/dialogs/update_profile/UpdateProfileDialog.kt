@@ -38,7 +38,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.Size
-import dev.than0s.aluminium.ui.roundCorners
+import dev.than0s.aluminium.ui.roundedCorners
 import dev.than0s.aluminium.ui.spacing
 import dev.than0s.aluminium.ui.textSize
 
@@ -84,7 +84,7 @@ private fun UpdateProfileDialogContent(
     }
 
     Surface(
-        shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
+        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
     ) {
         if (screenState.isLoading) {
             LoadingShimmerEffect()

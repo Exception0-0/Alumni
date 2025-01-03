@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.than0s.aluminium.ui.roundCorners
+import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
 fun AluminiumFilledButton(
@@ -22,7 +22,7 @@ fun AluminiumFilledButton(
 ) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(MaterialTheme.roundCorners.default),
+        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
         modifier = modifier,
         enabled = enabled,
         content = content

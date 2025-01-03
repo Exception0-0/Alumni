@@ -15,7 +15,7 @@ import dev.than0s.aluminium.ui.LocalRoundCorners
 import dev.than0s.aluminium.ui.LocalSize
 import dev.than0s.aluminium.ui.LocalSpacing
 import dev.than0s.aluminium.ui.LocalTextSize
-import dev.than0s.aluminium.ui.RoundCorners
+import dev.than0s.aluminium.ui.RoundedCorners
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.Padding
 import dev.than0s.aluminium.ui.TextSize
@@ -61,7 +61,7 @@ fun AluminiumTheme(
     CompositionLocalProvider(
         LocalSpacing provides Padding(),
         LocalTextSize provides TextSize(),
-        LocalRoundCorners provides RoundCorners(),
+        LocalRoundCorners provides RoundedCorners(),
         LocalSize provides Size()
     ) {
         MaterialTheme(
