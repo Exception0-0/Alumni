@@ -21,7 +21,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.roundedCorners
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 
 @Composable
 fun PostsScreen(
@@ -64,7 +64,7 @@ private fun PostImagePreview(post: Post) {
     Box(
         modifier = Modifier
             .size(100.dp)
-            .padding(MaterialTheme.spacing.verySmall)
+            .padding(MaterialTheme.padding.verySmall)
     ) {
         AluminiumAsyncImage(
             model = post.file,
@@ -96,7 +96,7 @@ private fun PostShimmerCard() {
         modifier = Modifier
             .shimmer()
             .size(100.dp)
-            .padding(MaterialTheme.spacing.verySmall)
+            .padding(MaterialTheme.padding.verySmall)
     )
 }
 

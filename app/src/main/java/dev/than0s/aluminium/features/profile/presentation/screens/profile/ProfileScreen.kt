@@ -42,7 +42,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminumCircularLoading
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.replace
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -69,7 +69,7 @@ private fun ProfileScreenContent(
         AluminumCircularLoading()
     } else {
         Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
@@ -79,10 +79,10 @@ private fun ProfileScreenContent(
                 screenState = screenState
             )
             Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                 modifier = Modifier
                     .padding(
-                        horizontal = MaterialTheme.spacing.medium
+                        horizontal = MaterialTheme.padding.medium
                     )
             ) {
                 AluminiumTitleText(
@@ -158,7 +158,7 @@ private fun ProfileTabRow(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(MaterialTheme.spacing.small)
+            .padding(MaterialTheme.padding.small)
     ) {
         ProfileNavHost(
             userId = screenState.user.id,
@@ -185,7 +185,7 @@ private fun ProfileAndCoverShower(
         Box(
             modifier = Modifier.padding(
                 top = 84.dp,
-                start = MaterialTheme.spacing.medium
+                start = MaterialTheme.padding.medium
             )
         ) {
             AluminiumAsyncImage(

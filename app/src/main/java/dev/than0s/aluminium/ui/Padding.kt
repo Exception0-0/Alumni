@@ -18,7 +18,7 @@ data class Padding(
 
 val LocalSpacing = compositionLocalOf { Padding() }
 
-val MaterialTheme.spacing: Padding
+val MaterialTheme.padding: Padding
     @Composable
     @ReadOnlyComposable
     get() = LocalSpacing.current

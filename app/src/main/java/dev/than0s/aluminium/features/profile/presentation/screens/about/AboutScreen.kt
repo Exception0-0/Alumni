@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormat
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormatShimmer
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 
 @Composable
 fun AboutScreen(
@@ -32,7 +32,7 @@ fun AboutContent(
         LoadingShimmerEffect()
     } else {
         Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.large),
         ) {
             CardInfoFormat(
                 title = "Role",
@@ -60,7 +60,7 @@ fun AboutContent(
 @Composable
 private fun LoadingShimmerEffect() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large)
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.large)
     ) {
         CardInfoFormatShimmer()
         CardInfoFormatShimmer()

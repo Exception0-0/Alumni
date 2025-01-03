@@ -26,7 +26,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimatio
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 
 @Composable
 fun ForgetPasswordScreen(
@@ -47,18 +47,18 @@ private fun ForgetPasswordContent(
     popScreen: () -> Unit,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .wrapContentHeight()
-            .padding(MaterialTheme.spacing.large)
+            .padding(MaterialTheme.padding.large)
             .verticalScroll(rememberScrollState())
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(MaterialTheme.spacing.large)
+            modifier = Modifier.padding(MaterialTheme.padding.large)
         ) {
             AluminiumTitleText(
                 title = "Forget Password",

@@ -60,7 +60,7 @@ import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.Size
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -148,7 +148,7 @@ private fun CommentScreenContent(
                                 },
                                 headlineContent = {
                                     Row(
-                                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+                                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)
                                     ) {
                                         userProfile?.let {
                                             Text(
@@ -202,7 +202,7 @@ private fun CommentScreenContent(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(MaterialTheme.spacing.small)
+                        .padding(MaterialTheme.padding.small)
                         .align(Alignment.BottomCenter)
                 )
             }
@@ -346,7 +346,7 @@ private fun CommentPreviewShimmer() {
             ShimmerBackground(
                 modifier = Modifier
                     .height(16.dp)
-                    .padding(top = MaterialTheme.spacing.small)
+                    .padding(top = MaterialTheme.padding.small)
                     .width(MaterialTheme.Size.large)
             )
         },

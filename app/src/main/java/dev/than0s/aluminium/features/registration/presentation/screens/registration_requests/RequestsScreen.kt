@@ -29,7 +29,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedCard
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.ui.roundedCorners
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -99,11 +99,11 @@ private fun RegistrationRequestItem(
     AluminiumElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(MaterialTheme.spacing.small)
+            .padding(MaterialTheme.padding.small)
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-            modifier = Modifier.padding(MaterialTheme.spacing.medium)
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            modifier = Modifier.padding(MaterialTheme.padding.medium)
         ) {
             AluminiumTitleText(
                 title = request.role.name,
@@ -143,7 +143,7 @@ private fun RegistrationRequestItem(
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(MaterialTheme.spacing.small)
+                    .padding(MaterialTheme.padding.small)
             ) {
                 TextButton(
                     onClick = {
@@ -154,7 +154,7 @@ private fun RegistrationRequestItem(
                     }
                 )
 
-                Spacer(modifier = Modifier.padding(MaterialTheme.spacing.small))
+                Spacer(modifier = Modifier.padding(MaterialTheme.padding.small))
 
                 TextButton(
                     onClick = {

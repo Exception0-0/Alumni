@@ -39,7 +39,7 @@ import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.roundedCorners
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -90,9 +90,9 @@ private fun UpdateProfileDialogContent(
             LoadingShimmerEffect()
         } else {
             Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(MaterialTheme.spacing.medium)
+                modifier = Modifier.padding(MaterialTheme.padding.medium)
             ) {
                 Text(
                     text = "Profile",
@@ -116,7 +116,7 @@ private fun UpdateProfileDialogContent(
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
                 ) {
 
                     AluminiumAsyncImage(
@@ -136,7 +136,7 @@ private fun UpdateProfileDialogContent(
                             }
                     )
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium)
                     ) {
                         AluminiumTextField(
                             value = screenState.userProfile.firstName,
@@ -196,11 +196,11 @@ private fun UpdateProfileDialogContent(
 @Composable
 private fun LoadingShimmerEffect() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .shimmer()
-            .padding(MaterialTheme.spacing.medium)
+            .padding(MaterialTheme.padding.medium)
     ) {
         ShimmerBackground(
             modifier = Modifier
@@ -214,7 +214,7 @@ private fun LoadingShimmerEffect() {
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
         ) {
 
             ShimmerBackground(
@@ -223,7 +223,7 @@ private fun LoadingShimmerEffect() {
                     .size(100.dp)
             )
             Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium)
             ) {
                 ShimmerBackground(
                     modifier = Modifier

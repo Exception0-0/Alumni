@@ -38,7 +38,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimatio
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -62,18 +62,18 @@ private fun RegistrationScreenContent(
     val isLastIndex = screenState.formIndex == registrationFormSectionList.lastIndex
     val isIndexZero = screenState.formIndex == 0
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .wrapContentHeight()
-            .padding(MaterialTheme.spacing.large)
+            .padding(MaterialTheme.padding.large)
             .verticalScroll(rememberScrollState())
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(MaterialTheme.spacing.large)
+            modifier = Modifier.padding(MaterialTheme.padding.large)
         ) {
             AluminiumTitleText(
                 title = registrationFormSectionList[screenState.formIndex].name,
@@ -83,7 +83,7 @@ private fun RegistrationScreenContent(
             registrationFormSectionList[screenState.formIndex].content(screenState, onEvent)
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium)
             ) {
                 IconButton(
                     onClick = {
@@ -235,7 +235,7 @@ private fun CollegeInfoSection(
 
     if (screenState.registrationForm.role == Role.Alumni) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         ) {
             AluminiumTextField(
                 value = screenState.registrationForm.batchFrom ?: "",

@@ -66,7 +66,7 @@ import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.Size
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 
 @Composable
 fun PostsScreen(
@@ -162,9 +162,9 @@ fun PostBox(
     onDeleteClick: () -> Unit,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
         modifier = Modifier.padding(
-            bottom = MaterialTheme.spacing.small
+            bottom = MaterialTheme.padding.small
         )
     ) {
         TopSection(
@@ -190,7 +190,7 @@ fun PostBox(
         AluminiumDescriptionText(
             description = post.description,
             modifier = Modifier.padding(
-                horizontal = MaterialTheme.spacing.medium
+                horizontal = MaterialTheme.padding.medium
             )
         )
 
@@ -198,7 +198,7 @@ fun PostBox(
             text = PrettyTimeUtils.getPrettyTime(post.timestamp),
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(
-                horizontal = MaterialTheme.spacing.medium
+                horizontal = MaterialTheme.padding.medium
             )
         )
     }
@@ -302,7 +302,7 @@ private fun BottomSection(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = MaterialTheme.spacing.small)
+            .padding(start = MaterialTheme.padding.small)
     ) {
         Row(
             modifier = Modifier
@@ -404,9 +404,9 @@ private fun ShimmerPostList() {
 @Composable
 private fun PostBoxShimmer() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
         modifier = Modifier
-            .padding(bottom = MaterialTheme.spacing.small)
+            .padding(bottom = MaterialTheme.padding.small)
             .shimmer()
     ) {
         ListItem(
@@ -442,12 +442,12 @@ private fun PostBoxShimmer() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    horizontal = MaterialTheme.spacing.medium,
-                    vertical = MaterialTheme.spacing.small
+                    horizontal = MaterialTheme.padding.medium,
+                    vertical = MaterialTheme.padding.small
                 )
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                 modifier = Modifier
                     .align(Alignment.TopStart)
             ) {
@@ -477,19 +477,19 @@ private fun PostBoxShimmer() {
             modifier = Modifier
                 .height(16.dp)
                 .width(MaterialTheme.Size.large)
-                .padding(horizontal = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.padding.medium)
         )
         ShimmerBackground(
             modifier = Modifier
                 .height(16.dp)
                 .width(MaterialTheme.Size.medium)
-                .padding(horizontal = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.padding.medium)
         )
         ShimmerBackground(
             modifier = Modifier
                 .height(16.dp)
                 .width(MaterialTheme.Size.small)
-                .padding(horizontal = MaterialTheme.spacing.medium)
+                .padding(horizontal = MaterialTheme.padding.medium)
         )
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth()

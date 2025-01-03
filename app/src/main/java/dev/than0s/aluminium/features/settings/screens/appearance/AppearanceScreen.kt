@@ -38,7 +38,7 @@ import dev.than0s.aluminium.core.presentation.ui.COLOR_THEME
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
 import dev.than0s.aluminium.core.presentation.ui.PURE_BLACK
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 
 @Composable
 fun AppearanceScreen(
@@ -184,7 +184,7 @@ private fun ColorThemeDialog(
             content = {
                 AluminiumSurface {
                     Column(
-                        modifier = Modifier.padding(MaterialTheme.spacing.medium)
+                        modifier = Modifier.padding(MaterialTheme.padding.medium)
                     ) {
                         ColorTheme.entries.forEach {
                             val isSelected = currentColorTheme == it

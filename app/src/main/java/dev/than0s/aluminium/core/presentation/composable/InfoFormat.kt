@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.ui.Size
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
 
@@ -33,15 +33,15 @@ fun CardInfoFormat(
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            modifier = Modifier.padding(MaterialTheme.spacing.medium)
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
+            modifier = Modifier.padding(MaterialTheme.padding.medium)
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = icon.name
             )
             Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             ) {
                 AluminiumTitleText(
                     title = title,
@@ -64,8 +64,8 @@ fun CardInfoFormatShimmer() {
             .shimmer()
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            modifier = Modifier.padding(MaterialTheme.spacing.medium)
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
+            modifier = Modifier.padding(MaterialTheme.padding.medium)
         ) {
             ShimmerBackground(
                 modifier = Modifier
@@ -73,7 +73,7 @@ fun CardInfoFormatShimmer() {
                     .size(16.dp)
             )
             Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             ) {
                 ShimmerBackground(
                     modifier = Modifier

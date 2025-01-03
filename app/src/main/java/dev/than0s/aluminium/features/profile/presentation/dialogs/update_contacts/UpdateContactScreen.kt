@@ -23,7 +23,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumTitleText
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.Size
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 
 @Composable
 fun UpdateContactScreen(
@@ -48,9 +48,9 @@ private fun UpdateContactScreenContent(
             LoadingShimmerEffect()
         } else {
             Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
                 horizontalAlignment = CenterHorizontally,
-                modifier = Modifier.padding(MaterialTheme.spacing.medium)
+                modifier = Modifier.padding(MaterialTheme.padding.medium)
             ) {
                 AluminiumTitleText(
                     title = "Contact",
@@ -110,12 +110,12 @@ private fun UpdateContactScreenContent(
 @Composable
 private fun LoadingShimmerEffect(){
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
         horizontalAlignment = CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
             .shimmer()
-            .padding(MaterialTheme.spacing.medium)
+            .padding(MaterialTheme.padding.medium)
     ) {
         ShimmerBackground(
             modifier = Modifier

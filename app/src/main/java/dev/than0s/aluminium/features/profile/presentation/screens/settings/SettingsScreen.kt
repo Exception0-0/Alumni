@@ -40,7 +40,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumGroupTitle
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.Size
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -68,7 +68,7 @@ private fun SettingScreenContent(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize()
-            .padding(MaterialTheme.spacing.medium)
+            .padding(MaterialTheme.padding.medium)
             .verticalScroll(rememberScrollState())
     ) {
 
@@ -137,8 +137,8 @@ private fun ProfileCard(
         ) {
             Row(
                 verticalAlignment = CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-                modifier = Modifier.padding(MaterialTheme.spacing.medium)
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
+                modifier = Modifier.padding(MaterialTheme.padding.medium)
             ) {
                 AluminiumAsyncImage(
                     model = userProfile.profileImage,
@@ -148,7 +148,7 @@ private fun ProfileCard(
                         .clip(CircleShape)
                 )
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall)
                 ) {
                     Text(
                         text = "${userProfile.firstName} ${userProfile.lastName}",
@@ -174,8 +174,8 @@ fun ShimmerProfileCard() {
     ) {
         Row(
             verticalAlignment = CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-            modifier = Modifier.padding(MaterialTheme.spacing.medium)
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
+            modifier = Modifier.padding(MaterialTheme.padding.medium)
         ) {
             ShimmerBackground(
                 modifier = Modifier
@@ -183,7 +183,7 @@ fun ShimmerProfileCard() {
                     .clip(CircleShape)
             )
             Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall)
             ) {
                 ShimmerBackground(
                     modifier = Modifier

@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Phone
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,7 +15,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumElevatedButton
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormat
 import dev.than0s.aluminium.core.presentation.composable.CardInfoFormatShimmer
 import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.ui.spacing
+import dev.than0s.aluminium.ui.padding
 
 @Composable
 fun ContactScreen(
@@ -42,7 +41,7 @@ private fun ContactsContent(
         LoadingShimmerEffect()
     } else {
         Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.large),
         ) {
             CardInfoFormat(
                 title = "Email",
@@ -75,7 +74,7 @@ private fun ContactsContent(
 @Composable
 private fun LoadingShimmerEffect() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large)
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.large)
     ) {
         CardInfoFormatShimmer()
         CardInfoFormatShimmer()
