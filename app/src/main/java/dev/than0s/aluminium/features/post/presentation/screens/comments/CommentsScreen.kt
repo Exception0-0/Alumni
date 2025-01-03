@@ -159,7 +159,7 @@ private fun CommentScreenContent(
                                         }
                                         Text(
                                             text = PrettyTimeUtils.getPrettyTime(comment.timestamp),
-                                            fontSize = MaterialTheme.textSize.extraSmall
+                                            fontSize = MaterialTheme.textSize.small
                                         )
                                     }
                                 },

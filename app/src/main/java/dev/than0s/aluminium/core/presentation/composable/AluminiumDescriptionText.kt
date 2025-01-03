@@ -15,8 +15,7 @@ fun AluminiumDescriptionText(
 ) {
     Text(
         text = description,
-        fontWeight = FontWeight.W300,
-        fontSize = MaterialTheme.textSize.small,
+        fontSize = MaterialTheme.textSize.medium,
         modifier = modifier
     )
 }

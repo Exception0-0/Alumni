@@ -77,7 +77,7 @@ private fun RegistrationScreenContent(
         ) {
             AluminiumTitleText(
                 title = registrationFormSectionList[screenState.formIndex].name,
-                fontSize = MaterialTheme.textSize.huge
+                fontSize = MaterialTheme.textSize.medium
             )
 
             registrationFormSectionList[screenState.formIndex].content(screenState, onEvent)

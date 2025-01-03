@@ -39,7 +39,7 @@ fun AluminiumTopAppBar(
             scrollBehavior.state.collapsedFraction
         }
         val titleSize = lerp(
-            start = MaterialTheme.textSize.extraLarge.value,
+            start = MaterialTheme.textSize.large.value,
             stop = MaterialTheme.textSize.gigantic.value,
             fraction = 1f - collapsedFraction
         ).sp

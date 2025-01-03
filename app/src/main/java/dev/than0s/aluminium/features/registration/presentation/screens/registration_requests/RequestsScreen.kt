@@ -107,7 +107,7 @@ private fun RegistrationRequestItem(
         ) {
             AluminiumTitleText(
                 title = request.role.name,
-                fontSize = MaterialTheme.textSize.huge
+                fontSize = MaterialTheme.textSize.medium
             )
             if (request.batchFrom != null) {
                 AluminiumTitleText(
