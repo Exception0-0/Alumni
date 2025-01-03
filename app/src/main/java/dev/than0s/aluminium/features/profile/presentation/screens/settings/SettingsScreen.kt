@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -65,6 +66,7 @@ private fun SettingScreenContent(
 ) {
     Column(
         modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.surface)
             .fillMaxSize()
             .padding(MaterialTheme.spacing.medium)
             .verticalScroll(rememberScrollState())
