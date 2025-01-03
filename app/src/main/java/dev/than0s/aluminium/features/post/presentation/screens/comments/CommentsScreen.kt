@@ -53,6 +53,7 @@ import dev.than0s.aluminium.core.presentation.composable.AluminiumAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.AluminiumDescriptionText
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingIconButton
 import dev.than0s.aluminium.core.presentation.composable.AluminiumLoadingTextButton
+import dev.than0s.aluminium.core.presentation.composable.AluminiumLottieAnimation
 import dev.than0s.aluminium.core.presentation.composable.AluminiumTextField
 import dev.than0s.aluminium.core.presentation.composable.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
@@ -107,60 +108,79 @@ private fun CommentScreenContent(
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.TopCenter)
-                ) {
-                    items(screenState.commentList) { comment ->
-                        if (!userMap.containsKey(comment.userId)) {
-                            onEvent(CommentEvents.GetUser(comment.userId))
+                if (screenState.commentList.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.align(Alignment.Center)
+                        ) {
+                            AluminiumLottieAnimation(
+                                lottieAnimation = R.raw.empty_box_animation,
+                                iteration = 1,
+                                modifier = Modifier
+                                    .size(150.dp)
+                            )
+                            Text(text = "No comments")
                         }
-                        val userProfile = userMap[comment.userId]
-                        ListItem(
-                            leadingContent = {
-                                AluminiumAsyncImage(
-                                    model = userProfile?.profileImage,
-                                    contentDescription = "Profile Image",
-                                    modifier = Modifier
-                                        .size(20.dp)
-                                        .clip(CircleShape),
-                                )
-                            },
-                            headlineContent = {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
-                                ) {
-                                    userProfile?.let {
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.TopCenter)
+                    ) {
+                        items(screenState.commentList) { comment ->
+                            if (!userMap.containsKey(comment.userId)) {
+                                onEvent(CommentEvents.GetUser(comment.userId))
+                            }
+                            val userProfile = userMap[comment.userId]
+                            ListItem(
+                                leadingContent = {
+                                    AluminiumAsyncImage(
+                                        model = userProfile?.profileImage,
+                                        contentDescription = "Profile Image",
+                                        modifier = Modifier
+                                            .size(20.dp)
+                                            .clip(CircleShape),
+                                    )
+                                },
+                                headlineContent = {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
+                                    ) {
+                                        userProfile?.let {
+                                            Text(
+                                                text = "${it.firstName} ${it.lastName}",
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = MaterialTheme.textSize.medium,
+                                            )
+                                        }
                                         Text(
-                                            text = "${it.firstName} ${it.lastName}",
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = MaterialTheme.textSize.medium,
+                                            text = PrettyTimeUtils.getPrettyTime(comment.timestamp),
+                                            fontSize = MaterialTheme.textSize.extraSmall
                                         )
                                     }
-                                    Text(
-                                        text = PrettyTimeUtils.getPrettyTime(comment.timestamp),
-                                        fontSize = MaterialTheme.textSize.extraSmall
+                                },
+                                supportingContent = {
+                                    AluminiumDescriptionText(
+                                        description = comment.message,
+                                    )
+                                },
+                                trailingContent = {
+                                    CommentMenu(
+                                        comment = comment,
+                                        onProfileClick = {
+                                            openScreen(Screen.ProfileScreen(comment.userId))
+                                        },
+                                        onDeleteClick = {
+                                            onEvent(CommentEvents.ShowCommentDeleteDialog(comment.id))
+                                        }
                                     )
                                 }
-                            },
-                            supportingContent = {
-                                AluminiumDescriptionText(
-                                    description = comment.message,
-                                )
-                            },
-                            trailingContent = {
-                                CommentMenu(
-                                    comment = comment,
-                                    onProfileClick = {
-                                        openScreen(Screen.ProfileScreen(comment.userId))
-                                    },
-                                    onDeleteClick = {
-                                        onEvent(CommentEvents.ShowCommentDeleteDialog(comment.id))
-                                    }
-                                )
-                            }
-                        )
+                            )
+                        }
                     }
                 }
                 AluminiumTextField(

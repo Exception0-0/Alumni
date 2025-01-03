@@ -11,7 +11,8 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun AluminiumLottieAnimation(
-    lottieAnimation:Int,
+    lottieAnimation: Int,
+    iteration: Int = LottieConstants.IterateForever,
     modifier: Modifier = Modifier,
 ) {
     val preloaderLottieComposition by rememberLottieComposition(
@@ -20,7 +21,7 @@ fun AluminiumLottieAnimation(
 
     val preloaderProgress by animateLottieCompositionAsState(
         preloaderLottieComposition,
-        iterations = LottieConstants.IterateForever,
+        iterations = iteration,
         isPlaying = true
     )
 
