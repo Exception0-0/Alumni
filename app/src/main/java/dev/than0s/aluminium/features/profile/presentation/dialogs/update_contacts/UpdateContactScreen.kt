@@ -1,7 +1,9 @@
 package dev.than0s.aluminium.features.profile.presentation.dialogs.update_contacts
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.MailOutline
@@ -23,6 +25,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredText
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextField
 import dev.than0s.aluminium.core.presentation.utils.asString
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -47,9 +50,11 @@ private fun UpdateContactScreenContent(
         if (screenState.isLoading) {
             LoadingShimmerEffect()
         } else {
-            PreferredColumn {
+            PreferredColumn(
+                modifier = Modifier.padding(MaterialTheme.padding.medium)
+            ) {
                 Text(
-                    text = "Contact",
+                    text = "Update Contact",
                     fontSize = MaterialTheme.textSize.large,
                     fontWeight = FontWeight.Bold
                 )
@@ -130,22 +135,28 @@ private fun UpdateContactScreenContent(
 private fun LoadingShimmerEffect() {
     PreferredColumn(
         modifier = Modifier
-            .fillMaxWidth()
+            .padding(MaterialTheme.padding.medium)
             .shimmer()
     ) {
-        ShimmerTextField()
-        ShimmerTextField()
-        ShimmerTextField()
-        ShimmerTextField()
+        ShimmerTextField(
+            modifier = Modifier.fillMaxWidth()
+        )
+        ShimmerTextField(
+            modifier = Modifier.fillMaxWidth()
+        )
+        ShimmerTextField(
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
 private fun UpdateContactScreenPreview() {
-    UpdateContactScreenContent(
-        screenState = UpdateContactScreenState(),
-        onEvent = {},
-        popScreen = {}
-    )
+//    UpdateContactScreenContent(
+//        screenState = UpdateContactScreenState(),
+//        onEvent = {},
+//        popScreen = {}
+//    )
+    LoadingShimmerEffect()
 }
