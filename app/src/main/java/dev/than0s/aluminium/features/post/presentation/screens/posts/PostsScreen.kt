@@ -169,7 +169,7 @@ private fun PostsScreenContent(
                                 )
                             )
                         },
-                        onImageClick = {
+                        onPostImageClick = {
                             onEvent(
                                 PostsEvents.ShowFullScreenImage(post.file)
                             )
@@ -190,7 +190,7 @@ fun PostBox(
     user: User?,
     likeStatus: Like?,
     onCommentClick: () -> Unit,
-    onImageClick: () -> Unit,
+    onPostImageClick: () -> Unit,
     onProfileClick: () -> Unit,
     onLikeClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -210,7 +210,7 @@ fun PostBox(
             contentDescription = "${user?.firstName} ${user?.lastName}",
             modifier = Modifier
                 .height(MaterialTheme.postHeight.default)
-                .clickable(onClick = onImageClick)
+                .clickable(onClick = onPostImageClick)
         )
 
         BottomSection(
