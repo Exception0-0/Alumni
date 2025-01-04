@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.SubcomposeAsyncImage
 import com.valentinilk.shimmer.shimmer
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

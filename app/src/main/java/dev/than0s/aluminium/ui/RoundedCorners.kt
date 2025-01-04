@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 
 data class RoundedCorners(
     val default: Dp = 8.dp,
+    val none: Dp = 0.dp,
     val verySmall: Dp = 2.dp,
     val extraSmall: Dp = 4.dp,
     val small: Dp = 6.dp,
