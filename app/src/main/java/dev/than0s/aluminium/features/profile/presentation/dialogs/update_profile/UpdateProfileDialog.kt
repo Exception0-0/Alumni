@@ -7,8 +7,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -34,7 +36,9 @@ import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileI
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextField
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.coverHeight
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
+import dev.than0s.aluminium.ui.roundedCorners
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -82,9 +86,11 @@ private fun UpdateProfileDialogContent(
         if (screenState.isLoading) {
             LoadingShimmerEffect()
         } else {
-            PreferredColumn {
+            PreferredColumn(
+                modifier = Modifier.padding(MaterialTheme.padding.medium)
+            ) {
                 Text(
-                    text = "Profile",
+                    text = "Update Profile",
                     fontSize = MaterialTheme.textSize.large,
                     fontWeight = FontWeight.Bold
                 )
@@ -93,6 +99,7 @@ private fun UpdateProfileDialogContent(
                     contentDescription = "user cover image",
                     modifier = Modifier
                         .height(MaterialTheme.coverHeight.default)
+                        .clip(RoundedCornerShape(MaterialTheme.roundedCorners.default))
                         .clickable(enabled = !screenState.isUpdating) {
                             imageSelectionState[COVER_IMAGE] = true
                             pickMedia.launch(
@@ -181,6 +188,7 @@ private fun UpdateProfileDialogContent(
 private fun LoadingShimmerEffect() {
     PreferredColumn(
         modifier = Modifier
+            .padding(MaterialTheme.padding.medium)
             .shimmer()
     ) {
         ShimmerCover()
@@ -189,20 +197,27 @@ private fun LoadingShimmerEffect() {
                 size = MaterialTheme.profileSize.large
             )
             PreferredColumn {
-                ShimmerTextField()
-                ShimmerTextField()
+                ShimmerTextField(
+                    modifier = Modifier.fillMaxWidth()
+                )
+                ShimmerTextField(
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
-        ShimmerTextField()
+        ShimmerTextField(
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
 private fun UpdateProfileDialogPreview() {
-    UpdateProfileDialogContent(
-        screenState = UpdateProfileDialogState(),
-        onEvent = {},
-        popScreen = {}
-    )
+//    UpdateProfileDialogContent(
+//        screenState = UpdateProfileDialogState(),
+//        onEvent = {},
+//        popScreen = {}
+//    )
+    LoadingShimmerEffect()
 }

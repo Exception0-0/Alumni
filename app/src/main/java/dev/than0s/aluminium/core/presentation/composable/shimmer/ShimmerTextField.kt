@@ -6,9 +6,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ShimmerTextField(){
+fun ShimmerTextField(
+    modifier: Modifier = Modifier
+) {
     ShimmerBackground(
-        modifier = Modifier
+        modifier = modifier
             .height(54.dp)
     )
 }
