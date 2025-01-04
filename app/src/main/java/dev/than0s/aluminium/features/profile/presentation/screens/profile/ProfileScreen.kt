@@ -14,9 +14,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Contacts
+import androidx.compose.material.icons.filled.GridOn
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.AccountBox
+import androidx.compose.material.icons.outlined.Contacts
+import androidx.compose.material.icons.outlined.GridOn
 import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
@@ -25,6 +29,8 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +39,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.journiapp.pinchtozoom.PinchToZoom
 import com.journiapp.pinchtozoom.PinchToZoomRoot
@@ -170,12 +179,20 @@ private fun ProfileTabRow(
     openScreen: (Screen) -> Unit,
 ) {
     val navController = rememberNavController()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    LaunchedEffect(key1 = currentBackStackEntry) {
+        onEvent(
+            ProfileEvents.OnTabChanged(
+                getSelectedIndexOfTabRow(currentBackStackEntry?.destination)
+            )
+        )
+    }
 
     TabRow(
-        selectedTabIndex = 0
+        selectedTabIndex = screenState.tabRowSelectedIndex
     ) {
         tabRowItemList.forEachIndexed { index, tabItem ->
-            val isSelected = index == 0
+            val isSelected = index == screenState.tabRowSelectedIndex
             Tab(
                 selected = isSelected,
                 onClick = {
@@ -243,6 +260,16 @@ private fun ProfileAndCoverShower(
     }
 }
 
+private fun getSelectedIndexOfTabRow(destination: NavDestination?): Int {
+    return when {
+        destination == null -> 0
+        destination.hasRoute<Screen.ProfileTabScreen.AboutScreen>() -> 0
+        destination.hasRoute<Screen.ProfileTabScreen.ContactScreen>() -> 1
+        destination.hasRoute<Screen.ProfileTabScreen.PostsScreen>() -> 2
+        else -> 0
+    }
+}
+
 data class TabItem(
     val title: String,
     val selectedIcon: ImageVector,
@@ -263,8 +290,8 @@ private val tabRowItemList = listOf(
     ),
     TabItem(
         title = Screen.ProfileTabScreen.ContactScreen("").name,
-        selectedIcon = Icons.Filled.AccountBox,
-        unselectedIcon = Icons.Outlined.AccountBox,
+        selectedIcon = Icons.Filled.Contacts,
+        unselectedIcon = Icons.Outlined.Contacts,
         screen = { userId ->
             Screen.ProfileTabScreen.ContactScreen(
                 userId = userId
@@ -273,8 +300,8 @@ private val tabRowItemList = listOf(
     ),
     TabItem(
         title = Screen.ProfileTabScreen.PostsScreen("").name,
-        selectedIcon = Icons.Filled.GridView,
-        unselectedIcon = Icons.Outlined.GridView,
+        selectedIcon = Icons.Filled.GridOn,
+        unselectedIcon = Icons.Outlined.GridOn,
         screen = { userId ->
             Screen.ProfileTabScreen.PostsScreen(
                 userId = userId
