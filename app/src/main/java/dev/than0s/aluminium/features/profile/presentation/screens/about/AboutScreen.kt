@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerIcons
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextHeight
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
@@ -125,33 +126,7 @@ private fun LoadingShimmerEffect() {
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
     ) {
         for (i in 1..3) {
-            ListItem(
-                headlineContent = {
-                    ShimmerText(
-                        height = ShimmerTextHeight.medium,
-                        width = ShimmerTextWidth.small
-                    )
-                },
-                supportingContent = {
-                    PreferredColumn(
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        VerticalDivider(
-                            thickness = 0.dp,
-                            modifier = Modifier.height(MaterialTheme.padding.extraSmall)
-                        )
-                        ShimmerText(
-                            height = ShimmerTextHeight.medium,
-                            width = ShimmerTextWidth.medium
-                        )
-                    }
-                },
-                leadingContent = {
-                    ShimmerIcons()
-                },
-                modifier = Modifier.shimmer()
-            )
+            ShimmerListItem()
         }
     }
 }

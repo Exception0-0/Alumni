@@ -3,13 +3,10 @@ package dev.than0s.aluminium.features.post.presentation.screens.comments
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -19,8 +16,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Report
-import androidx.compose.material.icons.filled.WarningAmber
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,7 +24,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,7 +38,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Comment
@@ -53,20 +46,13 @@ import dev.than0s.aluminium.core.presentation.composable.lottie_animation.Animat
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
-import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
-import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerIcons
-import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileImage
-import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
-import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.padding
-import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -269,32 +255,9 @@ private fun CommentMenu(
 private fun ShimmerList() {
     Column {
         for (i in 1..10) {
-            CommentPreviewShimmer()
+            ShimmerListItem()
         }
     }
-}
-
-@Composable
-private fun CommentPreviewShimmer() {
-    ListItem(
-        leadingContent = {
-            ShimmerProfileImage(
-                size = MaterialTheme.profileSize.small
-            )
-        },
-        headlineContent = {
-            ShimmerText()
-        },
-        supportingContent = {
-            ShimmerText(
-                width = ShimmerTextWidth.high
-            )
-        },
-        trailingContent = {
-            ShimmerIcons()
-        },
-        modifier = Modifier.shimmer()
-    )
 }
 
 @Preview(showSystemUi = true)
@@ -306,5 +269,4 @@ private fun CommentScreenPreview() {
 //        onEvent = {},
 //        openScreen = {}
 //    )
-    CommentPreviewShimmer()
 }
