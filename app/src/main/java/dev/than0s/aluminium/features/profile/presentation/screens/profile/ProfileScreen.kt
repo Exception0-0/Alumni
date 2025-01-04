@@ -1,5 +1,7 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,16 +29,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.journiapp.pinchtozoom.PinchToZoom
+import com.journiapp.pinchtozoom.PinchToZoomRoot
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicator
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicatorSize
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.replace
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
@@ -65,6 +71,28 @@ private fun ProfileScreenContent(
     onEvent: (ProfileEvents) -> Unit,
     openScreen: (Screen) -> Unit
 ) {
+    if (screenState.fullScreenImage != null) {
+        PreferredFullScreen(
+            contentDescription = "Image",
+            onDismissRequest = {
+                onEvent(ProfileEvents.DismissFullScreenImage)
+            },
+            content = {
+                PinchToZoomRoot {
+                    PinchToZoom(
+                        modifier = Modifier.align(Alignment.Center),
+                        showOriginal = true
+                    ) {
+                        PreferredAsyncImage(
+                            model = screenState.fullScreenImage,
+                            contentScale = ContentScale.Fit,
+                            contentDescription = "Post Image",
+                        )
+                    }
+                }
+            }
+        )
+    }
     if (screenState.isLoading) {
         Box(
             modifier = Modifier.fillMaxSize()
@@ -81,7 +109,10 @@ private fun ProfileScreenContent(
                 .verticalScroll(rememberScrollState())
         ) {
             ProfileAndCoverShower(
-                screenState = screenState
+                screenState = screenState,
+                onImageClick = { uri: Uri ->
+                    onEvent(ProfileEvents.ShowFullScreenImage(uri))
+                }
             )
             PreferredColumn(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.verySmall),
@@ -181,7 +212,8 @@ private fun ProfileTabRow(
 
 @Composable
 private fun ProfileAndCoverShower(
-    screenState: ProfileState
+    screenState: ProfileState,
+    onImageClick: (Uri) -> Unit,
 ) {
     Box {
         PreferredAsyncImage(
@@ -190,6 +222,9 @@ private fun ProfileAndCoverShower(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(MaterialTheme.coverHeight.default)
+                .clickable {
+                    onImageClick(screenState.user.coverImage)
+                }
         )
         PreferredAsyncImage(
             model = screenState.user.profileImage,
@@ -201,6 +236,9 @@ private fun ProfileAndCoverShower(
                 )
                 .size(MaterialTheme.profileSize.large)
                 .clip(CircleShape)
+                .clickable {
+                    onImageClick(screenState.user.profileImage)
+                }
         )
     }
 }

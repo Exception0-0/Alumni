@@ -17,8 +17,8 @@ fun RemoteUser.toUser(): User = User(
     firstName = firstName,
     lastName = lastName,
     bio = bio,
-    profileImage = profileImageUri?.let { Uri.parse(it) },
-    coverImage = coverImageUri?.let { Uri.parse(it) }
+    profileImage = profileImageUri.let { Uri.parse(it) },
+    coverImage = coverImageUri.let { Uri.parse(it) }
 )
 
 data class RemoteUser(
@@ -27,6 +27,6 @@ data class RemoteUser(
     val firstName: String = "",
     val lastName: String = "",
     val bio: String = "",
-    val profileImageUri: String? = null,
-    val coverImageUri: String? = null
+    val profileImageUri: String = "",
+    val coverImageUri: String = ""
 )

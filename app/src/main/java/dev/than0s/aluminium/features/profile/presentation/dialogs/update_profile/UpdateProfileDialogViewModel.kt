@@ -113,13 +113,13 @@ class UpdateProfileDialogViewModel @Inject constructor(
         )
     }
 
-    private fun onProfileImageChange(image: Uri?) {
+    private fun onProfileImageChange(image: Uri) {
         screenState = screenState.copy(
             userProfile = screenState.userProfile.copy(profileImage = image)
         )
     }
 
-    private fun onCoverImageChange(image: Uri?) {
+    private fun onCoverImageChange(image: Uri) {
         screenState = screenState.copy(
             userProfile = screenState.userProfile.copy(coverImage = image)
         )

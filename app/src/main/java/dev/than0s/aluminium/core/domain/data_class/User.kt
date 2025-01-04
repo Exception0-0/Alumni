@@ -4,8 +4,8 @@ import android.net.Uri
 
 data class User(
     val id: String = "",
-    val profileImage: Uri? = null,
-    val coverImage: Uri? = null,
+    val profileImage: Uri = Uri.EMPTY,
+    val coverImage: Uri = Uri.EMPTY,
     val firstName: String = "",
     val lastName: String = "",
     val bio: String = "",

@@ -37,14 +37,8 @@ class ProfileDataSourceImple @Inject constructor(
 
     override suspend fun setUserProfile(user: User) {
         try {
-
-            val profileImageUri = user.profileImage?.let {
-                uploadProfileImage(it)
-            }
-
-            val coverImageUri = user.coverImage?.let {
-                uploadCoverImage(it)
-            }
+            val profileImageUri = uploadProfileImage(user.profileImage)
+            val coverImageUri = uploadCoverImage(user.coverImage)
 
             store.collection(PROFILE)
                 .document(auth.currentUser!!.uid)

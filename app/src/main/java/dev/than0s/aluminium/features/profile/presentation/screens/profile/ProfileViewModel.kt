@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -55,6 +56,14 @@ class ProfileViewModel @Inject constructor(
         screenState = screenState.copy(tabRowSelectedIndex = tabIndex)
     }
 
+    private fun showFullScreenImage(uri: Uri) {
+        screenState = screenState.copy(fullScreenImage = uri)
+    }
+
+    private fun dismissFullScreenImage() {
+        screenState = screenState.copy(fullScreenImage = null)
+    }
+
     fun onEvent(event: ProfileEvents) {
         when (event) {
             is ProfileEvents.OnLoadProfile -> {
@@ -63,6 +72,14 @@ class ProfileViewModel @Inject constructor(
 
             is ProfileEvents.OnTabChanged -> {
                 onTabChanged(event.tabIndex)
+            }
+
+            is ProfileEvents.DismissFullScreenImage -> {
+                dismissFullScreenImage()
+            }
+
+            is ProfileEvents.ShowFullScreenImage -> {
+                showFullScreenImage(event.uri)
             }
         }
     }
