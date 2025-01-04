@@ -118,9 +118,6 @@ dependencies {
     // remember preference
     implementation(libs.compose.remember.preference)
 
-    // dynamic theme
-    implementation(libs.dynamictheme)
-
     // pretty time
     implementation (libs.prettytime)
 }
