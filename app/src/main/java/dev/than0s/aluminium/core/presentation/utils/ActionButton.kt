@@ -9,7 +9,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumFloatingActionButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
 
 @Composable
 fun AluminiumActionButton(
@@ -21,7 +21,7 @@ fun AluminiumActionButton(
         destination = destination,
         openScreen = navController::openScreen
     )?.let {
-        AluminiumFloatingActionButton(
+        PreferredFloatingActionButton(
             onClick = it.onClick,
             content = it.content
         )

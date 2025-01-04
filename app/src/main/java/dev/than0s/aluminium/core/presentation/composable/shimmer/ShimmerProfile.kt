@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
-import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
 import dev.than0s.aluminium.ui.profileSize
 
 @Composable

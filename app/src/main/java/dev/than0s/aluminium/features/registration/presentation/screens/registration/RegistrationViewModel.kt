@@ -118,6 +118,18 @@ class RegistrationViewModel @Inject constructor(
         )
     }
 
+    private fun onRoleClick() {
+        screenState = screenState.copy(
+            roleExpanded = !screenState.roleExpanded
+        )
+    }
+
+    private fun onCourseClick() {
+        screenState = screenState.copy(
+            courseExpanded = !screenState.courseExpanded
+        )
+    }
+
     private fun onRegisterClick(
         onSuccess: () -> Unit
     ) {
@@ -176,6 +188,8 @@ class RegistrationViewModel @Inject constructor(
             is RegistrationEvents.OnRegisterClick -> onRegisterClick(event.onSuccess)
             is RegistrationEvents.OnPreviousClick -> onPreviousClick()
             is RegistrationEvents.OnNextClick -> onNextClick()
+            is RegistrationEvents.OnCourseClick -> onCourseClick()
+            is RegistrationEvents.OnRoleClick -> onRoleClick()
         }
     }
 }

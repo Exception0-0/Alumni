@@ -5,41 +5,36 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerCover
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileImage
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextField
 import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.ui.Size
-import dev.than0s.aluminium.ui.roundedCorners
-import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.coverHeight
+import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -83,28 +78,21 @@ private fun UpdateProfileDialogContent(
         }
     }
 
-    Surface(
-        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
-    ) {
+    PreferredSurface {
         if (screenState.isLoading) {
             LoadingShimmerEffect()
         } else {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(MaterialTheme.padding.medium)
-            ) {
+            PreferredColumn {
                 Text(
                     text = "Profile",
-                    fontSize = MaterialTheme.textSize.gigantic,
-                    fontWeight = FontWeight.W900
+                    fontSize = MaterialTheme.textSize.large,
+                    fontWeight = FontWeight.Bold
                 )
-                AluminiumAsyncImage(
+                PreferredAsyncImage(
                     model = screenState.userProfile.coverImage,
                     contentDescription = "user cover image",
-                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .height(100.dp)
+                        .height(MaterialTheme.coverHeight.default)
                         .clickable(enabled = !screenState.isUpdating) {
                             imageSelectionState[COVER_IMAGE] = true
                             pickMedia.launch(
@@ -114,17 +102,13 @@ private fun UpdateProfileDialogContent(
                             )
                         }
                 )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-                ) {
-
-                    AluminiumAsyncImage(
+                PreferredRow {
+                    PreferredAsyncImage(
                         model = screenState.userProfile.profileImage,
                         contentDescription = "user profile image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(100.dp)
+                            .size(MaterialTheme.profileSize.large)
                             .clip(CircleShape)
                             .clickable(enabled = !screenState.isUpdating) {
                                 imageSelectionState[PROFILE_IMAGE] = true
@@ -135,10 +119,8 @@ private fun UpdateProfileDialogContent(
                                 )
                             }
                     )
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium)
-                    ) {
-                        AluminiumTextField(
+                    PreferredColumn {
+                        PreferredTextField(
                             value = screenState.userProfile.firstName,
                             onValueChange = {
                                 onEvent(UpdateProfileDialogEvents.OnFirstNameChanged(it))
@@ -147,7 +129,7 @@ private fun UpdateProfileDialogContent(
                             supportingText = screenState.firstNameError?.message?.asString(),
                             placeholder = "First Name",
                         )
-                        AluminiumTextField(
+                        PreferredTextField(
                             value = screenState.userProfile.lastName,
                             enable = !screenState.isUpdating,
                             onValueChange = {
@@ -158,7 +140,7 @@ private fun UpdateProfileDialogContent(
                         )
                     }
                 }
-                AluminiumTextField(
+                PreferredTextField(
                     value = screenState.userProfile.bio,
                     onValueChange = {
                         onEvent(UpdateProfileDialogEvents.OnBioChanged(it))
@@ -168,16 +150,18 @@ private fun UpdateProfileDialogContent(
                     placeholder = "Bio",
                     modifier = Modifier.fillMaxWidth()
                 )
-                Row(
+                PreferredRow(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(onClick = popScreen) {
+                    TextButton(
+                        onClick = popScreen,
+                        enabled = !screenState.isUpdating
+                    ) {
                         Text(text = "Cancel")
                     }
-
-                    AluminiumLoadingTextButton(
-                        label = "Update",
+                    PreferredTextButton(
+                        text = "Update",
                         isLoading = screenState.isUpdating,
                         onClick = {
                             onEvent(
@@ -195,53 +179,21 @@ private fun UpdateProfileDialogContent(
 
 @Composable
 private fun LoadingShimmerEffect() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    PreferredColumn(
         modifier = Modifier
             .shimmer()
-            .padding(MaterialTheme.padding.medium)
     ) {
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.Size.extraSmall)
-                .width(MaterialTheme.Size.medium)
-        )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth()
-        )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-        ) {
-
-            ShimmerBackground(
-                modifier = Modifier
-                    .clip(shape = CircleShape)
-                    .size(100.dp)
+        ShimmerCover()
+        PreferredRow {
+            ShimmerProfileImage(
+                size = MaterialTheme.profileSize.large
             )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium)
-            ) {
-                ShimmerBackground(
-                    modifier = Modifier
-                        .height(MaterialTheme.Size.small)
-                        .width(MaterialTheme.Size.large)
-                )
-                ShimmerBackground(
-                    modifier = Modifier
-                        .height(MaterialTheme.Size.small)
-                        .width(MaterialTheme.Size.large)
-                )
+            PreferredColumn {
+                ShimmerTextField()
+                ShimmerTextField()
             }
         }
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.Size.small)
-                .fillMaxSize()
-        )
+        ShimmerTextField()
     }
 }
 
@@ -253,5 +205,4 @@ private fun UpdateProfileDialogPreview() {
         onEvent = {},
         popScreen = {}
     )
-//    LoadingShimmerEffect()
 }

@@ -4,6 +4,7 @@ import dev.than0s.aluminium.core.domain.error.Error
 
 data class SignInState(
     val isLoading: Boolean = false,
+    val isPasswordVisible: Boolean = false,
     val email: String = "",
     val password: String = "",
     val emailError: Error? = null,

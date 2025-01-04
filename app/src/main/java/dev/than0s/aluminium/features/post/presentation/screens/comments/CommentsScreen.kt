@@ -49,18 +49,24 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumDescriptionText
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingIconButton
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLottieAnimation
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.lottie_animation.AnimationNoData
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerIcons
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileImage
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -85,8 +91,10 @@ private fun CommentScreenContent(
     openScreen: (Screen) -> Unit,
 ) {
     if (screenState.deleteCommentId != null) {
-        CommentDeleteDialog(
-            isDeleting = screenState.isDeleting,
+        PreferredWarningDialog(
+            title = stringResource(R.string.comment_delete),
+            description = stringResource(R.string.delete_alert_message),
+            isLoading = screenState.isDeleting,
             onDismissRequest = {
                 onEvent(CommentEvents.DismissCommentDeleteDialog)
             },
@@ -105,107 +113,88 @@ private fun CommentScreenContent(
         if (screenState.isLoading) {
             ShimmerList()
         } else {
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                if (screenState.commentList.isEmpty()) {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.align(Alignment.Center)
-                        ) {
-                            AluminiumLottieAnimation(
-                                lottieAnimation = R.raw.empty_box_animation,
-                                iteration = 1,
-                                modifier = Modifier
-                                    .size(150.dp)
-                            )
-                            Text(text = "No comments")
+            if (screenState.commentList.isEmpty()) {
+                AnimationNoData(text = "No comments")
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    items(screenState.commentList) { comment ->
+                        if (!userMap.containsKey(comment.userId)) {
+                            onEvent(CommentEvents.GetUser(comment.userId))
                         }
-                    }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.TopCenter)
-                    ) {
-                        items(screenState.commentList) { comment ->
-                            if (!userMap.containsKey(comment.userId)) {
-                                onEvent(CommentEvents.GetUser(comment.userId))
-                            }
-                            val userProfile = userMap[comment.userId]
-                            ListItem(
-                                leadingContent = {
-                                    AluminiumAsyncImage(
-                                        model = userProfile?.profileImage,
-                                        contentDescription = "Profile Image",
-                                        modifier = Modifier
-                                            .size(20.dp)
-                                            .clip(CircleShape),
-                                    )
-                                },
-                                headlineContent = {
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)
-                                    ) {
-                                        userProfile?.let {
-                                            Text(
-                                                text = "${it.firstName} ${it.lastName}",
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = MaterialTheme.textSize.medium,
-                                            )
-                                        }
+                        val userProfile = userMap[comment.userId]
+                        ListItem(
+                            leadingContent = {
+                                PreferredAsyncImage(
+                                    model = userProfile?.profileImage,
+                                    contentDescription = "Profile Image",
+                                    modifier = Modifier
+                                        .size(20.dp)
+                                        .clip(CircleShape),
+                                )
+                            },
+                            headlineContent = {
+                                PreferredRow(
+                                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)
+                                ) {
+                                    userProfile?.let {
                                         Text(
-                                            text = PrettyTimeUtils.getPrettyTime(comment.timestamp),
-                                            fontSize = MaterialTheme.textSize.small
+                                            text = "${it.firstName} ${it.lastName}",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = MaterialTheme.textSize.medium,
                                         )
                                     }
-                                },
-                                supportingContent = {
-                                    AluminiumDescriptionText(
-                                        description = comment.message,
-                                    )
-                                },
-                                trailingContent = {
-                                    CommentMenu(
-                                        comment = comment,
-                                        onProfileClick = {
-                                            openScreen(Screen.ProfileScreen(comment.userId))
-                                        },
-                                        onDeleteClick = {
-                                            onEvent(CommentEvents.ShowCommentDeleteDialog(comment.id))
-                                        }
+                                    Text(
+                                        text = PrettyTimeUtils.getPrettyTime(comment.timestamp),
+                                        fontSize = MaterialTheme.textSize.small
                                     )
                                 }
-                            )
-                        }
+                            },
+                            supportingContent = {
+                                Text(
+                                    text = comment.message,
+                                    fontSize = MaterialTheme.textSize.medium
+                                )
+                            },
+                            trailingContent = {
+                                CommentMenu(
+                                    comment = comment,
+                                    onProfileClick = {
+                                        openScreen(Screen.ProfileScreen(comment.userId))
+                                    },
+                                    onDeleteClick = {
+                                        onEvent(CommentEvents.ShowCommentDeleteDialog(comment.id))
+                                    }
+                                )
+                            }
+                        )
                     }
                 }
-                AluminiumTextField(
-                    value = screenState.comment.message,
-                    placeholder = "comment message...",
-                    onValueChange = {
-                        onEvent(CommentEvents.OnCommentChanged(it))
-                    },
-                    enable = !screenState.isCommentAdding,
-                    supportingText = screenState.commentError?.message?.asString(),
-                    trailingIcon = {
-                        AluminiumLoadingIconButton(
-                            icon = Icons.AutoMirrored.Filled.Send,
-                            circularProgressIndicatorState = screenState.isCommentAdding,
-                            onClick = {
-                                onEvent(CommentEvents.OnAddCommentClick)
-                            },
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(MaterialTheme.padding.small)
-                        .align(Alignment.BottomCenter)
-                )
             }
+            PreferredTextField(
+                value = screenState.comment.message,
+                placeholder = "comment message...",
+                onValueChange = {
+                    onEvent(CommentEvents.OnCommentChanged(it))
+                },
+                enable = !screenState.isCommentAdding,
+                supportingText = screenState.commentError?.message?.asString(),
+                trailingIcon = {
+                    PreferredIconButton(
+                        icon = Icons.AutoMirrored.Filled.Send,
+                        isLoading = screenState.isCommentAdding,
+                        onClick = {
+                            onEvent(CommentEvents.OnAddCommentClick)
+                        },
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.padding.small)
+                    .align(Alignment.BottomCenter)
+            )
         }
     }
 }
@@ -277,46 +266,6 @@ private fun CommentMenu(
 }
 
 @Composable
-private fun CommentDeleteDialog(
-    isDeleting: Boolean,
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
-) {
-    AlertDialog(
-        icon = {
-            Icon(Icons.Default.WarningAmber, contentDescription = "warning")
-        },
-        title = {
-            Text(text = stringResource(R.string.comment_delete))
-        },
-        text = {
-            Text(text = stringResource(R.string.delete_alert_message))
-        },
-        onDismissRequest = {},
-        confirmButton = {
-            AluminiumLoadingTextButton(
-                label = "Confirm",
-                isLoading = isDeleting,
-                onClick = {
-                    onConfirmation()
-                }
-            )
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                },
-                content = {
-                    Text("Dismiss")
-                },
-                enabled = !isDeleting
-            )
-        }
-    )
-}
-
-@Composable
 private fun ShimmerList() {
     Column {
         for (i in 1..10) {
@@ -329,31 +278,20 @@ private fun ShimmerList() {
 private fun CommentPreviewShimmer() {
     ListItem(
         leadingContent = {
-            ShimmerBackground(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(16.dp)
+            ShimmerProfileImage(
+                size = MaterialTheme.profileSize.small
             )
         },
         headlineContent = {
-            ShimmerBackground(
-                modifier = Modifier
-                    .height(16.dp)
-                    .width(MaterialTheme.Size.medium)
-            )
+            ShimmerText()
         },
         supportingContent = {
-            ShimmerBackground(
-                modifier = Modifier
-                    .height(16.dp)
-                    .width(MaterialTheme.Size.large)
+            ShimmerText(
+                width = ShimmerTextWidth.high
             )
         },
         trailingContent = {
-            ShimmerBackground(
-                modifier = Modifier
-                    .size(26.dp)
-            )
+            ShimmerIcons()
         },
         modifier = Modifier.shimmer()
     )

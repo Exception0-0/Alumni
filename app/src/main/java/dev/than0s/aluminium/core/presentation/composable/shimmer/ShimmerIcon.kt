@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
 
 @Composable
 fun ShimmerIcons() {

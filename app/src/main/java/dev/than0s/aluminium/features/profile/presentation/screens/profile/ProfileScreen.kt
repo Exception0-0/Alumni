@@ -1,9 +1,7 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,21 +27,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import dev.than0s.aluminium.core.currentUserId
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumDescriptionText
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumElevatedButton
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminumCircularLoading
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicator
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicatorSize
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.replace
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
 import dev.than0s.aluminium.ui.coverHeight
 import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -67,48 +66,51 @@ private fun ProfileScreenContent(
     openScreen: (Screen) -> Unit
 ) {
     if (screenState.isLoading) {
-        AluminumCircularLoading()
+        PreferredCircularProgressIndicator(
+            size = PreferredCircularProgressIndicatorSize.default
+        )
     } else {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+        PreferredColumn(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
             ProfileAndCoverShower(
                 screenState = screenState
             )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            PreferredColumn(
                 modifier = Modifier
-                    .padding(
-                        horizontal = MaterialTheme.padding.medium
-                    )
+                    .padding(horizontal = MaterialTheme.padding.medium)
             ) {
-                AluminiumTitleText(
-                    title = "${screenState.user.firstName} ${screenState.user.lastName}",
+                Text(
+                    text = "${screenState.user.firstName} ${screenState.user.lastName}",
                     fontSize = MaterialTheme.textSize.large,
+                    fontWeight = FontWeight.Bold
                 )
-                AluminiumDescriptionText(
-                    description = screenState.user.bio,
+                Text(
+                    text = screenState.user.bio,
+                    fontSize = MaterialTheme.textSize.medium
                 )
 
                 if (userId == currentUserId) {
-                    AluminiumElevatedButton(
-                        label = "Edit Profile",
+                    PreferredFilledButton(
                         onClick = {
                             openScreen(Screen.UpdateProfileDialog)
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        content = {
+                            Text(text = "Edit Profile")
+                        }
                     )
                 } else {
-                    AluminiumElevatedButton(
-                        label = "Message",
+                    PreferredFilledButton(
                         onClick = {
                             openScreen(Screen.ChatDetailScreen(userId))
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        content = {
+                            Text(text = "Message")
+                        }
                     )
                 }
 
@@ -173,32 +175,28 @@ private fun ProfileTabRow(
 private fun ProfileAndCoverShower(
     screenState: ProfileState
 ) {
-    Box {
-        AluminiumAsyncImage(
+    PreferredColumn(
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Top
+    ) {
+        PreferredAsyncImage(
             model = screenState.user.coverImage,
             contentDescription = "Cover Image",
-            onTapFullScreen = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(MaterialTheme.coverHeight.default)
-                .align(Alignment.TopCenter)
         )
-        Box(
-            modifier = Modifier.padding(
-                top = 84.dp,
-                start = MaterialTheme.padding.medium
-            )
-        ) {
-            AluminiumAsyncImage(
-                model = screenState.user.profileImage,
-                onTapFullScreen = true,
-                contentDescription = "Profile Image",
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .align(Alignment.TopStart)
-            )
-        }
+        PreferredAsyncImage(
+            model = screenState.user.profileImage,
+            contentDescription = "Profile Image",
+            modifier = Modifier
+                .size(MaterialTheme.profileSize.large)
+                .clip(CircleShape)
+                .padding(
+                    start = MaterialTheme.padding.small,
+                    top = -MaterialTheme.profileSize.large / 2
+                )
+        )
     }
 }
 

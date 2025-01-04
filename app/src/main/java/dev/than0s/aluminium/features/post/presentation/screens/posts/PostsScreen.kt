@@ -1,17 +1,14 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -25,10 +22,8 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Report
 import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.ThumbUp
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,7 +33,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,7 +45,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
@@ -59,15 +52,21 @@ import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumDescriptionText
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerIcons
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileImage
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.postHeight
 import dev.than0s.aluminium.ui.profileSize
+import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun PostsScreen(
@@ -93,8 +92,10 @@ private fun PostsScreenContent(
     openScreen: (Screen) -> Unit,
 ) {
     if (screenState.deletePostId != null) {
-        PostDeleteDialog(
-            isDeleting = screenState.isDeleting,
+        PreferredWarningDialog(
+            title = stringResource(R.string.post_delete),
+            description = stringResource(R.string.delete_alert_message),
+            isLoading = screenState.isDeleting,
             onDismissRequest = {
                 onEvent(PostsEvents.DismissPostDeleteDialog)
             },
@@ -113,7 +114,7 @@ private fun PostsScreenContent(
             ShimmerPostList()
         } else {
             LazyColumn(
-                modifier = Modifier.background(color = MaterialTheme.colorScheme.surface)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 items(screenState.postList) { post ->
                     if (!userMap.containsKey(post.userId)) {
@@ -127,10 +128,14 @@ private fun PostsScreenContent(
                         user = userMap[post.userId],
                         likeStatus = likeMap[post.id],
                         onCommentClick = {
-                            openScreen(Screen.CommentsScreen(post.id))
+                            openScreen(
+                                Screen.CommentsScreen(postId = post.id)
+                            )
                         },
                         onProfileClick = {
-                            openScreen(Screen.ProfileScreen(post.userId))
+                            openScreen(
+                                Screen.ProfileScreen(userId = post.userId)
+                            )
                         },
                         onLikeClick = {
                             onEvent(
@@ -140,7 +145,11 @@ private fun PostsScreenContent(
                             )
                         },
                         onDeleteClick = {
-                            onEvent(PostsEvents.ShowPostDeleteDialog(postId = post.id))
+                            onEvent(
+                                PostsEvents.ShowPostDeleteDialog(
+                                    postId = post.id
+                                )
+                            )
                         }
                     )
                     HorizontalDivider(
@@ -162,11 +171,8 @@ fun PostBox(
     onLikeClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
-    Column(
+    PreferredColumn(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
-        modifier = Modifier.padding(
-            bottom = MaterialTheme.padding.small
-        )
     ) {
         TopSection(
             user = user ?: User(),
@@ -174,33 +180,18 @@ fun PostBox(
             onDeleteClick = onDeleteClick
         )
 
-        AluminiumAsyncImage(
+        PreferredAsyncImage(
             model = post.file,
             contentDescription = "${user?.firstName} ${user?.lastName}",
-            onTapFullScreen = true,
             modifier = Modifier
-                .height(450.dp)
+                .height(MaterialTheme.postHeight.default)
         )
 
         BottomSection(
+            post = post,
             isLiked = likeStatus != null,
             onLikeClick = onLikeClick,
             onCommentClick = onCommentClick,
-        )
-
-        AluminiumDescriptionText(
-            description = post.description,
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.padding.medium
-            )
-        )
-
-        Text(
-            text = PrettyTimeUtils.getPrettyTime(post.timestamp),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.padding.medium
-            )
         )
     }
 }
@@ -215,9 +206,8 @@ private fun TopSection(
     var expanded by remember { mutableStateOf(false) }
     ListItem(
         leadingContent = {
-            AluminiumAsyncImage(
+            PreferredAsyncImage(
                 model = user.profileImage,
-                onTapFullScreen = true,
                 modifier = Modifier
                     .size(MaterialTheme.profileSize.medium)
                     .clip(CircleShape)
@@ -226,6 +216,8 @@ private fun TopSection(
         headlineContent = {
             Text(
                 text = "${user.firstName} ${user.lastName}",
+                fontSize = MaterialTheme.textSize.medium,
+                fontWeight = FontWeight.Bold
             )
         },
         trailingContent = {
@@ -295,98 +287,75 @@ private fun TopSection(
 
 @Composable
 private fun BottomSection(
+    post: Post,
     isLiked: Boolean,
     onLikeClick: () -> Unit,
     onCommentClick: () -> Unit,
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = MaterialTheme.padding.small)
+    PreferredColumn(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)
     ) {
-        Row(
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
-                .align(Alignment.TopStart)
+                .fillMaxWidth()
+                .padding(horizontal = MaterialTheme.padding.extraSmall)
         ) {
-            IconButton(
-                content = {
-                    Icon(
-                        imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
-                        contentDescription = "like button"
-                    )
-                },
-                onClick = onLikeClick,
-            )
+            PreferredRow(
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+            ) {
+                IconButton(
+                    content = {
+                        Icon(
+                            imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
+                            contentDescription = "like button"
+                        )
+                    },
+                    onClick = onLikeClick,
+                )
 
-            IconButton(
-                onClick = onCommentClick,
-                content = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.Comment,
-                        contentDescription = "comment button",
-                    )
-                }
-            )
+                IconButton(
+                    onClick = onCommentClick,
+                    content = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.Comment,
+                            contentDescription = "comment button",
+                        )
+                    }
+                )
+            }
+
+            PreferredRow(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+            ) {
+                IconButton(
+                    content = {
+                        Icon(
+                            imageVector = if (isLiked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
+                            contentDescription = "save button"
+                        )
+                    },
+                    onClick = {},
+                )
+            }
+
         }
 
-        Row(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-        ) {
+        Text(
+            text = post.description,
+            fontSize = MaterialTheme.textSize.medium
+        )
 
-            IconButton(
-                content = {
-                    Icon(
-                        imageVector = if (isLiked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
-                        contentDescription = "save button"
-                    )
-                },
-                onClick = {},
-            )
-        }
-
+        Text(
+            text = PrettyTimeUtils.getPrettyTime(post.timestamp),
+            fontWeight = FontWeight.Bold,
+            fontSize = MaterialTheme.textSize.medium
+        )
     }
-}
-
-@Composable
-private fun PostDeleteDialog(
-    isDeleting: Boolean,
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
-) {
-    AlertDialog(
-        icon = {
-            Icon(Icons.Default.WarningAmber, contentDescription = "warning")
-        },
-        title = {
-            Text(text = stringResource(R.string.post_delete))
-        },
-        text = {
-            Text(text = stringResource(R.string.delete_alert_message))
-        },
-        onDismissRequest = {},
-        confirmButton = {
-            AluminiumLoadingTextButton(
-                label = "Confirm",
-                isLoading = isDeleting,
-                onClick = {
-                    onConfirmation()
-                }
-            )
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
-                },
-                content = {
-                    Text("Dismiss")
-                },
-                enabled = !isDeleting
-            )
-        }
-    )
 }
 
 @Composable
@@ -397,100 +366,63 @@ private fun ShimmerPostList() {
             .verticalScroll(rememberScrollState())
     ) {
         for (i in 1..5) {
-            PostBoxShimmer()
+            ShimmerPostBox()
         }
     }
 }
 
 @Composable
-private fun PostBoxShimmer() {
-    Column(
+private fun ShimmerPostBox() {
+    PreferredColumn(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
         modifier = Modifier
-            .padding(bottom = MaterialTheme.padding.small)
             .shimmer()
     ) {
         ListItem(
             headlineContent = {
-                ShimmerBackground(
-                    modifier = Modifier
-                        .height(16.dp)
-                        .width(MaterialTheme.Size.medium)
-                )
+                ShimmerText()
             },
             leadingContent = {
-                ShimmerBackground(
-                    modifier = Modifier
-                        .clip(shape = CircleShape)
-                        .size(32.dp)
-                )
+                ShimmerProfileImage()
             },
             trailingContent = {
-                ShimmerBackground(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(16.dp)
-                )
+                ShimmerIcons()
             }
         )
         ShimmerBackground(
             modifier = Modifier
-                .height(450.dp)
                 .fillMaxWidth()
+                .height(MaterialTheme.postHeight.default)
         )
         Box(
-            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    horizontal = MaterialTheme.padding.medium,
-                    vertical = MaterialTheme.padding.small
-                )
+                .padding(horizontal = MaterialTheme.padding.extraSmall)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            PreferredRow(
+                horizontalArrangement = Arrangement.Start,
                 modifier = Modifier
                     .align(Alignment.TopStart)
             ) {
-                ShimmerBackground(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(16.dp)
-                )
-                ShimmerBackground(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(16.dp)
-                )
+                ShimmerIcons()
+                ShimmerIcons()
             }
-            Row(
+            PreferredRow(
+                horizontalArrangement = Arrangement.End,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
             ) {
-                ShimmerBackground(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(16.dp)
-                )
+                ShimmerIcons()
             }
         }
-        ShimmerBackground(
-            modifier = Modifier
-                .height(16.dp)
-                .width(MaterialTheme.Size.large)
-                .padding(horizontal = MaterialTheme.padding.medium)
+        ShimmerText(
+            width = ShimmerTextWidth.high
         )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(16.dp)
-                .width(MaterialTheme.Size.medium)
-                .padding(horizontal = MaterialTheme.padding.medium)
+        ShimmerText(
+            width = ShimmerTextWidth.medium
         )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(16.dp)
-                .width(MaterialTheme.Size.small)
-                .padding(horizontal = MaterialTheme.padding.medium)
+        ShimmerText(
+            width = ShimmerTextWidth.small
         )
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth()
@@ -508,5 +440,4 @@ private fun PostsScreenPreview() {
         onEvent = {},
         openScreen = {}
     )
-//    PostBoxShimmer()
 }

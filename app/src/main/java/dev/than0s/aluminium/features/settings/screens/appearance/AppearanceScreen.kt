@@ -1,14 +1,11 @@
 package dev.than0s.aluminium.features.settings.screens.appearance
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Contrast
@@ -17,23 +14,21 @@ import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.burnoo.compose.rememberpreference.rememberStringPreference
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumGroupTitle
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumSurface
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumSwitch
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredGroupTitle
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRadioButton
 import dev.than0s.aluminium.core.presentation.ui.COLOR_THEME
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
@@ -71,14 +66,15 @@ private fun AppearanceScreenContent(
         defaultValue = false,
     )
 
-    ColorThemeDialog(
-        currentColorTheme = ColorTheme.valueOf(storeColorTheme),
-        screenState = screenState,
-        onEvent = onEvent,
-        onColorThemeChanged = { theme: ColorTheme ->
-            storeColorTheme = theme.name
-        },
-    )
+    if(screenState.colorThemeDialog) {
+        ColorThemeDialog(
+            currentColorTheme = ColorTheme.valueOf(storeColorTheme),
+            onEvent = onEvent,
+            onColorThemeChanged = { theme: ColorTheme ->
+                storeColorTheme = theme.name
+            },
+        )
+    }
 
     ThemeColumn(
         currentColorTheme = storeColorTheme,
@@ -103,14 +99,13 @@ private fun ThemeColumn(
     onDynamicThemeChange: (Boolean) -> Unit,
     onEvent: (AppearanceScreenEvents) -> Unit
 ) {
-    Column(
+    PreferredColumn(
+        verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        AluminiumGroupTitle(
-            title = "theme"
-        )
+        PreferredGroupTitle(text = "theme")
         ListItem(
             headlineContent = {
                 Text(text = "Enable dynamic theme")
@@ -122,7 +117,7 @@ private fun ThemeColumn(
                 )
             },
             trailingContent = {
-                AluminiumSwitch(
+                Switch(
                     checked = isDynamicTheme,
                     onCheckedChange = {
                         onDynamicThemeChange(it)
@@ -158,7 +153,7 @@ private fun ThemeColumn(
                 )
             },
             trailingContent = {
-                AluminiumSwitch(
+                Switch(
                     checked = isPureBlack,
                     onCheckedChange = {
                         onPureBlackChange(it)
@@ -172,67 +167,35 @@ private fun ThemeColumn(
 @Composable
 private fun ColorThemeDialog(
     currentColorTheme: ColorTheme,
-    screenState: AppearanceScreenState,
     onColorThemeChanged: (ColorTheme) -> Unit,
     onEvent: (AppearanceScreenEvents) -> Unit
 ) {
-    if (screenState.colorThemeDialog) {
-        Dialog(
-            onDismissRequest = {
-                onEvent(AppearanceScreenEvents.OnColorThemeDialogDismissRequest)
-            },
-            content = {
-                AluminiumSurface {
-                    Column(
-                        modifier = Modifier.padding(MaterialTheme.padding.medium)
-                    ) {
-                        ColorTheme.entries.forEach {
-                            val isSelected = currentColorTheme == it
-                            ColorThemeRadioButton(
-                                colorTheme = it,
-                                isSelected = isSelected,
-                                onClick = {
-                                    onColorThemeChanged(it)
-                                    onEvent(AppearanceScreenEvents.OnColorThemeDialogDismissRequest)
-                                }
-                            )
-                        }
+    Dialog(
+        onDismissRequest = {
+            onEvent(AppearanceScreenEvents.OnColorThemeDialogDismissRequest)
+        },
+        content = {
+            PreferredSurface {
+                PreferredColumn(
+                    modifier = Modifier.padding(MaterialTheme.padding.medium)
+                ) {
+                    ColorTheme.entries.forEach {
+                        val isSelected = currentColorTheme == it
+                        PreferredRadioButton(
+                            text = it.name,
+                            isSelected = isSelected,
+                            onClick = {
+                                onColorThemeChanged(it)
+                                onEvent(AppearanceScreenEvents.OnColorThemeDialogDismissRequest)
+                            }
+                        )
                     }
                 }
             }
-        )
-    }
+        }
+    )
 }
 
-@Composable
-private fun ColorThemeRadioButton(
-    colorTheme: ColorTheme,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .selectable(
-                selected = isSelected,
-                onClick = onClick,
-                role = Role.RadioButton
-            )
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(
-            selected = isSelected,
-            onClick = null
-        )
-        Text(
-            text = colorTheme.name,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-    }
-}
 
 @Preview(showSystemUi = true)
 @Composable

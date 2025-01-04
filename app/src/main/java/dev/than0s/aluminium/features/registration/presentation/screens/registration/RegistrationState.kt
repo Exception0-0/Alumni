@@ -6,6 +6,8 @@ import dev.than0s.aluminium.features.registration.domain.data_class.Registration
 data class RegistrationState(
     val registrationForm: RegistrationForm = RegistrationForm(),
     val isLoading: Boolean = false,
+    val courseExpanded: Boolean = false,
+    val roleExpanded: Boolean = false,
     val formIndex: Int = 0,
     val collageIdError: Error? = null,
     val firstNameError: Error? = null,

@@ -29,13 +29,13 @@ import dev.than0s.aluminium.ui.TextSize
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
     secondary = SecondaryDark,
-    surface = Color.Black
+    surface = Color.Black,
+    background = Color.Black,
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = PrimaryLight,
     secondary = SecondaryLight,
-    surface = Color.Black
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),

@@ -1,29 +1,29 @@
 package dev.than0s.aluminium.features.profile.presentation.dialogs.update_contacts
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingTextButton
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumSurface
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
-import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextField
 import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.ui.Size
-import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun UpdateContactScreen(
@@ -43,55 +43,74 @@ private fun UpdateContactScreenContent(
     onEvent: (UpdateContactScreenEvents) -> Unit,
     popScreen: () -> Unit,
 ) {
-    AluminiumSurface {
+    PreferredSurface {
         if (screenState.isLoading) {
             LoadingShimmerEffect()
         } else {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-                horizontalAlignment = CenterHorizontally,
-                modifier = Modifier.padding(MaterialTheme.padding.medium)
-            ) {
-                AluminiumTitleText(
-                    title = "Contact",
+            PreferredColumn {
+                Text(
+                    text = "Contact",
+                    fontSize = MaterialTheme.textSize.large,
+                    fontWeight = FontWeight.Bold
                 )
-                AluminiumTextField(
+                PreferredTextField(
                     value = screenState.contactInfo.email ?: "",
                     onValueChange = {
                         onEvent(UpdateContactScreenEvents.OnEmailChanged(it))
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.MailOutline,
+                            contentDescription = null
+                        )
                     },
                     enable = !screenState.isUpdating,
                     supportingText = screenState.emailError?.message?.asString(),
                     placeholder = "Email"
                 )
-                AluminiumTextField(
+                PreferredTextField(
                     value = screenState.contactInfo.mobile ?: "",
                     onValueChange = {
                         onEvent(UpdateContactScreenEvents.OnMobileChanged(it))
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Phone,
+                            contentDescription = null
+                        )
                     },
                     enable = !screenState.isUpdating,
                     supportingText = screenState.mobileError?.message?.asString(),
                     placeholder = "Mobile"
                 )
-                AluminiumTextField(
+                PreferredTextField(
                     value = screenState.contactInfo.socialHandles ?: "",
                     onValueChange = {
                         onEvent(UpdateContactScreenEvents.OnSocialChanged(it))
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Link,
+                            contentDescription = null
+                        )
                     },
                     enable = !screenState.isUpdating,
                     supportingText = screenState.socialHandleError?.message?.asString(),
                     placeholder = "Social Handles"
                 )
-                Row(
+                PreferredRow(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(onClick = popScreen) {
+                    TextButton(
+                        onClick = popScreen,
+                        enabled = !screenState.isUpdating
+                    ) {
                         Text(text = "Cancel")
                     }
 
-                    AluminiumLoadingTextButton(
-                        label = "Update",
+                    PreferredTextButton(
+                        text = "Update",
                         isLoading = screenState.isUpdating,
                         onClick = {
                             onEvent(
@@ -108,35 +127,16 @@ private fun UpdateContactScreenContent(
 }
 
 @Composable
-private fun LoadingShimmerEffect(){
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-        horizontalAlignment = CenterHorizontally,
+private fun LoadingShimmerEffect() {
+    PreferredColumn(
         modifier = Modifier
             .fillMaxWidth()
             .shimmer()
-            .padding(MaterialTheme.padding.medium)
     ) {
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.Size.extraSmall)
-                .width(MaterialTheme.Size.medium)
-        )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.Size.small)
-                .width(MaterialTheme.Size.large)
-        )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.Size.small)
-                .width(MaterialTheme.Size.large)
-        )
-        ShimmerBackground(
-            modifier = Modifier
-                .height(MaterialTheme.Size.small)
-                .width(MaterialTheme.Size.large)
-        )
+        ShimmerTextField()
+        ShimmerTextField()
+        ShimmerTextField()
+        ShimmerTextField()
     }
 }
 

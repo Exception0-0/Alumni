@@ -27,9 +27,7 @@ fun PreferredClickableText(
         ),
         textAlign = textAlign,
         modifier = Modifier
-            .clickable(enabled = enabled) {
-                onClick()
-            }
+            .clickable(enabled = enabled, onClick = onClick)
     )
 }
 

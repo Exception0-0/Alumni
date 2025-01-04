@@ -12,4 +12,6 @@ sealed class SignInEvents {
     data class OnSignInClick(
         val restartApp: () -> Unit = {},
     ) : SignInEvents()
+
+    data object OnPasswordVisibilityChange : SignInEvents()
 }

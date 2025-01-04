@@ -28,6 +28,10 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
         screenState = screenState.copy(password = password)
     }
 
+    private fun onPasswordVisibilityChange() {
+        screenState = screenState.copy(isPasswordVisible = !screenState.isPasswordVisible)
+    }
+
     private fun onSignInClick(
         restartApp: () -> Unit,
     ) {
@@ -83,6 +87,10 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
                 onSignInClick(
                     restartApp = event.restartApp,
                 )
+            }
+
+            is SignInEvents.OnPasswordVisibilityChange -> {
+                onPasswordVisibilityChange()
             }
         }
     }

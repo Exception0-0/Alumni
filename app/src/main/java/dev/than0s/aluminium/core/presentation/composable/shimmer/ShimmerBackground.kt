@@ -16,6 +16,7 @@ private val ShimmerLightColor = Color(0xFFCDCDCD)
 
 @Composable
 fun ShimmerBackground(
+    shape: RoundedCornerShape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
     modifier: Modifier = Modifier,
 ) {
     when (getCurrentColorTheme()) {
@@ -24,7 +25,7 @@ fun ShimmerBackground(
         ColorTheme.Light -> false
     }.let {
         Surface(
-            shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+            shape = shape,
             color = if (it) ShimmerDarkColor else ShimmerLightColor,
             modifier = modifier,
             content = {}

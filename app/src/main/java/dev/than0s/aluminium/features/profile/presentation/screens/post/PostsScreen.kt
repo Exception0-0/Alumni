@@ -7,21 +7,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.domain.data_class.Post
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.ShimmerBackground
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.ui.roundedCorners
 import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.postHeight
 
 @Composable
 fun PostsScreen(
@@ -40,14 +38,14 @@ private fun PostsContent(
     onEvent: (PostsEvents) -> Unit,
 ) {
     if (screenState.isLoading) {
-        LoadingShimmerEffect(
+        ShimmerEffectLoading(
             modifier = Modifier.height(350.dp)
         )
     } else {
         LazyVerticalGrid(
             modifier = Modifier
                 .height(350.dp),
-            columns = GridCells.Adaptive(100.dp),
+            columns = GridCells.Adaptive(MaterialTheme.postHeight.small),
             content = {
                 items(screenState.postList) {
                     PostImagePreview(
@@ -63,28 +61,25 @@ private fun PostsContent(
 private fun PostImagePreview(post: Post) {
     Box(
         modifier = Modifier
-            .size(100.dp)
+            .size(MaterialTheme.postHeight.small)
             .padding(MaterialTheme.padding.verySmall)
     ) {
-        AluminiumAsyncImage(
+        PreferredAsyncImage(
             model = post.file,
-            onTapFullScreen = false,
-            modifier = Modifier.clip(
-                shape = RoundedCornerShape(MaterialTheme.roundedCorners.default)
-            )
+            contentDescription = "post image"
         )
     }
 }
 
 @Composable
-private fun LoadingShimmerEffect(
+private fun ShimmerEffectLoading(
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(100.dp),
+        columns = GridCells.Adaptive(MaterialTheme.postHeight.small),
         modifier = modifier
     ) {
-        items(16) {
+        items(8) {
             PostShimmerCard()
         }
     }
@@ -95,7 +90,7 @@ private fun PostShimmerCard() {
     ShimmerBackground(
         modifier = Modifier
             .shimmer()
-            .size(100.dp)
+            .size(MaterialTheme.postHeight.small)
             .padding(MaterialTheme.padding.verySmall)
     )
 }

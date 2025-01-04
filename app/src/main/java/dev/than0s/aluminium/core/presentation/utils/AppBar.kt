@@ -9,18 +9,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
 import dev.than0s.aluminium.ui.textSize
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,9 +46,10 @@ fun AluminiumTopAppBar(
         ).sp
         LargeTopAppBar(
             title = {
-                AluminiumTitleText(
-                    title = it.title,
-                    fontSize = titleSize
+                Text(
+                    text = it.title,
+                    fontSize = titleSize,
+                    fontWeight = FontWeight.Bold
                 )
             },
             navigationIcon = {

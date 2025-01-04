@@ -1,27 +1,14 @@
 package dev.than0s.aluminium.core.presentation.composable.preferred
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,70 +19,21 @@ import coil.compose.SubcomposeAsyncImage
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AluminiumAsyncImage(
+fun PreferredAsyncImage(
     model: Any?,
     contentDescription: String? = null,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop,
-    onTapFullScreen: Boolean = false,
 ) {
-    var _modifier = modifier
-
-    if (onTapFullScreen) {
-        var fullScreenState by rememberSaveable { mutableStateOf(false) }
-
-        if (fullScreenState) {
-            ModalBottomSheet(
-                onDismissRequest = {
-                    fullScreenState = false
-                },
-                sheetState = rememberModalBottomSheetState(true, { false }),
-                dragHandle = null,
-                content = {
-                    Scaffold(
-                        topBar = {
-                            TopAppBar(
-                                title = {
-                                    contentDescription?.let {
-                                        Text(it)
-                                    }
-                                },
-                                navigationIcon = {
-                                    IconButton(onClick = {
-                                        fullScreenState = false
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = "back button"
-                                        )
-                                    }
-                                },
-                            )
-                        }
-                    ) { contentPadding ->
-                        PinchZoomImage(
-                            model = model,
-                            modifier = Modifier.padding(contentPadding)
-                        )
-                    }
-                }
-            )
-        }
-        _modifier = _modifier.clickable {
-            fullScreenState = true
-        }
-    }
-
     SubcomposeAsyncImage(
         model = model,
         loading = {
-            AsyncImageShimmerEffect()
+            ShimmerEffectAsyncImage()
         },
         contentScale = contentScale,
         contentDescription = contentDescription,
-        modifier = _modifier
+        modifier = modifier
     )
 }
 
@@ -133,7 +71,7 @@ private fun PinchZoomImage(
         SubcomposeAsyncImage(
             model = model,
             loading = {
-                AsyncImageShimmerEffect()
+                ShimmerEffectAsyncImage()
             },
             contentDescription = null,
             modifier = Modifier
@@ -150,7 +88,7 @@ private fun PinchZoomImage(
 }
 
 @Composable
-private fun AsyncImageShimmerEffect() {
+private fun ShimmerEffectAsyncImage() {
     ShimmerBackground(
         modifier = Modifier
             .fillMaxSize()

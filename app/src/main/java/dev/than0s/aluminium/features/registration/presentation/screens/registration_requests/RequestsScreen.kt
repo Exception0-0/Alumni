@@ -23,10 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Role
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAlertDialog
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumClickableText
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumElevatedCard
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredClickableText
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.ui.roundedCorners
 import dev.than0s.aluminium.ui.padding
@@ -96,77 +93,77 @@ private fun RegistrationRequestItem(
     request: RegistrationForm,
     onEvent: (RequestScreenEvents) -> Unit,
 ) {
-    AluminiumElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(MaterialTheme.padding.small)
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-            modifier = Modifier.padding(MaterialTheme.padding.medium)
-        ) {
-            AluminiumTitleText(
-                title = request.role.name,
-                fontSize = MaterialTheme.textSize.medium
-            )
-            if (request.batchFrom != null) {
-                AluminiumTitleText(
-                    title = "${request.batchFrom} - ${request.batchTo}",
-                    fontSize = MaterialTheme.textSize.medium
-                )
-            }
-            if (request.collegeId != null) {
-                AluminiumTitleText(
-                    title = request.collegeId,
-                    fontSize = MaterialTheme.textSize.medium
-                )
-            }
-            AluminiumTitleText(
-                title = "${request.lastName} ${request.firstName} ${request.middleName}",
-                fontSize = MaterialTheme.textSize.medium
-            )
-            AluminiumTitleText(
-                title = request.email,
-                fontSize = MaterialTheme.textSize.medium
-            )
-
-            if (request.idCardImage != null) {
-                AluminiumClickableText(
-                    title = "show Id card image",
-                    onClick = {
-                        onEvent(RequestScreenEvents.OnShowIdCard(request.id))
-                    }
-                )
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(MaterialTheme.padding.small)
-            ) {
-                TextButton(
-                    onClick = {
-                        onEvent(RequestScreenEvents.OnShowDialog(request.id, true))
-                    },
-                    content = {
-                        Text("Accept")
-                    }
-                )
-
-                Spacer(modifier = Modifier.padding(MaterialTheme.padding.small))
-
-                TextButton(
-                    onClick = {
-                        onEvent(RequestScreenEvents.OnShowDialog(request.id, false))
-                    },
-                    content = {
-                        Text("Cancel")
-                    }
-                )
-            }
-        }
-    }
+//    AluminiumElevatedCard(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(MaterialTheme.padding.small)
+//    ) {
+//        Column(
+//            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+//            modifier = Modifier.padding(MaterialTheme.padding.medium)
+//        ) {
+//            AluminiumTitleText(
+//                title = request.role.name,
+//                fontSize = MaterialTheme.textSize.medium
+//            )
+//            if (request.batchFrom != null) {
+//                AluminiumTitleText(
+//                    title = "${request.batchFrom} - ${request.batchTo}",
+//                    fontSize = MaterialTheme.textSize.medium
+//                )
+//            }
+//            if (request.collegeId != null) {
+//                AluminiumTitleText(
+//                    title = request.collegeId,
+//                    fontSize = MaterialTheme.textSize.medium
+//                )
+//            }
+//            AluminiumTitleText(
+//                title = "${request.lastName} ${request.firstName} ${request.middleName}",
+//                fontSize = MaterialTheme.textSize.medium
+//            )
+//            AluminiumTitleText(
+//                title = request.email,
+//                fontSize = MaterialTheme.textSize.medium
+//            )
+//
+//            if (request.idCardImage != null) {
+//                PreferredClickableText(
+//                    text = "show Id card image",
+//                    onClick = {
+//                        onEvent(RequestScreenEvents.OnShowIdCard(request.id))
+//                    }
+//                )
+//            }
+//
+//            Row(
+//                horizontalArrangement = Arrangement.End,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(MaterialTheme.padding.small)
+//            ) {
+//                TextButton(
+//                    onClick = {
+//                        onEvent(RequestScreenEvents.OnShowDialog(request.id, true))
+//                    },
+//                    content = {
+//                        Text("Accept")
+//                    }
+//                )
+//
+//                Spacer(modifier = Modifier.padding(MaterialTheme.padding.small))
+//
+//                TextButton(
+//                    onClick = {
+//                        onEvent(RequestScreenEvents.OnShowDialog(request.id, false))
+//                    },
+//                    content = {
+//                        Text("Cancel")
+//                    }
+//                )
+//            }
+//        }
+//    }
 }
 
 @Composable
@@ -174,30 +171,30 @@ private fun WarningDialogLogic(
     screenState: RequestScreenState,
     onEvent: (RequestScreenEvents) -> Unit
 ) {
-    if (screenState.requestSelection != null) {
-        screenState.requestSelection.second.let { dialogMode ->
-            AluminiumAlertDialog(
-                title = if (dialogMode) stringResource(R.string.accept_request_title)
-                else stringResource(R.string.reject_request_title),
-                description = stringResource(R.string.request_desc),
-                circularProgressIndicatorState = screenState.isDialogLoading,
-                onDismissRequest = {
-                    onEvent(RequestScreenEvents.OnDismissDialog)
-                },
-                onConfirmation = {
-                    screenState.requestsList.first { it.id == screenState.requestSelection.first }
-                        .run {
-                            onEvent(
-                                if (dialogMode)
-                                    RequestScreenEvents.OnAcceptClick(this)
-                                else
-                                    RequestScreenEvents.OnRejectClick(this)
-                            )
-                        }
-                }
-            )
-        }
-    }
+//    if (screenState.requestSelection != null) {
+//        screenState.requestSelection.second.let { dialogMode ->
+//            AluminiumAlertDialog(
+//                title = if (dialogMode) stringResource(R.string.accept_request_title)
+//                else stringResource(R.string.reject_request_title),
+//                description = stringResource(R.string.request_desc),
+//                circularProgressIndicatorState = screenState.isDialogLoading,
+//                onDismissRequest = {
+//                    onEvent(RequestScreenEvents.OnDismissDialog)
+//                },
+//                onConfirmation = {
+//                    screenState.requestsList.first { it.id == screenState.requestSelection.first }
+//                        .run {
+//                            onEvent(
+//                                if (dialogMode)
+//                                    RequestScreenEvents.OnAcceptClick(this)
+//                                else
+//                                    RequestScreenEvents.OnRejectClick(this)
+//                            )
+//                        }
+//                }
+//            )
+//        }
+//    }
 }
 
 @Preview(showSystemUi = true)

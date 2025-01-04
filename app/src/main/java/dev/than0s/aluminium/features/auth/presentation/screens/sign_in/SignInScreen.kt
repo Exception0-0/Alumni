@@ -1,13 +1,9 @@
 package dev.than0s.aluminium.features.auth.presentation.screens.sign_in
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material3.Icon
@@ -16,20 +12,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumClickableText
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingFilledButton
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLottieAnimation
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumPasswordTextField
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredClickableText
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredLottieAnimation
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPasswordTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun SignInScreen(
@@ -52,25 +48,19 @@ private fun SignInScreenContent(
     openScreen: (Screen) -> Unit,
     restartApp: () -> Unit
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentHeight()
-            .padding(MaterialTheme.padding.large)
-            .verticalScroll(rememberScrollState())
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(MaterialTheme.padding.large)
+            modifier = Modifier.align(Alignment.Center),
         ) {
-            AluminiumTitleText(
-                title = "Sign In"
+            Text(
+                text = "Sign In",
+                fontSize = MaterialTheme.textSize.large,
+                fontWeight = FontWeight.Bold
             )
 
-            AluminiumTextField(
+            PreferredTextField(
                 value = screenState.email,
                 enable = !screenState.isLoading,
                 keyboardType = KeyboardType.Email,
@@ -87,8 +77,12 @@ private fun SignInScreenContent(
                 }
             )
 
-            AluminiumPasswordTextField(
+            PreferredPasswordTextField(
                 value = screenState.password,
+                passwordVisibilityState = screenState.isPasswordVisible,
+                onPasswordVisibilityChange = {
+                    onEvent(SignInEvents.OnPasswordVisibilityChange)
+                },
                 enable = !screenState.isLoading,
                 supportingText = screenState.passwordError?.message?.asString(),
                 onPasswordChange = { newValue ->
@@ -97,21 +91,23 @@ private fun SignInScreenContent(
                 placeholder = "Password",
             )
 
-            AluminiumClickableText(
-                title = "Don't have an account?",
+            PreferredClickableText(
+                text = "Don't have an account?",
+                enabled = !screenState.isLoading,
                 onClick = {
                     openScreen(Screen.RegistrationScreen)
                 }
             )
 
-            AluminiumClickableText(
-                title = "Forget Password?",
+            PreferredClickableText(
+                text = "Forget Password?",
+                enabled = !screenState.isLoading,
                 onClick = {
                     openScreen(Screen.ForgotPasswordScreen)
                 }
             )
 
-            AluminiumLoadingFilledButton(
+            PreferredFilledButton(
                 isLoading = screenState.isLoading,
                 onClick = {
                     onEvent(
@@ -126,7 +122,7 @@ private fun SignInScreenContent(
                 }
             )
         }
-        AluminiumLottieAnimation(
+        PreferredLottieAnimation(
             lottieAnimation = R.raw.authentication_animation,
             modifier = Modifier.size(150.dp)
         )

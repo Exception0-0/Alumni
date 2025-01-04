@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLottieAnimation
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredLottieAnimation
 import dev.than0s.aluminium.core.presentation.utils.Screen
 
 @Composable
@@ -40,7 +40,7 @@ private fun SplashScreenContent(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        AluminiumLottieAnimation(
+        PreferredLottieAnimation(
             lottieAnimation = R.raw.waiting_animation,
             modifier = Modifier
                 .size(180.dp)

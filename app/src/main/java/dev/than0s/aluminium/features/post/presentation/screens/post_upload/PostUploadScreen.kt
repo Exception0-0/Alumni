@@ -20,11 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.presentation.utils.asString
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumLoadingElevatedButton
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumElevatedCard
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTextField
-import dev.than0s.aluminium.core.presentation.composable.preferred.AluminiumTitleText
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.ui.padding
 
 @Composable
@@ -49,64 +46,61 @@ private fun PostUploadScreenContent(
             }
         }
 
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-    ) {
-        AluminiumElevatedCard(
-            modifier = Modifier.padding(MaterialTheme.padding.medium)
-        ) {
-            Column(
-                horizontalAlignment = CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-                modifier = Modifier
-                    .padding(MaterialTheme.padding.medium)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                AluminiumTitleText(
-                    title = "Post Upload"
-                )
-                AluminiumAsyncImage(
-                    model = screenStates.post.file,
-                    modifier = Modifier
-                        .height(450.dp)
-                        .width(360.dp)
-                        .clickable {
-                            launcher.launch("image/*")
-                        }
-                )
-
-                AluminiumTextField(
-                    value = screenStates.post.title,
-                    placeholder = "Title",
-                    supportingText = screenStates.titleError?.message?.asString(),
-                    onValueChange = {
-                        onEvent(PostEvents.OnTitleChanged(it))
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                AluminiumTextField(
-                    value = screenStates.post.description,
-                    placeholder = "Description",
-                    supportingText = screenStates.descriptionError?.message?.asString(),
-                    onValueChange = {
-                        onEvent(PostEvents.OnDescriptionChanged(it))
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                AluminiumLoadingElevatedButton(
-                    label = "Upload",
-                    circularProgressIndicatorState = screenStates.isLoading,
-                    onClick = {
-                        onEvent(PostEvents.OnUploadClick(popScreen = popScreen))
-                    },
-                    modifier = Modifier.align(CenterHorizontally)
-                )
-            }
-        }
-    }
+//    Column(
+//        verticalArrangement = Arrangement.Center,
+//        modifier = Modifier
+//    ) {
+//            Column(
+//                horizontalAlignment = CenterHorizontally,
+//                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
+//                modifier = Modifier
+//                    .padding(MaterialTheme.padding.medium)
+//                    .verticalScroll(rememberScrollState())
+//            ) {
+//                AluminiumTitleText(
+//                    title = "Post Upload"
+//                )
+//                PreferredAsyncImage(
+//                    model = screenStates.post.file,
+//                    modifier = Modifier
+//                        .height(450.dp)
+//                        .width(360.dp)
+//                        .clickable {
+//                            launcher.launch("image/*")
+//                        }
+//                )
+//
+//                PreferredTextField(
+//                    value = screenStates.post.title,
+//                    placeholder = "Title",
+//                    supportingText = screenStates.titleError?.message?.asString(),
+//                    onValueChange = {
+//                        onEvent(PostEvents.OnTitleChanged(it))
+//                    },
+//                    modifier = Modifier.fillMaxWidth()
+//                )
+//
+//                PreferredTextField(
+//                    value = screenStates.post.description,
+//                    placeholder = "Description",
+//                    supportingText = screenStates.descriptionError?.message?.asString(),
+//                    onValueChange = {
+//                        onEvent(PostEvents.OnDescriptionChanged(it))
+//                    },
+//                    modifier = Modifier.fillMaxWidth()
+//                )
+//
+//                PreferredElevatedButton(
+//                    label = "Upload",
+//                    circularProgressIndicatorState = screenStates.isLoading,
+//                    onClick = {
+//                        onEvent(PostEvents.OnUploadClick(popScreen = popScreen))
+//                    },
+//                    modifier = Modifier.align(CenterHorizontally)
+//                )
+//            }
+//        }
+//    }
 }
 
 @Preview(showSystemUi = true)
