@@ -66,9 +66,14 @@ private fun ProfileScreenContent(
     openScreen: (Screen) -> Unit
 ) {
     if (screenState.isLoading) {
-        PreferredCircularProgressIndicator(
-            size = PreferredCircularProgressIndicatorSize.default
-        )
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            PreferredCircularProgressIndicator(
+                size = PreferredCircularProgressIndicatorSize.default,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
     } else {
         PreferredColumn(
             modifier = Modifier
@@ -79,17 +84,20 @@ private fun ProfileScreenContent(
                 screenState = screenState
             )
             PreferredColumn(
-                modifier = Modifier
-                    .padding(horizontal = MaterialTheme.padding.medium)
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.verySmall),
+                modifier = Modifier.padding(horizontal = MaterialTheme.padding.medium)
             ) {
                 Text(
                     text = "${screenState.user.firstName} ${screenState.user.lastName}",
                     fontSize = MaterialTheme.textSize.large,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth()
                 )
+
                 Text(
                     text = screenState.user.bio,
-                    fontSize = MaterialTheme.textSize.medium
+                    fontSize = MaterialTheme.textSize.medium,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 if (userId == currentUserId) {
@@ -175,10 +183,7 @@ private fun ProfileTabRow(
 private fun ProfileAndCoverShower(
     screenState: ProfileState
 ) {
-    PreferredColumn(
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top
-    ) {
+    Box {
         PreferredAsyncImage(
             model = screenState.user.coverImage,
             contentDescription = "Cover Image",
@@ -190,12 +195,12 @@ private fun ProfileAndCoverShower(
             model = screenState.user.profileImage,
             contentDescription = "Profile Image",
             modifier = Modifier
-                .size(MaterialTheme.profileSize.large)
-                .clip(CircleShape)
                 .padding(
                     start = MaterialTheme.padding.small,
-                    top = -MaterialTheme.profileSize.large / 2
+                    top = MaterialTheme.coverHeight.default - (MaterialTheme.profileSize.large / 2)
                 )
+                .size(MaterialTheme.profileSize.large)
+                .clip(CircleShape)
         )
     }
 }

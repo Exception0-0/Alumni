@@ -10,10 +10,11 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PreferredCircularProgressIndicator(
-    size: Dp = PreferredCircularProgressIndicatorSize.small
+    size: Dp = PreferredCircularProgressIndicatorSize.small,
+    modifier: Modifier = Modifier
 ) {
     CircularProgressIndicator(
-        modifier = Modifier.size(size),
+        modifier = modifier.size(size),
         color = MaterialTheme.colorScheme.secondary,
         trackColor = MaterialTheme.colorScheme.surfaceVariant,
     )

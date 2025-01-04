@@ -49,7 +49,6 @@ fun AluminiumTopAppBar(
                 Text(
                     text = it.title,
                     fontSize = titleSize,
-                    fontWeight = FontWeight.Bold
                 )
             },
             navigationIcon = {
