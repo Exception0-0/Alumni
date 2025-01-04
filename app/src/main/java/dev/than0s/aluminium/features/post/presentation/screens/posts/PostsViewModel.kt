@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -73,6 +74,18 @@ class PostsViewModel @Inject constructor(
     private fun refreshLikeMap(postId: String) {
         likeMap.remove(postId)
         likeMap.getLike(postId)
+    }
+
+    private fun showFullScreenImage(uri: Uri) {
+        screenState = screenState.copy(
+            fullScreenImage = uri
+        )
+    }
+
+    private fun dismissFullScreenImage() {
+        screenState = screenState.copy(
+            fullScreenImage = null
+        )
     }
 
     private fun removeLike(postId: String) {
@@ -214,6 +227,14 @@ class PostsViewModel @Inject constructor(
 
             is PostsEvents.DismissPostDeleteDialog -> {
                 dismissPostDeleteDialog()
+            }
+
+            is PostsEvents.DismissFullScreenImage -> {
+                dismissFullScreenImage()
+            }
+
+            is PostsEvents.ShowFullScreenImage -> {
+                showFullScreenImage(uri = event.uri)
             }
         }
     }

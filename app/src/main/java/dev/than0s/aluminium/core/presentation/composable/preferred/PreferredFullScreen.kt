@@ -1,5 +1,8 @@
 package dev.than0s.aluminium.core.presentation.composable.preferred
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,7 +22,7 @@ import androidx.compose.ui.Modifier
 fun PreferredFullScreen(
     contentDescription: String? = null,
     onDismissRequest: () -> Unit,
-    content: @Composable (Modifier) -> Unit,
+    content: @Composable (BoxScope.() -> Unit)
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -45,8 +48,11 @@ fun PreferredFullScreen(
                     )
                 }
             ) { contentPadding ->
-                content(
-                    Modifier.padding(contentPadding)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding),
+                    content = content
                 )
             }
         }

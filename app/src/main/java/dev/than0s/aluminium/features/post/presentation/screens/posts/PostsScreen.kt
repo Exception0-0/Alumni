@@ -56,6 +56,7 @@ import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
@@ -106,6 +107,21 @@ private fun PostsScreenContent(
             }
         )
     }
+    if (screenState.fullScreenImage != null) {
+        PreferredFullScreen(
+            contentDescription = "Post Image",
+            onDismissRequest = {
+                onEvent(PostsEvents.DismissFullScreenImage)
+            },
+            content = {
+                PreferredAsyncImage(
+                    model = screenState.fullScreenImage,
+                    contentDescription = "Post Image",
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        )
+    }
     PullToRefreshBox(
         isRefreshing = screenState.isLoading,
         onRefresh = {
@@ -152,6 +168,11 @@ private fun PostsScreenContent(
                                     postId = post.id
                                 )
                             )
+                        },
+                        onImageClick = {
+                            onEvent(
+                                PostsEvents.ShowFullScreenImage(post.file)
+                            )
                         }
                     )
                     HorizontalDivider(
@@ -169,6 +190,7 @@ fun PostBox(
     user: User?,
     likeStatus: Like?,
     onCommentClick: () -> Unit,
+    onImageClick: () -> Unit,
     onProfileClick: () -> Unit,
     onLikeClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -188,6 +210,7 @@ fun PostBox(
             contentDescription = "${user?.firstName} ${user?.lastName}",
             modifier = Modifier
                 .height(MaterialTheme.postHeight.default)
+                .clickable(onClick = onImageClick)
         )
 
         BottomSection(
