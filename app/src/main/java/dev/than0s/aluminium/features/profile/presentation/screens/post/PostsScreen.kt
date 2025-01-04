@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,6 +22,7 @@ import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackgrou
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.postHeight
+import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
 fun PostsScreen(
@@ -66,7 +69,10 @@ private fun PostImagePreview(post: Post) {
     ) {
         PreferredAsyncImage(
             model = post.file,
-            contentDescription = "post image"
+            contentDescription = "post image",
+            modifier = Modifier.clip(
+                RoundedCornerShape(MaterialTheme.roundedCorners.default)
+            )
         )
     }
 }
