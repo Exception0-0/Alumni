@@ -169,7 +169,7 @@ private fun ProfileTabRow(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(MaterialTheme.padding.small)
+            .padding(MaterialTheme.padding.extraSmall)
     ) {
         ProfileNavHost(
             userId = screenState.user.id,
@@ -196,7 +196,7 @@ private fun ProfileAndCoverShower(
             contentDescription = "Profile Image",
             modifier = Modifier
                 .padding(
-                    start = MaterialTheme.padding.small,
+                    start = MaterialTheme.padding.medium,
                     top = MaterialTheme.coverHeight.default - (MaterialTheme.profileSize.large / 2)
                 )
                 .size(MaterialTheme.profileSize.large)

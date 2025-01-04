@@ -1,7 +1,7 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.contact
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Link
@@ -10,10 +10,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
@@ -48,8 +53,8 @@ private fun ContactsContent(
     if (screenState.isLoading) {
         LoadingShimmerEffect()
     } else {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.large),
+        PreferredColumn(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
         ) {
             ListItem(
                 headlineContent = {
@@ -133,7 +138,7 @@ private fun ContactsContent(
 @Composable
 private fun LoadingShimmerEffect() {
     PreferredColumn {
-        for (i in 1..3)
+        for (i in 1..3) {
             ListItem(
                 headlineContent = {
                     ShimmerText(
@@ -142,15 +147,26 @@ private fun LoadingShimmerEffect() {
                     )
                 },
                 supportingContent = {
-                    ShimmerText(
-                        height = ShimmerTextHeight.medium,
-                        width = ShimmerTextWidth.medium
-                    )
+                    PreferredColumn(
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        VerticalDivider(
+                            thickness = 0.dp,
+                            modifier = Modifier.height(MaterialTheme.padding.extraSmall)
+                        )
+                        ShimmerText(
+                            height = ShimmerTextHeight.medium,
+                            width = ShimmerTextWidth.medium
+                        )
+                    }
                 },
                 leadingContent = {
                     ShimmerIcons()
                 },
+                modifier = Modifier.shimmer()
             )
+        }
     }
 }
 
