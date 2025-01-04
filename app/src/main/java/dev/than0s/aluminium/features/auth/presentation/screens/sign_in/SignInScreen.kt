@@ -1,9 +1,10 @@
 package dev.than0s.aluminium.features.auth.presentation.screens.sign_in
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material3.Icon
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredClickableText
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredLottieAnimation
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPasswordTextField
@@ -51,8 +53,10 @@ private fun SignInScreenContent(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier.align(Alignment.Center),
+        PreferredColumn(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .align(Alignment.Center),
         ) {
             Text(
                 text = "Sign In",
@@ -121,11 +125,11 @@ private fun SignInScreenContent(
                     Text("Sign In")
                 }
             )
+            PreferredLottieAnimation(
+                lottieAnimation = R.raw.authentication_animation,
+                modifier = Modifier.size(150.dp)
+            )
         }
-        PreferredLottieAnimation(
-            lottieAnimation = R.raw.authentication_animation,
-            modifier = Modifier.size(150.dp)
-        )
     }
 }
 
