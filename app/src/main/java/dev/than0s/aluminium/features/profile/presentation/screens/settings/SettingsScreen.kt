@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.settings
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredGroupTitle
 import dev.than0s.aluminium.core.presentation.utils.Screen
 
 @Composable
@@ -40,11 +40,11 @@ private fun SettingScreenContent(
     restartApp: () -> Unit
 ) {
     PreferredColumn(
+        verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        PreferredGroupTitle(text = "profile")
         ListItem(
             headlineContent = {
                 Text(text = "Profile")
@@ -59,7 +59,6 @@ private fun SettingScreenContent(
                 openScreen(Screen.ProfileScreen(currentUserId!!))
             }
         )
-        PreferredGroupTitle(text = "theme")
         ListItem(
             headlineContent = {
                 Text(text = "Appearance")
@@ -74,7 +73,6 @@ private fun SettingScreenContent(
                 openScreen(Screen.AppearanceScreen)
             }
         )
-        PreferredGroupTitle(text = "options")
         ListItem(
             headlineContent = {
                 Text(text = "Log out")
