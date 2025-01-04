@@ -58,6 +58,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerIcons
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileImage
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
@@ -176,6 +177,7 @@ fun PostBox(
     ) {
         TopSection(
             user = user ?: User(),
+            timestamp = post.timestamp,
             onProfileClick = onProfileClick,
             onDeleteClick = onDeleteClick
         )
@@ -199,6 +201,7 @@ fun PostBox(
 @Composable
 private fun TopSection(
     user: User,
+    timestamp:Long,
     onProfileClick: () -> Unit,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -218,6 +221,13 @@ private fun TopSection(
                 text = "${user.firstName} ${user.lastName}",
                 fontSize = MaterialTheme.textSize.medium,
                 fontWeight = FontWeight.Bold
+            )
+        },
+        supportingContent = {
+            Text(
+                text = PrettyTimeUtils.getPrettyTime(timestamp),
+                fontSize = MaterialTheme.textSize.medium,
+                modifier = Modifier.fillMaxWidth()
             )
         },
         trailingContent = {
@@ -349,13 +359,6 @@ private fun BottomSection(
             fontSize = MaterialTheme.textSize.medium,
             modifier = Modifier.fillMaxWidth()
         )
-
-        Text(
-            text = PrettyTimeUtils.getPrettyTime(post.timestamp),
-            fontWeight = FontWeight.Bold,
-            fontSize = MaterialTheme.textSize.medium,
-            modifier = Modifier.fillMaxWidth()
-        )
     }
 }
 
@@ -380,17 +383,7 @@ private fun ShimmerPostBox() {
         modifier = Modifier
             .shimmer()
     ) {
-        ListItem(
-            headlineContent = {
-                ShimmerText()
-            },
-            leadingContent = {
-                ShimmerProfileImage()
-            },
-            trailingContent = {
-                ShimmerIcons()
-            }
-        )
+        ShimmerListItem()
         ShimmerBackground(
             modifier = Modifier
                 .fillMaxWidth()
