@@ -8,14 +8,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.WorkOutline
+import androidx.compose.material.icons.outlined.Badge
+import androidx.compose.material.icons.outlined.School
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -23,7 +29,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +49,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.coverHeight
+import dev.than0s.aluminium.ui.roundedCorners
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
@@ -64,10 +73,13 @@ private fun RegistrationScreenContent(
     val isLastIndex = screenState.formIndex == registrationFormSectionList.lastIndex
     val isIndexZero = screenState.formIndex == 0
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
-        PreferredColumn {
+        PreferredColumn(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .align(Alignment.Center)
+        ) {
             Text(
                 text = registrationFormSectionList[screenState.formIndex].name,
                 fontSize = MaterialTheme.textSize.large,
@@ -118,11 +130,11 @@ private fun RegistrationScreenContent(
                     }
                 )
             }
+            PreferredLottieAnimation(
+                lottieAnimation = R.raw.registration_animation,
+                modifier = Modifier.size(180.dp)
+            )
         }
-        PreferredLottieAnimation(
-            lottieAnimation = R.raw.registration_animation,
-            modifier = Modifier.size(180.dp)
-        )
     }
 }
 
@@ -204,7 +216,7 @@ private fun RoleSection(
                 )
             },
             trailingIcon = {
-                if (screenState.courseExpanded) {
+                if (screenState.roleExpanded) {
                     Icon(
                         imageVector = Icons.Default.ArrowDropUp,
                         contentDescription = "drop up arrow"
@@ -229,7 +241,7 @@ private fun RoleSection(
                 onEvent(RegistrationEvents.OnRoleClick)
             }
         ) {
-            Role.entries.forEach {
+            Role.entries.minus(Role.Anonymous).forEach {
                 DropdownMenuItem(
                     text = {
                         Text(it.name)
@@ -261,6 +273,12 @@ private fun CollegeInfoSection(
         onValueChange = { newValue ->
             onEvent(RegistrationEvents.OnCollegeIdChange(newValue))
         },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Outlined.Badge,
+                contentDescription = "course icon"
+            )
+        },
         enable = !screenState.isLoading,
         keyboardType = KeyboardType.Number,
         supportingText = screenState.collageIdError?.message?.asString(),
@@ -276,7 +294,7 @@ private fun CollegeInfoSection(
                 enable = false,
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Default.School,
+                        imageVector = Icons.Outlined.School,
                         contentDescription = "course icon"
                     )
                 },
@@ -364,6 +382,7 @@ private fun CollegeInfoSection(
             contentDescription = "Id card image",
             modifier = Modifier
                 .size(MaterialTheme.coverHeight.default)
+                .clip(RoundedCornerShape(MaterialTheme.roundedCorners.default))
                 .clickable {
                     onEvent(RegistrationEvents.OnCollegeIdCardChange(null))
                 }
