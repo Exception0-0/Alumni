@@ -181,6 +181,7 @@ private fun ColorThemeDialog(
         content = {
             PreferredSurface {
                 PreferredColumn(
+                    verticalArrangement = Arrangement.Top,
                     modifier = Modifier.padding(MaterialTheme.padding.medium)
                 ) {
                     ColorTheme.entries.forEach {

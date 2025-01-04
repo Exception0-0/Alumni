@@ -16,14 +16,12 @@ import dev.than0s.aluminium.ui.LocalCoverSize
 import dev.than0s.aluminium.ui.LocalPostHeight
 import dev.than0s.aluminium.ui.LocalProfileSize
 import dev.than0s.aluminium.ui.LocalRoundCorners
-import dev.than0s.aluminium.ui.LocalSize
 import dev.than0s.aluminium.ui.LocalSpacing
 import dev.than0s.aluminium.ui.LocalTextSize
 import dev.than0s.aluminium.ui.Padding
 import dev.than0s.aluminium.ui.PostHeight
 import dev.than0s.aluminium.ui.ProfileSize
 import dev.than0s.aluminium.ui.RoundedCorners
-import dev.than0s.aluminium.ui.Size
 import dev.than0s.aluminium.ui.TextSize
 
 private val DarkColorScheme = darkColorScheme(
@@ -71,7 +69,6 @@ fun AluminiumTheme(
         LocalSpacing provides Padding(),
         LocalTextSize provides TextSize(),
         LocalRoundCorners provides RoundedCorners(),
-        LocalSize provides Size(),
         LocalProfileSize provides ProfileSize(),
         LocalCoverSize provides CoverHeight(),
         LocalPostHeight provides PostHeight()
