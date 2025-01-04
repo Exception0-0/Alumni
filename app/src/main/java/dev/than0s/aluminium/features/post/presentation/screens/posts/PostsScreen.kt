@@ -293,13 +293,12 @@ private fun BottomSection(
     onCommentClick: () -> Unit,
 ) {
     PreferredColumn(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+        modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
     ) {
         Box(
-            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.padding.extraSmall)
         ) {
             PreferredRow(
                 horizontalArrangement = Arrangement.Start,
@@ -347,13 +346,15 @@ private fun BottomSection(
 
         Text(
             text = post.description,
-            fontSize = MaterialTheme.textSize.medium
+            fontSize = MaterialTheme.textSize.medium,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Text(
             text = PrettyTimeUtils.getPrettyTime(post.timestamp),
             fontWeight = FontWeight.Bold,
-            fontSize = MaterialTheme.textSize.medium
+            fontSize = MaterialTheme.textSize.medium,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -374,6 +375,7 @@ private fun ShimmerPostList() {
 @Composable
 private fun ShimmerPostBox() {
     PreferredColumn(
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
         modifier = Modifier
             .shimmer()
@@ -397,10 +399,10 @@ private fun ShimmerPostBox() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.padding.extraSmall)
+                .padding(horizontal = MaterialTheme.padding.small)
         ) {
             PreferredRow(
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                 modifier = Modifier
                     .align(Alignment.TopStart)
             ) {
@@ -409,20 +411,22 @@ private fun ShimmerPostBox() {
             }
             PreferredRow(
                 horizontalArrangement = Arrangement.End,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
+                modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 ShimmerIcons()
             }
         }
         ShimmerText(
-            width = ShimmerTextWidth.high
+            width = ShimmerTextWidth.high,
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
         )
         ShimmerText(
-            width = ShimmerTextWidth.medium
+            width = ShimmerTextWidth.medium,
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
         )
         ShimmerText(
-            width = ShimmerTextWidth.small
+            width = ShimmerTextWidth.small,
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
         )
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth()
@@ -433,11 +437,12 @@ private fun ShimmerPostBox() {
 @Preview(showSystemUi = true)
 @Composable
 private fun PostsScreenPreview() {
-    PostsScreenContent(
-        screenState = PostsState(),
-        userMap = emptyMap(),
-        likeMap = emptyMap(),
-        onEvent = {},
-        openScreen = {}
-    )
+//    PostsScreenContent(
+//        screenState = PostsState(),
+//        userMap = emptyMap(),
+//        likeMap = emptyMap(),
+//        onEvent = {},
+//        openScreen = {}
+//    )
+    ShimmerPostBox()
 }
