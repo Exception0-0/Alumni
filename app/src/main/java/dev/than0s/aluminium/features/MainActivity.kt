@@ -53,20 +53,11 @@ class MainActivity : ComponentActivity() {
                 initialValue = false,
                 defaultValue = false,
             )
-//            DynamicTheme(
-//                state = rememberDynamicThemeState(),
-//                isDarkTheme = darkTheme,
-//                defaultColorTuple = ColorTuple(
-//                    primary = Primary,
-//                    secondary = Secondary,
-//                    tertiary = Tertiary
-//                ),
-//                dynamicColor = isDynamicTheme,
-//                amoledMode = pureBlack
-//            ) {
+
             AluminiumTheme(
                 darkTheme = darkTheme,
-                dynamicColor = isDynamicTheme
+                dynamicColor = isDynamicTheme,
+                pureBlack = pureBlack,
             ) {
                 val navController = rememberNavController()
                 val snackbarHostState = remember { SnackbarHostState() }

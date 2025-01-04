@@ -20,7 +20,7 @@ fun PreferredRow(
     Row(
         verticalAlignment = verticalAlignment,
         horizontalArrangement = horizontalArrangement,
-        modifier = modifier.background(color = MaterialTheme.colorScheme.surface),
+        modifier = modifier,
         content = content
     )
 }

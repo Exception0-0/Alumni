@@ -29,8 +29,6 @@ import dev.than0s.aluminium.ui.TextSize
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
     secondary = SecondaryDark,
-    surface = Color.Black,
-    background = Color.Black,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -51,6 +49,7 @@ private val LightColorScheme = lightColorScheme(
 fun AluminiumTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
+    pureBlack: Boolean = false,
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -62,6 +61,10 @@ fun AluminiumTheme(
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+    }.let {
+        if (darkTheme && pureBlack) {
+            it.copy(background = Color.Black, surface = Color.Black)
+        } else it
     }
 
     CompositionLocalProvider(

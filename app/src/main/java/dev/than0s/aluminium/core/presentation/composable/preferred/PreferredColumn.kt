@@ -20,7 +20,7 @@ fun PreferredColumn(
     Column(
         horizontalAlignment = horizontalAlignment,
         verticalArrangement = verticalArrangement,
-        modifier = modifier.background(color = MaterialTheme.colorScheme.surface),
+        modifier = modifier,
         content = content
     )
 }
