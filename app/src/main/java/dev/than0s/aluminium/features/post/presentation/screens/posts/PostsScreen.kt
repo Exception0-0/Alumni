@@ -33,6 +33,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
@@ -58,7 +60,6 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerIcons
-import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileImage
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
@@ -201,7 +202,7 @@ fun PostBox(
 @Composable
 private fun TopSection(
     user: User,
-    timestamp:Long,
+    timestamp: Long,
     onProfileClick: () -> Unit,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -383,7 +384,31 @@ private fun ShimmerPostBox() {
         modifier = Modifier
             .shimmer()
     ) {
-        ShimmerListItem()
+        ListItem(
+            headlineContent = {
+                ShimmerText()
+            },
+            supportingContent = {
+                PreferredColumn(
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    VerticalDivider(
+                        thickness = 0.dp,
+                        modifier = Modifier.height(MaterialTheme.padding.extraSmall)
+                    )
+                    ShimmerText(
+                        width = ShimmerTextWidth.small
+                    )
+                }
+            },
+            leadingContent = {
+                ShimmerProfileImage()
+            },
+            trailingContent = {
+                ShimmerIcons()
+            }
+        )
         ShimmerBackground(
             modifier = Modifier
                 .fillMaxWidth()
