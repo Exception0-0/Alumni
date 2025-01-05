@@ -122,7 +122,7 @@ dependencies {
     implementation (libs.prettytime)
 
     // pinch zoom
-    implementation (libs.pinch.to.zoom)
+//    implementation (libs.pinch.to.zoom)
 }
 
 // Allow references to generated code

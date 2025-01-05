@@ -53,14 +53,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.journiapp.pinchtozoom.PinchToZoom
-import com.journiapp.pinchtozoom.PinchToZoomRoot
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
@@ -121,17 +120,12 @@ private fun PostsScreenContent(
                 onEvent(PostsEvents.DismissFullScreenImage)
             },
             content = {
-                PinchToZoomRoot {
-                    PinchToZoom(
-                        modifier = Modifier.align(Alignment.Center),
-                        showOriginal = true
-                    ) {
-                        PreferredAsyncImage(
-                            model = screenState.fullScreenImage,
-                            contentScale = ContentScale.Fit,
-                            contentDescription = "Post Image",
-                        )
-                    }
+                PreferredPinchZoom {
+                    PreferredAsyncImage(
+                        model = screenState.fullScreenImage,
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "Post Image",
+                    )
                 }
             }
         )

@@ -13,15 +13,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.GridOn
-import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material.icons.outlined.Contacts
 import androidx.compose.material.icons.outlined.GridOn
-import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,8 +39,6 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.journiapp.pinchtozoom.PinchToZoom
-import com.journiapp.pinchtozoom.PinchToZoomRoot
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicator
@@ -52,6 +46,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCirc
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.replace
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
@@ -87,17 +82,12 @@ private fun ProfileScreenContent(
                 onEvent(ProfileEvents.DismissFullScreenImage)
             },
             content = {
-                PinchToZoomRoot {
-                    PinchToZoom(
-                        modifier = Modifier.align(Alignment.Center),
-                        showOriginal = true
-                    ) {
-                        PreferredAsyncImage(
-                            model = screenState.fullScreenImage,
-                            contentScale = ContentScale.Fit,
-                            contentDescription = "Post Image",
-                        )
-                    }
+                PreferredPinchZoom {
+                    PreferredAsyncImage(
+                        model = screenState.fullScreenImage,
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "Post Image",
+                    )
                 }
             }
         )
