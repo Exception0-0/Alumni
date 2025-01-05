@@ -125,6 +125,7 @@ private fun PostsScreenContent(
                         model = screenState.fullScreenImage,
                         contentScale = ContentScale.Fit,
                         contentDescription = "Post Image",
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }

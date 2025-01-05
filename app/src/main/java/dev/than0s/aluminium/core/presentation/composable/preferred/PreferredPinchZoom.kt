@@ -4,7 +4,6 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,52 +11,34 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 
 @Composable
 fun PreferredPinchZoom(
-    modifier: Modifier = Modifier,
     content: @Composable (BoxScope.() -> Unit)
 ) {
-    var scale by remember {
-        mutableFloatStateOf(1f)
+    var scale by remember { mutableFloatStateOf(1f) }
+    var rotation by remember { mutableFloatStateOf(0f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
+    val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
+        scale *= zoomChange
+        rotation += rotationChange
+        offset += offsetChange
     }
-    var offset by remember {
-        mutableStateOf(Offset.Zero)
-    }
 
-    BoxWithConstraints(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        val state = rememberTransformableState { zoomChange, panChange, _ ->
-            scale = (scale * zoomChange).coerceIn(1f, 10f)
-
-            val extraWidth = (scale - 1) * constraints.maxWidth
-            val extraHeight = (scale - 1) * constraints.maxHeight
-
-            val maxX = extraWidth / 2
-            val maxY = extraHeight / 2
-
-            offset = Offset(
-                x = (offset.x + scale * panChange.x).coerceIn(-maxX, maxX),
-                y = (offset.y + scale * panChange.y).coerceIn(-maxY, maxY),
+    Box(
+        modifier = Modifier
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale,
+                rotationZ = rotation,
+                translationX = offset.x,
+                translationY = offset.y
             )
-        }
-        Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .graphicsLayer {
-                    scaleX = scale
-                    scaleY = scale
-                    translationX = offset.x
-                    translationY = offset.y
-                }
-                .transformable(state),
-            content = content
-        )
-    }
+            .transformable(state = state)
+            .fillMaxSize(),
+        content = content
+    )
 }
