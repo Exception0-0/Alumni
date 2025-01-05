@@ -26,9 +26,20 @@ fun ShimmerBackground(
     }.let {
         Surface(
             shape = shape,
-            color = if (it) ShimmerDarkColor else ShimmerLightColor,
+            color = getCurrentShimmerBackground(),
             modifier = modifier,
             content = {}
         )
+    }
+}
+
+@Composable
+fun getCurrentShimmerBackground(): Color {
+    return when (getCurrentColorTheme()) {
+        ColorTheme.System -> isSystemInDarkTheme()
+        ColorTheme.Dark -> true
+        ColorTheme.Light -> false
+    }.let {
+        if (it) ShimmerDarkColor else ShimmerLightColor
     }
 }

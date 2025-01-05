@@ -1,113 +1,128 @@
 package dev.than0s.aluminium.features.post.presentation.screens.post_upload
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.CarouselState
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import dev.than0s.aluminium.core.presentation.utils.asString
+import dev.than0s.aluminium.core.POST_IMAGES_COUNT
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
+import dev.than0s.aluminium.core.presentation.composable.shimmer.getCurrentShimmerBackground
+import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.postHeight
 
 @Composable
 fun PostUploadScreen(viewModel: PostUploadViewModel = hiltViewModel(), popScreen: () -> Unit) {
-//    PostUploadScreenContent(
-//        screenStates = viewModel.screenStatus,
-//        popScreen = popScreen,
-//        onEvent = viewModel::onEvent
-//    )
+    PostUploadScreenContent(
+        screenStates = viewModel.screenStatus,
+        popScreen = popScreen,
+        onEvent = viewModel::onEvent
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PostUploadScreenContent(
-    screenStates: PostStatus,
+    screenStates: PostUploadScreenStatus,
     popScreen: () -> Unit,
-    onEvent: (PostEvents) -> Unit,
+    onEvent: (PostUploadScreenEvents) -> Unit,
 ) {
-    val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { image: Uri? ->
-            image?.let {
-                onEvent(PostEvents.OnFileUriChanged(it))
-            }
+    val configuration = LocalConfiguration.current
+    val pickMultipleMedia =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.PickMultipleVisualMedia(POST_IMAGES_COUNT)
+        ) { images ->
+            onEvent(PostUploadScreenEvents.OnImagesSelected(images))
         }
 
-//    Column(
-//        verticalArrangement = Arrangement.Center,
-//        modifier = Modifier
-//    ) {
-//            Column(
-//                horizontalAlignment = CenterHorizontally,
-//                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.medium),
-//                modifier = Modifier
-//                    .padding(MaterialTheme.padding.medium)
-//                    .verticalScroll(rememberScrollState())
-//            ) {
-//                AluminiumTitleText(
-//                    title = "Post Upload"
-//                )
-//                PreferredAsyncImage(
-//                    model = screenStates.post.file,
-//                    modifier = Modifier
-//                        .height(450.dp)
-//                        .width(360.dp)
-//                        .clickable {
-//                            launcher.launch("image/*")
-//                        }
-//                )
-//
-//                PreferredTextField(
-//                    value = screenStates.post.title,
-//                    placeholder = "Title",
-//                    supportingText = screenStates.titleError?.message?.asString(),
-//                    onValueChange = {
-//                        onEvent(PostEvents.OnTitleChanged(it))
-//                    },
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//
-//                PreferredTextField(
-//                    value = screenStates.post.description,
-//                    placeholder = "Description",
-//                    supportingText = screenStates.descriptionError?.message?.asString(),
-//                    onValueChange = {
-//                        onEvent(PostEvents.OnDescriptionChanged(it))
-//                    },
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//
-//                PreferredElevatedButton(
-//                    label = "Upload",
-//                    circularProgressIndicatorState = screenStates.isLoading,
-//                    onClick = {
-//                        onEvent(PostEvents.OnUploadClick(popScreen = popScreen))
-//                    },
-//                    modifier = Modifier.align(CenterHorizontally)
-//                )
-//            }
-//        }
-//    }
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        PreferredColumn(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .verticalScroll(rememberScrollState())
+        ) {
+            HorizontalMultiBrowseCarousel(
+                state = CarouselState { screenStates.post.files.size },
+                preferredItemWidth = configuration.screenWidthDp.dp,
+                modifier = Modifier
+                    .height(MaterialTheme.postHeight.default)
+                    .fillMaxWidth()
+                    .background(color = getCurrentShimmerBackground())
+                    .clickable(enabled = !screenStates.isLoading) {
+                        pickMultipleMedia.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
+            ) { index ->
+                val uri = screenStates.post.files[index]
+                PreferredAsyncImage(
+                    model = uri,
+                    contentDescription = "selected image",
+                    modifier = Modifier
+                        .height(MaterialTheme.postHeight.default)
+                )
+            }
+            PreferredTextField(
+                value = screenStates.post.caption,
+                onValueChange = {
+                    onEvent(PostUploadScreenEvents.OnCaptionChanged(it))
+                },
+                placeholder = "caption",
+                enable = !screenStates.isLoading,
+                supportingText = screenStates.titleError?.message?.asString(),
+                singleLine = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.padding.extraSmall)
+            )
+            PreferredFilledButton(
+                onClick = {
+                    onEvent(
+                        PostUploadScreenEvents.OnUploadClick(
+                            popScreen = popScreen
+                        )
+                    )
+                },
+                enabled = !screenStates.isLoading,
+                isLoading = screenStates.isLoading,
+                content = {
+                    Text(text = "Post")
+                }
+            )
+        }
+    }
 }
 
 @Preview(showSystemUi = true)
 @Composable
 private fun PostUploadScreenPreview() {
     PostUploadScreenContent(
-        screenStates = PostStatus(),
+        screenStates = PostUploadScreenStatus(),
         popScreen = {},
         onEvent = {}
     )

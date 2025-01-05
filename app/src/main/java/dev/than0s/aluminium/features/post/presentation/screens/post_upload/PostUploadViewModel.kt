@@ -20,23 +20,23 @@ import javax.inject.Inject
 class PostUploadViewModel @Inject constructor(
     private val addPostUserCase: AddPostUseCase,
 ) : ViewModel() {
-    var screenStatus by mutableStateOf(PostStatus())
+    var screenStatus by mutableStateOf(PostUploadScreenStatus())
 
-    private fun onDescriptionChanged(description: String) {
+    private fun onCaptionChanged(caption: String) {
         screenStatus = screenStatus.copy(
             post = screenStatus.post.copy(
-                caption = description
+                caption = caption
             )
         )
     }
 
-//    private fun onFileUriChanged(uri: Uri) {
-//        screenStatus = screenStatus.copy(
-//            post = screenStatus.post.copy(
-//                files = uri
-//            )
-//        )
-//    }
+    private fun onImagesSelected(images: List<Uri>) {
+        screenStatus = screenStatus.copy(
+            post = screenStatus.post.copy(
+                files = images
+            )
+        )
+    }
 
     private fun onUploadClick(
         popScreen: () -> Unit,
@@ -78,11 +78,11 @@ class PostUploadViewModel @Inject constructor(
         }
     }
 
-//    fun onEvent(event: PostEvents) {
-//        when (event) {
-//            is PostEvents.OnDescriptionChanged -> onDescriptionChanged(event.text)
-//            is PostEvents.OnFileUriChanged -> onFileUriChanged(event.uri)
-//            is PostEvents.OnUploadClick -> onUploadClick(popScreen = event.popScreen)
-//        }
-//    }
+    fun onEvent(event: PostUploadScreenEvents) {
+        when (event) {
+            is PostUploadScreenEvents.OnCaptionChanged -> onCaptionChanged(caption = event.text)
+            is PostUploadScreenEvents.OnImagesSelected -> onImagesSelected(images = event.images)
+            is PostUploadScreenEvents.OnUploadClick -> onUploadClick(popScreen = event.popScreen)
+        }
+    }
 }

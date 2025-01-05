@@ -15,7 +15,6 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.navigation.NavDestination
@@ -133,6 +132,10 @@ private fun getDefaultTopAppBar(
 
         destination.hasRoute<Screen.CommentsScreen>() -> TopAppBarItem(
             title = Screen.CommentsScreen("").name
+        )
+
+        destination.hasRoute<Screen.PostUploadScreen>() -> TopAppBarItem(
+            title = Screen.PostUploadScreen.name
         )
 
         else -> null

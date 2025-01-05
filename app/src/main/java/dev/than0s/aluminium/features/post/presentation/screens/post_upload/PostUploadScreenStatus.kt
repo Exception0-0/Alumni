@@ -3,7 +3,7 @@ package dev.than0s.aluminium.features.post.presentation.screens.post_upload
 import dev.than0s.aluminium.core.domain.error.Error
 import dev.than0s.aluminium.core.domain.data_class.Post
 
-data class PostStatus(
+data class PostUploadScreenStatus(
     val post: Post = Post(),
     val isLoading: Boolean = false,
     val titleError: Error? = null,
