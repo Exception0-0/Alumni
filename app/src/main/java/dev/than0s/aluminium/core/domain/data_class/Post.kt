@@ -5,8 +5,7 @@ import android.net.Uri
 data class Post(
     val id: String = "",
     val userId: String = "",
-    val file: Uri = Uri.EMPTY,
-    val title: String = "",
-    val description: String = "",
+    val files: List<Uri> = emptyList(),
+    val caption: String = "",
     val timestamp: Long = 0,
 )

@@ -9,18 +9,16 @@ import dev.than0s.aluminium.core.domain.data_class.Post
 fun RemotePost.toPost(): Post = Post(
     id = id,
     userId = userId,
-    file = Uri.parse(file),
-    title = title,
-    description = description,
+    files = files.map { Uri.parse(it) },
+    caption = caption,
     timestamp = timestamp.toDate().time,
 )
 
 fun Post.toRemotePost() = RemotePost(
     id = id,
     userId = userId,
-    file = file.toString(),
-    title = title,
-    description = description,
+    files = files.map { it.toString() },
+    caption = caption,
     timestamp = getFirebaseTimestamp(timestamp)
 )
 
@@ -28,8 +26,7 @@ data class RemotePost(
     @DocumentId
     val id: String = "",
     val userId: String = "",
-    val file: String = "",
-    val title: String = "",
-    val description: String = "",
+    val files: List<String> = emptyList(),
+    val caption: String = "",
     val timestamp: Timestamp = Timestamp.now()
 )

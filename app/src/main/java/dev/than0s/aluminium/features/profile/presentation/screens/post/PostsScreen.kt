@@ -68,7 +68,7 @@ private fun PostImagePreview(post: Post) {
             .padding(MaterialTheme.padding.verySmall)
     ) {
         PreferredAsyncImage(
-            model = post.file,
+            model = post.files[0],
             contentDescription = "post image",
             modifier = Modifier.clip(
                 RoundedCornerShape(MaterialTheme.roundedCorners.default)

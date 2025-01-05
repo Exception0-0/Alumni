@@ -26,11 +26,11 @@ import dev.than0s.aluminium.ui.padding
 
 @Composable
 fun PostUploadScreen(viewModel: PostUploadViewModel = hiltViewModel(), popScreen: () -> Unit) {
-    PostUploadScreenContent(
-        screenStates = viewModel.screenStatus,
-        popScreen = popScreen,
-        onEvent = viewModel::onEvent
-    )
+//    PostUploadScreenContent(
+//        screenStates = viewModel.screenStatus,
+//        popScreen = popScreen,
+//        onEvent = viewModel::onEvent
+//    )
 }
 
 @Composable

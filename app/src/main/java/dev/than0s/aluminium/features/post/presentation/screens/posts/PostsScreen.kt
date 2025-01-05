@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,8 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -179,9 +183,9 @@ private fun PostsScreenContent(
                                 )
                             )
                         },
-                        onPostImageClick = {
+                        onPostImageClick = { uri ->
                             onEvent(
-                                PostsEvents.ShowFullScreenImage(post.file)
+                                PostsEvents.ShowFullScreenImage(uri)
                             )
                         }
                     )
@@ -194,13 +198,14 @@ private fun PostsScreenContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostBox(
     post: Post,
     user: User?,
     likeStatus: Like?,
     onCommentClick: () -> Unit,
-    onPostImageClick: () -> Unit,
+    onPostImageClick: (Uri) -> Unit,
     onProfileClick: () -> Unit,
     onLikeClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -215,13 +220,22 @@ fun PostBox(
             onDeleteClick = onDeleteClick
         )
 
-        PreferredAsyncImage(
-            model = post.file,
-            contentDescription = "${user?.firstName} ${user?.lastName}",
-            modifier = Modifier
-                .height(MaterialTheme.postHeight.default)
-                .clickable(onClick = onPostImageClick)
-        )
+        val configuration = LocalConfiguration.current
+        HorizontalMultiBrowseCarousel(
+            state = rememberCarouselState { post.files.size },
+            preferredItemWidth = configuration.screenWidthDp.dp,
+        ) { index ->
+            val uri = post.files[index]
+            PreferredAsyncImage(
+                model = uri,
+                contentDescription = "${user?.firstName} ${user?.lastName}",
+                modifier = Modifier
+                    .height(MaterialTheme.postHeight.default)
+                    .clickable {
+                        onPostImageClick(uri)
+                    }
+            )
+        }
 
         BottomSection(
             post = post,
@@ -389,7 +403,7 @@ private fun BottomSection(
         }
 
         Text(
-            text = post.description,
+            text = post.caption,
             fontSize = MaterialTheme.textSize.medium,
             modifier = Modifier.fillMaxWidth()
         )

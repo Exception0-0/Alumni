@@ -22,29 +22,21 @@ class PostUploadViewModel @Inject constructor(
 ) : ViewModel() {
     var screenStatus by mutableStateOf(PostStatus())
 
-    private fun onTitleChanged(title: String) {
-        screenStatus = screenStatus.copy(
-            post = screenStatus.post.copy(
-                title = title
-            )
-        )
-    }
-
     private fun onDescriptionChanged(description: String) {
         screenStatus = screenStatus.copy(
             post = screenStatus.post.copy(
-                description = description
+                caption = description
             )
         )
     }
 
-    private fun onFileUriChanged(uri: Uri) {
-        screenStatus = screenStatus.copy(
-            post = screenStatus.post.copy(
-                file = uri
-            )
-        )
-    }
+//    private fun onFileUriChanged(uri: Uri) {
+//        screenStatus = screenStatus.copy(
+//            post = screenStatus.post.copy(
+//                files = uri
+//            )
+//        )
+//    }
 
     private fun onUploadClick(
         popScreen: () -> Unit,
@@ -56,7 +48,6 @@ class PostUploadViewModel @Inject constructor(
 
             addPostResult.let {
                 screenStatus = screenStatus.copy(
-                    titleError = it.titleError,
                     descriptionError = it.descriptionError,
                     fileError = it.fileError
                 )
@@ -87,12 +78,11 @@ class PostUploadViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: PostEvents) {
-        when (event) {
-            is PostEvents.OnTitleChanged -> onTitleChanged(event.text)
-            is PostEvents.OnDescriptionChanged -> onDescriptionChanged(event.text)
-            is PostEvents.OnFileUriChanged -> onFileUriChanged(event.uri)
-            is PostEvents.OnUploadClick -> onUploadClick(popScreen = event.popScreen)
-        }
-    }
+//    fun onEvent(event: PostEvents) {
+//        when (event) {
+//            is PostEvents.OnDescriptionChanged -> onDescriptionChanged(event.text)
+//            is PostEvents.OnFileUriChanged -> onFileUriChanged(event.uri)
+//            is PostEvents.OnUploadClick -> onUploadClick(popScreen = event.popScreen)
+//        }
+//    }
 }

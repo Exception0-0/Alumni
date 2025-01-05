@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.post.data.remote
 
+import android.net.Uri
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.toObjects
@@ -7,9 +8,9 @@ import com.google.firebase.storage.FirebaseStorage
 import dev.than0s.aluminium.core.data.remote.POSTS
 import dev.than0s.aluminium.core.data.remote.USER_ID
 import dev.than0s.aluminium.core.data.remote.error.ServerException
+import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.features.post.data.mapper.RemotePost
 import dev.than0s.aluminium.features.post.data.mapper.toPost
-import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.features.post.data.mapper.toRemotePost
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -49,19 +50,22 @@ class PostRemoteImple @Inject constructor(
 
     override suspend fun addPost(post: Post) {
         try {
-            cloud.reference
-                .child("$POSTS/${post.id}/0")
-                .putFile(post.file)
-                .await()
-                .storage
-                .downloadUrl
-                .await()
-                .let {
-                    store.collection(POSTS)
-                        .document(post.id)
-                        .set(post.copy(file = it).toRemotePost())
+            val filesDownloadUri = mutableListOf<Uri>()
+            post.files.forEachIndexed { index, uri ->
+                filesDownloadUri.add(
+                    cloud.reference
+                        .child("$POSTS/${post.id}/$index")
+                        .putFile(uri)
                         .await()
-                }
+                        .storage
+                        .downloadUrl
+                        .await()
+                )
+            }
+            store.collection(POSTS)
+                .document(post.id)
+                .set(post.copy(files = filesDownloadUri).toRemotePost())
+                .await()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
