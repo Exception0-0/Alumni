@@ -85,13 +85,11 @@ private fun PostImagePreview(post: Post) {
                 painterResource(R.drawable.stacks_icon),
                 contentDescription = "",
                 modifier = Modifier
+                    .padding(MaterialTheme.padding.verySmall)
                     .align(Alignment.TopEnd)
-
                     .background(
-                        color = Color.Black,
-                        shape = RoundedCornerShape(
-                            topEnd = MaterialTheme.roundedCorners.default
-                        )
+                        color = Color.Black.copy(alpha = 0.5f),
+                        shape = RoundedCornerShape(MaterialTheme.roundedCorners.small)
                     )
             )
         }
