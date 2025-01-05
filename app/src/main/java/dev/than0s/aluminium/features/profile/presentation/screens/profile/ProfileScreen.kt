@@ -29,7 +29,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -235,6 +234,7 @@ private fun ProfileAndCoverShower(
         )
         PreferredAsyncImage(
             model = screenState.user.profileImage,
+            shape = CircleShape,
             contentDescription = "Profile Image",
             modifier = Modifier
                 .padding(
@@ -242,7 +242,6 @@ private fun ProfileAndCoverShower(
                     top = MaterialTheme.coverHeight.default - (MaterialTheme.profileSize.large / 2)
                 )
                 .size(MaterialTheme.profileSize.large)
-                .clip(CircleShape)
                 .clickable {
                     onImageClick(screenState.user.profileImage)
                 }

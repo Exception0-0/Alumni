@@ -17,7 +17,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -97,9 +96,9 @@ private fun UpdateProfileDialogContent(
                 PreferredAsyncImage(
                     model = screenState.userProfile.coverImage,
                     contentDescription = "user cover image",
+                    shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
                     modifier = Modifier
                         .height(MaterialTheme.coverHeight.default)
-                        .clip(RoundedCornerShape(MaterialTheme.roundedCorners.default))
                         .clickable(enabled = !screenState.isUpdating) {
                             imageSelectionState[COVER_IMAGE] = true
                             pickMedia.launch(
@@ -114,9 +113,9 @@ private fun UpdateProfileDialogContent(
                         model = screenState.userProfile.profileImage,
                         contentDescription = "user profile image",
                         contentScale = ContentScale.Crop,
+                        shape = CircleShape,
                         modifier = Modifier
                             .size(MaterialTheme.profileSize.large)
-                            .clip(CircleShape)
                             .clickable(enabled = !screenState.isUpdating) {
                                 imageSelectionState[PROFILE_IMAGE] = true
                                 pickMedia.launch(

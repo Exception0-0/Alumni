@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,9 +75,7 @@ private fun PostImagePreview(post: Post) {
         PreferredAsyncImage(
             model = post.files[0],
             contentDescription = "post image",
-            modifier = Modifier.clip(
-                RoundedCornerShape(MaterialTheme.roundedCorners.default)
-            )
+            shape = RoundedCornerShape(MaterialTheme.roundedCorners.extraSmall),
         )
         if (post.files.size > 1) {
             Image(
@@ -113,6 +110,7 @@ private fun ShimmerEffectLoading(
 @Composable
 private fun PostShimmerCard() {
     ShimmerBackground(
+        shape = RoundedCornerShape(MaterialTheme.roundedCorners.extraSmall),
         modifier = Modifier
             .shimmer()
             .size(MaterialTheme.postHeight.small)

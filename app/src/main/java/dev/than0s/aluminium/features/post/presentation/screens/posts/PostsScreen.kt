@@ -254,9 +254,9 @@ private fun TopSection(
         leadingContent = {
             PreferredAsyncImage(
                 model = user.profileImage,
+                shape = CircleShape,
                 modifier = Modifier
                     .size(MaterialTheme.profileSize.medium)
-                    .clip(CircleShape)
             )
         },
         headlineContent = {

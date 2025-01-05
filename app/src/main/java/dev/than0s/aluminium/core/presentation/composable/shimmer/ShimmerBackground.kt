@@ -7,6 +7,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.getCurrentColorTheme
 import dev.than0s.aluminium.ui.roundedCorners
@@ -16,7 +17,7 @@ private val ShimmerLightColor = Color(0xFFCDCDCD)
 
 @Composable
 fun ShimmerBackground(
-    shape: RoundedCornerShape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+    shape: Shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
     modifier: Modifier = Modifier,
 ) {
     when (getCurrentColorTheme()) {

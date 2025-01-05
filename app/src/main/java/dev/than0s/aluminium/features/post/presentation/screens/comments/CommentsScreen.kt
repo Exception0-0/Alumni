@@ -115,10 +115,10 @@ private fun CommentScreenContent(
                             leadingContent = {
                                 PreferredAsyncImage(
                                     model = userProfile?.profileImage,
+                                    shape = CircleShape,
                                     contentDescription = "Profile Image",
                                     modifier = Modifier
                                         .size(20.dp)
-                                        .clip(CircleShape),
                                 )
                             },
                             headlineContent = {
