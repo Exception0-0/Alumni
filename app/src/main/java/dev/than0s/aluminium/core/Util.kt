@@ -26,3 +26,5 @@ enum class Course {
     MCA,
     MBA
 }
+
+const val POST_IMAGES_COUNT = 5

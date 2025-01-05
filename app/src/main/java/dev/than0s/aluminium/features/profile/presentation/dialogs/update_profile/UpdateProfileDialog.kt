@@ -104,7 +104,7 @@ private fun UpdateProfileDialogContent(
                             imageSelectionState[COVER_IMAGE] = true
                             pickMedia.launch(
                                 input = PickVisualMediaRequest(
-                                    ActivityResultContracts.PickVisualMedia.ImageAndVideo
+                                    ActivityResultContracts.PickVisualMedia.ImageOnly
                                 ),
                             )
                         }
@@ -121,7 +121,7 @@ private fun UpdateProfileDialogContent(
                                 imageSelectionState[PROFILE_IMAGE] = true
                                 pickMedia.launch(
                                     input = PickVisualMediaRequest(
-                                        ActivityResultContracts.PickVisualMedia.ImageAndVideo
+                                        ActivityResultContracts.PickVisualMedia.ImageOnly
                                     ),
                                 )
                             }
