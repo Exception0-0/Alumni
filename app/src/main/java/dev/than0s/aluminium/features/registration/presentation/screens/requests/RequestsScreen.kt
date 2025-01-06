@@ -3,11 +3,12 @@ package dev.than0s.aluminium.features.registration.presentation.screens.requests
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -20,11 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.Course
-import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicator
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredClickableText
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
@@ -33,8 +32,10 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinc
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextHeight
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
-import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationRequestStatus
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
@@ -94,9 +95,7 @@ private fun RegistrationRequestsContent(
         }
     ) {
         if (screenState.isLoading) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                PreferredCircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
+            ShimmerList()
         } else {
             LazyColumn {
                 items(items = screenState.requestsList) { request ->
@@ -227,28 +226,87 @@ private fun RequestItem(
     }
 }
 
+@Composable
+private fun ShimmerList() {
+    PreferredColumn(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .shimmer()
+    ) {
+        for (i in 1..10) {
+            ShimmerRequestItem()
+        }
+    }
+}
+
+@Composable
+private fun ShimmerRequestItem() {
+    PreferredColumn(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier
+            .padding(MaterialTheme.padding.small)
+            .fillMaxWidth()
+    ) {
+        ShimmerText(width = ShimmerTextWidth.high)
+        ShimmerText(
+            height = ShimmerTextHeight.small,
+            width = ShimmerTextWidth.high
+        )
+        ShimmerText(
+            height = ShimmerTextHeight.small,
+            width = ShimmerTextWidth.medium
+        )
+        ShimmerText(
+            height = ShimmerTextHeight.small,
+            width = ShimmerTextWidth.medium
+        )
+        ShimmerText(
+            height = ShimmerTextHeight.small,
+            width = ShimmerTextWidth.small
+        )
+        ShimmerText(
+            height = ShimmerTextHeight.small,
+            width = ShimmerTextWidth.small
+        )
+        Box(modifier = Modifier.fillMaxWidth()) {
+            PreferredRow(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(vertical = MaterialTheme.padding.small)
+            ) {
+                ShimmerText(
+                    height = ShimmerTextHeight.high,
+                    width = ShimmerTextWidth.medium
+                )
+            }
+        }
+    }
+}
+
 @Preview(showSystemUi = true)
 @Composable
 private fun RegistrationRequestPreview() {
-    RegistrationRequestsContent(
-        screenState = RequestScreenState(
-            listOf(
-                RegistrationForm(
-                    id = "1",
-                    role = Role.Student,
-                    collegeId = "123456",
-                    course = Course.MCA,
-                    firstName = "Himanshu",
-                    middleName = "Vasantrao",
-                    lastName = "Patil",
-                    email = "himanshupatil45h@gmail.com",
-                    batchFrom = "2023",
-                    batchTo = "2025",
-                    idCardImage = Uri.EMPTY,
-                    status = RegistrationRequestStatus(approvalStatus = true)
-                ),
-            )
-        ),
-        onEvent = {}
-    )
+//    RegistrationRequestsContent(
+//        screenState = RequestScreenState(
+//            listOf(
+//                RegistrationForm(
+//                    id = "1",
+//                    role = Role.Student,
+//                    collegeId = "123456",
+//                    course = Course.MCA,
+//                    firstName = "Himanshu",
+//                    middleName = "Vasantrao",
+//                    lastName = "Patil",
+//                    email = "himanshupatil45h@gmail.com",
+//                    batchFrom = "2023",
+//                    batchTo = "2025",
+//                    idCardImage = Uri.EMPTY,
+//                    status = RegistrationRequestStatus(approvalStatus = true)
+//                ),
+//            )
+//        ),
+//        onEvent = {}
+//    )
+//    ShimmerRequestItem()
 }
