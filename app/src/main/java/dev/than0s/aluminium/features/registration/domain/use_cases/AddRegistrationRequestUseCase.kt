@@ -60,7 +60,12 @@ class AddRegistrationRequestUseCase @Inject constructor(private val repository: 
         }
 
         return SubmitRegistrationResult(
-            result = repository.addRegistrationRequest(form.copy(id = generateUniqueId()))
+            result = repository.addRegistrationRequest(
+                form.copy(
+                    id = generateUniqueId(),
+                    timestamp = System.currentTimeMillis()
+                )
+            )
         )
     }
 }
