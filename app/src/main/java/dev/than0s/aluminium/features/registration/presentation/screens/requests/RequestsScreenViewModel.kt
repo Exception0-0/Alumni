@@ -155,7 +155,6 @@ class RequestsScreenViewModel @Inject constructor(
                 }
             }
         )
-        filterRequests()
     }
 
     fun onEvent(event: RequestScreenEvents) {
