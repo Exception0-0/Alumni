@@ -109,10 +109,6 @@ private fun RegistrationRequestsContent(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top
             ) {
-                FilterRow(
-                    screenState = screenState,
-                    onEvent = onEvent
-                )
                 PreferredOutlinedTextField(
                     placeholder = "Search...",
                     value = screenState.searchText,
@@ -128,6 +124,10 @@ private fun RegistrationRequestsContent(
                     modifier = Modifier
                         .padding(horizontal = MaterialTheme.padding.small)
                         .fillMaxWidth()
+                )
+                FilterRow(
+                    screenState = screenState,
+                    onEvent = onEvent
                 )
                 if (screenState.filteredList.isEmpty()) {
                     AnimationNoData(
