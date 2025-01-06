@@ -35,6 +35,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarn
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextHeight
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
+import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
@@ -170,6 +171,10 @@ private fun RequestItem(
         Text(
             text = request.email,
             fontSize = MaterialTheme.textSize.medium
+        )
+        Text(
+            text = PrettyTimeUtils.getFormatedDateAndTime(request.timestamp),
+            fontSize = MaterialTheme.textSize.medium,
         )
         request.idCardImage?.let {
             PreferredClickableText(
