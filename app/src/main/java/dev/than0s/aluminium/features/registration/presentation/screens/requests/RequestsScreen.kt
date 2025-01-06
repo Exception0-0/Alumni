@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.features.registration.presentation.screens.requests
 
 import android.net.Uri
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +28,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredClickableText
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilterChip
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
@@ -98,31 +100,71 @@ private fun RegistrationRequestsContent(
         if (screenState.isLoading) {
             ShimmerList()
         } else {
-            LazyColumn {
-                items(items = screenState.requestsList) { request ->
-                    RequestItem(
-                        request = request,
-                        onIdCardClick = { uri ->
-                            onEvent(RequestScreenEvents.ShowIdCard(uri))
+            PreferredColumn(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top
+            ) {
+                PreferredRow(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                    modifier = Modifier
+                        .padding(horizontal = MaterialTheme.padding.small)
+                        .horizontalScroll(rememberScrollState())
+                ) {
+                    PreferredFilterChip(
+                        label = "All",
+                        selected = screenState.allFilter,
+                        onClick = {
+                            onEvent(RequestScreenEvents.OnAllFilterClick)
                         },
-                        onAcceptClick = {
-                            onEvent(
-                                RequestScreenEvents.ShowWarningDialog(
-                                    formId = request.id,
-                                    accepted = true
-                                )
-                            )
-                        },
-                        onRejectClick = {
-                            onEvent(
-                                RequestScreenEvents.ShowWarningDialog(
-                                    formId = request.id,
-                                    accepted = false,
-                                )
-                            )
-                        }
                     )
-                    HorizontalDivider()
+                    PreferredFilterChip(
+                        label = "Pending",
+                        selected = screenState.pendingFilter,
+                        onClick = {
+                            onEvent(RequestScreenEvents.OnPendingFilterClick)
+                        },
+                    )
+                    PreferredFilterChip(
+                        label = "Approved",
+                        selected = screenState.approvedFilter,
+                        onClick = {
+                            onEvent(RequestScreenEvents.OnApprovedFilterClick)
+                        },
+                    )
+                    PreferredFilterChip(
+                        label = "Rejected",
+                        selected = screenState.rejectedFilter,
+                        onClick = {
+                            onEvent(RequestScreenEvents.OnRejectedFilterClick)
+                        },
+                    )
+                }
+                LazyColumn {
+                    items(items = screenState.filteredList) { request ->
+                        RequestItem(
+                            request = request,
+                            onIdCardClick = { uri ->
+                                onEvent(RequestScreenEvents.ShowIdCard(uri))
+                            },
+                            onAcceptClick = {
+                                onEvent(
+                                    RequestScreenEvents.ShowWarningDialog(
+                                        formId = request.id,
+                                        accepted = true
+                                    )
+                                )
+                            },
+                            onRejectClick = {
+                                onEvent(
+                                    RequestScreenEvents.ShowWarningDialog(
+                                        formId = request.id,
+                                        accepted = false,
+                                    )
+                                )
+                            }
+                        )
+                        HorizontalDivider()
+                    }
                 }
             }
         }

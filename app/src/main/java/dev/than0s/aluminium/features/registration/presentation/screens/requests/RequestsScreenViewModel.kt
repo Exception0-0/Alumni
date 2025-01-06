@@ -45,6 +45,7 @@ class RequestsScreenViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     screenState = screenState.copy(requestsList = result.data!!)
+                    filterRequests()
                 }
             }
             screenState = screenState.copy(isLoading = false)
@@ -119,6 +120,44 @@ class RequestsScreenViewModel @Inject constructor(
         screenState = screenState.copy(selectedIdCard = null)
     }
 
+    private fun onAllFilterClick() {
+        screenState = screenState.copy(
+            pendingFilter = !screenState.allFilter,
+            approvedFilter = !screenState.allFilter,
+            rejectedFilter = !screenState.allFilter,
+            allFilter = !screenState.allFilter
+        )
+        filterRequests()
+    }
+
+    private fun onPendingFilterClick() {
+        screenState = screenState.copy(pendingFilter = !screenState.pendingFilter)
+        filterRequests()
+    }
+
+    private fun onApprovedFilterClick() {
+        screenState = screenState.copy(approvedFilter = !screenState.approvedFilter)
+        filterRequests()
+    }
+
+    private fun onRejectFilterClick() {
+        screenState = screenState.copy(rejectedFilter = !screenState.rejectedFilter)
+        filterRequests()
+    }
+
+    private fun filterRequests() {
+        screenState = screenState.copy(
+            filteredList = screenState.requestsList.filter {
+                when (it.status.approvalStatus) {
+                    null -> screenState.pendingFilter
+                    true -> screenState.approvedFilter
+                    false -> screenState.rejectedFilter
+                }
+            }
+        )
+        filterRequests()
+    }
+
     fun onEvent(event: RequestScreenEvents) {
         when (event) {
             is RequestScreenEvents.OnAcceptClick -> {
@@ -148,6 +187,11 @@ class RequestsScreenViewModel @Inject constructor(
             is RequestScreenEvents.DismissIdCard -> {
                 dismissIdCard()
             }
+
+            is RequestScreenEvents.OnAllFilterClick -> onAllFilterClick()
+            is RequestScreenEvents.OnApprovedFilterClick -> onApprovedFilterClick()
+            is RequestScreenEvents.OnPendingFilterClick -> onPendingFilterClick()
+            is RequestScreenEvents.OnRejectedFilterClick -> onRejectFilterClick()
         }
     }
 }
