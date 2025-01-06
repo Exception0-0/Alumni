@@ -14,13 +14,13 @@ import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
-import dev.than0s.aluminium.features.registration.domain.use_cases.SubmitRegistrationUseCase
+import dev.than0s.aluminium.features.registration.domain.use_cases.AddRegistrationRequestUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val registerUseCase: SubmitRegistrationUseCase
+    private val registerUseCase: AddRegistrationRequestUseCase
 ) :
     ViewModel() {
     var screenState by mutableStateOf(RegistrationState())

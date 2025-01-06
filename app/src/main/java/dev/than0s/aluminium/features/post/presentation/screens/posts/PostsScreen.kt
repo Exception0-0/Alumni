@@ -45,7 +45,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -59,10 +58,10 @@ import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
@@ -103,7 +102,7 @@ private fun PostsScreenContent(
     if (screenState.deletePostId != null) {
         PreferredWarningDialog(
             title = stringResource(R.string.post_delete),
-            description = stringResource(R.string.delete_alert_message),
+            description = stringResource(R.string.alert_message),
             isLoading = screenState.isDeleting,
             onDismissRequest = {
                 onEvent(PostsEvents.DismissPostDeleteDialog)
@@ -184,9 +183,7 @@ private fun PostsScreenContent(
                             )
                         }
                     )
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    HorizontalDivider()
                 }
             }
         }
@@ -488,9 +485,7 @@ private fun ShimmerPostBox() {
             width = ShimmerTextWidth.small,
             modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
         )
-        HorizontalDivider(
-            modifier = Modifier.fillMaxWidth()
-        )
+        HorizontalDivider()
     }
 }
 

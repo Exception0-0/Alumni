@@ -20,7 +20,7 @@ sealed class Screen(
     data object RegistrationScreen : Screen(name = "Registration")
 
     @Serializable
-    data object RegistrationRequestsScreen : Screen(name = "Registration Requests")
+    data object RegistrationRequestsScreen : Screen(name = "Admin Home")
 
     @Serializable
     data object PostUploadScreen : Screen(name = "Post Upload")

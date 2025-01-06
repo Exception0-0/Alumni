@@ -15,8 +15,8 @@
     <string name="successfully_register">Registration completed successfully</string>
     <string name="request_accepted_successfully">Request accepted successfully</string>
     <string name="request_rejected_successfully">Request rejected successfully</string>
-    <string name="accept_request_title">Do you really want to accept this request?</string>
-    <string name="reject_request_title">Do you really want to reject this request?</string>
+    <string name="accept_request_title">Accept Request</string>
+    <string name="reject_request_title">Reject Request</string>
     <string name="request_desc">You can\'t undo this action, so be careful with your choices</string>
     <string name="invalid_email">invalid email format</string>
     <string name="input_too_short_error">input too short</string>
@@ -27,6 +27,7 @@
     <string name="post_delete_successfully">post deleted successfully</string>
     <string name="profile_create_successfully">profile create successfully</string>
     <string name="post_delete">Post Delete</string>
-    <string name="delete_alert_message">you can\'t revert this operation, so think before delete.</string>
+    <string name="alert_message">you can\'t revert this operation, so think before do.</string>
     <string name="comment_delete">Comment Delete</string>
+    <string name="show_id_card">show id card</string>
 </resources>

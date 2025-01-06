@@ -24,3 +24,17 @@ fun PreferredTextButton(
         }
     }
 }
+
+@Composable
+fun PreferredTextButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Text(text = text)
+    }
+}

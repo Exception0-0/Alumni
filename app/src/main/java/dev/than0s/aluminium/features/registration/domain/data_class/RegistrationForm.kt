@@ -17,5 +17,5 @@ data class RegistrationForm(
     val batchFrom: String? = null,
     val batchTo: String? = null,
     val idCardImage: Uri? = null,
-    val status: RegistrationStatus = RegistrationStatus()
+    val status: RegistrationRequestStatus = RegistrationRequestStatus()
 )

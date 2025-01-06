@@ -1,10 +1,11 @@
 package dev.than0s.aluminium.features.registration.data.mapper
 
 import android.net.Uri
+import com.google.firebase.firestore.DocumentId
 import dev.than0s.aluminium.core.Course
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
-import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationStatus
+import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationRequestStatus
 
 fun RegistrationForm.toRemoteRegistrationForm(): RemoteRegistrationForm = RemoteRegistrationForm(
     id = id,
@@ -36,8 +37,8 @@ fun RemoteRegistrationForm.toRegistrationForm(): RegistrationForm = Registration
     status = status
 )
 
-
 data class RemoteRegistrationForm(
+    @DocumentId
     val id: String = "",
     val role: Role = Role.Student,
     val collegeId: String = "",
@@ -49,5 +50,5 @@ data class RemoteRegistrationForm(
     val batchTo: String? = null,
     val course: Course? = null,
     val idCardImage: String? = null,
-    val status: RegistrationStatus = RegistrationStatus()
+    val status: RegistrationRequestStatus = RegistrationRequestStatus()
 )

@@ -1,5 +1,6 @@
-package dev.than0s.aluminium.features.registration.presentation.screens.registration_requests
+package dev.than0s.aluminium.features.registration.presentation.screens.requests
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,18 +12,17 @@ import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
-import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
-import dev.than0s.aluminium.features.registration.domain.use_cases.AcceptRegistrationRequest
-import dev.than0s.aluminium.features.registration.domain.use_cases.RegistrationRequestListUseCase
-import dev.than0s.aluminium.features.registration.domain.use_cases.RejectRegistrationRequest
+import dev.than0s.aluminium.features.registration.domain.use_cases.AcceptRegistrationRequestUseCase
+import dev.than0s.aluminium.features.registration.domain.use_cases.GetRegistrationRequestsUseCase
+import dev.than0s.aluminium.features.registration.domain.use_cases.RejectRegistrationRequestUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RequestViewModel @Inject constructor(
-    private val requestsUseCase: RegistrationRequestListUseCase,
-    private val acceptedUseCase: AcceptRegistrationRequest,
-    private val rejectedUserCase: RejectRegistrationRequest
+class RequestsScreenViewModel @Inject constructor(
+    private val getRegistrationRequestsUseCase: GetRegistrationRequestsUseCase,
+    private val acceptRegistrationRequestUseCase: AcceptRegistrationRequestUseCase,
+    private val rejectRegistrationRequestUseCase: RejectRegistrationRequestUseCase
 ) :
     ViewModel() {
     var screenState by mutableStateOf(RequestScreenState())
@@ -34,7 +34,7 @@ class RequestViewModel @Inject constructor(
     private fun loadRequestList() {
         viewModelScope.launch {
             screenState = screenState.copy(isLoading = true)
-            when (val result = requestsUseCase()) {
+            when (val result = getRegistrationRequestsUseCase()) {
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
@@ -51,10 +51,10 @@ class RequestViewModel @Inject constructor(
         }
     }
 
-    private fun onAcceptClick(form: RegistrationForm) {
+    private fun onAcceptClick(registrationRequestId: String) {
         viewModelScope.launch {
-            screenState = screenState.copy(isDialogLoading = true)
-            when (val result = acceptedUseCase(form)) {
+            screenState = screenState.copy(isUpdating = true)
+            when (val result = acceptRegistrationRequestUseCase(registrationRequestId)) {
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
@@ -69,16 +69,18 @@ class RequestViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.request_accepted_successfully)
                         )
                     )
+                    dismissWarningDialog()
+                    loadRequestList()
                 }
             }
-            screenState = screenState.copy(isDialogLoading = false)
+            screenState = screenState.copy(isUpdating = false)
         }
     }
 
-    private fun onRejectedClick(form: RegistrationForm) {
+    private fun onRejectedClick(registrationRequestId: String) {
         viewModelScope.launch {
-            screenState = screenState.copy(isDialogLoading = true)
-            when (val result = rejectedUserCase(form)) {
+            screenState = screenState.copy(isUpdating = true)
+            when (val result = rejectRegistrationRequestUseCase(registrationRequestId)) {
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
@@ -93,56 +95,58 @@ class RequestViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.request_rejected_successfully)
                         )
                     )
+                    dismissWarningDialog()
+                    loadRequestList()
                 }
             }
-            screenState = screenState.copy(isDialogLoading = false)
+            screenState = screenState.copy(isUpdating = false)
         }
     }
 
-    private fun showWarningDialog(formId: String, accepted: Boolean) {
-        screenState = screenState.copy(requestSelection = Pair(formId, accepted))
+    private fun showWarningDialog(requestId: String, accepted: Boolean) {
+        screenState = screenState.copy(requestSelection = Pair(requestId, accepted))
     }
 
-    private fun hideWarningDialog() {
+    private fun dismissWarningDialog() {
         screenState = screenState.copy(requestSelection = null)
     }
 
-    private fun showIdCard(formId: String) {
-        screenState = screenState.copy(idCardSelection = formId)
+    private fun showIdCard(uri: Uri) {
+        screenState = screenState.copy(selectedIdCard = uri)
     }
 
-    private fun hideIdCard() {
-        screenState = screenState.copy(idCardSelection = null)
+    private fun dismissIdCard() {
+        screenState = screenState.copy(selectedIdCard = null)
     }
 
     fun onEvent(event: RequestScreenEvents) {
         when (event) {
             is RequestScreenEvents.OnAcceptClick -> {
-                onAcceptClick(event.form)
+                onAcceptClick(event.requestId)
             }
 
             is RequestScreenEvents.OnRejectClick -> {
-                onRejectedClick(event.form)
+                onRejectedClick(event.requestId)
             }
 
-            is RequestScreenEvents.OnLoad -> {
+            is RequestScreenEvents.LoadRequest -> {
                 loadRequestList()
             }
 
-            is RequestScreenEvents.OnShowDialog -> {
+            is RequestScreenEvents.ShowWarningDialog -> {
                 showWarningDialog(event.formId, event.accepted)
             }
 
-            is RequestScreenEvents.OnDismissDialog -> {
-                hideWarningDialog()
+            is RequestScreenEvents.DismissWarningDialog -> {
+                dismissWarningDialog()
             }
 
-            is RequestScreenEvents.OnShowIdCard -> {
-                showIdCard(event.formId)
+            is RequestScreenEvents.ShowIdCard -> {
+                showIdCard(event.imageUri)
             }
 
-            is RequestScreenEvents.OnHideIdCard -> {
-                hideIdCard()
+            is RequestScreenEvents.DismissIdCard -> {
+                dismissIdCard()
             }
         }
     }

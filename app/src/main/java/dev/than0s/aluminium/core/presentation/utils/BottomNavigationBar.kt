@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
-import androidx.compose.material.icons.filled.AppRegistration
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.AppRegistration
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
@@ -35,8 +33,8 @@ private data class BottomNavigationItem(
 private val bottomNavItems = listOf(
     BottomNavigationItem(
         Screen.RegistrationRequestsScreen,
-        Icons.Filled.AppRegistration,
-        Icons.Outlined.AppRegistration,
+        Icons.Filled.Home,
+        Icons.Outlined.Home,
     ),
     BottomNavigationItem(
         Screen.HomeScreen(),

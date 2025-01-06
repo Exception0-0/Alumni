@@ -41,7 +41,9 @@ fun PreferredWarningDialog(
         dismissButton = {
             TextButton(
                 onClick = {
-                    onDismissRequest()
+                    if (!isLoading) {
+                        onDismissRequest()
+                    }
                 },
                 content = {
                     Text("Cancel")

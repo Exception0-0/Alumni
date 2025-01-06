@@ -17,3 +17,6 @@ const val ID_CARD_IMAGES = "id_card_images"
 
 // post collection field
 const val USER_ID = "userId"
+
+// registration request field
+const val STATUS_APPROVAL_STATUS = "status.approvalStatus"

@@ -5,8 +5,8 @@ import dev.than0s.aluminium.features.registration.domain.data_class.Registration
 import dev.than0s.aluminium.features.registration.domain.repository.RegistrationRepository
 import javax.inject.Inject
 
-class RegistrationRequestListUseCase @Inject constructor(private val repository: RegistrationRepository) {
+class GetRegistrationRequestsUseCase @Inject constructor(private val repository: RegistrationRepository) {
     suspend operator fun invoke(): Resource<List<RegistrationForm>> {
-        return repository.registrationList()
+        return repository.getRegistrationRequests()
     }
 }

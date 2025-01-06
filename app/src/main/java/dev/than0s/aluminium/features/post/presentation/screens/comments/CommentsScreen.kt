@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,7 +78,7 @@ private fun CommentScreenContent(
     if (screenState.deleteCommentId != null) {
         PreferredWarningDialog(
             title = stringResource(R.string.comment_delete),
-            description = stringResource(R.string.delete_alert_message),
+            description = stringResource(R.string.alert_message),
             isLoading = screenState.isDeleting,
             onDismissRequest = {
                 onEvent(CommentEvents.DismissCommentDeleteDialog)

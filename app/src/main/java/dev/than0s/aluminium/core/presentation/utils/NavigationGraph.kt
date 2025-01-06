@@ -17,7 +17,7 @@ import dev.than0s.aluminium.features.profile.presentation.dialogs.update_profile
 import dev.than0s.aluminium.features.profile.presentation.screens.profile.ProfileScreen
 import dev.than0s.aluminium.features.profile.presentation.screens.settings.SettingScreen
 import dev.than0s.aluminium.features.registration.presentation.screens.registration.RegistrationScreen
-import dev.than0s.aluminium.features.registration.presentation.screens.registration_requests.RegistrationRequestsScreen
+import dev.than0s.aluminium.features.registration.presentation.screens.requests.RegistrationRequestsScreen
 import dev.than0s.aluminium.features.settings.screens.appearance.AppearanceScreen
 import dev.than0s.aluminium.features.splash.presentation.splash.SplashScreen
 

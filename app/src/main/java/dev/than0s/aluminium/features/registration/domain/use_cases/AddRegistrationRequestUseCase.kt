@@ -8,7 +8,7 @@ import dev.than0s.aluminium.features.registration.domain.data_class.SubmitRegist
 import dev.than0s.aluminium.features.registration.domain.repository.RegistrationRepository
 import javax.inject.Inject
 
-class SubmitRegistrationUseCase @Inject constructor(private val repository: RegistrationRepository) {
+class AddRegistrationRequestUseCase @Inject constructor(private val repository: RegistrationRepository) {
     suspend operator fun invoke(form: RegistrationForm): SubmitRegistrationResult {
         val emailError = form.email.let {
             if (it.isBlank()) TextFieldError.FieldEmpty
@@ -60,7 +60,7 @@ class SubmitRegistrationUseCase @Inject constructor(private val repository: Regi
         }
 
         return SubmitRegistrationResult(
-            result = repository.setRegistration(form.copy(id = generateUniqueId()))
+            result = repository.addRegistrationRequest(form.copy(id = generateUniqueId()))
         )
     }
 }

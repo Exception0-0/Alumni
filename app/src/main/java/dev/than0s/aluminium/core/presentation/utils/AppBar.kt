@@ -138,6 +138,11 @@ private fun getDefaultTopAppBar(
             title = Screen.PostUploadScreen.name
         )
 
+        destination.hasRoute<Screen.RegistrationRequestsScreen>() -> TopAppBarItem(
+            title = Screen.RegistrationRequestsScreen.name,
+            shouldHaveNavIcon = false,
+        )
+
         else -> null
     }
 }
