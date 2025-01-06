@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.core.presentation.utils
 
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
@@ -24,6 +23,7 @@ fun SnackbarLogic(
 
             val result = snackbarHostState.showSnackbar(
                 message = event.message.asString(context),
+                withDismissAction = true,
                 actionLabel = event.action?.name?.asString(context),
             )
 
