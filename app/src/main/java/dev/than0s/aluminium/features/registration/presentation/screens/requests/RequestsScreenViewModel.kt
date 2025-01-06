@@ -179,7 +179,7 @@ class RequestsScreenViewModel @Inject constructor(
 
     private fun filterRequestsOnSearchText() {
         screenState = screenState.copy(
-            filteredList = screenState.requestsList.filter {
+            filteredList = screenState.filteredList.filter {
                 it.toString().contains(screenState.searchText,ignoreCase = true)
             }
         )
