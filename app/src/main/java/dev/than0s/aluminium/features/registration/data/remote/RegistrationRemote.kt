@@ -6,6 +6,7 @@ import com.google.firebase.firestore.toObjects
 import com.google.firebase.storage.FirebaseStorage
 import dev.than0s.aluminium.core.data.remote.ID_CARD_IMAGES
 import dev.than0s.aluminium.core.data.remote.REGISTRATION_REQUESTS
+import dev.than0s.aluminium.core.data.remote.STATUS_ACCOUNT_GENERATED_STATUS
 import dev.than0s.aluminium.core.data.remote.STATUS_APPROVAL_STATUS
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.features.registration.data.mapper.RemoteRegistrationForm
@@ -67,7 +68,12 @@ class RegisterDataSourceImple @Inject constructor(
         try {
             store.collection(REGISTRATION_REQUESTS)
                 .document(registrationRequestId)
-                .update(mapOf(STATUS_APPROVAL_STATUS to true))
+                .update(
+                    mapOf(
+                        STATUS_APPROVAL_STATUS to true,
+                        STATUS_ACCOUNT_GENERATED_STATUS to false,
+                    )
+                )
                 .await()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
