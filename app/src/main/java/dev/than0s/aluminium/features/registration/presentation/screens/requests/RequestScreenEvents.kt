@@ -12,6 +12,8 @@ sealed class RequestScreenEvents {
     data object OnPendingFilterClick : RequestScreenEvents()
     data object OnApprovedFilterClick : RequestScreenEvents()
     data object OnRejectedFilterClick : RequestScreenEvents()
+    data object ShowBottomSheet : RequestScreenEvents()
+    data object DismissBottomSheet : RequestScreenEvents()
     data object DismissIdCard : RequestScreenEvents()
     data object DismissWarningDialog : RequestScreenEvents()
     data object LoadRequest : RequestScreenEvents()

@@ -11,6 +11,7 @@ data class RequestScreenState(
     val selectedIdCard: Uri? = null,
     val isLoading: Boolean = false,
     val isUpdating: Boolean = false,
+    val isBottomSheetVisible: Boolean = false,
     val allFilter: Boolean = false,
     val pendingFilter: Boolean = true,
     val approvedFilter: Boolean = false,

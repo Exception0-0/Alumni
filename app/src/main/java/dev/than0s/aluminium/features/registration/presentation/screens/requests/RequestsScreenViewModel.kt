@@ -45,7 +45,7 @@ class RequestsScreenViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     screenState = screenState.copy(requestsList = result.data!!)
-                    filterRequestsOnFilters()
+                    filterRequests()
                 }
             }
             screenState = screenState.copy(isLoading = false)
@@ -106,7 +106,7 @@ class RequestsScreenViewModel @Inject constructor(
 
     private fun onSearchTextChange(text: String) {
         screenState = screenState.copy(searchText = text)
-        filterRequestsOnSearchText()
+        filterRequests()
     }
 
     private fun showWarningDialog(requestId: String, accepted: Boolean) {
@@ -125,6 +125,14 @@ class RequestsScreenViewModel @Inject constructor(
         screenState = screenState.copy(selectedIdCard = null)
     }
 
+    private fun showBottomSheet() {
+        screenState = screenState.copy(isBottomSheetVisible = true)
+    }
+
+    private fun dismissBottomSheet() {
+        screenState = screenState.copy(isBottomSheetVisible = false)
+    }
+
     private fun onAllFilterClick() {
         screenState = screenState.copy(
             pendingFilter = !screenState.allFilter,
@@ -132,25 +140,25 @@ class RequestsScreenViewModel @Inject constructor(
             rejectedFilter = !screenState.allFilter,
             allFilter = !screenState.allFilter
         )
-        filterRequestsOnFilters()
+        filterRequests()
     }
 
     private fun onPendingFilterClick() {
         screenState = screenState.copy(pendingFilter = !screenState.pendingFilter)
         shouldAllFilterCheck()
-        filterRequestsOnFilters()
+        filterRequests()
     }
 
     private fun onApprovedFilterClick() {
         screenState = screenState.copy(approvedFilter = !screenState.approvedFilter)
         shouldAllFilterCheck()
-        filterRequestsOnFilters()
+        filterRequests()
     }
 
     private fun onRejectFilterClick() {
         screenState = screenState.copy(rejectedFilter = !screenState.rejectedFilter)
         shouldAllFilterCheck()
-        filterRequestsOnFilters()
+        filterRequests()
     }
 
     private fun shouldAllFilterCheck() {
@@ -165,7 +173,7 @@ class RequestsScreenViewModel @Inject constructor(
         }
     }
 
-    private fun filterRequestsOnFilters() {
+    private fun filterRequests() {
         screenState = screenState.copy(
             filteredList = screenState.requestsList.filter {
                 when (it.status.approvalStatus) {
@@ -173,14 +181,8 @@ class RequestsScreenViewModel @Inject constructor(
                     true -> screenState.approvedFilter
                     false -> screenState.rejectedFilter
                 }
-            }
-        )
-    }
-
-    private fun filterRequestsOnSearchText() {
-        screenState = screenState.copy(
-            filteredList = screenState.filteredList.filter {
-                it.toString().contains(screenState.searchText,ignoreCase = true)
+            }.filter {
+                it.toString().contains(screenState.searchText, ignoreCase = true)
             }
         )
     }
@@ -220,6 +222,8 @@ class RequestsScreenViewModel @Inject constructor(
             is RequestScreenEvents.OnPendingFilterClick -> onPendingFilterClick()
             is RequestScreenEvents.OnRejectedFilterClick -> onRejectFilterClick()
             is RequestScreenEvents.OnSearchTextChanged -> onSearchTextChange(event.text)
+            is RequestScreenEvents.DismissBottomSheet -> dismissBottomSheet()
+            is RequestScreenEvents.ShowBottomSheet -> showBottomSheet()
         }
     }
 }

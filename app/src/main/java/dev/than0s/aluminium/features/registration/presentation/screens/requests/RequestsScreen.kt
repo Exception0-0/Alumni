@@ -11,11 +11,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -34,6 +37,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColu
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilterChip
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredGroupTitle
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
@@ -96,6 +100,12 @@ private fun RegistrationRequestsContent(
             }
         )
     }
+    if (screenState.isBottomSheetVisible) {
+        BottomSheet(
+            screenState = screenState,
+            onEvent = onEvent
+        )
+    }
     PullToRefreshBox(
         isRefreshing = screenState.isLoading,
         onRefresh = {
@@ -121,14 +131,22 @@ private fun RegistrationRequestsContent(
                             contentDescription = "Search"
                         )
                     },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                onEvent(RequestScreenEvents.ShowBottomSheet)
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.Filled.FilterList,
+                                    contentDescription = "filter list"
+                                )
+                            }
+                        )
+                    },
                     modifier = Modifier
-                        .padding(horizontal = MaterialTheme.padding.small)
-                        .padding(top = MaterialTheme.padding.small)
+                        .padding(MaterialTheme.padding.small)
                         .fillMaxWidth()
-                )
-                FilterRow(
-                    screenState = screenState,
-                    onEvent = onEvent
                 )
                 if (screenState.filteredList.isEmpty()) {
                     AnimationNoData(
@@ -165,6 +183,27 @@ private fun RegistrationRequestsContent(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomSheet(
+    screenState: RequestScreenState,
+    onEvent: (RequestScreenEvents) -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = {
+            onEvent(RequestScreenEvents.DismissBottomSheet)
+        },
+    ) {
+        PreferredGroupTitle(
+            text = "Approval Status"
+        )
+        FilterRow(
+            screenState = screenState,
+            onEvent = onEvent
+        )
     }
 }
 
