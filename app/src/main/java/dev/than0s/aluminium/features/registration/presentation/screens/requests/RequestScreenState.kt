@@ -6,6 +6,7 @@ import dev.than0s.aluminium.features.registration.domain.data_class.Registration
 data class RequestScreenState(
     val requestsList: List<RegistrationForm> = emptyList(),
     val filteredList: List<RegistrationForm> = emptyList(),
+    val searchText: String = "",
     val requestSelection: Pair<String, Boolean>? = null,
     val selectedIdCard: Uri? = null,
     val isLoading: Boolean = false,

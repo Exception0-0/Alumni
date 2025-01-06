@@ -10,8 +10,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -31,6 +34,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColu
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilterChip
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextButton
@@ -108,6 +112,22 @@ private fun RegistrationRequestsContent(
                 FilterRow(
                     screenState = screenState,
                     onEvent = onEvent
+                )
+                PreferredOutlinedTextField(
+                    placeholder = "Search...",
+                    value = screenState.searchText,
+                    onValueChange = {
+                        onEvent(RequestScreenEvents.OnSearchTextChanged(it))
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Search"
+                        )
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = MaterialTheme.padding.small)
+                        .fillMaxWidth()
                 )
                 if (screenState.filteredList.isEmpty()) {
                     AnimationNoData(

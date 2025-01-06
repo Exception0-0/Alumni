@@ -45,7 +45,7 @@ class RequestsScreenViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     screenState = screenState.copy(requestsList = result.data!!)
-                    filterRequests()
+                    filterRequestsOnFilters()
                 }
             }
             screenState = screenState.copy(isLoading = false)
@@ -104,6 +104,11 @@ class RequestsScreenViewModel @Inject constructor(
         }
     }
 
+    private fun onSearchTextChange(text: String) {
+        screenState = screenState.copy(searchText = text)
+        filterRequestsOnSearchText()
+    }
+
     private fun showWarningDialog(requestId: String, accepted: Boolean) {
         screenState = screenState.copy(requestSelection = Pair(requestId, accepted))
     }
@@ -127,25 +132,25 @@ class RequestsScreenViewModel @Inject constructor(
             rejectedFilter = !screenState.allFilter,
             allFilter = !screenState.allFilter
         )
-        filterRequests()
+        filterRequestsOnFilters()
     }
 
     private fun onPendingFilterClick() {
         screenState = screenState.copy(pendingFilter = !screenState.pendingFilter)
         shouldAllFilterCheck()
-        filterRequests()
+        filterRequestsOnFilters()
     }
 
     private fun onApprovedFilterClick() {
         screenState = screenState.copy(approvedFilter = !screenState.approvedFilter)
         shouldAllFilterCheck()
-        filterRequests()
+        filterRequestsOnFilters()
     }
 
     private fun onRejectFilterClick() {
         screenState = screenState.copy(rejectedFilter = !screenState.rejectedFilter)
         shouldAllFilterCheck()
-        filterRequests()
+        filterRequestsOnFilters()
     }
 
     private fun shouldAllFilterCheck() {
@@ -160,7 +165,7 @@ class RequestsScreenViewModel @Inject constructor(
         }
     }
 
-    private fun filterRequests() {
+    private fun filterRequestsOnFilters() {
         screenState = screenState.copy(
             filteredList = screenState.requestsList.filter {
                 when (it.status.approvalStatus) {
@@ -168,6 +173,14 @@ class RequestsScreenViewModel @Inject constructor(
                     true -> screenState.approvedFilter
                     false -> screenState.rejectedFilter
                 }
+            }
+        )
+    }
+
+    private fun filterRequestsOnSearchText() {
+        screenState = screenState.copy(
+            filteredList = screenState.requestsList.filter {
+                it.toString().contains(screenState.searchText,ignoreCase = true)
             }
         )
     }
@@ -206,6 +219,7 @@ class RequestsScreenViewModel @Inject constructor(
             is RequestScreenEvents.OnApprovedFilterClick -> onApprovedFilterClick()
             is RequestScreenEvents.OnPendingFilterClick -> onPendingFilterClick()
             is RequestScreenEvents.OnRejectedFilterClick -> onRejectFilterClick()
+            is RequestScreenEvents.OnSearchTextChanged -> onSearchTextChange(event.text)
         }
     }
 }
