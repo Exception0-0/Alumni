@@ -3,8 +3,10 @@ package dev.than0s.aluminium.features.profile.presentation.screens.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.domain.use_case.SignOutUseCase
+import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
@@ -24,7 +26,13 @@ class SettingsViewModel @Inject constructor(
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
-                            message = result.uiText ?: UiText.unknownError()
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    onSignOut(restartApp = restartApp)
+                                }
+                            )
                         )
                     )
                 }
@@ -32,7 +40,7 @@ class SettingsViewModel @Inject constructor(
                 is Resource.Success -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
-                            message = UiText.DynamicString("Signed out successfully")
+                            message = UiText.StringResource(R.string.sign_out_successfully),
                         )
                     )
                     restartApp()

@@ -25,7 +25,7 @@ fun SnackbarLogic(
             val result = snackbarHostState.showSnackbar(
                 message = event.message.asString(context),
                 actionLabel = event.action?.name?.asString(context),
-                duration = SnackbarDuration.Long
+                duration = if (event.action != null) SnackbarDuration.Indefinite else SnackbarDuration.Long
             )
 
             if (result == SnackbarResult.ActionPerformed) {
