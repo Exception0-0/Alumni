@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
+import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
@@ -57,7 +58,13 @@ class PostUploadViewModel @Inject constructor(
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
-                            message = addPostResult.result.uiText ?: UiText.unknownError()
+                            message = addPostResult.result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    onUploadClick(popScreen = popScreen)
+                                }
+                            )
                         )
                     )
                 }
