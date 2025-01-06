@@ -123,6 +123,7 @@ private fun RegistrationRequestsContent(
                     },
                     modifier = Modifier
                         .padding(horizontal = MaterialTheme.padding.small)
+                        .padding(top = MaterialTheme.padding.small)
                         .fillMaxWidth()
                 )
                 FilterRow(
