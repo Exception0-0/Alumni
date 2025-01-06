@@ -16,7 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.currentUserId
+import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.utils.Screen
 
@@ -45,20 +47,22 @@ private fun SettingScreenContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        ListItem(
-            headlineContent = {
-                Text(text = "Profile")
-            },
-            leadingContent = {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Profile"
-                )
-            },
-            modifier = Modifier.clickable {
-                openScreen(Screen.ProfileScreen(currentUserId!!))
-            }
-        )
+        if (currentUserRole != Role.Admin) {
+            ListItem(
+                headlineContent = {
+                    Text(text = "Profile")
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Profile"
+                    )
+                },
+                modifier = Modifier.clickable {
+                    openScreen(Screen.ProfileScreen(currentUserId!!))
+                }
+            )
+        }
         ListItem(
             headlineContent = {
                 Text(text = "Appearance")
