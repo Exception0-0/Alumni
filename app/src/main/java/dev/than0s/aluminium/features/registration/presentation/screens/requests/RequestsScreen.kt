@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.presentation.composable.lottie_animation.AnimationNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredClickableText
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
@@ -104,70 +105,87 @@ private fun RegistrationRequestsContent(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top
             ) {
-                PreferredRow(
-                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                    modifier = Modifier
-                        .padding(horizontal = MaterialTheme.padding.small)
-                        .horizontalScroll(rememberScrollState())
-                ) {
-                    PreferredFilterChip(
-                        label = "All",
-                        selected = screenState.allFilter,
-                        onClick = {
-                            onEvent(RequestScreenEvents.OnAllFilterClick)
-                        },
+                FilterRow(
+                    screenState = screenState,
+                    onEvent = onEvent
+                )
+                if (screenState.filteredList.isEmpty()) {
+                    AnimationNoData(
+                        text = "No request found"
                     )
-                    PreferredFilterChip(
-                        label = "Pending",
-                        selected = screenState.pendingFilter,
-                        onClick = {
-                            onEvent(RequestScreenEvents.OnPendingFilterClick)
-                        },
-                    )
-                    PreferredFilterChip(
-                        label = "Approved",
-                        selected = screenState.approvedFilter,
-                        onClick = {
-                            onEvent(RequestScreenEvents.OnApprovedFilterClick)
-                        },
-                    )
-                    PreferredFilterChip(
-                        label = "Rejected",
-                        selected = screenState.rejectedFilter,
-                        onClick = {
-                            onEvent(RequestScreenEvents.OnRejectedFilterClick)
-                        },
-                    )
-                }
-                LazyColumn {
-                    items(items = screenState.filteredList) { request ->
-                        RequestItem(
-                            request = request,
-                            onIdCardClick = { uri ->
-                                onEvent(RequestScreenEvents.ShowIdCard(uri))
-                            },
-                            onAcceptClick = {
-                                onEvent(
-                                    RequestScreenEvents.ShowWarningDialog(
-                                        formId = request.id,
-                                        accepted = true
+                } else {
+                    LazyColumn {
+                        items(items = screenState.filteredList) { request ->
+                            RequestItem(
+                                request = request,
+                                onIdCardClick = { uri ->
+                                    onEvent(RequestScreenEvents.ShowIdCard(uri))
+                                },
+                                onAcceptClick = {
+                                    onEvent(
+                                        RequestScreenEvents.ShowWarningDialog(
+                                            formId = request.id,
+                                            accepted = true
+                                        )
                                     )
-                                )
-                            },
-                            onRejectClick = {
-                                onEvent(
-                                    RequestScreenEvents.ShowWarningDialog(
-                                        formId = request.id,
-                                        accepted = false,
+                                },
+                                onRejectClick = {
+                                    onEvent(
+                                        RequestScreenEvents.ShowWarningDialog(
+                                            formId = request.id,
+                                            accepted = false,
+                                        )
                                     )
-                                )
-                            }
-                        )
-                        HorizontalDivider()
+                                }
+                            )
+                            HorizontalDivider()
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun FilterRow(
+    screenState: RequestScreenState,
+    onEvent: (RequestScreenEvents) -> Unit
+) {
+    PreferredRow(
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+        modifier = Modifier
+            .padding(horizontal = MaterialTheme.padding.small)
+            .horizontalScroll(rememberScrollState())
+    ) {
+        PreferredFilterChip(
+            label = "All",
+            selected = screenState.allFilter,
+            onClick = {
+                onEvent(RequestScreenEvents.OnAllFilterClick)
+            },
+        )
+        PreferredFilterChip(
+            label = "Pending",
+            selected = screenState.pendingFilter,
+            onClick = {
+                onEvent(RequestScreenEvents.OnPendingFilterClick)
+            },
+        )
+        PreferredFilterChip(
+            label = "Approved",
+            selected = screenState.approvedFilter,
+            onClick = {
+                onEvent(RequestScreenEvents.OnApprovedFilterClick)
+            },
+        )
+        PreferredFilterChip(
+            label = "Rejected",
+            selected = screenState.rejectedFilter,
+            onClick = {
+                onEvent(RequestScreenEvents.OnRejectedFilterClick)
+            },
+        )
     }
 }
 
