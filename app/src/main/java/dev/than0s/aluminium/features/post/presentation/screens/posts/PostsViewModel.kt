@@ -21,6 +21,7 @@ import dev.than0s.aluminium.core.domain.use_case.GetPostsUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import dev.than0s.aluminium.core.domain.use_case.RemoveLikeUseCase
 import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
@@ -94,7 +95,13 @@ class PostsViewModel @Inject constructor(
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
-                            message = result.uiText ?: UiText.unknownError()
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    removeLike(postId)
+                                }
+                            )
                         )
                     )
                 }
@@ -113,7 +120,13 @@ class PostsViewModel @Inject constructor(
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
-                            message = result.uiText ?: UiText.unknownError()
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    addLike(postId)
+                                }
+                            )
                         )
                     )
                 }

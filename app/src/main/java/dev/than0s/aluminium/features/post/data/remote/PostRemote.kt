@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.toObjects
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 import dev.than0s.aluminium.core.data.remote.POSTS
 import dev.than0s.aluminium.core.data.remote.USER_ID
 import dev.than0s.aluminium.core.data.remote.error.ServerException
@@ -68,6 +69,8 @@ class PostRemoteImple @Inject constructor(
                 .await()
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
+        } catch (e: StorageException) {
+            throw ServerException(e.message.toString())
         }
     }
 
@@ -76,6 +79,8 @@ class PostRemoteImple @Inject constructor(
             store.collection(POSTS).document(postId).delete().await()
             cloud.reference.child("$POSTS/${postId}/0").delete().await()
         } catch (e: FirebaseFirestoreException) {
+            throw ServerException(e.message.toString())
+        } catch (e: StorageException) {
             throw ServerException(e.message.toString())
         }
     }
