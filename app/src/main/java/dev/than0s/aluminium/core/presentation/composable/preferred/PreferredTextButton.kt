@@ -15,7 +15,7 @@ fun PreferredTextButton(
     TextButton(
         onClick = onClick,
         enabled = !isLoading,
-        modifier = modifier
+        modifier = modifier,
     ) {
         if (isLoading) {
             PreferredCircularProgressIndicator()
@@ -29,11 +29,13 @@ fun PreferredTextButton(
 fun PreferredTextButton(
     text: String,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     TextButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        enabled = enabled
     ) {
         Text(text = text)
     }

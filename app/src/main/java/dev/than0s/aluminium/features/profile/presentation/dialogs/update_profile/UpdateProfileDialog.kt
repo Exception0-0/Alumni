@@ -1,9 +1,9 @@
 package dev.than0s.aluminium.features.profile.presentation.dialogs.update_profile
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAddPicture
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
@@ -98,37 +98,39 @@ private fun UpdateProfileDialogContent(
                     fontSize = MaterialTheme.textSize.large,
                     fontWeight = FontWeight.Bold
                 )
-                PreferredAsyncImage(
-                    model = screenState.userProfile.coverImage,
+                PreferredAddPicture(
+                    model = screenState.userProfile.coverImage.let { if (it == Uri.EMPTY) null else it },
                     contentDescription = "user cover image",
                     shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+                    enabled = !screenState.isUpdating,
                     modifier = Modifier
                         .height(MaterialTheme.coverHeight.default)
-                        .clickable(enabled = !screenState.isUpdating) {
-                            imageSelectionState[COVER_IMAGE] = true
+                        .fillMaxWidth(),
+                    onAddPicture = {
+                        imageSelectionState[COVER_IMAGE] = true
+                        pickMedia.launch(
+                            input = PickVisualMediaRequest(
+                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                            ),
+                        )
+                    }
+                )
+                PreferredRow {
+                    PreferredAddPicture(
+                        model = screenState.userProfile.profileImage.let { if (it == Uri.EMPTY) null else it },
+                        contentDescription = "user profile image",
+                        contentScale = ContentScale.Crop,
+                        shape = CircleShape,
+                        enabled = !screenState.isUpdating,
+                        modifier = Modifier.size(MaterialTheme.profileSize.large),
+                        onAddPicture = {
+                            imageSelectionState[PROFILE_IMAGE] = true
                             pickMedia.launch(
                                 input = PickVisualMediaRequest(
                                     ActivityResultContracts.PickVisualMedia.ImageOnly
                                 ),
                             )
-                        }
-                )
-                PreferredRow {
-                    PreferredAsyncImage(
-                        model = screenState.userProfile.profileImage,
-                        contentDescription = "user profile image",
-                        contentScale = ContentScale.Crop,
-                        shape = CircleShape,
-                        modifier = Modifier
-                            .size(MaterialTheme.profileSize.large)
-                            .clickable(enabled = !screenState.isUpdating) {
-                                imageSelectionState[PROFILE_IMAGE] = true
-                                pickMedia.launch(
-                                    input = PickVisualMediaRequest(
-                                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                                    ),
-                                )
-                            }
+                        },
                     )
                     PreferredColumn {
                         PreferredTextField(
