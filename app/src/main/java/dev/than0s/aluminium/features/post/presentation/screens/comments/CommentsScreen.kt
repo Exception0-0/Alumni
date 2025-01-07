@@ -166,6 +166,7 @@ private fun CommentScreenContent(
                     onEvent(CommentEvents.OnCommentChanged(it))
                 },
                 enabled = !screenState.isCommentAdding,
+                singleLine = false,
                 supportingText = screenState.commentError?.message?.asString(),
                 trailingIcon = {
                     PreferredIconButton(
