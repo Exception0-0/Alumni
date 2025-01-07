@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -25,14 +26,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.POST_IMAGES_COUNT
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAddPicture
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.shimmer.getCurrentShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.postHeight
+import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
 fun PostUploadScreen(viewModel: PostUploadViewModel = hiltViewModel(), popScreen: () -> Unit) {
@@ -55,7 +58,9 @@ private fun PostUploadScreenContent(
         rememberLauncherForActivityResult(
             ActivityResultContracts.PickMultipleVisualMedia(POST_IMAGES_COUNT)
         ) { images ->
-            onEvent(PostUploadScreenEvents.OnImagesSelected(images))
+            if (images.isNotEmpty()) {
+                onEvent(PostUploadScreenEvents.OnImagesSelected(images))
+            }
         }
 
     Box(
@@ -66,39 +71,54 @@ private fun PostUploadScreenContent(
                 .align(Alignment.Center)
                 .verticalScroll(rememberScrollState())
         ) {
-            HorizontalMultiBrowseCarousel(
-                state = CarouselState { screenStates.post.files.size },
-                preferredItemWidth = configuration.screenWidthDp.dp,
-                modifier = Modifier
-                    .height(MaterialTheme.postHeight.default)
-                    .fillMaxWidth()
-                    .background(color = getCurrentShimmerBackground())
-                    .clickable(enabled = !screenStates.isLoading) {
+            if (screenStates.post.files.isEmpty()) {
+                PreferredAddPicture(
+                    model = null,
+                    shape = RoundedCornerShape(MaterialTheme.roundedCorners.small),
+                    modifier = Modifier
+                        .height(MaterialTheme.postHeight.default)
+                        .fillMaxWidth(),
+                    onAddPicture = {
                         pickMultipleMedia.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
                     }
-            ) { index ->
-                val uri = screenStates.post.files[index]
-                PreferredAsyncImage(
-                    model = uri,
-                    contentDescription = "selected image",
+                )
+            } else {
+                HorizontalMultiBrowseCarousel(
+                    state = CarouselState { screenStates.post.files.size },
+                    preferredItemWidth = configuration.screenWidthDp.dp,
                     modifier = Modifier
                         .height(MaterialTheme.postHeight.default)
-                )
+                        .fillMaxWidth()
+                        .background(color = getCurrentShimmerBackground())
+                        .clickable(enabled = !screenStates.isLoading) {
+                            pickMultipleMedia.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        }
+                ) { index ->
+                    val uri = screenStates.post.files[index]
+                    PreferredAsyncImage(
+                        model = uri,
+                        contentDescription = "selected image",
+                        modifier = Modifier
+                            .height(MaterialTheme.postHeight.default)
+                    )
+                }
             }
-            PreferredTextField(
+            PreferredOutlinedTextField(
                 value = screenStates.post.caption,
                 onValueChange = {
                     onEvent(PostUploadScreenEvents.OnCaptionChanged(it))
                 },
                 placeholder = "caption",
-                enable = !screenStates.isLoading,
+                enabled = !screenStates.isLoading,
                 supportingText = screenStates.titleError?.message?.asString(),
                 singleLine = false,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(horizontal = MaterialTheme.padding.extraSmall)
+                    .fillMaxWidth()
             )
             PreferredFilledButton(
                 onClick = {
