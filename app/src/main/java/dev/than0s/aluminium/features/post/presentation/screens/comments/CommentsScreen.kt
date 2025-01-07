@@ -44,6 +44,7 @@ import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.lottie_animation.AnimationNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
@@ -158,13 +159,13 @@ private fun CommentScreenContent(
                     }
                 }
             }
-            PreferredTextField(
+            PreferredOutlinedTextField(
                 value = screenState.comment.message,
                 placeholder = "comment message...",
                 onValueChange = {
                     onEvent(CommentEvents.OnCommentChanged(it))
                 },
-                enable = !screenState.isCommentAdding,
+                enabled = !screenState.isCommentAdding,
                 supportingText = screenState.commentError?.message?.asString(),
                 trailingIcon = {
                     PreferredIconButton(
