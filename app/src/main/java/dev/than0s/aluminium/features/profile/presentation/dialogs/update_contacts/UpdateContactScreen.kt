@@ -1,7 +1,6 @@
 package dev.than0s.aluminium.features.profile.presentation.dialogs.update_contacts
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons

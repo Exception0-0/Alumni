@@ -5,6 +5,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -43,20 +45,23 @@ import dev.than0s.aluminium.ui.textSize
 @Composable
 fun UpdateProfileDialog(
     viewModel: UpdateProfileDialogViewModel = hiltViewModel(),
-    popScreen: () -> Unit,
+    shouldSignOutShow: Boolean = false,
+    onSuccess: () -> Unit,
 ) {
     UpdateProfileDialogContent(
         screenState = viewModel.screenState,
         onEvent = viewModel::onEvent,
-        popScreen = popScreen
+        shouldSignOutShow = shouldSignOutShow,
+        onSuccess = onSuccess
     )
 }
 
 @Composable
 private fun UpdateProfileDialogContent(
     screenState: UpdateProfileDialogState,
+    shouldSignOutShow: Boolean,
+    onSuccess: () -> Unit,
     onEvent: (UpdateProfileDialogEvents) -> Unit,
-    popScreen: () -> Unit
 ) {
     val imageSelectionState = rememberSaveable {
         mutableMapOf(
@@ -156,27 +161,49 @@ private fun UpdateProfileDialogContent(
                     placeholder = "Bio",
                     modifier = Modifier.fillMaxWidth()
                 )
-                PreferredRow(
-                    horizontalArrangement = Arrangement.End,
+                Box(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(
-                        onClick = popScreen,
-                        enabled = !screenState.isUpdating
+                    PreferredRow(
+                        horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
                     ) {
-                        Text(text = "Cancel")
-                    }
-                    PreferredTextButton(
-                        text = "Update",
-                        isLoading = screenState.isUpdating,
-                        onClick = {
-                            onEvent(
-                                UpdateProfileDialogEvents.OnProfileUpdateClick(
-                                    onSuccessful = popScreen
+                        TextButton(
+                            onClick = onSuccess,
+                            enabled = !screenState.isUpdating
+                        ) {
+                            Text(text = "Cancel")
+                        }
+                        PreferredTextButton(
+                            text = "Update",
+                            isLoading = screenState.isUpdating,
+                            onClick = {
+                                onEvent(
+                                    UpdateProfileDialogEvents.OnProfileUpdateClick(
+                                        onSuccess = onSuccess
+                                    )
                                 )
+                            }
+                        )
+                    }
+                    if (shouldSignOutShow) {
+                        PreferredRow(
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                        ) {
+                            PreferredTextButton(
+                                text = "Sign out",
+                                onClick = {
+                                    onEvent(
+                                        UpdateProfileDialogEvents.OnSignOutClick(
+                                            restartApp = onSuccess
+                                        )
+                                    )
+                                }
                             )
                         }
-                    )
+                    }
                 }
             }
         }
@@ -213,10 +240,11 @@ private fun LoadingShimmerEffect() {
 @Preview(showSystemUi = true)
 @Composable
 private fun UpdateProfileDialogPreview() {
-//    UpdateProfileDialogContent(
-//        screenState = UpdateProfileDialogState(),
-//        onEvent = {},
-//        popScreen = {}
-//    )
-    LoadingShimmerEffect()
+    UpdateProfileDialogContent(
+        screenState = UpdateProfileDialogState(),
+        onEvent = {},
+        onSuccess = {},
+        shouldSignOutShow = false
+    )
+//    LoadingShimmerEffect()
 }

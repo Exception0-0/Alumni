@@ -8,5 +8,6 @@ sealed class UpdateProfileDialogEvents {
     data class OnBioChanged(val name: String) : UpdateProfileDialogEvents()
     data class OnProfileImageChanged(val uri: Uri) : UpdateProfileDialogEvents()
     data class OnCoverImageChanged(val uri: Uri) : UpdateProfileDialogEvents()
-    data class OnProfileUpdateClick(val onSuccessful: () -> Unit) : UpdateProfileDialogEvents()
+    data class OnProfileUpdateClick(val onSuccess: () -> Unit) : UpdateProfileDialogEvents()
+    data class OnSignOutClick(val restartApp: () -> Unit) : UpdateProfileDialogEvents()
 }

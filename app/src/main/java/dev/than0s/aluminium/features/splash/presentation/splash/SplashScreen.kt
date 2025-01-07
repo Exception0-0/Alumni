@@ -17,23 +17,23 @@ import dev.than0s.aluminium.core.presentation.utils.Screen
 @Composable
 fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel(),
-    popAndOpen: (Screen) -> Unit
+    replaceScreen: (Screen) -> Unit
 ) {
     SplashScreenContent(
-        popAndOpen = popAndOpen,
+        replaceScreen = replaceScreen,
         onEvent = viewModel::onEvent
     )
 }
 
 @Composable
 private fun SplashScreenContent(
-    popAndOpen: (Screen) -> Unit,
+    replaceScreen: (Screen) -> Unit,
     onEvent: (SplashScreenEvents) -> Unit,
 ) {
     LaunchedEffect(key1 = Unit) {
         onEvent(
             SplashScreenEvents.OnLoad(
-                popAndOpen = popAndOpen
+                replaceScreen = replaceScreen
             )
         )
     }
@@ -53,7 +53,7 @@ private fun SplashScreenContent(
 @Composable
 private fun SplashScreenPreview() {
     SplashScreenContent(
-        popAndOpen = {},
+        replaceScreen = {},
         onEvent = {}
     )
 }

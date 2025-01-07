@@ -11,6 +11,8 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
+import dev.than0s.aluminium.core.domain.use_case.SignOutUseCase
+import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
@@ -21,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UpdateProfileDialogViewModel @Inject constructor(
     private val updateProfileUseCase: SetProfileUseCase,
-    private val getUserUserCase: GetUserUseCase
+    private val getUserUserCase: GetUserUseCase,
+    private val signOutUseCase: SignOutUseCase,
 ) : ViewModel() {
     var screenState by mutableStateOf(UpdateProfileDialogState())
 
@@ -53,8 +56,37 @@ class UpdateProfileDialogViewModel @Inject constructor(
         }
     }
 
+    private fun onSignOutClick(restartApp: () -> Unit) {
+        viewModelScope.launch {
+            when (val result = signOutUseCase()) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    onSignOutClick(restartApp)
+                                }
+                            )
+                        )
+                    )
+                }
+
+                is Resource.Success -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.sign_out_successfully)
+                        )
+                    )
+                    restartApp()
+                }
+            }
+        }
+    }
+
     private fun onUpdateProfileClick(
-        onSuccessful: () -> Unit,
+        onSuccess: () -> Unit,
     ) {
         viewModelScope.launch {
             screenState = screenState.copy(isUpdating = true)
@@ -85,7 +117,7 @@ class UpdateProfileDialogViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.profile_create_successfully)
                         )
                     )
-                    onSuccessful()
+                    onSuccess()
                 }
 
                 null -> {}
@@ -141,7 +173,7 @@ class UpdateProfileDialogViewModel @Inject constructor(
 
             is UpdateProfileDialogEvents.OnProfileUpdateClick -> {
                 onUpdateProfileClick(
-                    onSuccessful = event.onSuccessful
+                    onSuccess = event.onSuccess
                 )
             }
 
@@ -151,6 +183,10 @@ class UpdateProfileDialogViewModel @Inject constructor(
 
             is UpdateProfileDialogEvents.OnProfileImageChanged -> {
                 onProfileImageChange(event.uri)
+            }
+
+            is UpdateProfileDialogEvents.OnSignOutClick -> {
+                onSignOutClick(restartApp = event.restartApp)
             }
         }
     }

@@ -38,6 +38,9 @@ sealed class Screen(
     data object UpdateProfileDialog : Screen(name = "Update Profile")
 
     @Serializable
+    data object CreateProfileDialog : Screen(name = "Create Profile")
+
+    @Serializable
     data object UpdateContactDialog : Screen(name = "Update Contact")
 
     @Serializable

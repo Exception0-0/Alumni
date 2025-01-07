@@ -24,7 +24,7 @@ class SplashViewModel @Inject constructor(
     private val hasUserProfileCreatedUseCase: HasUserProfileCreatedUseCase
 ) : ViewModel() {
     private fun loadScreen(
-        popAndOpen: (Screen) -> Unit
+        replaceScreen: (Screen) -> Unit
     ) {
         viewModelScope.launch {
             when (val result = getCurrentUser()) {
@@ -45,13 +45,13 @@ class SplashViewModel @Inject constructor(
                     }
 
                     when (currentUserRole) {
-                        Role.Anonymous -> popAndOpen(Screen.SignInScreen)
-                        Role.Admin -> popAndOpen(Screen.RegistrationRequestsScreen)
+                        Role.Anonymous -> replaceScreen(Screen.SignInScreen)
+                        Role.Admin -> replaceScreen(Screen.RegistrationRequestsScreen)
                         else -> {
                             if (hasUserProfileCreate()) {
-                                popAndOpen(Screen.HomeScreen())
+                                replaceScreen(Screen.HomeScreen())
                             } else {
-                                popAndOpen(Screen.UpdateProfileDialog)
+                                replaceScreen(Screen.CreateProfileDialog)
                             }
                         }
                     }
@@ -79,7 +79,7 @@ class SplashViewModel @Inject constructor(
 
     fun onEvent(event: SplashScreenEvents) {
         when (event) {
-            is SplashScreenEvents.OnLoad -> loadScreen(popAndOpen = event.popAndOpen)
+            is SplashScreenEvents.OnLoad -> loadScreen(replaceScreen = event.replaceScreen)
         }
     }
 }

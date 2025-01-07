@@ -33,7 +33,7 @@ fun NavGraphHost(
     ) {
         composable<Screen.SplashScreen> {
             SplashScreen(
-                popAndOpen = navController::popAndOpen
+                replaceScreen = navController::replace
             )
         }
         composable<Screen.SignInScreen> {
@@ -83,12 +83,18 @@ fun NavGraphHost(
         }
         dialog<Screen.UpdateProfileDialog> {
             UpdateProfileDialog(
-                popScreen = navController::popScreen
+                onSuccess = navController::popScreen
             )
         }
         dialog<Screen.UpdateContactDialog> {
             UpdateContactScreen(
                 popScreen = navController::popScreen
+            )
+        }
+        dialog<Screen.CreateProfileDialog> {
+            UpdateProfileDialog(
+                onSuccess = navController::restartApp,
+                shouldSignOutShow = true,
             )
         }
         composable<Screen.AppearanceScreen> {
@@ -130,7 +136,7 @@ fun NavHostController.replace(screen: Screen) {
 
 fun NavHostController.restartApp() {
     navigate(Screen.SplashScreen) {
-        popUpTo(graph.id) {
+        popUpTo(graph.findStartDestination().id) {
             inclusive = true
         }
     }
