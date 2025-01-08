@@ -11,6 +11,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import dev.than0s.aluminium.ui.textSize
@@ -34,15 +36,14 @@ fun PreferredWrappedText(
             }
         ) {
             Text(
-                text = text.substring(0, maxTextLength) + " ...",
+                text = buildAnnotatedString {
+                    append(text.substring(0, maxTextLength))
+                    pushStyle(SpanStyle(color = MaterialTheme.colorScheme.primary,fontWeight = FontWeight.Bold))
+                    append(" ...tap to read more")
+                    pop()
+                },
                 fontSize = fontSize,
                 fontWeight = fontWeight,
-            )
-            Text(
-                text = "tap to read more".uppercase(),
-                fontSize = MaterialTheme.textSize.medium,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold,
             )
         }
     } else {
