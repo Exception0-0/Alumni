@@ -25,6 +25,7 @@ fun PreferredFullScreen(
     content: @Composable (BoxScope.() -> Unit)
 ) {
     ModalBottomSheet(
+        modifier = Modifier.fillMaxSize(),
         onDismissRequest = onDismissRequest,
         sheetState = rememberModalBottomSheetState(true) { false },
         dragHandle = null,
@@ -46,11 +47,10 @@ fun PreferredFullScreen(
                             }
                         },
                     )
-                }
+                },
             ) { contentPadding ->
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
                         .padding(contentPadding),
                     content = content
                 )
