@@ -64,6 +64,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFull
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWrappedText
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerBackground
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerIcons
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileImage
@@ -394,7 +395,7 @@ private fun BottomSection(
 
         }
 
-        Text(
+        PreferredWrappedText(
             text = post.caption,
             fontSize = MaterialTheme.textSize.medium,
             modifier = Modifier.fillMaxWidth()
