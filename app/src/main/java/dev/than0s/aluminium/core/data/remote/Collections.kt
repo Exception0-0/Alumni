@@ -21,3 +21,6 @@ const val USER_ID = "userId"
 // registration request field
 const val STATUS_APPROVAL_STATUS = "status.approvalStatus"
 const val STATUS_ACCOUNT_GENERATED_STATUS = "status.accountGeneratedStatus"
+
+// chats fields
+const val USERS_ID = "usersId"

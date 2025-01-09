@@ -1,12 +1,10 @@
 package dev.than0s.aluminium.di
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
@@ -117,4 +115,7 @@ object FirebaseModule {
 
     @Provides
     fun storage(): FirebaseStorage = Firebase.storage
+
+    @Provides
+    fun database(): FirebaseDatabase = Firebase.database
 }
