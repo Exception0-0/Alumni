@@ -43,6 +43,7 @@ sealed class Screen(
     @Serializable
     data object UpdateContactDialog : Screen(name = "Update Contact")
 
+
     @Serializable
     data class HomeScreen(
         val userId: String? = null,
@@ -60,7 +61,8 @@ sealed class Screen(
 
     @Serializable
     data class ChatDetailScreen(
-        val userId: String
+        val userId: String,
+        val groupId: String,
     ) : Screen("Chat Detail")
 
     class ProfileTabScreen {

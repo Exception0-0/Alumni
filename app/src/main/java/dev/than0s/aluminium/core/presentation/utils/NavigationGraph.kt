@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.ForgetPasswordScreen
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
+import dev.than0s.aluminium.features.chat.presentation.screens.detail_chat.ScreenDetailChat
+import dev.than0s.aluminium.features.chat.presentation.screens.group_list.ScreenGroupList
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
 import dev.than0s.aluminium.features.post.presentation.screens.posts.PostsScreen
@@ -101,12 +103,14 @@ fun NavGraphHost(
             AppearanceScreen()
         }
         composable<Screen.ChatsScreen> {
-//            ChatListScreen(it
-//                openScreen = navController::openScreen
-//            )
+            ScreenGroupList(
+                openScreen = navController::openScreen
+            )
         }
         composable<Screen.ChatDetailScreen> {
-//            ChatDetailScreen()
+            ScreenDetailChat(
+                popScreen = navController::popScreen
+            )
         }
     }
 }

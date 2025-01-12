@@ -18,6 +18,10 @@ import dev.than0s.aluminium.features.auth.data.remote.AuthRemote
 import dev.than0s.aluminium.features.auth.data.remote.AuthRemoteImple
 import dev.than0s.aluminium.features.auth.data.repository.AuthRepositoryImple
 import dev.than0s.aluminium.features.auth.domain.repository.AuthRepository
+import dev.than0s.aluminium.features.chat.data.remote.RemoteChat
+import dev.than0s.aluminium.features.chat.data.remote.RemoteChatImple
+import dev.than0s.aluminium.features.chat.data.repository.RepositoryChatImple
+import dev.than0s.aluminium.features.chat.domain.repository.RepositoryChat
 import dev.than0s.aluminium.features.post.data.remote.CommentRemote
 import dev.than0s.aluminium.features.post.data.remote.CommentRemoteImple
 import dev.than0s.aluminium.features.post.data.remote.LikeDataSourceImple
@@ -102,6 +106,13 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindAccountRepository(imple: AccountRepositoryImple): AccountRepository
+
+    // chat
+    @Binds
+    abstract fun bindRemoteChat(imple: RemoteChatImple): RemoteChat
+
+    @Binds
+    abstract fun bindRepositoryChat(imple: RepositoryChatImple): RepositoryChat
 }
 
 @InstallIn(SingletonComponent::class)

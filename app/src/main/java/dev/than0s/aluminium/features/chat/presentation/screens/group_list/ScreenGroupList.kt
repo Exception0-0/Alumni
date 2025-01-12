@@ -18,21 +18,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
 fun ScreenGroupList(
     viewModel: ViewModelGroupList = hiltViewModel(),
+    openScreen: (Screen) -> Unit,
 ) {
-
+    Content(
+        state = viewModel.state,
+        onEvent = viewModel::onEvent,
+        userMap = viewModel.userMap,
+        openScreen = openScreen
+    )
 }
 
 @Composable
 private fun Content(
     state: StateGroupList,
     onEvent: (EventsGroupList) -> Unit,
-    userMap: Map<String, User>
+    userMap: Map<String, User>,
+    openScreen: (Screen) -> Unit,
 ) {
     if (state.isLoading) {
 
@@ -46,7 +54,14 @@ private fun Content(
                 val user = userMap[otherUserId] ?: User()
                 GroupItem(
                     user = user,
-                    onClick = {}
+                    onClick = {
+                        openScreen(
+                            Screen.ChatDetailScreen(
+                                userId = otherUserId,
+                                groupId = item.id
+                            )
+                        )
+                    }
                 )
             }
         }
