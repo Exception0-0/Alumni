@@ -1,8 +1,11 @@
 package dev.than0s.aluminium.features.chat.presentation.screens.detail_chat
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,15 +24,23 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
+import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
 
@@ -53,9 +64,7 @@ private fun Content(
     onEvent: (EventsDetailChat) -> Unit,
     popScreen: () -> Unit,
 ) {
-    val chatList = state.chatFlow.collectAsState(emptyList()).value
     Scaffold(
-        contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             TopAppBar(
                 title = {
@@ -97,21 +106,49 @@ private fun Content(
                             onEvent(EventsDetailChat.AddMessage)
                         }
                     )
-                }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.padding.medium)
             )
         },
-        content = {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ){
-                items(chatList) { item ->
-                    Text(
-                        text = item.message
+    ) {
+        val chatList = state.chatFlow.collectAsState(emptyList()).value
+        LazyColumn(
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            items(chatList) { item ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(MaterialTheme.padding.verySmall)
+                ) {
+                    PreferredSurface(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        modifier = Modifier
+                            .align(
+                                if (item.userId == currentUserId!!) Alignment.TopEnd
+                                else Alignment.TopStart
+                            ),
+                        content = {
+                            Text(
+                                text = buildAnnotatedString {
+                                    pushStyle(SpanStyle(fontSize = MaterialTheme.textSize.large))
+                                    append(item.message)
+                                    pop()
+                                    append(MESSAGE_TIME_SPACING)
+                                    pushStyle(SpanStyle(fontSize = MaterialTheme.textSize.medium))
+                                    append(PrettyTimeUtils.getFormatedTime(item.timestamp))
+                                },
+                                fontSize = MaterialTheme.textSize.medium,
+                                modifier = Modifier.padding(MaterialTheme.padding.small)
+                            )
+                        }
                     )
                 }
             }
         }
-    )
+    }
 }
 
 @Composable
@@ -152,3 +189,5 @@ private fun Preview() {
         popScreen = {}
     )
 }
+
+private const val MESSAGE_TIME_SPACING = "     "
