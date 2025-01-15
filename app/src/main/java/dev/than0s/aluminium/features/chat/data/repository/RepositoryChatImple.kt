@@ -23,15 +23,6 @@ class RepositoryChatImple @Inject constructor(
         }
     }
 
-    override suspend fun addGroup(chatGroup: ChatGroup): SimpleResource {
-        return try {
-            remote.addGroup(chatGroup)
-            Resource.Success(Unit)
-        } catch (e: ServerException) {
-            Resource.Error(UiText.DynamicString(e.message))
-        }
-    }
-
     override suspend fun getGroups(): Resource<List<ChatGroup>> {
         return try {
             Resource.Success(remote.getGroups())

@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface RepositoryChat {
     suspend fun addMessage(groupId: String, message: ChatMessage): SimpleResource
-    suspend fun addGroup(chatGroup: ChatGroup): SimpleResource
     suspend fun getGroups(): Resource<List<ChatGroup>>
     fun getMessages(groupId: String): Resource<Flow<List<ChatMessage>>>
 }
