@@ -9,4 +9,5 @@ interface ProfileRepository {
     suspend fun setUserProfile(profile: User): SimpleResource
     suspend fun getUserProfile(userId: String): Resource<User?>
     suspend fun getAboutInfo(userId: String): Resource<AboutInfo>
+    suspend fun getAllUserProfile(): Resource<List<User>>
 }

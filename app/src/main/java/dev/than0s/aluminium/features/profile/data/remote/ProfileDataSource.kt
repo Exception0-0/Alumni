@@ -27,6 +27,7 @@ interface ProfileDataSource {
     suspend fun setUserProfile(user: User)
     suspend fun getAboutInfo(userId: String): AboutInfo
     suspend fun getUserProfile(userId: String): User?
+    suspend fun getAllUserProfile(): List<User>
 }
 
 class ProfileDataSourceImple @Inject constructor(
@@ -76,6 +77,18 @@ class ProfileDataSourceImple @Inject constructor(
                 .await()
                 .toObject(RemoteUser::class.java)
                 ?.toUser()
+        } catch (e: FirebaseFirestoreException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun getAllUserProfile(): List<User> {
+        return try {
+            store.collection(PROFILE)
+                .get()
+                .await()
+                .toObjects(RemoteUser::class.java)
+                .map { it.toUser() }
         } catch (e: FirebaseFirestoreException) {
             throw ServerException(e.message.toString())
         }
