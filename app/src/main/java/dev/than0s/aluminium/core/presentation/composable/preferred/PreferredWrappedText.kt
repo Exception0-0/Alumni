@@ -16,6 +16,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import dev.than0s.aluminium.ui.textSize
+import kotlin.math.min
 
 private const val maxTextLength = 100
 
@@ -37,8 +38,13 @@ fun PreferredWrappedText(
         ) {
             Text(
                 text = buildAnnotatedString {
-                    append(text.substring(0, maxTextLength))
-                    pushStyle(SpanStyle(color = MaterialTheme.colorScheme.primary,fontWeight = FontWeight.Bold))
+                    append(text.substring(0, min(text.length, maxTextLength)))
+                    pushStyle(
+                        SpanStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
                     append(" ...tap to read more")
                     pop()
                 },
