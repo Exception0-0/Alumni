@@ -1,36 +1,37 @@
 package dev.than0s.aluminium.features.chat.presentation.screens.group_list
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.currentUserId
-import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
+import dev.than0s.aluminium.core.domain.use_case.UseCaseGetAllUserProfile
+import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
+import dev.than0s.aluminium.core.presentation.utils.UserProfile
+import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseGetGroup
 import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseGetGroups
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ViewModelGroupList @Inject constructor(
-    private val getUserUseCase: GetUserUseCase,
-    private val useCaseGetGroups: UseCaseGetGroups
+    private val useCaseGetGroups: UseCaseGetGroups,
+    private val useCaseGetAllUserProfile: UseCaseGetAllUserProfile,
+    private val useCaseGetGroup: UseCaseGetGroup
 ) : ViewModel() {
     var state by mutableStateOf(StateGroupList())
-    val userMap = mutableStateMapOf<String, User>()
 
     init {
         loadChatGroup()
+        loadAllUserProfile()
     }
 
     private fun loadChatGroup() {
@@ -65,26 +66,77 @@ class ViewModelGroupList @Inject constructor(
         }
     }
 
-    private fun SnapshotStateMap<String, User>.getUser(userId: String) {
-        if (!containsKey(userId)) {
-            viewModelScope.launch {
-                when (val result = getUserUseCase(userId)) {
-                    is Resource.Error -> {
-                        // TODO: do something on error
-                    }
+    private fun loadAllUserProfile() {
+        viewModelScope.launch {
+            when (val result = useCaseGetAllUserProfile()) {
+                is Resource.Error -> {
+                    SnackbarEvent(
+                        message = result.uiText ?: UiText.unknownError(),
+                        action = SnackbarAction(
+                            name = UiText.StringResource(R.string.try_again),
+                            action = {
+                                loadAllUserProfile()
+                            }
+                        )
+                    )
+                }
 
-                    is Resource.Success -> {
-                        this@getUser[userId] = result.data!!
+                is Resource.Success -> {
+                    result.data!!.forEach { user ->
+                        UserProfile.userMap[user.id] = user
                     }
                 }
             }
         }
     }
 
+    private fun openChatDetailScreen(
+        receiverId: String,
+        openScreen: (Screen) -> Unit,
+    ) {
+        viewModelScope.launch {
+            when (val result = useCaseGetGroup(receiverUserId = receiverId)) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    openChatDetailScreen(receiverId, openScreen)
+                                }
+                            )
+                        )
+                    )
+                }
+
+                is Resource.Success -> {
+                    openScreen(
+                        Screen.ChatDetailScreen(
+                            groupId = result.data!!.id,
+                            userId = receiverId
+                        )
+                    )
+                    changeNewMessageState()
+                }
+            }
+        }
+    }
+
+    private fun changeNewMessageState() {
+        state = state.copy(newMessageVisibility = !state.newMessageVisibility)
+    }
+
     fun onEvent(event: EventsGroupList) {
         when (event) {
             is EventsGroupList.LoadGroup -> loadChatGroup()
-            is EventsGroupList.LoadUser -> userMap.getUser(event.userId)
+            EventsGroupList.OnNewMessageClick -> changeNewMessageState()
+            is EventsGroupList.OpenChatDetailScreen -> {
+                openChatDetailScreen(
+                    receiverId = event.receiverId,
+                    openScreen = event.openScreen
+                )
+            }
         }
     }
 }

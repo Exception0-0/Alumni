@@ -1,24 +1,35 @@
 package dev.than0s.aluminium.features.chat.presentation.screens.group_list
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddComment
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
 import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.UserProfile
+import dev.than0s.aluminium.core.presentation.utils.UserProfile.getUser
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
 
@@ -30,7 +41,6 @@ fun ScreenGroupList(
     Content(
         state = viewModel.state,
         onEvent = viewModel::onEvent,
-        userMap = viewModel.userMap,
         openScreen = openScreen
     )
 }
@@ -39,32 +49,57 @@ fun ScreenGroupList(
 private fun Content(
     state: StateGroupList,
     onEvent: (EventsGroupList) -> Unit,
-    userMap: Map<String, User>,
     openScreen: (Screen) -> Unit,
 ) {
-    if (state.isLoading) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if (state.isLoading) {
 
-    } else {
-        LazyColumn {
-            items(state.groupList) { item ->
-                val otherUserId = item.usersId[0]
-                if (!userMap.containsKey(otherUserId)) {
-                    onEvent(EventsGroupList.LoadUser(otherUserId))
-                }
-                val user = userMap[otherUserId] ?: User()
-                GroupItem(
-                    user = user,
-                    onClick = {
-                        openScreen(
-                            Screen.ChatDetailScreen(
-                                userId = otherUserId,
-                                groupId = item.id
-                            )
-                        )
+        } else {
+            LazyColumn(
+                modifier = Modifier.align(Alignment.TopCenter)
+            ) {
+                items(state.groupList) { item ->
+                    val otherUserId = item.usersId[0]
+                    if (!UserProfile.userMap.containsKey(otherUserId)) {
+                        UserProfile.userMap.getUser(otherUserId)
                     }
-                )
+                    val user = UserProfile.userMap[otherUserId] ?: User()
+                    GroupItem(
+                        user = user,
+                        onClick = {
+                            openScreen(
+                                Screen.ChatDetailScreen(
+                                    groupId = item.id,
+                                    userId = user.id
+                                )
+                            )
+                        }
+                    )
+                }
             }
         }
+        PreferredFloatingActionButton(
+            onClick = {
+                onEvent(EventsGroupList.OnNewMessageClick)
+            },
+            content = {
+                Icon(
+                    imageVector = Icons.Default.AddComment,
+                    contentDescription = "new message"
+                )
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(MaterialTheme.padding.medium)
+        )
+    }
+    if (state.newMessageVisibility) {
+        NewMessage(
+            openScreen = openScreen,
+            onEvent = onEvent
+        )
     }
 }
 
@@ -103,6 +138,55 @@ private fun GroupItem(
         },
         modifier = Modifier.clickable(onClick = onClick)
     )
+}
+
+@Composable
+private fun NewMessage(
+    openScreen: (Screen) -> Unit,
+    onEvent: (EventsGroupList) -> Unit,
+) {
+    PreferredFullScreen(
+        title = "New message",
+        onDismissRequest = {
+            onEvent(EventsGroupList.OnNewMessageClick)
+        }
+    ) {
+        LazyColumn {
+            items(UserProfile.userMap.values.toList()) {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = "${it.firstName} ${it.lastName}",
+                            fontSize = MaterialTheme.textSize.medium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    leadingContent = {
+                        PreferredAsyncImage(
+                            model = it.profileImage,
+                            contentDescription = "user profile image",
+                            shape = CircleShape,
+                            modifier = Modifier.size(MaterialTheme.profileSize.medium)
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = it.bio,
+                            fontSize = MaterialTheme.textSize.medium,
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        onEvent(
+                            EventsGroupList.OpenChatDetailScreen(
+                                receiverId = it.id,
+                                openScreen = openScreen
+                            )
+                        )
+                    }
+                )
+            }
+        }
+    }
 }
 
 @Preview(showSystemUi = true)
