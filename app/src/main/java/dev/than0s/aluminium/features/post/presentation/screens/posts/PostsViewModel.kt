@@ -14,11 +14,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.domain.data_class.Like
-import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.domain.use_case.AddLikeUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetCurrentUserLikeStatusUseCase
 import dev.than0s.aluminium.core.domain.use_case.GetPostsUseCase
-import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
 import dev.than0s.aluminium.core.domain.use_case.RemoveLikeUseCase
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
@@ -35,13 +33,11 @@ class PostsViewModel @Inject constructor(
     private val getPostUseCase: GetPostsUseCase,
     private val addLikeUseCase: AddLikeUseCase,
     private val removeLikeUseCase: RemoveLikeUseCase,
-    private val getUserUserCase: GetUserUseCase,
     private val deletePostUseCase: DeletePostUseCase,
     private val getCurrentUserLikeStatusUseCase: GetCurrentUserLikeStatusUseCase,
 ) : ViewModel() {
 
     private val postScreenArgs = savedStateHandle.toRoute<Screen.HomeScreen>()
-    val userMap = mutableStateMapOf<String, User>()
     val likeMap = mutableStateMapOf<String, Like?>()
     var screenState by mutableStateOf(PostsState())
 
@@ -138,22 +134,6 @@ class PostsViewModel @Inject constructor(
         }
     }
 
-    private fun SnapshotStateMap<String, User>.getUser(userId: String) {
-        if (!containsKey(userId)) {
-            viewModelScope.launch {
-                when (val result = getUserUserCase(userId)) {
-                    is Resource.Error -> {
-                        // TODO: do something on error
-                    }
-
-                    is Resource.Success -> {
-                        this@getUser[userId] = result.data!!
-                    }
-                }
-            }
-        }
-    }
-
     private fun SnapshotStateMap<String, Like?>.getLike(postId: String) {
         if (!containsKey(postId)) {
             viewModelScope.launch {
@@ -220,10 +200,6 @@ class PostsViewModel @Inject constructor(
 
             is PostsEvents.DeletePost -> {
                 deletePost()
-            }
-
-            is PostsEvents.GetUser -> {
-                userMap.getUser(event.userId)
             }
 
             is PostsEvents.GetLike -> {
