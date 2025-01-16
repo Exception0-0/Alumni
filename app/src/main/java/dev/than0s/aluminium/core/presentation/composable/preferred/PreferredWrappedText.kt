@@ -22,9 +22,9 @@ private const val maxTextLength = 100
 @Composable
 fun PreferredWrappedText(
     text: String,
+    modifier: Modifier = Modifier,
     fontSize: TextUnit = MaterialTheme.textSize.medium,
     fontWeight: FontWeight? = null,
-    modifier: Modifier = Modifier,
 ) {
     var isWrapped by remember { mutableStateOf(text.length > maxTextLength) }
     if (isWrapped) {

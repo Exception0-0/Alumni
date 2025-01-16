@@ -16,6 +16,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -23,12 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWrappedText
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
 import dev.than0s.aluminium.core.presentation.utils.UserProfile.getUser
+import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
@@ -57,22 +59,22 @@ private fun Content(
         if (state.isLoading) {
 
         } else {
+            val groupList = state.groupList.collectAsState(emptyList()).value
             LazyColumn(
                 modifier = Modifier.align(Alignment.TopCenter)
             ) {
-                items(state.groupList) { item ->
-                    val otherUserId = item.usersId[0]
-                    if (!UserProfile.userMap.containsKey(otherUserId)) {
-                        UserProfile.userMap.getUser(otherUserId)
+                items(groupList) { item ->
+                    if (!UserProfile.userMap.containsKey(item.receiverId)) {
+                        UserProfile.userMap.getUser(item.receiverId)
                     }
-                    val user = UserProfile.userMap[otherUserId] ?: User()
+                    val user = UserProfile.userMap[item.receiverId] ?: User()
                     GroupItem(
                         user = user,
+                        message = item.message,
                         onClick = {
                             openScreen(
                                 Screen.ChatDetailScreen(
-                                    groupId = item.id,
-                                    userId = user.id
+                                    receiverId = item.receiverId
                                 )
                             )
                         }
@@ -106,6 +108,7 @@ private fun Content(
 @Composable
 private fun GroupItem(
     user: User,
+    message: ChatMessage,
     onClick: () -> Unit,
 ) {
     ListItem(
@@ -125,8 +128,8 @@ private fun GroupItem(
             )
         },
         supportingContent = {
-            Text(
-                text = "call me maybe later...",
+            PreferredWrappedText(
+                text = message.message,
                 fontSize = MaterialTheme.textSize.medium,
             )
         },
@@ -176,10 +179,9 @@ private fun NewMessage(
                         )
                     },
                     modifier = Modifier.clickable {
-                        onEvent(
-                            EventsGroupList.OpenChatDetailScreen(
-                                receiverId = it.id,
-                                openScreen = openScreen
+                        openScreen(
+                            Screen.ChatDetailScreen(
+                                receiverId = it.id
                             )
                         )
                     }

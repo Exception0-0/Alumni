@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
-import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.use_case.UseCaseGetAllUserProfile
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
@@ -16,7 +15,6 @@ import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
-import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseGetGroup
 import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseGetGroups
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,7 +23,6 @@ import javax.inject.Inject
 class ViewModelGroupList @Inject constructor(
     private val useCaseGetGroups: UseCaseGetGroups,
     private val useCaseGetAllUserProfile: UseCaseGetAllUserProfile,
-    private val useCaseGetGroup: UseCaseGetGroup
 ) : ViewModel() {
     var state by mutableStateOf(StateGroupList())
 
@@ -55,9 +52,7 @@ class ViewModelGroupList @Inject constructor(
 
                 is Resource.Success -> {
                     state = state.copy(
-                        groupList = result.data!!.map {
-                            it.copy(usersId = it.usersId.minus(currentUserId!!))
-                        }
+                        groupList = result.data!!
                     )
                 }
             }
@@ -90,39 +85,6 @@ class ViewModelGroupList @Inject constructor(
         }
     }
 
-    private fun openChatDetailScreen(
-        receiverId: String,
-        openScreen: (Screen) -> Unit,
-    ) {
-        viewModelScope.launch {
-            when (val result = useCaseGetGroup(receiverUserId = receiverId)) {
-                is Resource.Error -> {
-                    SnackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = result.uiText ?: UiText.unknownError(),
-                            action = SnackbarAction(
-                                name = UiText.StringResource(R.string.try_again),
-                                action = {
-                                    openChatDetailScreen(receiverId, openScreen)
-                                }
-                            )
-                        )
-                    )
-                }
-
-                is Resource.Success -> {
-                    openScreen(
-                        Screen.ChatDetailScreen(
-                            groupId = result.data!!.id,
-                            userId = receiverId
-                        )
-                    )
-                    changeNewMessageState()
-                }
-            }
-        }
-    }
-
     private fun changeNewMessageState() {
         state = state.copy(newMessageVisibility = !state.newMessageVisibility)
     }
@@ -131,12 +93,6 @@ class ViewModelGroupList @Inject constructor(
         when (event) {
             is EventsGroupList.LoadGroup -> loadChatGroup()
             EventsGroupList.OnNewMessageClick -> changeNewMessageState()
-            is EventsGroupList.OpenChatDetailScreen -> {
-                openChatDetailScreen(
-                    receiverId = event.receiverId,
-                    openScreen = event.openScreen
-                )
-            }
         }
     }
 }

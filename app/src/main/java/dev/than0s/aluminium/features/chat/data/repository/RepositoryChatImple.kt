@@ -5,7 +5,6 @@ import dev.than0s.aluminium.core.SimpleResource
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.chat.data.remote.RemoteChat
-import dev.than0s.aluminium.features.chat.domain.data_class.ChatGroup
 import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
 import dev.than0s.aluminium.features.chat.domain.repository.RepositoryChat
 import kotlinx.coroutines.flow.Flow
@@ -14,34 +13,25 @@ import javax.inject.Inject
 class RepositoryChatImple @Inject constructor(
     private val remote: RemoteChat
 ) : RepositoryChat {
-    override suspend fun addMessage(groupId: String, message: ChatMessage): SimpleResource {
+    override val chatGroups
+        get() = try {
+            Resource.Success(remote.chatGroups)
+        } catch (e: ServerException) {
+            Resource.Error(UiText.DynamicString(e.message))
+        }
+
+    override suspend fun addMessage(receiverId: String, message: ChatMessage): SimpleResource {
         return try {
-            remote.addMessage(groupId, message)
+            remote.addMessage(receiverId = receiverId, message = message)
             Resource.Success(Unit)
         } catch (e: ServerException) {
             Resource.Error(UiText.DynamicString(e.message))
         }
     }
 
-    override suspend fun getGroups(): Resource<List<ChatGroup>> {
+    override fun getMessages(receiverId: String): Resource<Flow<List<ChatMessage>>> {
         return try {
-            Resource.Success(remote.getGroups())
-        } catch (e: ServerException) {
-            Resource.Error(UiText.DynamicString(e.message))
-        }
-    }
-
-    override suspend fun getGroup(receiverUserId: String): Resource<ChatGroup> {
-        return try {
-            Resource.Success(remote.getGroup(receiverUserId))
-        } catch (e: ServerException) {
-            Resource.Error(UiText.DynamicString(e.message))
-        }
-    }
-
-    override fun getMessages(groupId: String): Resource<Flow<List<ChatMessage>>> {
-        return try {
-            Resource.Success(remote.getMessages(groupId))
+            Resource.Success(remote.getMessages(receiverId = receiverId))
         } catch (e: ServerException) {
             Resource.Error(UiText.DynamicString(e.message))
         }

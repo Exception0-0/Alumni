@@ -32,14 +32,14 @@ class ViewModelDetailChat @Inject constructor(
     private val args = savedStateHandle.toRoute<Screen.ChatDetailScreen>()
     var state by mutableStateOf(StateDetailChat())
 
-    init{
+    init {
         loadMessages()
         loadUser()
     }
 
     private fun loadMessages() {
         viewModelScope.launch {
-            when (val result = useCaseGetMessages(groupId = args.groupId)) {
+            when (val result = useCaseGetMessages(receiverId = args.receiverId)) {
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
@@ -64,7 +64,7 @@ class ViewModelDetailChat @Inject constructor(
     private fun loadUser() {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
-            when (val result = getUserUseCase(args.userId)) {
+            when (val result = getUserUseCase(args.receiverId)) {
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
                         SnackbarEvent(
@@ -91,7 +91,7 @@ class ViewModelDetailChat @Inject constructor(
         viewModelScope.launch {
             state = state.copy(isSending = true)
             val addMessageResult = useCaseAddMessage(
-                groupId = args.groupId,
+                receiverId = args.receiverId,
                 message = ChatMessage(message = state.chatMessage)
             )
             if (addMessageResult.messageError != null) {

@@ -7,8 +7,7 @@ import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
 import kotlinx.coroutines.flow.Flow
 
 interface RepositoryChat {
-    suspend fun addMessage(groupId: String, message: ChatMessage): SimpleResource
-    suspend fun getGroups(): Resource<List<ChatGroup>>
-    suspend fun getGroup(receiverUserId: String): Resource<ChatGroup>
-    fun getMessages(groupId: String): Resource<Flow<List<ChatMessage>>>
+    val chatGroups: Resource<Flow<List<ChatGroup>>>
+    suspend fun addMessage(receiverId: String, message: ChatMessage): SimpleResource
+    fun getMessages(receiverId: String): Resource<Flow<List<ChatMessage>>>
 }

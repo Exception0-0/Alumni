@@ -9,7 +9,7 @@ import javax.inject.Inject
 class UseCaseGetMessages @Inject constructor(
     private val repository: RepositoryChat
 ) {
-    operator fun invoke(groupId: String): Resource<Flow<List<ChatMessage>>> {
-        return repository.getMessages(groupId = groupId)
+    operator fun invoke(receiverId: String): Resource<Flow<List<ChatMessage>>> {
+        return repository.getMessages(receiverId = receiverId)
     }
 }

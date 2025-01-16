@@ -11,7 +11,7 @@ import javax.inject.Inject
 class UseCaseAddMessage @Inject constructor(
     private val repository: RepositoryChat
 ) {
-    suspend operator fun invoke(groupId: String, message: ChatMessage): AddChatMessageResult {
+    suspend operator fun invoke(receiverId: String, message: ChatMessage): AddChatMessageResult {
         val messageError = message.let {
             if (message.message.isBlank()) TextFieldError.FieldEmpty
             else null
@@ -25,7 +25,7 @@ class UseCaseAddMessage @Inject constructor(
 
         return AddChatMessageResult(
             result = repository.addMessage(
-                groupId = groupId,
+                receiverId = receiverId,
                 message = message.copy(
                     id = generateUniqueId(),
                     userId = currentUserId!!,

@@ -71,6 +71,7 @@ class MainActivity : ComponentActivity() {
                 )
 
                 Scaffold(
+                    contentWindowInsets = WindowInsets(0.dp),
                     topBar = {
                         AluminiumTopAppBar(
                             navController = navController,
