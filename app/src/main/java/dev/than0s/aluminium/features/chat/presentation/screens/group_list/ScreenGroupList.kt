@@ -128,7 +128,7 @@ private fun GroupItem(
             )
         },
         supportingContent = {
-            PreferredWrappedText(
+            Text(
                 text = message.message,
                 fontSize = MaterialTheme.textSize.medium,
             )
