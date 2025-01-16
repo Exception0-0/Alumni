@@ -4,7 +4,6 @@ import android.net.Uri
 
 sealed class PostsEvents {
     data class OnLikeClick(val postId: String) : PostsEvents()
-    data class GetUser(val userId: String) : PostsEvents()
     data class GetLike(val postId: String) : PostsEvents()
     data class ShowPostDeleteDialog(val postId: String) : PostsEvents()
     data class ShowFullScreenImage(val uri: Uri) : PostsEvents()

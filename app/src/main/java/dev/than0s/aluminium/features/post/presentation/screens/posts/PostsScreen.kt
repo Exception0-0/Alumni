@@ -72,6 +72,8 @@ import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.UserProfile
+import dev.than0s.aluminium.core.presentation.utils.UserProfile.getUser
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.postHeight
 import dev.than0s.aluminium.ui.profileSize
@@ -84,7 +86,6 @@ fun PostsScreen(
 ) {
     PostsScreenContent(
         screenState = viewModel.screenState,
-        userMap = viewModel.userMap,
         likeMap = viewModel.likeMap,
         onEvent = viewModel::onEvent,
         openScreen = openScreen
@@ -95,7 +96,6 @@ fun PostsScreen(
 @Composable
 private fun PostsScreenContent(
     screenState: PostsState,
-    userMap: Map<String, User>,
     likeMap: Map<String, Like?>,
     onEvent: (PostsEvents) -> Unit,
     openScreen: (Screen) -> Unit,
@@ -144,15 +144,15 @@ private fun PostsScreenContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(screenState.postList) { post ->
-                    if (!userMap.containsKey(post.userId)) {
-                        onEvent(PostsEvents.GetUser(post.userId))
+                    if (!UserProfile.userMap.containsKey(post.userId)) {
+                        UserProfile.userMap.getUser(post.userId)
                     }
                     if (!likeMap.containsKey(post.id)) {
                         onEvent(PostsEvents.GetLike(post.id))
                     }
                     PostBox(
                         post = post,
-                        user = userMap[post.userId],
+                        user = UserProfile.userMap[post.userId],
                         likeStatus = likeMap[post.id],
                         onCommentClick = {
                             openScreen(
