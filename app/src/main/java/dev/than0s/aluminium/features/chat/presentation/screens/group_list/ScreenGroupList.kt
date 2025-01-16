@@ -184,6 +184,7 @@ private fun NewMessage(
                                 receiverId = it.id
                             )
                         )
+                        onEvent(EventsGroupList.OnNewMessageClick)
                     }
                 )
             }
