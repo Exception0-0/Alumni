@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreferredFullScreen(
-    contentDescription: String? = null,
+    title: String? = null,
     onDismissRequest: () -> Unit,
     content: @Composable (BoxScope.() -> Unit)
 ) {
@@ -34,7 +34,7 @@ fun PreferredFullScreen(
                 topBar = {
                     TopAppBar(
                         title = {
-                            contentDescription?.let {
+                            title?.let {
                                 Text(it)
                             }
                         },

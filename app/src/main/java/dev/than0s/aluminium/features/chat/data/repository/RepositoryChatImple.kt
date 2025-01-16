@@ -31,6 +31,14 @@ class RepositoryChatImple @Inject constructor(
         }
     }
 
+    override suspend fun getGroup(receiverUserId: String): Resource<ChatGroup> {
+        return try {
+            Resource.Success(remote.getGroup(receiverUserId))
+        } catch (e: ServerException) {
+            Resource.Error(UiText.DynamicString(e.message))
+        }
+    }
+
     override fun getMessages(groupId: String): Resource<Flow<List<ChatMessage>>> {
         return try {
             Resource.Success(remote.getMessages(groupId))

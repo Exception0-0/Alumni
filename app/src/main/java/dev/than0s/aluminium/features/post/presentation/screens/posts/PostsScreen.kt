@@ -115,7 +115,7 @@ private fun PostsScreenContent(
     }
     if (screenState.fullScreenImage != null) {
         PreferredFullScreen(
-            contentDescription = "Post Image",
+            title = "Post Image",
             onDismissRequest = {
                 onEvent(PostsEvents.DismissFullScreenImage)
             },

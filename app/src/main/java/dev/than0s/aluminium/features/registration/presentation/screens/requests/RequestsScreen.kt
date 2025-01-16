@@ -87,7 +87,7 @@ private fun RegistrationRequestsContent(
     }
     screenState.selectedIdCard?.let {
         PreferredFullScreen(
-            contentDescription = "ID Card",
+            title = "ID Card",
             onDismissRequest = {
                 onEvent(RequestScreenEvents.DismissIdCard)
             },

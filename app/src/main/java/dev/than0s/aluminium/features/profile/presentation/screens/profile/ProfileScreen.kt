@@ -76,7 +76,7 @@ private fun ProfileScreenContent(
 ) {
     if (screenState.fullScreenImage != null) {
         PreferredFullScreen(
-            contentDescription = "Image",
+            title = "Image",
             onDismissRequest = {
                 onEvent(ProfileEvents.DismissFullScreenImage)
             },
