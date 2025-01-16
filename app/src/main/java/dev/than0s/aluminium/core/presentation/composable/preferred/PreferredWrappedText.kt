@@ -45,7 +45,7 @@ fun PreferredWrappedText(
                             fontWeight = FontWeight.Bold
                         )
                     )
-                    append(" ...tap to read more")
+                    append(" ...more")
                     pop()
                 },
                 fontSize = fontSize,
