@@ -31,7 +31,6 @@ import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
-import dev.than0s.aluminium.core.presentation.utils.UserProfile.getUser
 import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
@@ -62,35 +61,36 @@ private fun Content(
             ShimmerGroupList()
         } else {
             val groupList = state.groupList.collectAsState(emptyList()).value
-            if (groupList.isEmpty()) {
+//            if (groupList.isEmpty()) {
                 AnimationNoData(
-                    text = "No Chat found"
+                    title = "No Chats",
+                    description = "do some chatting with friends"
                 )
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .fillMaxSize()
-                ) {
-                    items(groupList) { item ->
-                        if (!UserProfile.userMap.containsKey(item.receiverId)) {
-                            UserProfile.userMap.getUser(item.receiverId)
-                        }
-                        val user = UserProfile.userMap[item.receiverId] ?: User()
-                        GroupItem(
-                            user = user,
-                            message = item.message,
-                            onClick = {
-                                openScreen(
-                                    Screen.ChatDetailScreen(
-                                        receiverId = item.receiverId
-                                    )
-                                )
-                            }
-                        )
-                    }
-                }
-            }
+//            } else {
+//                LazyColumn(
+//                    modifier = Modifier
+//                        .align(Alignment.TopCenter)
+//                        .fillMaxSize()
+//                ) {
+//                    items(groupList) { item ->
+//                        if (!UserProfile.userMap.containsKey(item.receiverId)) {
+//                            UserProfile.userMap.getUser(item.receiverId)
+//                        }
+//                        val user = UserProfile.userMap[item.receiverId] ?: User()
+//                        GroupItem(
+//                            user = user,
+//                            message = item.message,
+//                            onClick = {
+//                                openScreen(
+//                                    Screen.ChatDetailScreen(
+//                                        receiverId = item.receiverId
+//                                    )
+//                                )
+//                            }
+//                        )
+//                    }
+//                }
+//            }
         }
         PreferredFloatingActionButton(
             onClick = {

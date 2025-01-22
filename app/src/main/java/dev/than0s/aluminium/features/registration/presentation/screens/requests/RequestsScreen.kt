@@ -150,7 +150,7 @@ private fun RegistrationRequestsContent(
                 )
                 if (screenState.filteredList.isEmpty()) {
                     AnimationNoData(
-                        text = "No request found"
+                        title = "No request found"
                     )
                 } else {
                     LazyColumn {

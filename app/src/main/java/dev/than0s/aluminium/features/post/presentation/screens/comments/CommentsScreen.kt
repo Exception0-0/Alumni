@@ -2,7 +2,6 @@ package dev.than0s.aluminium.features.post.presentation.screens.comments
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -47,7 +46,6 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColu
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
@@ -101,7 +99,7 @@ private fun CommentScreenContent(
             ShimmerList()
         } else {
             if (screenState.commentList.isEmpty()) {
-                AnimationNoData(text = "No comments")
+                AnimationNoData(title = "No comments")
             } else {
                 LazyColumn(
                     modifier = Modifier
