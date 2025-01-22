@@ -22,9 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.presentation.composable.lottie_animation.AnimationNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
@@ -56,28 +59,36 @@ private fun Content(
         modifier = Modifier.fillMaxSize()
     ) {
         if (state.isLoading) {
-
+            ShimmerGroupList()
         } else {
             val groupList = state.groupList.collectAsState(emptyList()).value
-            LazyColumn(
-                modifier = Modifier.align(Alignment.TopCenter)
-            ) {
-                items(groupList) { item ->
-                    if (!UserProfile.userMap.containsKey(item.receiverId)) {
-                        UserProfile.userMap.getUser(item.receiverId)
-                    }
-                    val user = UserProfile.userMap[item.receiverId] ?: User()
-                    GroupItem(
-                        user = user,
-                        message = item.message,
-                        onClick = {
-                            openScreen(
-                                Screen.ChatDetailScreen(
-                                    receiverId = item.receiverId
-                                )
-                            )
+            if (groupList.isEmpty()) {
+                AnimationNoData(
+                    text = "No Chat found"
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxSize()
+                ) {
+                    items(groupList) { item ->
+                        if (!UserProfile.userMap.containsKey(item.receiverId)) {
+                            UserProfile.userMap.getUser(item.receiverId)
                         }
-                    )
+                        val user = UserProfile.userMap[item.receiverId] ?: User()
+                        GroupItem(
+                            user = user,
+                            message = item.message,
+                            onClick = {
+                                openScreen(
+                                    Screen.ChatDetailScreen(
+                                        receiverId = item.receiverId
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -135,7 +146,7 @@ private fun GroupItem(
         trailingContent = {
             Text(
                 text = PrettyTimeUtils.getPrettyTime(message.timestamp),
-                fontSize = MaterialTheme.textSize.small
+                fontSize = MaterialTheme.textSize.medium
             )
         },
         modifier = Modifier.clickable(onClick = onClick)
@@ -187,6 +198,15 @@ private fun NewMessage(
                     }
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun ShimmerGroupList() {
+    PreferredColumn {
+        for (i in 1..10) {
+            ShimmerListItem()
         }
     }
 }

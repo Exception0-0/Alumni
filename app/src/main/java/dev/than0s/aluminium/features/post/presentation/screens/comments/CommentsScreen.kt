@@ -43,6 +43,7 @@ import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.lottie_animation.AnimationNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
@@ -254,7 +255,7 @@ private fun CommentMenu(
 
 @Composable
 private fun ShimmerList() {
-    Column {
+    PreferredColumn {
         for (i in 1..10) {
             ShimmerListItem()
         }
