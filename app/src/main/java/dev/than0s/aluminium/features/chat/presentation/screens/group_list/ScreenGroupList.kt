@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddComment
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +25,7 @@ import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWrappedText
+import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
 import dev.than0s.aluminium.core.presentation.utils.UserProfile.getUser
@@ -134,9 +133,9 @@ private fun GroupItem(
             )
         },
         trailingContent = {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "more option"
+            Text(
+                text = PrettyTimeUtils.getPrettyTime(message.timestamp),
+                fontSize = MaterialTheme.textSize.small
             )
         },
         modifier = Modifier.clickable(onClick = onClick)
