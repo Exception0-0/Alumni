@@ -1,4 +1,4 @@
-package dev.than0s.aluminium.core.presentation.composable.lottie_animation
+package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,14 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieConstants
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCard
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredLottieAnimation
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.textSize
 
 @Composable
-fun AnimationNoData(
+fun PreferredNoData(
     title: String,
     description: String? = null,
 ) {
@@ -64,7 +61,7 @@ fun AnimationNoData(
 @Preview(showSystemUi = true)
 @Composable
 private fun Preview() {
-    AnimationNoData(
+    PreferredNoData(
         title ="No Data",
         description = "No data to show do something"
     )

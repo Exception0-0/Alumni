@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.composable.lottie_animation.AnimationNoData
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
@@ -62,7 +62,7 @@ private fun Content(
         } else {
             val groupList = state.groupList.collectAsState(emptyList()).value
 //            if (groupList.isEmpty()) {
-                AnimationNoData(
+                PreferredNoData(
                     title = "No Chats",
                     description = "do some chatting with friends"
                 )

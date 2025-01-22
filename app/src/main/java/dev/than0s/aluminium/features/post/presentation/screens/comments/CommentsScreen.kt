@@ -40,7 +40,7 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.composable.lottie_animation.AnimationNoData
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
@@ -99,7 +99,7 @@ private fun CommentScreenContent(
             ShimmerList()
         } else {
             if (screenState.commentList.isEmpty()) {
-                AnimationNoData(title = "No comments")
+                PreferredNoData(title = "No comments")
             } else {
                 LazyColumn(
                     modifier = Modifier
