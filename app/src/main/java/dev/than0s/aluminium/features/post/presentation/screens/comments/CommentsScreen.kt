@@ -40,12 +40,13 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
@@ -158,29 +159,33 @@ private fun CommentScreenContent(
                     }
                 }
             }
-            PreferredOutlinedTextField(
-                value = screenState.comment.message,
-                placeholder = "comment message...",
-                onValueChange = {
-                    onEvent(CommentEvents.OnCommentChanged(it))
-                },
-                enabled = !screenState.isCommentAdding,
-                singleLine = false,
-                supportingText = screenState.commentError?.message?.asString(),
-                trailingIcon = {
-                    PreferredIconButton(
-                        icon = Icons.AutoMirrored.Filled.Send,
-                        isLoading = screenState.isCommentAdding,
-                        onClick = {
-                            onEvent(CommentEvents.OnAddCommentClick)
-                        },
-                    )
-                },
+            PreferredSurface(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(MaterialTheme.padding.small)
                     .align(Alignment.BottomCenter)
-            )
+            ) {
+                PreferredOutlinedTextField(
+                    value = screenState.comment.message,
+                    placeholder = "comment message...",
+                    onValueChange = {
+                        onEvent(CommentEvents.OnCommentChanged(it))
+                    },
+                    enabled = !screenState.isCommentAdding,
+                    singleLine = false,
+                    supportingText = screenState.commentError?.message?.asString(),
+                    trailingIcon = {
+                        PreferredIconButton(
+                            icon = Icons.AutoMirrored.Filled.Send,
+                            isLoading = screenState.isCommentAdding,
+                            onClick = {
+                                onEvent(CommentEvents.OnAddCommentClick)
+                            },
+                        )
+                    },
+                    modifier = Modifier
+                        .padding(vertical = MaterialTheme.padding.medium)
+                        .fillMaxWidth()
+                )
+            }
         }
     }
 }
