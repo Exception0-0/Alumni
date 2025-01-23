@@ -1,6 +1,8 @@
 package dev.than0s.aluminium.core.presentation.utils
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
@@ -16,7 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.than0s.aluminium.core.Role
@@ -87,6 +91,7 @@ fun AluminiumBottomNavigationBar(
 
     if (isGiveScreenHaveBottomBar(currentScreenClassName)) {
         NavigationBar(
+            modifier = Modifier.height(80.dp),
             content = customNavbar ?: {
                 bottomNavItems.forEach { item ->
                     if (shouldShowOption(item.screen)) {
@@ -104,14 +109,13 @@ fun AluminiumBottomNavigationBar(
                                     } else {
                                         item.outlinedIcon
                                     },
-                                    contentDescription = item.screen::class.simpleName
+                                    contentDescription = item.screen::class.simpleName,
                                 )
                             },
                             label = {
-                                Text(
-                                    text = item.screen.name
-                                )
-                            }
+                                Text(text = item.screen.name)
+                            },
+                            alwaysShowLabel = false,
                         )
                     }
                 }
