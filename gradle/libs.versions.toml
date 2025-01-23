@@ -30,6 +30,7 @@ pinchToZoom = "1.0.0"
 prettytime = "5.0.4.Final"
 serialization = "1.6.3"
 firebaseDatabase = "21.0.0"
+uiTextGoogleFonts = "1.7.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -68,6 +69,7 @@ lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "
 pinch-to-zoom = { module = "com.github.journiapp:pinch-to-zoom", version.ref = "pinchToZoom" }
 prettytime = { module = "org.ocpsoft.prettytime:prettytime", version.ref = "prettytime" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
