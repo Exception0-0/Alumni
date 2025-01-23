@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,8 +37,8 @@ import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
@@ -93,7 +94,7 @@ private fun Content(
             )
         },
         bottomBar = {
-            PreferredTextField(
+            PreferredOutlinedTextField(
                 placeholder = "message",
                 value = state.chatMessage,
                 onValueChange = {
@@ -108,9 +109,17 @@ private fun Content(
                         }
                     )
                 },
+                leadingIcon = {
+                    PreferredIconButton(
+                        onClick = {
+                        },
+                        icon = Icons.Outlined.AddPhotoAlternate,
+
+                        )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.padding.medium)
+                    .padding(vertical = MaterialTheme.padding.medium)
             )
         },
     ) {
