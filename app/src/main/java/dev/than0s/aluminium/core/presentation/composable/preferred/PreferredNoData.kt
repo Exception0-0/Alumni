@@ -2,9 +2,11 @@ package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +29,9 @@ fun PreferredNoData(
         modifier = Modifier.fillMaxSize()
     ) {
         PreferredCard(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+            ),
             modifier = Modifier
                 .align(Alignment.Center)
         ) {
@@ -44,6 +49,7 @@ fun PreferredNoData(
                     fontSize = MaterialTheme.textSize.large
                 )
                 description?.let {
+                    Spacer(modifier = Modifier.size(MaterialTheme.padding.small))
                     Text(
                         text = it,
                         fontSize = MaterialTheme.textSize.medium
