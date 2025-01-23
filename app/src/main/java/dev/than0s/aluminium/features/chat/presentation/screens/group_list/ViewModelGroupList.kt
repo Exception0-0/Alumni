@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.domain.use_case.UseCaseGetAllUserProfile
-import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
@@ -33,8 +32,6 @@ class ViewModelGroupList @Inject constructor(
 
     private fun loadChatGroup() {
         viewModelScope.launch {
-            state = state.copy(isLoading = true)
-
             when (val result = useCaseGetGroups()) {
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
@@ -56,8 +53,6 @@ class ViewModelGroupList @Inject constructor(
                     )
                 }
             }
-
-            state = state.copy(isLoading = false)
         }
     }
 

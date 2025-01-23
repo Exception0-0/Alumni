@@ -22,15 +22,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.domain.data_class.User
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
-import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
+import dev.than0s.aluminium.core.presentation.utils.UserProfile.getUser
 import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
@@ -57,40 +56,36 @@ private fun Content(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        if (state.isLoading) {
-            ShimmerGroupList()
+        val groupList = state.groupList.collectAsState(emptyList()).value
+        if (groupList.isEmpty()) {
+            PreferredNoData(
+                title = "No Chats",
+                description = "do some chatting with friends"
+            )
         } else {
-            val groupList = state.groupList.collectAsState(emptyList()).value
-//            if (groupList.isEmpty()) {
-                PreferredNoData(
-                    title = "No Chats",
-                    description = "do some chatting with friends"
-                )
-//            } else {
-//                LazyColumn(
-//                    modifier = Modifier
-//                        .align(Alignment.TopCenter)
-//                        .fillMaxSize()
-//                ) {
-//                    items(groupList) { item ->
-//                        if (!UserProfile.userMap.containsKey(item.receiverId)) {
-//                            UserProfile.userMap.getUser(item.receiverId)
-//                        }
-//                        val user = UserProfile.userMap[item.receiverId] ?: User()
-//                        GroupItem(
-//                            user = user,
-//                            message = item.message,
-//                            onClick = {
-//                                openScreen(
-//                                    Screen.ChatDetailScreen(
-//                                        receiverId = item.receiverId
-//                                    )
-//                                )
-//                            }
-//                        )
-//                    }
-//                }
-//            }
+            LazyColumn(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxSize()
+            ) {
+                items(groupList) { item ->
+                    if (!UserProfile.userMap.containsKey(item.receiverId)) {
+                        UserProfile.userMap.getUser(item.receiverId)
+                    }
+                    val user = UserProfile.userMap[item.receiverId] ?: User()
+                    GroupItem(
+                        user = user,
+                        message = item.message,
+                        onClick = {
+                            openScreen(
+                                Screen.ChatDetailScreen(
+                                    receiverId = item.receiverId
+                                )
+                            )
+                        }
+                    )
+                }
+            }
         }
         PreferredFloatingActionButton(
             onClick = {
@@ -198,15 +193,6 @@ private fun NewMessage(
                     }
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun ShimmerGroupList() {
-    PreferredColumn {
-        for (i in 1..10) {
-            ShimmerListItem()
         }
     }
 }

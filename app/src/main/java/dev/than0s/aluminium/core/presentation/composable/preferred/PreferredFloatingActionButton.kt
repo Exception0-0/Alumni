@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ fun PreferredFloatingActionButton(
         onClick = onClick,
         shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
         content = content,
+        containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
         modifier = modifier
     )
 }

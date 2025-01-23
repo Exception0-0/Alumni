@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 data class StateGroupList(
-    val isLoading: Boolean = false,
     val newMessageVisibility: Boolean = false,
     val groupList: Flow<List<ChatGroup>> = emptyFlow(),
 )
