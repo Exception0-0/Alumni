@@ -43,6 +43,8 @@ sealed class Screen(
     @Serializable
     data object UpdateContactDialog : Screen(name = "Update Contact")
 
+    @Serializable
+    data object NotificationScreen : Screen(name = "Notifications")
 
     @Serializable
     data class HomeScreen(

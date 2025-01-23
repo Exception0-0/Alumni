@@ -1,14 +1,14 @@
 package dev.than0s.aluminium.core.presentation.utils
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -18,9 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.than0s.aluminium.core.Role
@@ -51,10 +49,15 @@ private val bottomNavItems = listOf(
         Icons.AutoMirrored.Outlined.Chat,
     ),
     BottomNavigationItem(
+        Screen.NotificationScreen,
+        Icons.Filled.Notifications,
+        Icons.Outlined.Notifications,
+    ),
+    BottomNavigationItem(
         Screen.SettingScreen,
         Icons.Filled.Settings,
         Icons.Outlined.Settings,
-    )
+    ),
 )
 
 private fun isGiveScreenHaveBottomBar(screenClassName: String?): Boolean {
@@ -77,6 +80,10 @@ private fun shouldShowOption(screen: Screen): Boolean {
             currentUserRole == Role.Admin
         }
 
+        is Screen.NotificationScreen -> {
+            currentUserRole != Role.Admin
+        }
+
         is Screen.SettingScreen -> true
         else -> false
     }
@@ -91,7 +98,6 @@ fun AluminiumBottomNavigationBar(
 
     if (isGiveScreenHaveBottomBar(currentScreenClassName)) {
         NavigationBar(
-            modifier = Modifier.height(80.dp),
             content = customNavbar ?: {
                 bottomNavItems.forEach { item ->
                     if (shouldShowOption(item.screen)) {

@@ -112,6 +112,9 @@ fun NavGraphHost(
                 popScreen = navController::popScreen
             )
         }
+        composable<Screen.NotificationScreen> {
+
+        }
     }
 }
 
