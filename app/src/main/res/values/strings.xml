@@ -34,4 +34,6 @@
     <string name="sign_out_successfully">sign out successfully</string>
     <string name="empty_chat">No chat found</string>
     <string name="network_error">No Internet Connection</string>
+    <string name="log_out_title">Log Out</string>
+    <string name="log_out_description">do really want to logout?</string>
 </resources>

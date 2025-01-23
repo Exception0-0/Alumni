@@ -14,12 +14,15 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.utils.Screen
 
 @Composable
@@ -29,6 +32,7 @@ fun SettingScreen(
     restartApp: () -> Unit,
 ) {
     SettingScreenContent(
+        screenState = viewModel.screenState,
         onEvent = viewModel::onEvent,
         openScreen = openScreen,
         restartApp = restartApp,
@@ -37,6 +41,7 @@ fun SettingScreen(
 
 @Composable
 private fun SettingScreenContent(
+    screenState: StateSettingsScreen,
     onEvent: (SettingsEvents) -> Unit,
     openScreen: (Screen) -> Unit,
     restartApp: () -> Unit
@@ -89,11 +94,27 @@ private fun SettingScreenContent(
             },
             modifier = Modifier.clickable {
                 onEvent(
+                    SettingsEvents.ShowLogoutDialog
+                )
+            }
+        )
+    }
+    if (screenState.isLogoutDialogShown) {
+        PreferredWarningDialog(
+            title = stringResource(R.string.log_out_title),
+            description = stringResource(R.string.log_out_description),
+            onDismissRequest = {
+                onEvent(
+                    SettingsEvents.DismissLogoutDialog
+                )
+            },
+            onConfirmation = {
+                onEvent(
                     SettingsEvents.OnSignOut(
                         restartApp = restartApp
                     )
                 )
-            }
+            },
         )
     }
 }
@@ -102,6 +123,7 @@ private fun SettingScreenContent(
 @Composable
 private fun SettingScreenPreview() {
     SettingScreenContent(
+        screenState = StateSettingsScreen(),
         onEvent = {},
         openScreen = {},
         restartApp = {}
