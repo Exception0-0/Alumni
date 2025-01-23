@@ -31,7 +31,6 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
-import dev.than0s.aluminium.core.presentation.composable.shimmer.getCurrentShimmerBackground
 import dev.than0s.aluminium.core.presentation.utils.asString
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.postHeight
@@ -91,7 +90,7 @@ private fun PostUploadScreenContent(
                     modifier = Modifier
                         .height(MaterialTheme.postHeight.default)
                         .fillMaxWidth()
-                        .background(color = getCurrentShimmerBackground())
+                        .background(color = MaterialTheme.colorScheme.secondaryContainer)
                         .clickable(enabled = !screenStates.isLoading) {
                             pickMultipleMedia.launch(
                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
