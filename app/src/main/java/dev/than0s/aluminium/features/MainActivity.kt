@@ -118,7 +118,8 @@ class MainActivity : ComponentActivity() {
                                     },
                                     colors = ListItemDefaults.colors(
                                         containerColor = MaterialTheme.colorScheme.errorContainer,
-                                        headlineColor = MaterialTheme.colorScheme.onErrorContainer
+                                        headlineColor = MaterialTheme.colorScheme.onErrorContainer,
+                                        leadingIconColor = MaterialTheme.colorScheme.onErrorContainer
                                     )
                                 )
                             }
