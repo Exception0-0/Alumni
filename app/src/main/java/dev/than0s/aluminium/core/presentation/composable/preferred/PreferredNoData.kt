@@ -37,7 +37,9 @@ fun PreferredNoData(
                 Text(
                     text = title
                         .lowercase()
-                        .replaceFirstChar { it.uppercase() },
+                        .replaceFirstChar {
+                            it.uppercase()
+                        },
                     fontWeight = FontWeight.Bold,
                     fontSize = MaterialTheme.textSize.large
                 )
@@ -62,7 +64,7 @@ fun PreferredNoData(
 @Composable
 private fun Preview() {
     PreferredNoData(
-        title ="No Data",
+        title = "No Data",
         description = "No data to show do something"
     )
 }
