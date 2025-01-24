@@ -4,28 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +40,7 @@ import dev.than0s.aluminium.core.presentation.utils.ConnectionState
 import dev.than0s.aluminium.core.presentation.utils.NavGraphHost
 import dev.than0s.aluminium.core.presentation.utils.SnackbarLogic
 import dev.than0s.aluminium.core.presentation.utils.connectivityState
+import dev.than0s.aluminium.ui.textSize
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -103,27 +101,18 @@ class MainActivity : ComponentActivity() {
                         PreferredColumn(
                             verticalArrangement = Arrangement.Top
                         ) {
+                            AluminiumBottomNavigationBar(navController)
                             if (!isConnected) {
-                                ListItem(
-                                    leadingContent = {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Warning,
-                                            contentDescription = "warning"
-                                        )
-                                    },
-                                    headlineContent = {
-                                        Text(
-                                            text = stringResource(R.string.network_error),
-                                        )
-                                    },
-                                    colors = ListItemDefaults.colors(
-                                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                                        headlineColor = MaterialTheme.colorScheme.onErrorContainer,
-                                        leadingIconColor = MaterialTheme.colorScheme.onErrorContainer
-                                    )
+                                Text(
+                                    text = stringResource(R.string.network_error),
+                                    fontSize = MaterialTheme.textSize.medium,
+                                    color = MaterialTheme.colorScheme.onErrorContainer,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .background(MaterialTheme.colorScheme.errorContainer)
+                                        .fillMaxWidth()
                                 )
                             }
-                            AluminiumBottomNavigationBar(navController)
                         }
                     },
                     floatingActionButton = {
