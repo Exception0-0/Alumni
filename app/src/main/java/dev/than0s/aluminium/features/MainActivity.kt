@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val snackbarHostState = remember { SnackbarHostState() }
             val scrollBehavior =
-                TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+                TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
             val connection by connectivityState()
             val isConnected = connection === ConnectionState.Available
 
