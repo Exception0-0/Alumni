@@ -1,15 +1,12 @@
 package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
@@ -32,7 +29,7 @@ fun PreferredOutlinedTextField(
         },
         enabled = enabled,
         isError = supportingText != null,
-        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+        shape = RoundedCornerShape(roundedCorners.default),
         supportingText = supportingText?.let {
             {
                 Text(

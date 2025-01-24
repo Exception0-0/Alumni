@@ -376,7 +376,7 @@ private fun CollegeInfoSection(
     } else {
         PreferredAsyncImage(
             model = screenState.registrationForm.idCardImage,
-            shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+            shape = RoundedCornerShape(roundedCorners.default),
             contentDescription = "Id card image",
             modifier = Modifier
                 .size(MaterialTheme.coverHeight.default)

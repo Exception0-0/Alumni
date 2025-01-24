@@ -13,7 +13,7 @@ import dev.than0s.aluminium.ui.roundedCorners
 fun PreferredSurface(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surface,
-    shape: Shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+    shape: Shape = RoundedCornerShape(roundedCorners.default),
     content: @Composable () -> Unit,
 ) {
     Surface(

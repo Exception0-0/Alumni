@@ -67,12 +67,14 @@ class MainActivity : ComponentActivity() {
                 initialValue = false,
                 defaultValue = false,
             )
+
             val navController = rememberNavController()
             val snackbarHostState = remember { SnackbarHostState() }
             val scrollBehavior =
                 TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
             val connection by connectivityState()
             val isConnected = connection === ConnectionState.Available
+            val a = 16.dp
 
             AluminiumTheme(
                 darkTheme = darkTheme,

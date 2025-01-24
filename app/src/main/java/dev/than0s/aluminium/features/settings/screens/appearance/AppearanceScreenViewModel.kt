@@ -23,6 +23,18 @@ class AppearanceScreenViewModel @Inject constructor() : ViewModel() {
         )
     }
 
+    private fun showRoundedCornersDialog() {
+        screenState = screenState.copy(
+            roundedCornersDialog = true
+        )
+    }
+
+    private fun dismissRoundedCornersDialog() {
+        screenState = screenState.copy(
+            roundedCornersDialog = false
+        )
+    }
+
     fun onEvent(event: AppearanceScreenEvents) {
         when (event) {
             is AppearanceScreenEvents.OnColorThemeDialogDismissRequest -> {
@@ -32,6 +44,9 @@ class AppearanceScreenViewModel @Inject constructor() : ViewModel() {
             is AppearanceScreenEvents.OnColorThemeDialogShowRequest -> {
                 onColorThemeDialogShowRequest()
             }
+
+            AppearanceScreenEvents.DismissRoundedCornersDialog -> dismissRoundedCornersDialog()
+            AppearanceScreenEvents.ShowRoundedCornersDialog -> showRoundedCornersDialog()
         }
     }
 }

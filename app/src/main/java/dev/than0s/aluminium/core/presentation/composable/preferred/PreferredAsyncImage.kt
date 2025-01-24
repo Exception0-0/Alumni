@@ -27,7 +27,7 @@ import dev.than0s.aluminium.ui.roundedCorners
 fun PreferredAsyncImage(
     model: Any?,
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(MaterialTheme.roundedCorners.none),
+    shape: Shape = RoundedCornerShape(roundedCorners.none),
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Crop,
 ) {
@@ -46,7 +46,7 @@ fun PreferredAsyncImage(
 fun PreferredAddPicture(
     model: Any?,
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(MaterialTheme.roundedCorners.none),
+    shape: Shape = RoundedCornerShape(roundedCorners.none),
     contentDescription: String? = null,
     enabled: Boolean = true,
     contentScale: ContentScale = ContentScale.Crop,

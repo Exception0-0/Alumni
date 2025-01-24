@@ -101,7 +101,7 @@ private fun UpdateProfileDialogContent(
                 PreferredAddPicture(
                     model = screenState.userProfile.coverImage.let { if (it == Uri.EMPTY) null else it },
                     contentDescription = "user cover image",
-                    shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+                    shape = RoundedCornerShape(roundedCorners.default),
                     enabled = !screenState.isUpdating,
                     modifier = Modifier
                         .height(MaterialTheme.coverHeight.default)

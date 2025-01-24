@@ -73,7 +73,7 @@ private fun PostUploadScreenContent(
             if (screenStates.post.files.isEmpty()) {
                 PreferredAddPicture(
                     model = null,
-                    shape = RoundedCornerShape(MaterialTheme.roundedCorners.small),
+                    shape = RoundedCornerShape(roundedCorners.small),
                     modifier = Modifier
                         .height(MaterialTheme.postHeight.default)
                         .fillMaxWidth(),
