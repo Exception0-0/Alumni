@@ -66,6 +66,18 @@ class SettingsViewModel @Inject constructor(
         )
     }
 
+    private fun showAboutDialog() {
+        screenState = screenState.copy(
+            isAboutDialogShown = true
+        )
+    }
+
+    private fun dismissAboutDialog() {
+        screenState = screenState.copy(
+            isAboutDialogShown = false
+        )
+    }
+
     fun onEvent(event: SettingsEvents) {
         when (event) {
             is SettingsEvents.OnSignOut -> {
@@ -81,6 +93,9 @@ class SettingsViewModel @Inject constructor(
             is SettingsEvents.DismissLogoutDialog -> {
                 dismissLogoutDialog()
             }
+
+            SettingsEvents.DismissAboutDialog -> dismissAboutDialog()
+            SettingsEvents.ShowAboutDialog -> showAboutDialog()
         }
     }
 }

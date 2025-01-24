@@ -4,4 +4,6 @@ sealed class SettingsEvents {
     data class OnSignOut(val restartApp: () -> Unit) : SettingsEvents()
     data object ShowLogoutDialog : SettingsEvents()
     data object DismissLogoutDialog : SettingsEvents()
+    data object ShowAboutDialog : SettingsEvents()
+    data object DismissAboutDialog : SettingsEvents()
 }

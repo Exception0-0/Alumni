@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">aluminium</string>
+    <string name="app_name">Aluminium</string>
     <string name="error_unknown">unknow error</string>
     <string name="error_couldnt_reach_server">error while connecting to server</string>
     <string name="oops_something_went_wrong">oops something went wrong</string>
@@ -36,4 +36,6 @@
     <string name="network_error">No Internet Connection</string>
     <string name="log_out_title">Log Out</string>
     <string name="log_out_description">do really want to logout?</string>
+    <string name="about">About</string>
+    <string name="linktree_url"><![CDATA[https://linktr.ee/than0s_op?utm_source=linktree_profile_share&ltsid=3a09acf8-2a9f-4808-9f08-8d47150628df]]></string>
 </resources>
