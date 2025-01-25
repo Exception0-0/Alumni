@@ -241,7 +241,9 @@ private fun ColorThemeDialog(
             onEvent(AppearanceScreenEvents.OnColorThemeDialogDismissRequest)
         },
         content = {
-            PreferredSurface {
+            PreferredSurface(
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
+            ) {
                 PreferredColumn(
                     verticalArrangement = Arrangement.Top,
                     modifier = Modifier.padding(MaterialTheme.padding.medium)
@@ -274,7 +276,9 @@ private fun RoundedCornersDialog(
             onEvent(AppearanceScreenEvents.DismissRoundedCornersDialog)
         },
         content = {
-            PreferredSurface {
+            PreferredSurface(
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
+            ) {
                 PreferredColumn(
                     modifier = Modifier.padding(MaterialTheme.padding.medium)
                 ) {

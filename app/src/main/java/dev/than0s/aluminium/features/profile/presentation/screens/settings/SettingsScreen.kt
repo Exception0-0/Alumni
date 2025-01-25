@@ -172,7 +172,9 @@ private fun AboutDialog(
     Dialog(
         onDismissRequest = onDismissRequest
     ) {
-        PreferredSurface {
+        PreferredSurface(
+            color = MaterialTheme.colorScheme.surfaceContainerHigh
+        ) {
             PreferredColumn(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
                 modifier = Modifier.padding(
