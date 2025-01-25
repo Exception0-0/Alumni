@@ -175,7 +175,7 @@ private fun UpdateProfileDialogContent(
                     ) {
                         TextButton(
                             onClick = onSuccess,
-                            enabled = !screenState.isUpdating
+                            enabled = !screenState.isUpdating && !shouldSignOutShow
                         ) {
                             Text(text = "Cancel")
                         }

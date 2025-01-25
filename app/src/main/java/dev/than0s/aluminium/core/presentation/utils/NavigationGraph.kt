@@ -2,6 +2,7 @@ package dev.than0s.aluminium.core.presentation.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -93,7 +94,12 @@ fun NavGraphHost(
                 popScreen = navController::popScreen
             )
         }
-        dialog<Screen.CreateProfileDialog> {
+        dialog<Screen.CreateProfileDialog>(
+            dialogProperties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+            )
+        ) {
             UpdateProfileDialog(
                 onSuccess = navController::restartApp,
                 shouldSignOutShow = true,
