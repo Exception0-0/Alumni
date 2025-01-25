@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicator
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
@@ -56,34 +57,38 @@ private fun Content(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        val groupList = state.groupList.collectAsState(emptyList()).value
-        if (groupList.isEmpty()) {
-            PreferredNoData(
-                title = "No Chats",
-                description = "do some chatting with friends"
-            )
+        val groupList = state.groupList.collectAsState(null).value
+        if (groupList == null) {
+            PreferredCircularProgressIndicator()
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxSize()
-            ) {
-                items(groupList) { item ->
-                    if (!UserProfile.userMap.containsKey(item.receiverId)) {
-                        UserProfile.userMap.getUser(item.receiverId)
-                    }
-                    val user = UserProfile.userMap[item.receiverId] ?: User()
-                    GroupItem(
-                        user = user,
-                        message = item.message,
-                        onClick = {
-                            openScreen(
-                                Screen.ChatDetailScreen(
-                                    receiverId = item.receiverId
-                                )
-                            )
+            if (groupList.isEmpty()) {
+                PreferredNoData(
+                    title = "No Chats",
+                    description = "do some chatting with friends"
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxSize()
+                ) {
+                    items(groupList) { item ->
+                        if (!UserProfile.userMap.containsKey(item.receiverId)) {
+                            UserProfile.userMap.getUser(item.receiverId)
                         }
-                    )
+                        val user = UserProfile.userMap[item.receiverId] ?: User()
+                        GroupItem(
+                            user = user,
+                            message = item.message,
+                            onClick = {
+                                openScreen(
+                                    Screen.ChatDetailScreen(
+                                        receiverId = item.receiverId
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
