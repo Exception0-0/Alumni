@@ -86,7 +86,9 @@ private fun UpdateProfileDialogContent(
         }
     }
 
-    PreferredSurface {
+    PreferredSurface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
+    ) {
         if (screenState.isLoading) {
             LoadingShimmerEffect()
         } else {

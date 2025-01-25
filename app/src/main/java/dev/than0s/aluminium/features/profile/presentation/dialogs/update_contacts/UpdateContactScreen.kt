@@ -45,7 +45,9 @@ private fun UpdateContactScreenContent(
     onEvent: (UpdateContactScreenEvents) -> Unit,
     popScreen: () -> Unit,
 ) {
-    PreferredSurface {
+    PreferredSurface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
+    ) {
         if (screenState.isLoading) {
             LoadingShimmerEffect()
         } else {
