@@ -9,9 +9,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShimmerText(
+    modifier: Modifier = Modifier,
     height: Dp = ShimmerTextHeight.medium,
     width: Dp = ShimmerTextWidth.medium,
-    modifier: Modifier = Modifier
 ) {
     ShimmerBackground(
         modifier = modifier
