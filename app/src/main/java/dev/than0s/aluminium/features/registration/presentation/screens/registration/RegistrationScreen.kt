@@ -8,31 +8,36 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.WorkOutline
 import androidx.compose.material.icons.outlined.Badge
 import androidx.compose.material.icons.outlined.School
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Course
@@ -44,7 +49,9 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFill
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredLottieAnimation
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextFieldDropDown
 import dev.than0s.aluminium.core.presentation.utils.asString
+import dev.than0s.aluminium.features.registration.domain.data_class.RegistrationForm
 import dev.than0s.aluminium.ui.coverHeight
 import dev.than0s.aluminium.ui.roundedCorners
 import dev.than0s.aluminium.ui.textSize
@@ -200,57 +207,25 @@ private fun RoleSection(
     screenState: RegistrationState,
     onEvent: (RegistrationEvents) -> Unit
 ) {
-    Box {
-        PreferredTextField(
-            value = screenState.registrationForm.role.name,
-            onValueChange = {},
-            placeholder = "Role",
-            enable = false,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.WorkOutline,
-                    contentDescription = "role icon"
-                )
-            },
-            trailingIcon = {
-                if (screenState.roleExpanded) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropUp,
-                        contentDescription = "drop up arrow"
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "drop down arrow"
-                    )
-                }
-            },
-            modifier = Modifier.clickable(
-                enabled = !screenState.isLoading,
-                onClick = {
-                    onEvent(RegistrationEvents.OnRoleClick)
-                }
+    PreferredTextFieldDropDown(
+        value = screenState.registrationForm.role.name,
+        onValueChange = {
+            onEvent(RegistrationEvents.OnRoleChange(Role.valueOf(it)))
+        },
+        placeholder = "Role",
+        expanded = screenState.roleExpanded,
+        dropList = Role.entries.minus(Role.Anonymous).map { it.name },
+        onStateChanged = {
+            onEvent(RegistrationEvents.ChangeRoleDropState(it))
+        },
+        enabled = !screenState.isLoading,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.WorkOutline,
+                contentDescription = "role icon"
             )
-        )
-        DropdownMenu(
-            expanded = screenState.roleExpanded,
-            onDismissRequest = {
-                onEvent(RegistrationEvents.OnRoleClick)
-            }
-        ) {
-            Role.entries.minus(Role.Anonymous).forEach {
-                DropdownMenuItem(
-                    text = {
-                        Text(it.name)
-                    },
-                    onClick = {
-                        onEvent(RegistrationEvents.OnRoleChange(it))
-                        onEvent(RegistrationEvents.OnRoleClick)
-                    }
-                )
-            }
-        }
-    }
+        },
+    )
 }
 
 @Composable
@@ -258,6 +233,7 @@ private fun CollegeInfoSection(
     screenState: RegistrationState,
     onEvent: (RegistrationEvents) -> Unit
 ) {
+    var textFieldSize by remember { mutableStateOf(Size.Zero) }
     val pickMedia =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { image: Uri? ->
             image?.let {
@@ -279,65 +255,40 @@ private fun CollegeInfoSection(
         enable = !screenState.isLoading,
         keyboardType = KeyboardType.Number,
         supportingText = screenState.collageIdError?.message?.asString(),
-        placeholder = "College Id"
+        placeholder = "College Id",
+        modifier = Modifier.onGloballyPositioned { coordinates ->
+            textFieldSize = coordinates.size.toSize()
+        }
     )
 
     if (screenState.registrationForm.role.let { it == Role.Student || it == Role.Alumni }) {
-        Box {
-            PreferredTextField(
-                value = screenState.registrationForm.course?.name ?: Course.MCA.name,
-                onValueChange = {},
-                placeholder = "Course",
-                enable = false,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.School,
-                        contentDescription = "course icon"
-                    )
-                },
-                trailingIcon = {
-                    if (screenState.courseExpanded) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropUp,
-                            contentDescription = "drop up arrow"
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = "drop down arrow"
-                        )
-                    }
-                },
-                modifier = Modifier.clickable(
-                    enabled = !screenState.isLoading,
-                    onClick = {
-                        onEvent(RegistrationEvents.OnCourseClick)
-                    }
+        PreferredTextFieldDropDown(
+            value = screenState.registrationForm.course?.name ?: "Select Course",
+            onValueChange = {
+                onEvent(RegistrationEvents.OnCourseChange(Course.valueOf(it)))
+            },
+            placeholder = "Course",
+            expanded = screenState.courseExpanded,
+            dropList = Course.entries.map { it.name },
+            onStateChanged = {
+                onEvent(RegistrationEvents.ChangeCourseDropState(it))
+            },
+            enabled = !screenState.isLoading,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Outlined.School,
+                    contentDescription = "course icon"
                 )
-            )
-            DropdownMenu(
-                expanded = screenState.courseExpanded,
-                onDismissRequest = {
-                    onEvent(RegistrationEvents.OnCourseClick)
-                }
-            ) {
-                Course.entries.forEach {
-                    DropdownMenuItem(
-                        text = {
-                            Text(it.name)
-                        },
-                        onClick = {
-                            onEvent(RegistrationEvents.OnCourseChange(it))
-                            onEvent(RegistrationEvents.OnCourseClick)
-                        }
-                    )
-                }
             }
-        }
+        )
     }
 
     if (screenState.registrationForm.role == Role.Alumni) {
-        PreferredRow {
+        PreferredRow(
+            modifier = Modifier.width(
+                with(LocalDensity.current) { textFieldSize.width.toDp() }
+            )
+        ) {
             PreferredTextField(
                 value = screenState.registrationForm.batchFrom ?: "",
                 onValueChange = {
@@ -347,6 +298,7 @@ private fun CollegeInfoSection(
                 enable = !screenState.isLoading,
                 supportingText = screenState.batchFromError?.message?.asString(),
                 placeholder = "Batch - From",
+                modifier = Modifier.weight(0.5f)
             )
 
             PreferredTextField(
@@ -358,6 +310,7 @@ private fun CollegeInfoSection(
                 enable = !screenState.isLoading,
                 supportingText = screenState.batchToError?.message?.asString(),
                 placeholder = "Batch - To",
+                modifier = Modifier.weight(0.5f)
             )
         }
     }
@@ -435,7 +388,10 @@ private val registrationFormSectionList = listOf(
 @Composable
 private fun RegistrationScreenPreview() {
     RegistrationScreenContent(
-        screenState = RegistrationState(),
+        screenState = RegistrationState(
+            registrationForm = RegistrationForm(role = Role.Alumni),
+            formIndex = 1,
+        ),
         onEvent = {},
         popScreen = {}
     )

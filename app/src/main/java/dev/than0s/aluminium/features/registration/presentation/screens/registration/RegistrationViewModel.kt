@@ -118,15 +118,15 @@ class RegistrationViewModel @Inject constructor(
         )
     }
 
-    private fun onRoleClick() {
+    private fun changeRoleDropState(state: Boolean) {
         screenState = screenState.copy(
-            roleExpanded = !screenState.roleExpanded
+            roleExpanded = state
         )
     }
 
-    private fun onCourseClick() {
+    private fun changeCourseDropState(state: Boolean) {
         screenState = screenState.copy(
-            courseExpanded = !screenState.courseExpanded
+            courseExpanded = state
         )
     }
 
@@ -188,8 +188,8 @@ class RegistrationViewModel @Inject constructor(
             is RegistrationEvents.OnRegisterClick -> onRegisterClick(event.onSuccess)
             is RegistrationEvents.OnPreviousClick -> onPreviousClick()
             is RegistrationEvents.OnNextClick -> onNextClick()
-            is RegistrationEvents.OnCourseClick -> onCourseClick()
-            is RegistrationEvents.OnRoleClick -> onRoleClick()
+            is RegistrationEvents.ChangeCourseDropState -> changeCourseDropState(event.state)
+            is RegistrationEvents.ChangeRoleDropState -> changeRoleDropState(event.state)
         }
     }
 }
