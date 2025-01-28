@@ -5,6 +5,8 @@ object TextFieldLimits {
     const val MIN_COLLEGE_ID = 7
     const val MAX_BATCH = 4
     const val MIN_BATCH = 4
-    const val NAME = 20
-    const val EMAIL = 50
+    const val MAX_NAME = 20
+    const val MAX_EMAIL = 50
+    const val MAX_PASSWORD = 20
+    const val MIN_PASSWORD = 8
 }

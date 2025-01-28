@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredClickableText
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
@@ -72,6 +73,7 @@ private fun SignInScreenContent(
                 onValueChange = { newValue ->
                     onEvent(SignInEvents.OnEmailChanged(newValue))
                 },
+                maxChar = TextFieldLimits.MAX_EMAIL,
                 placeholder = "Email",
                 leadingIcon = {
                     Icon(
@@ -88,6 +90,7 @@ private fun SignInScreenContent(
                     onEvent(SignInEvents.OnPasswordVisibilityChange)
                 },
                 enable = !screenState.isLoading,
+                maxChar = TextFieldLimits.MAX_PASSWORD,
                 supportingText = screenState.passwordError?.message?.asString(),
                 onPasswordChange = { newValue ->
                     onEvent(SignInEvents.OnPasswordChange(newValue))
@@ -125,6 +128,7 @@ private fun SignInScreenContent(
                     Text("Sign In")
                 }
             )
+
             PreferredLottieAnimation(
                 lottieAnimation = R.raw.authentication_animation,
                 modifier = Modifier.size(150.dp)

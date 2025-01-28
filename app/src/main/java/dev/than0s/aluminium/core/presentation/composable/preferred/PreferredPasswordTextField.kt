@@ -19,10 +19,11 @@ fun PreferredPasswordTextField(
     onPasswordVisibilityChange: () -> Unit,
     onPasswordChange: (String) -> Unit,
     placeholder: String,
+    modifier: Modifier = Modifier,
+    maxChar: Int = Int.MAX_VALUE,
     enable: Boolean = true,
     singleLine: Boolean = true,
     supportingText: String? = null,
-    modifier: Modifier = Modifier,
 ) {
     PreferredTextField(
         value = value,
@@ -34,6 +35,7 @@ fun PreferredPasswordTextField(
         keyboardType = KeyboardType.Password,
         enable = enable,
         supportingText = supportingText,
+        maxChar = maxChar,
         visualTransformation = if (passwordVisibilityState)
             VisualTransformation.None
         else PasswordVisualTransformation(),

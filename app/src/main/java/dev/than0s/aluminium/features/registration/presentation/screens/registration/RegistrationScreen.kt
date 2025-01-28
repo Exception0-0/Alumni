@@ -155,7 +155,7 @@ private fun PersonalInfoSection(
         onValueChange = { newValue ->
             onEvent(RegistrationEvents.OnFirstNameChange(newValue))
         },
-        maxChar = TextFieldLimits.NAME,
+        maxChar = TextFieldLimits.MAX_NAME,
         enable = !screenState.isLoading,
         supportingText = screenState.firstNameError?.message?.asString(),
         placeholder = "First Name"
@@ -166,7 +166,7 @@ private fun PersonalInfoSection(
         onValueChange = { newValue ->
             onEvent(RegistrationEvents.OnMiddleNameChange(newValue))
         },
-        maxChar = TextFieldLimits.NAME,
+        maxChar = TextFieldLimits.MAX_NAME,
         enable = !screenState.isLoading,
         supportingText = screenState.middleNameError?.message?.asString(),
         placeholder = "Middle Name"
@@ -177,7 +177,7 @@ private fun PersonalInfoSection(
         onValueChange = { newValue ->
             onEvent(RegistrationEvents.OnLastNameChange(newValue))
         },
-        maxChar = TextFieldLimits.NAME,
+        maxChar = TextFieldLimits.MAX_NAME,
         enable = !screenState.isLoading,
         supportingText = screenState.lastNameError?.message?.asString(),
         placeholder = "Last Name"
@@ -195,7 +195,7 @@ private fun ContactInfoSection(
             onEvent(RegistrationEvents.OnEmailChange(newValue))
         },
         enable = !screenState.isLoading,
-        maxChar = TextFieldLimits.EMAIL,
+        maxChar = TextFieldLimits.MAX_EMAIL,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.MailOutline,
