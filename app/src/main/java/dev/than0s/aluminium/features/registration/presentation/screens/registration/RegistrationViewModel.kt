@@ -146,6 +146,7 @@ class RegistrationViewModel @Inject constructor(
                 lastNameError = registrationResult.lastNameError,
                 collageIdError = registrationResult.rollNoError,
                 middleNameError = registrationResult.middleNameError,
+                courseError = registrationResult.courseError
             )
 
             when (registrationResult.result) {

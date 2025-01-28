@@ -16,4 +16,5 @@ data class RegistrationState(
     val emailError: Error? = null,
     val batchFromError: Error? = null,
     val batchToError: Error? = null,
+    val courseError: Error? = null,
 )

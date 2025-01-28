@@ -11,5 +11,6 @@ data class SubmitRegistrationResult(
     val batchFromError: Error? = null,
     val batchToError: Error? = null,
     val rollNoError: Error? = null,
+    val courseError: Error? = null,
     val result: SimpleResource? = null
 )

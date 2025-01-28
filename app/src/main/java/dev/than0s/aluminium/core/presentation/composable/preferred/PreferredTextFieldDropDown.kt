@@ -19,6 +19,7 @@ fun PreferredTextFieldDropDown(
     dropList: List<String>,
     onStateChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    supportingText: String? = null,
     enabled: Boolean = true,
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
@@ -35,6 +36,7 @@ fun PreferredTextFieldDropDown(
             placeholder = placeholder,
             readOnly = true,
             leadingIcon = leadingIcon,
+            supportingText = supportingText,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded

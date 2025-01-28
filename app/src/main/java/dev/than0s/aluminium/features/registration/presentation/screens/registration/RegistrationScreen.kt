@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -263,7 +264,7 @@ private fun CollegeInfoSection(
 
     if (screenState.registrationForm.role.let { it == Role.Student || it == Role.Alumni }) {
         PreferredTextFieldDropDown(
-            value = screenState.registrationForm.course?.name ?: "Select Course",
+            value = screenState.registrationForm.course?.name ?: stringResource(R.string.select_value),
             onValueChange = {
                 onEvent(RegistrationEvents.OnCourseChange(Course.valueOf(it)))
             },
@@ -273,6 +274,7 @@ private fun CollegeInfoSection(
             onStateChanged = {
                 onEvent(RegistrationEvents.ChangeCourseDropState(it))
             },
+            supportingText = screenState.courseError?.message?.asString(),
             enabled = !screenState.isLoading,
             leadingIcon = {
                 Icon(
