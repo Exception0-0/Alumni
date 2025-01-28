@@ -9,4 +9,7 @@ object TextFieldLimits {
     const val MAX_EMAIL = 50
     const val MAX_PASSWORD = 20
     const val MIN_PASSWORD = 8
+    const val MAX_MOBILE = 13
+    const val MIN_MOBILE = 13
+    const val MAX_LINK = 50
 }
