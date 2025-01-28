@@ -40,4 +40,6 @@
     <string name="linktree_url"><![CDATA[https://linktr.ee/than0s_op?utm_source=linktree_profile_share&ltsid=3a09acf8-2a9f-4808-9f08-8d47150628df]]></string>
     <string name="drop_down_empty_error">select a value</string>
     <string name="select_value">--select--</string>
+    <string name="short_college_id">\"collage id should contain at least 7 digits\"</string>
+    <string name="short_year">field should contain 4 digits</string>
 </resources>

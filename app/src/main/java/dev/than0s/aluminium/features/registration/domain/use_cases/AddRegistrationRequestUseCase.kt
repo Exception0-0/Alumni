@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.features.registration.domain.use_cases
 
 import dev.than0s.aluminium.core.Role
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.domain.util.generateUniqueId
 import dev.than0s.aluminium.core.domain.util.isValidEmail
 import dev.than0s.aluminium.core.presentation.error.DropDownError
@@ -32,17 +33,20 @@ class AddRegistrationRequestUseCase @Inject constructor(private val repository: 
         val batchFromError = form.batchFrom.let {
             if (form.role == Role.Alumni) {
                 if (it.isNullOrBlank()) TextFieldError.FieldEmpty
+                else if (it.length < TextFieldLimits.MIN_BATCH) TextFieldError.ShortYear
                 else null
             } else null
         }
         val batchToError = form.batchTo.let {
             if (form.role == Role.Alumni) {
                 if (it.isNullOrBlank()) TextFieldError.FieldEmpty
+                else if (it.length < TextFieldLimits.MIN_BATCH) TextFieldError.ShortYear
                 else null
             } else null
         }
         val collegeIdError = form.collegeId.let {
             if (it.isBlank()) TextFieldError.FieldEmpty
+            else if (it.length < TextFieldLimits.MIN_COLLEGE_ID) TextFieldError.ShortCollegeID
             else null
         }
         val courseError = form.course.let {
