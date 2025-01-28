@@ -1,8 +1,10 @@
 package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -47,6 +49,6 @@ fun PreferredOutlinedTextField(
         singleLine = singleLine,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
-        modifier = modifier
+        modifier = modifier.width(OutlinedTextFieldDefaults.MinWidth)
     )
 }

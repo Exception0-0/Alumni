@@ -23,22 +23,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Course
@@ -239,7 +232,6 @@ private fun CollegeInfoSection(
     screenState: RegistrationState,
     onEvent: (RegistrationEvents) -> Unit
 ) {
-    var textFieldSize by remember { mutableStateOf(Size.Zero) }
     val pickMedia =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { image: Uri? ->
             image?.let {
@@ -263,14 +255,12 @@ private fun CollegeInfoSection(
         keyboardType = KeyboardType.Number,
         supportingText = screenState.collageIdError?.message?.asString(),
         placeholder = "College Id",
-        modifier = Modifier.onGloballyPositioned { coordinates ->
-            textFieldSize = coordinates.size.toSize()
-        }
     )
 
     if (screenState.registrationForm.role.let { it == Role.Student || it == Role.Alumni }) {
         PreferredTextFieldDropDown(
-            value = screenState.registrationForm.course?.name ?: stringResource(R.string.select_value),
+            value = screenState.registrationForm.course?.name
+                ?: stringResource(R.string.select_value),
             onValueChange = {
                 onEvent(RegistrationEvents.OnCourseChange(Course.valueOf(it)))
             },
@@ -293,9 +283,7 @@ private fun CollegeInfoSection(
 
     if (screenState.registrationForm.role == Role.Alumni) {
         PreferredRow(
-            modifier = Modifier.width(
-                with(LocalDensity.current) { textFieldSize.width.toDp() }
-            )
+            modifier = Modifier.width(TextFieldDefaults.MinWidth)
         ) {
             PreferredTextField(
                 value = screenState.registrationForm.batchFrom ?: "",

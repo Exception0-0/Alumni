@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -68,7 +69,7 @@ fun PreferredTextField(
         trailingIcon = trailingIcon,
         leadingIcon = leadingIcon,
         readOnly = readOnly,
-        modifier = modifier,
+        modifier = modifier.width(TextFieldDefaults.MinWidth),
     )
 }
 
