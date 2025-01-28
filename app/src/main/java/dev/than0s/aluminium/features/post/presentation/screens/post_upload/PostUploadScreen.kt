@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.core.POST_IMAGES_COUNT
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAddPicture
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
@@ -111,6 +112,7 @@ private fun PostUploadScreenContent(
                 onValueChange = {
                     onEvent(PostUploadScreenEvents.OnCaptionChanged(it))
                 },
+                maxChar = TextFieldLimits.MAX_MESSAGE,
                 placeholder = "caption",
                 enabled = !screenStates.isLoading,
                 supportingText = screenStates.titleError?.message?.asString(),

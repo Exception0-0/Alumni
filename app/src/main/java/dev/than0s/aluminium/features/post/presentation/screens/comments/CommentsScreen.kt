@@ -40,6 +40,7 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Comment
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
@@ -169,6 +170,7 @@ private fun CommentScreenContent(
                     onValueChange = {
                         onEvent(CommentEvents.OnCommentChanged(it))
                     },
+                    maxChar = TextFieldLimits.MAX_MESSAGE,
                     enabled = !screenState.isCommentAdding,
                     singleLine = false,
                     supportingText = screenState.commentError?.message?.asString(),

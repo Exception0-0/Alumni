@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicator
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
@@ -104,6 +105,7 @@ private fun Content(
                 onValueChange = {
                     onEvent(EventsDetailChat.OnMessageChange(it))
                 },
+                maxChar = TextFieldLimits.MAX_MESSAGE,
                 trailingIcon = {
                     PreferredIconButton(
                         icon = Icons.AutoMirrored.Filled.Send,

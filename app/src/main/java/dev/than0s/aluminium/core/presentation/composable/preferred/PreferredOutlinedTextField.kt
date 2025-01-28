@@ -18,12 +18,17 @@ fun PreferredOutlinedTextField(
     enabled: Boolean = true,
     singleLine: Boolean = true,
     supportingText: String? = null,
+    maxChar: Int = Int.MAX_VALUE,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = { newValue ->
+            if (newValue.length <= maxChar) {
+                onValueChange(newValue)
+            }
+        },
         placeholder = placeholder?.let {
             { Text(placeholder) }
         },
