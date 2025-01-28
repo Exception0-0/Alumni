@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredLottieAnimation
@@ -44,9 +45,9 @@ private fun ForgetPasswordContent(
     onEvent: (ForgetPasswordEvents) -> Unit,
     popScreen: () -> Unit,
 ) {
-    Box (
+    Box(
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         PreferredColumn(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
@@ -71,6 +72,7 @@ private fun ForgetPasswordContent(
                         contentDescription = "Mail icon"
                     )
                 },
+                maxChar = TextFieldLimits.MAX_EMAIL,
                 placeholder = "Email"
             )
             PreferredFilledButton(
