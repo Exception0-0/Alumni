@@ -12,4 +12,6 @@ object TextFieldLimits {
     const val MAX_MOBILE = 13
     const val MIN_MOBILE = 13
     const val MAX_LINK = 50
+    const val MAX_MESSAGE = 4096
+    const val MAX_BIO = 70
 }
