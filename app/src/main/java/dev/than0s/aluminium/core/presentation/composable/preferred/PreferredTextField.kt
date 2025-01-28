@@ -30,13 +30,16 @@ fun PreferredTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     supportingText: String? = null,
+    maxChar: Int = Int.MAX_VALUE,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     TextField(
         value = value,
         onValueChange = { newValue ->
-            onValueChange(newValue)
+            if (newValue.length <= maxChar) {
+                onValueChange(newValue)
+            }
         },
         enabled = enable,
         label = {

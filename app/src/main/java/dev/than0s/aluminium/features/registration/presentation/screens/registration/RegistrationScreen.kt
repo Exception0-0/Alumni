@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Course
 import dev.than0s.aluminium.core.Role
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredClickableText
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
@@ -154,6 +155,7 @@ private fun PersonalInfoSection(
         onValueChange = { newValue ->
             onEvent(RegistrationEvents.OnFirstNameChange(newValue))
         },
+        maxChar = TextFieldLimits.NAME,
         enable = !screenState.isLoading,
         supportingText = screenState.firstNameError?.message?.asString(),
         placeholder = "First Name"
@@ -164,6 +166,7 @@ private fun PersonalInfoSection(
         onValueChange = { newValue ->
             onEvent(RegistrationEvents.OnMiddleNameChange(newValue))
         },
+        maxChar = TextFieldLimits.NAME,
         enable = !screenState.isLoading,
         supportingText = screenState.middleNameError?.message?.asString(),
         placeholder = "Middle Name"
@@ -174,6 +177,7 @@ private fun PersonalInfoSection(
         onValueChange = { newValue ->
             onEvent(RegistrationEvents.OnLastNameChange(newValue))
         },
+        maxChar = TextFieldLimits.NAME,
         enable = !screenState.isLoading,
         supportingText = screenState.lastNameError?.message?.asString(),
         placeholder = "Last Name"
@@ -191,6 +195,7 @@ private fun ContactInfoSection(
             onEvent(RegistrationEvents.OnEmailChange(newValue))
         },
         enable = !screenState.isLoading,
+        maxChar = TextFieldLimits.EMAIL,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.MailOutline,
@@ -253,6 +258,7 @@ private fun CollegeInfoSection(
                 contentDescription = "course icon"
             )
         },
+        maxChar = TextFieldLimits.MAX_COLLEGE_ID,
         enable = !screenState.isLoading,
         keyboardType = KeyboardType.Number,
         supportingText = screenState.collageIdError?.message?.asString(),
@@ -298,6 +304,7 @@ private fun CollegeInfoSection(
                 },
                 keyboardType = KeyboardType.Number,
                 enable = !screenState.isLoading,
+                maxChar = TextFieldLimits.MAX_BATCH,
                 supportingText = screenState.batchFromError?.message?.asString(),
                 placeholder = "Batch - From",
                 modifier = Modifier.weight(0.5f)
@@ -309,6 +316,7 @@ private fun CollegeInfoSection(
                     onEvent(RegistrationEvents.OnBatchToChange(it))
                 },
                 keyboardType = KeyboardType.Number,
+                maxChar = TextFieldLimits.MAX_BATCH,
                 enable = !screenState.isLoading,
                 supportingText = screenState.batchToError?.message?.asString(),
                 placeholder = "Batch - To",
@@ -391,7 +399,7 @@ private val registrationFormSectionList = listOf(
 private fun RegistrationScreenPreview() {
     RegistrationScreenContent(
         screenState = RegistrationState(
-            registrationForm = RegistrationForm(role = Role.Alumni),
+            registrationForm = RegistrationForm(role = Role.Student),
             formIndex = 1,
         ),
         onEvent = {},
