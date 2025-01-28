@@ -68,15 +68,12 @@ fun PreferredAddPicture(
                 )
             }
         } else {
-            SubcomposeAsyncImage(
+            PreferredAsyncImage(
                 model = model,
-                loading = {
-                    ShimmerEffectAsyncImage(shape = shape)
-                },
                 contentScale = contentScale,
+                shape = shape,
                 contentDescription = contentDescription,
                 modifier = modifier
-                    .clip(shape = shape)
                     .clickable(onClick = onAddPicture, enabled = enabled)
             )
         }
