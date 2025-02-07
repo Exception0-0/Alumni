@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.features
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,9 +26,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import dagger.hilt.android.AndroidEntryPoint
 import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
@@ -74,7 +78,6 @@ class MainActivity : ComponentActivity() {
                 TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
             val connection by connectivityState()
             val isConnected = connection === ConnectionState.Available
-            val a = 16.dp
 
             AluminiumTheme(
                 darkTheme = darkTheme,

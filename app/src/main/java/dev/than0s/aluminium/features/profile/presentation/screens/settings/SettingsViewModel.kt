@@ -8,17 +8,24 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
+import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.core.domain.use_case.SignOutUseCase
+import dev.than0s.aluminium.core.domain.use_case.UseCaseUnSubscribeChannel
 import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val signOutUseCase: SignOutUseCase
+    private val signOutUseCase: SignOutUseCase,
+    private val useCaseUnSubscribeChannel: UseCaseUnSubscribeChannel
 ) : ViewModel() {
     var screenState by mutableStateOf(StateSettingsScreen())
 
@@ -47,9 +54,32 @@ class SettingsViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.sign_out_successfully),
                         )
                     )
+                    unSubscribeChannel(currentUserRole.name)
                     dismissLogoutDialog()
                     restartApp()
                 }
+            }
+        }
+    }
+
+    private fun unSubscribeChannel(channel: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            when (val result = useCaseUnSubscribeChannel(channel)) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    unSubscribeChannel(channel)
+                                }
+                            )
+                        )
+                    )
+                }
+
+                is Resource.Success -> {}
             }
         }
     }

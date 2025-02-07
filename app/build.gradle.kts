@@ -125,6 +125,9 @@ dependencies {
 
     // pretty time
     implementation (libs.prettytime)
+
+    // messaging
+    implementation(libs.firebase.messaging)
 }
 
 // Allow references to generated code

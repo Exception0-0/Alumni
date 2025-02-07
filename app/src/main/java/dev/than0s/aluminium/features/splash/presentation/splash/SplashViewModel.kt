@@ -3,11 +3,14 @@ package dev.than0s.aluminium.features.splash.presentation.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
+import dev.than0s.aluminium.core.domain.use_case.UseCaseSubscribeChannel
 import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
@@ -21,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val getCurrentUser: GetCurrentUserUseCase,
-    private val hasUserProfileCreatedUseCase: HasUserProfileCreatedUseCase
+    private val hasUserProfileCreatedUseCase: HasUserProfileCreatedUseCase,
+    private val useCaseSubscribeChannel: UseCaseSubscribeChannel
 ) : ViewModel() {
     private fun loadScreen(
         replaceScreen: (Screen) -> Unit
@@ -40,8 +44,8 @@ class SplashViewModel @Inject constructor(
                     setCurrentUserId(result.data!!.userId)
                     setCurrentUserRole(result.data.role ?: Role.Anonymous)
 
-                    result.data.role?.let {
-                        setCurrentUserRole(it)
+                    if (currentUserRole != Role.Anonymous) {
+                        subscribeChannel(currentUserRole.name)
                     }
 
                     when (currentUserRole) {
@@ -55,6 +59,30 @@ class SplashViewModel @Inject constructor(
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun subscribeChannel(channel: String) {
+        viewModelScope.launch {
+            when (val result = useCaseSubscribeChannel(channel)) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    subscribeChannel(channel)
+                                }
+                            )
+                        )
+                    )
+                }
+
+                is Resource.Success -> {
+
                 }
             }
         }

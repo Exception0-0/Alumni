@@ -7,6 +7,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.messaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 import dagger.Binds
@@ -22,6 +24,10 @@ import dev.than0s.aluminium.features.chat.data.remote.RemoteChat
 import dev.than0s.aluminium.features.chat.data.remote.RemoteChatImple
 import dev.than0s.aluminium.features.chat.data.repository.RepositoryChatImple
 import dev.than0s.aluminium.features.chat.domain.repository.RepositoryChat
+import dev.than0s.aluminium.features.notification.data.remote.RemoteMessaging
+import dev.than0s.aluminium.features.notification.data.remote.RemoteMessagingImple
+import dev.than0s.aluminium.features.notification.data.repository.RepositoryMessagingImple
+import dev.than0s.aluminium.features.notification.domain.repository.RepositoryMessaging
 import dev.than0s.aluminium.features.post.data.remote.CommentRemote
 import dev.than0s.aluminium.features.post.data.remote.CommentRemoteImple
 import dev.than0s.aluminium.features.post.data.remote.LikeDataSourceImple
@@ -113,6 +119,13 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindRepositoryChat(imple: RepositoryChatImple): RepositoryChat
+
+    // notification
+    @Binds
+    abstract fun bindRemoteMessaging(imple: RemoteMessagingImple): RemoteMessaging
+
+    @Binds
+    abstract fun bindRepositoryMessaging(imple: RepositoryMessagingImple): RepositoryMessaging
 }
 
 @InstallIn(SingletonComponent::class)
@@ -129,4 +142,7 @@ object FirebaseModule {
 
     @Provides
     fun database(): FirebaseDatabase = Firebase.database
+
+    @Provides
+    fun messaging(): FirebaseMessaging = Firebase.messaging
 }
