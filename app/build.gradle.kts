@@ -128,6 +128,9 @@ dependencies {
 
     // messaging
     implementation(libs.firebase.messaging)
+
+    // accompanist
+    implementation(libs.accompanist.permissions)
 }
 
 // Allow references to generated code

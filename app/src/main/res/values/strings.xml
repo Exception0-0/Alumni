@@ -42,6 +42,6 @@
     <string name="select_value">--select--</string>
     <string name="short_college_id">\"collage id should contain at least 7 digits\"</string>
     <string name="short_year">field should contain 4 digits</string>
-    <string name="channel_name">notification</string>
+    <string name="admin_channel_name">admin</string>
     <string name="channel_description">nothing to say</string>
 </resources>

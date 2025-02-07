@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -101,7 +102,7 @@ fun AluminiumBottomNavigationBar(
 
     if (isGiveScreenHaveBottomBar(currentScreenClassName)) {
         NavigationBar(
-            modifier = Modifier.height(80.dp),
+            modifier = Modifier.height(65.dp),
             content = customNavbar ?: {
                 bottomNavItems.forEach { item ->
                     if (shouldShowOption(item.screen)) {
@@ -122,11 +123,14 @@ fun AluminiumBottomNavigationBar(
                                     contentDescription = item.screen::class.simpleName,
                                 )
                             },
-                            label = {
-                                Text(text = item.screen.name)
-                            },
+//                            label = {
+//                                Text(
+//                                    text = item.screen.name,
+//                                    fontWeight = if (isScreenSelected) FontWeight.Bold else null,
+//                                )
+//                            },
                             alwaysShowLabel = false,
-                            modifier = Modifier.height(20.dp)
+                            modifier = Modifier.height(22.dp)
                         )
                     }
                 }

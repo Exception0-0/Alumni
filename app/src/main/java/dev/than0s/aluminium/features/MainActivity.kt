@@ -1,10 +1,12 @@
 package dev.than0s.aluminium.features
 
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +35,7 @@ import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.utils.RequestNotificationPermission
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
 import dev.than0s.aluminium.core.presentation.ui.PURE_BLACK
@@ -51,6 +54,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,12 +83,13 @@ class MainActivity : ComponentActivity() {
             val connection by connectivityState()
             val isConnected = connection === ConnectionState.Available
 
+            RequestNotificationPermission()
+
             AluminiumTheme(
                 darkTheme = darkTheme,
                 dynamicColor = isDynamicTheme,
                 pureBlack = pureBlack,
             ) {
-
                 SnackbarLogic(
                     snackbarHostState = snackbarHostState
                 )
