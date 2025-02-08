@@ -142,7 +142,7 @@ private fun ProfileScreenContent(
                 } else {
                     PreferredFilledButton(
                         onClick = {
-//                            openScreen(Screen.ChatDetailScreen(userId,))
+                            openScreen(Screen.ChatDetailScreen(receiverId = userId))
                         },
                         modifier = Modifier.fillMaxWidth(),
                         content = {
