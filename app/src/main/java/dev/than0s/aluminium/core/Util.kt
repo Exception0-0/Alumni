@@ -28,3 +28,4 @@ enum class Course {
 }
 
 const val POST_IMAGES_COUNT = 5
+const val LAST_SEEN_UPDATE_SEC = 5

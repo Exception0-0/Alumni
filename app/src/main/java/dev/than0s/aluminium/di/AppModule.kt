@@ -22,6 +22,10 @@ import dev.than0s.aluminium.features.chat.data.remote.RemoteChat
 import dev.than0s.aluminium.features.chat.data.remote.RemoteChatImple
 import dev.than0s.aluminium.features.chat.data.repository.RepositoryChatImple
 import dev.than0s.aluminium.features.chat.domain.repository.RepositoryChat
+import dev.than0s.aluminium.features.last_seen.data.remote.RemoteLastSeen
+import dev.than0s.aluminium.features.last_seen.data.remote.RemoteLastSeenImple
+import dev.than0s.aluminium.features.last_seen.data.repository.RepositoryLastSeenImple
+import dev.than0s.aluminium.features.last_seen.domain.repository.RepositoryLastSeen
 import dev.than0s.aluminium.features.post.data.remote.CommentRemote
 import dev.than0s.aluminium.features.post.data.remote.CommentRemoteImple
 import dev.than0s.aluminium.features.post.data.remote.LikeDataSourceImple
@@ -113,6 +117,13 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindRepositoryChat(imple: RepositoryChatImple): RepositoryChat
+
+    // last seen
+    @Binds
+    abstract fun bindRemoteLastSeen(imple: RemoteLastSeenImple): RemoteLastSeen
+
+    @Binds
+    abstract fun bindRepositoryLastSeen(imple: RepositoryLastSeenImple): RepositoryLastSeen
 }
 
 @InstallIn(SingletonComponent::class)

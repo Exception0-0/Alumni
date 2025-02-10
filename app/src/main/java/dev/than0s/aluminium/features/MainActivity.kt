@@ -46,9 +46,12 @@ import dev.than0s.aluminium.core.presentation.utils.connectivityState
 import dev.than0s.aluminium.ui.textSize
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var viewModel: ViewModelMainActivity
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
