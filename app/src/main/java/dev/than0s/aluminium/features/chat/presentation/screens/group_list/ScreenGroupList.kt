@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.chat.presentation.screens.group_list
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +32,6 @@ import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
 import dev.than0s.aluminium.core.presentation.utils.UserProfile.getUser
-import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
@@ -75,7 +76,9 @@ private fun Content(
                     val user = UserProfile.userMap[item.receiverId] ?: User()
                     GroupItem(
                         user = user,
-                        message = item.message,
+                        messageId = item.messageId,
+                        state = state,
+                        onEvent = onEvent,
                         onClick = {
                             openScreen(
                                 Screen.ChatDetailScreen(
@@ -113,9 +116,20 @@ private fun Content(
 @Composable
 private fun GroupItem(
     user: User,
-    message: ChatMessage,
+    messageId: String,
+    state: StateGroupList,
+    onEvent: (EventsGroupList) -> Unit,
     onClick: () -> Unit,
 ) {
+    LaunchedEffect(state.lastMessageMap[user.id]) {
+        onEvent(
+            EventsGroupList.GetChatMessage(
+                receiverId = user.id,
+                messageId = messageId
+            )
+        )
+    }
+    val message = state.lastMessageMap[user.id]
     ListItem(
         headlineContent = {
             Text(
@@ -133,16 +147,20 @@ private fun GroupItem(
             )
         },
         supportingContent = {
-            Text(
-                text = message.message,
-                fontSize = MaterialTheme.textSize.medium,
-            )
+            AnimatedVisibility(message != null) {
+                Text(
+                    text = message!!.message,
+                    fontSize = MaterialTheme.textSize.medium,
+                )
+            }
         },
         trailingContent = {
-            Text(
-                text = PrettyTimeUtils.getPrettyTime(message.timestamp),
-                fontSize = MaterialTheme.textSize.medium
-            )
+            AnimatedVisibility(message != null) {
+                Text(
+                    text = PrettyTimeUtils.getPrettyTime(message!!.timestamp),
+                    fontSize = MaterialTheme.textSize.medium
+                )
+            }
         },
         modifier = Modifier.clickable(onClick = onClick)
     )

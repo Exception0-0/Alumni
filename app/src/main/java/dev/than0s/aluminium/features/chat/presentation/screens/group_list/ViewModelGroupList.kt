@@ -15,6 +15,7 @@ import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
 import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseGetGroups
+import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseGetMessage
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class ViewModelGroupList @Inject constructor(
     private val useCaseGetGroups: UseCaseGetGroups,
     private val useCaseGetAllUserProfile: UseCaseGetAllUserProfile,
+    private val useCaseGetMessage: UseCaseGetMessage,
 ) : ViewModel() {
     var state by mutableStateOf(StateGroupList())
 
@@ -84,10 +86,27 @@ class ViewModelGroupList @Inject constructor(
         state = state.copy(newMessageVisibility = !state.newMessageVisibility)
     }
 
+    private fun getMessage(receiverId: String, messageId: String) {
+        viewModelScope.launch {
+            when (
+                val result = useCaseGetMessage(
+                    receiverId = receiverId,
+                    messageId = messageId
+                )
+            ) {
+                is Resource.Error -> {}
+                is Resource.Success -> {
+                    state.lastMessageMap[receiverId] = result.data!!
+                }
+            }
+        }
+    }
+
     fun onEvent(event: EventsGroupList) {
         when (event) {
             is EventsGroupList.LoadGroup -> loadChatGroup()
-            EventsGroupList.OnNewMessageClick -> changeNewMessageState()
+            is EventsGroupList.OnNewMessageClick -> changeNewMessageState()
+            is EventsGroupList.GetChatMessage -> getMessage(event.receiverId, event.messageId)
         }
     }
 }

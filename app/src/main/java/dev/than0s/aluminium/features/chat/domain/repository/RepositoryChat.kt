@@ -10,4 +10,5 @@ interface RepositoryChat {
     val chatGroups: Resource<Flow<List<ChatGroup>>>
     suspend fun addMessage(receiverId: String, message: ChatMessage): SimpleResource
     fun getMessages(receiverId: String): Resource<Flow<List<ChatMessage>>>
+    suspend fun getMessage(receiverId: String, messageId: String): Resource<ChatMessage>
 }

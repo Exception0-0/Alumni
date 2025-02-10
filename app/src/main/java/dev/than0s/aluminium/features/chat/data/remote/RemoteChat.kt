@@ -22,6 +22,7 @@ interface RemoteChat {
     val chatGroups: Flow<List<ChatGroup>>
     suspend fun addMessage(receiverId: String, message: ChatMessage)
     fun getMessages(receiverId: String): Flow<List<ChatMessage>>
+    suspend fun getMessage(receiverId: String, messageId: String): ChatMessage
 }
 
 class RemoteChatImple @Inject constructor(
@@ -56,7 +57,7 @@ class RemoteChatImple @Inject constructor(
                 .setValue(
                     ChatGroup(
                         receiverId = receiverId,
-                        message = message
+                        messageId = message.id
                     )
                 )
                 .await()
@@ -69,7 +70,7 @@ class RemoteChatImple @Inject constructor(
                 .setValue(
                     ChatGroup(
                         receiverId = auth.currentUser!!.uid,
-                        message = message
+                        messageId = message.id
                     )
                 )
                 .await()
@@ -86,6 +87,20 @@ class RemoteChatImple @Inject constructor(
                 .orderByChild("timestamp")
                 .asFlow()
         } catch (e: FirebaseException) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun getMessage(receiverId: String, messageId: String): ChatMessage {
+        return try {
+            database.reference
+                .child(CHATS)
+                .child(getGroupId(receiverId))
+                .child(messageId)
+                .get()
+                .await()
+                .getValue(ChatMessage::class.java)!!
+        } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
