@@ -9,8 +9,12 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import dev.burnoo.compose.rememberpreference.rememberFloatPreference
+import dev.than0s.aluminium.core.presentation.ui.ROUNDED_CORNERS
 import dev.than0s.aluminium.ui.CoverHeight
 import dev.than0s.aluminium.ui.LocalCoverSize
 import dev.than0s.aluminium.ui.LocalPostHeight
@@ -23,6 +27,7 @@ import dev.than0s.aluminium.ui.PostHeight
 import dev.than0s.aluminium.ui.ProfileSize
 import dev.than0s.aluminium.ui.RoundedCorners
 import dev.than0s.aluminium.ui.TextSize
+import dev.than0s.aluminium.ui.roundedCorners
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -122,10 +127,16 @@ fun AluminiumTheme(
         } else it
     }
 
+    val roundedCorners by rememberFloatPreference(
+        keyName = ROUNDED_CORNERS,
+        initialValue = roundedCorners.default.value,
+        defaultValue = roundedCorners.default.value,
+    )
+
     CompositionLocalProvider(
         LocalSpacing provides Padding(),
         LocalTextSize provides TextSize(),
-        LocalRoundCorners provides RoundedCorners(),
+        LocalRoundCorners provides RoundedCorners(default = roundedCorners.dp),
         LocalProfileSize provides ProfileSize(),
         LocalCoverSize provides CoverHeight(),
         LocalPostHeight provides PostHeight()

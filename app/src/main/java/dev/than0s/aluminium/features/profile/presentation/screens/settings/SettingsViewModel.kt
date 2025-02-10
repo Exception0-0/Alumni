@@ -1,5 +1,8 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.settings
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +20,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
+    var screenState by mutableStateOf(StateSettingsScreen())
 
     private fun onSignOut(
         restartApp: () -> Unit
@@ -43,10 +47,35 @@ class SettingsViewModel @Inject constructor(
                             message = UiText.StringResource(R.string.sign_out_successfully),
                         )
                     )
+                    dismissLogoutDialog()
                     restartApp()
                 }
             }
         }
+    }
+
+    private fun showLogoutDialog() {
+        screenState = screenState.copy(
+            isLogoutDialogShown = true
+        )
+    }
+
+    private fun dismissLogoutDialog() {
+        screenState = screenState.copy(
+            isLogoutDialogShown = false
+        )
+    }
+
+    private fun showAboutDialog() {
+        screenState = screenState.copy(
+            isAboutDialogShown = true
+        )
+    }
+
+    private fun dismissAboutDialog() {
+        screenState = screenState.copy(
+            isAboutDialogShown = false
+        )
     }
 
     fun onEvent(event: SettingsEvents) {
@@ -56,6 +85,17 @@ class SettingsViewModel @Inject constructor(
                     restartApp = event.restartApp
                 )
             }
+
+            is SettingsEvents.ShowLogoutDialog -> {
+                showLogoutDialog()
+            }
+
+            is SettingsEvents.DismissLogoutDialog -> {
+                dismissLogoutDialog()
+            }
+
+            SettingsEvents.DismissAboutDialog -> dismissAboutDialog()
+            SettingsEvents.ShowAboutDialog -> showAboutDialog()
         }
     }
 }

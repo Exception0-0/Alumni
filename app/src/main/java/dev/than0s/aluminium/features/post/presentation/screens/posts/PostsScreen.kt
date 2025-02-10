@@ -203,7 +203,7 @@ fun PostBox(
     onDeleteClick: () -> Unit,
 ) {
     PreferredColumn(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+        verticalArrangement = Arrangement.Top,
     ) {
         TopSection(
             user = user ?: User(),
@@ -391,9 +391,7 @@ private fun BottomSection(
                     onClick = {},
                 )
             }
-
         }
-
         PreferredWrappedText(
             text = post.caption,
             fontSize = MaterialTheme.textSize.medium,
@@ -453,39 +451,45 @@ private fun ShimmerPostBox() {
                 .fillMaxWidth()
                 .height(MaterialTheme.postHeight.default)
         )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.padding.small)
+        PreferredColumn(
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.extraSmall),
+            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
         ) {
-            PreferredRow(
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+            Box(
                 modifier = Modifier
-                    .align(Alignment.TopStart)
+                    .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.padding.small)
             ) {
-                ShimmerIcons()
-                ShimmerIcons()
+                PreferredRow(
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                ) {
+                    ShimmerIcons()
+                    ShimmerIcons()
+                }
+                PreferredRow(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    ShimmerIcons()
+                }
             }
-            PreferredRow(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                ShimmerIcons()
-            }
+            ShimmerText(
+                width = ShimmerTextWidth.high,
+                modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
+            )
+            ShimmerText(
+                width = ShimmerTextWidth.medium,
+                modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
+            )
+            ShimmerText(
+                width = ShimmerTextWidth.small,
+                modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
+            )
+            HorizontalDivider()
         }
-        ShimmerText(
-            width = ShimmerTextWidth.high,
-            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
-        )
-        ShimmerText(
-            width = ShimmerTextWidth.medium,
-            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
-        )
-        ShimmerText(
-            width = ShimmerTextWidth.small,
-            modifier = Modifier.padding(horizontal = MaterialTheme.padding.small)
-        )
-        HorizontalDivider()
     }
 }
 

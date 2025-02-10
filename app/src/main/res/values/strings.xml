@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">aluminium</string>
+    <string name="app_name">Aluminium</string>
     <string name="error_unknown">unknow error</string>
     <string name="error_couldnt_reach_server">error while connecting to server</string>
     <string name="oops_something_went_wrong">oops something went wrong</string>
@@ -34,4 +34,12 @@
     <string name="sign_out_successfully">sign out successfully</string>
     <string name="empty_chat">No chat found</string>
     <string name="network_error">No Internet Connection</string>
+    <string name="log_out_title">Log Out</string>
+    <string name="log_out_description">do really want to logout?</string>
+    <string name="about">About</string>
+    <string name="linktree_url"><![CDATA[https://linktr.ee/than0s_op?utm_source=linktree_profile_share&ltsid=3a09acf8-2a9f-4808-9f08-8d47150628df]]></string>
+    <string name="drop_down_empty_error">select a value</string>
+    <string name="select_value">--select--</string>
+    <string name="short_college_id">\"collage id should contain at least 7 digits\"</string>
+    <string name="short_year">field should contain 4 digits</string>
 </resources>

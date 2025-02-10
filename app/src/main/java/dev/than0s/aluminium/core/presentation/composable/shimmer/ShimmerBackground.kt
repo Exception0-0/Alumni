@@ -14,7 +14,7 @@ import dev.than0s.aluminium.ui.roundedCorners
 @Composable
 fun ShimmerBackground(
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+    shape: Shape = RoundedCornerShape(roundedCorners.default),
 ) {
     when (getCurrentColorTheme()) {
         ColorTheme.System -> isSystemInDarkTheme()

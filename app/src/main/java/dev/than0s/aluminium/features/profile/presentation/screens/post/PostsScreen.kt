@@ -19,7 +19,6 @@ import androidx.compose.material.icons.automirrored.outlined.Comment
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Report
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material.icons.outlined.BookmarkBorder
@@ -108,7 +107,7 @@ private fun PostImagePreview(post: Post) {
         PreferredAsyncImage(
             model = post.files[0],
             contentDescription = "post image",
-            shape = RoundedCornerShape(MaterialTheme.roundedCorners.extraSmall),
+            shape = RoundedCornerShape(roundedCorners.extraSmall),
         )
         if (post.files.size > 1) {
             Image(
@@ -119,7 +118,7 @@ private fun PostImagePreview(post: Post) {
                     .align(Alignment.TopEnd)
                     .background(
                         color = Color.Black.copy(alpha = 0.5f),
-                        shape = RoundedCornerShape(MaterialTheme.roundedCorners.small)
+                        shape = RoundedCornerShape(roundedCorners.small)
                     )
             )
         }
@@ -273,7 +272,7 @@ private fun ShimmerEffectLoading(
 @Composable
 private fun PostShimmerCard() {
     ShimmerBackground(
-        shape = RoundedCornerShape(MaterialTheme.roundedCorners.extraSmall),
+        shape = RoundedCornerShape(roundedCorners.extraSmall),
         modifier = Modifier
             .shimmer()
             .size(MaterialTheme.postHeight.small)

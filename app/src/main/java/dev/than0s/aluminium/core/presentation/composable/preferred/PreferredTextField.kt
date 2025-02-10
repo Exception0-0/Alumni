@@ -1,13 +1,12 @@
 package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -32,13 +31,16 @@ fun PreferredTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     supportingText: String? = null,
+    maxChar: Int = Int.MAX_VALUE,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     TextField(
         value = value,
         onValueChange = { newValue ->
-            onValueChange(newValue)
+            if (newValue.length <= maxChar) {
+                onValueChange(newValue)
+            }
         },
         enabled = enable,
         label = {
@@ -57,7 +59,7 @@ fun PreferredTextField(
         },
         visualTransformation = visualTransformation,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+        shape = RoundedCornerShape(roundedCorners.default),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
@@ -67,7 +69,7 @@ fun PreferredTextField(
         trailingIcon = trailingIcon,
         leadingIcon = leadingIcon,
         readOnly = readOnly,
-        modifier = modifier,
+        modifier = modifier.width(TextFieldDefaults.MinWidth),
     )
 }
 
@@ -85,11 +87,5 @@ private fun PreferredTextFieldPreview() {
             )
         },
         supportingText = "so what",
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "add"
-            )
-        }
     )
 }

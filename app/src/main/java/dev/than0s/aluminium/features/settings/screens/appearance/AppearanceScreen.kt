@@ -1,6 +1,8 @@
 package dev.than0s.aluminium.features.settings.screens.appearance
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,9 +13,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Contrast
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.RoundedCorner
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,16 +28,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
+import dev.burnoo.compose.rememberpreference.rememberFloatPreference
 import dev.burnoo.compose.rememberpreference.rememberStringPreference
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredGroupTitle
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRadioButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
 import dev.than0s.aluminium.core.presentation.ui.COLOR_THEME
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
 import dev.than0s.aluminium.core.presentation.ui.PURE_BLACK
+import dev.than0s.aluminium.core.presentation.ui.ROUNDED_CORNERS
+import dev.than0s.aluminium.ui.RoundedCorners
 import dev.than0s.aluminium.ui.padding
+import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
 fun AppearanceScreen(
@@ -65,14 +73,29 @@ private fun AppearanceScreenContent(
         initialValue = false,
         defaultValue = false,
     )
+    var roundedCorners by rememberFloatPreference(
+        keyName = ROUNDED_CORNERS,
+        initialValue = roundedCorners.default.value,
+        defaultValue = roundedCorners.default.value,
+    )
 
-    if(screenState.colorThemeDialog) {
+    if (screenState.colorThemeDialog) {
         ColorThemeDialog(
             currentColorTheme = ColorTheme.valueOf(storeColorTheme),
             onEvent = onEvent,
             onColorThemeChanged = { theme: ColorTheme ->
                 storeColorTheme = theme.name
             },
+        )
+    }
+
+    if (screenState.roundedCornersDialog) {
+        RoundedCornersDialog(
+            roundedCorners = roundedCorners,
+            onRoundedCornersChanged = {
+                roundedCorners = it
+            },
+            onEvent = onEvent
         )
     }
 
@@ -86,18 +109,25 @@ private fun AppearanceScreenContent(
         onDynamicThemeChange = { value ->
             isDynamicTheme = value
         },
+        onRoundedCornersChanged = {
+            roundedCorners = it
+        },
+        roundedCorners = roundedCorners.toInt().toString(),
         onEvent = onEvent
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ThemeColumn(
     currentColorTheme: String,
     isPureBlack: Boolean,
     isDynamicTheme: Boolean,
+    roundedCorners: String,
     onPureBlackChange: (Boolean) -> Unit,
     onDynamicThemeChange: (Boolean) -> Unit,
-    onEvent: (AppearanceScreenEvents) -> Unit
+    onRoundedCornersChanged: (Float) -> Unit,
+    onEvent: (AppearanceScreenEvents) -> Unit,
 ) {
     PreferredColumn(
         verticalArrangement = Arrangement.Top,
@@ -164,6 +194,39 @@ private fun ThemeColumn(
                 )
             },
         )
+        PreferredGroupTitle(
+            text = "shape",
+            modifier = Modifier.fillMaxWidth()
+        )
+        ListItem(
+            headlineContent = {
+                Text(text = "Rounded Corners")
+            },
+            leadingContent = {
+                Icon(
+                    imageVector = Icons.Default.RoundedCorner,
+                    contentDescription = "rounded corners"
+                )
+            },
+            supportingContent = {
+                Text(
+                    text = "Hold it to set reset"
+                )
+            },
+            trailingContent = {
+                Text(
+                    text = roundedCorners
+                )
+            },
+            modifier = Modifier.combinedClickable(
+                onClick = {
+                    onEvent(AppearanceScreenEvents.ShowRoundedCornersDialog)
+                },
+                onLongClick = {
+                    onRoundedCornersChanged(RoundedCorners().default.value)
+                }
+            )
+        )
     }
 }
 
@@ -178,7 +241,9 @@ private fun ColorThemeDialog(
             onEvent(AppearanceScreenEvents.OnColorThemeDialogDismissRequest)
         },
         content = {
-            PreferredSurface {
+            PreferredSurface(
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
+            ) {
                 PreferredColumn(
                     verticalArrangement = Arrangement.Top,
                     modifier = Modifier.padding(MaterialTheme.padding.medium)
@@ -200,6 +265,37 @@ private fun ColorThemeDialog(
     )
 }
 
+@Composable
+private fun RoundedCornersDialog(
+    roundedCorners: Float,
+    onRoundedCornersChanged: (Float) -> Unit,
+    onEvent: (AppearanceScreenEvents) -> Unit
+) {
+    Dialog(
+        onDismissRequest = {
+            onEvent(AppearanceScreenEvents.DismissRoundedCornersDialog)
+        },
+        content = {
+            PreferredSurface(
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
+            ) {
+                PreferredColumn(
+                    modifier = Modifier.padding(MaterialTheme.padding.medium)
+                ) {
+                    Slider(
+                        value = roundedCorners,
+                        onValueChange = onRoundedCornersChanged,
+                        steps = 6,
+                        valueRange = RoundedCorners().none.value..RoundedCorners().veryLarge.value
+                    )
+                    Text(
+                        text = roundedCorners.toInt().toString()
+                    )
+                }
+            }
+        }
+    )
+}
 
 @Preview(showSystemUi = true)
 @Composable

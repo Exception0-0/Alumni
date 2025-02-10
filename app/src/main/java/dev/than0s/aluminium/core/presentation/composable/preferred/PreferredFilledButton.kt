@@ -3,11 +3,8 @@ package dev.than0s.aluminium.core.presentation.composable.preferred
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import dev.than0s.aluminium.ui.roundedCorners
 
 @Composable
@@ -19,7 +16,7 @@ fun PreferredFilledButton(
 ) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+        shape = RoundedCornerShape(roundedCorners.default),
         modifier = modifier,
         enabled = enabled,
         content = content

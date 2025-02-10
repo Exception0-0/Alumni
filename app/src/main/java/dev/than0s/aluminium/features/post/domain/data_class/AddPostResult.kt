@@ -1,10 +1,10 @@
 package dev.than0s.aluminium.features.post.domain.data_class
 
 import dev.than0s.aluminium.core.SimpleResource
-import dev.than0s.aluminium.core.domain.error.Error
+import dev.than0s.aluminium.core.domain.error.PreferredError
 
 data class AddPostResult(
-    val descriptionError: Error? = null,
-    val fileError: Error? = null,
+    val descriptionError: PreferredError? = null,
+    val fileError: PreferredError? = null,
     val result: SimpleResource? = null
 )

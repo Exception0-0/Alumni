@@ -15,9 +15,9 @@ sealed class RegistrationEvents {
     data class OnBatchToChange(val to: String) : RegistrationEvents()
     data class OnCourseChange(val course: Course) : RegistrationEvents()
     data class OnCollegeIdCardChange(val idCard: Uri?) : RegistrationEvents()
+    data class ChangeRoleDropState(val state: Boolean) : RegistrationEvents()
+    data class ChangeCourseDropState(val state: Boolean) : RegistrationEvents()
     data object OnPreviousClick : RegistrationEvents()
-    data object OnCourseClick:RegistrationEvents()
-    data object OnRoleClick:RegistrationEvents()
     data object OnNextClick : RegistrationEvents()
     data class OnRegisterClick(
         val onSuccess: () -> Unit,

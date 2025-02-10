@@ -7,7 +7,7 @@ private val hasSpecialChar = Regex(".*[!@#\$%^&*(),.?\":_{}|<>].*")
 
 fun isValidPassword(password: String): Boolean {
     // Check for minimum length
-    if (password.length < 8) return false
+    if (password.length < TextFieldLimits.MIN_PASSWORD) return false
 
     // Validate each condition
     return hasUppercase.containsMatchIn(password) &&

@@ -12,6 +12,6 @@ fun ShimmerIcons() {
     ShimmerBackground(
         modifier = Modifier
             .clip(CircleShape)
-            .size(16.dp)
+            .size(24.dp)
     )
 }

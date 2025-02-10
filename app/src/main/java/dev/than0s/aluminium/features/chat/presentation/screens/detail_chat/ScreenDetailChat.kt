@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.chat.presentation.screens.detail_chat
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,12 +38,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicator
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
+import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
@@ -51,10 +55,12 @@ import dev.than0s.aluminium.ui.textSize
 fun ScreenDetailChat(
     viewModel: ViewModelDetailChat = hiltViewModel(),
     popScreen: () -> Unit,
+    openScreen: (Screen) -> Unit,
 ) {
     Content(
         state = viewModel.state,
         onEvent = viewModel::onEvent,
+        openScreen = openScreen,
         popScreen = popScreen
     )
 }
@@ -63,6 +69,7 @@ fun ScreenDetailChat(
 @Composable
 private fun Content(
     state: StateDetailChat,
+    openScreen: (Screen) -> Unit,
     onEvent: (EventsDetailChat) -> Unit,
     popScreen: () -> Unit,
 ) {
@@ -71,7 +78,8 @@ private fun Content(
             TopAppBar(
                 title = {
                     UserDetail(
-                        user = state.otherUser
+                        user = state.otherUser,
+                        openScreen = openScreen,
                     )
                 },
                 navigationIcon = {
@@ -103,6 +111,7 @@ private fun Content(
                 onValueChange = {
                     onEvent(EventsDetailChat.OnMessageChange(it))
                 },
+                maxChar = TextFieldLimits.MAX_MESSAGE,
                 trailingIcon = {
                     PreferredIconButton(
                         icon = Icons.AutoMirrored.Filled.Send,
@@ -126,48 +135,51 @@ private fun Content(
             )
         },
     ) {
-        val chatList = state.chatFlow.collectAsState(emptyList()).value
-        if(chatList.isEmpty()){
-            PreferredNoData(
-                title = stringResource(R.string.empty_chat),
-                description = "Say hi to \"${state.otherUser.firstName} ${state.otherUser.lastName}\""
-            )
-        }
-        else {
-            LazyColumn(
-                verticalArrangement = Arrangement.Bottom,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-            ) {
-                items(chatList) { item ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(MaterialTheme.padding.verySmall)
-                    ) {
-                        PreferredSurface(
-                            color = MaterialTheme.colorScheme.primaryContainer,
+        val chatList = state.chatFlow.collectAsState(null).value
+        if (chatList == null) {
+            PreferredCircularProgressIndicator()
+        } else {
+            if (chatList.isEmpty()) {
+                PreferredNoData(
+                    title = stringResource(R.string.empty_chat),
+                    description = "Say hi to \"${state.otherUser.firstName} ${state.otherUser.lastName}\""
+                )
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)
+                ) {
+                    items(chatList) { item ->
+                        Box(
                             modifier = Modifier
-                                .align(
-                                    if (item.userId == currentUserId!!) Alignment.TopEnd
-                                    else Alignment.TopStart
-                                ),
-                            content = {
-                                Text(
-                                    text = buildAnnotatedString {
-                                        pushStyle(SpanStyle(fontSize = MaterialTheme.textSize.large))
-                                        append(item.message)
-                                        pop()
-                                        append(MESSAGE_TIME_SPACING)
-                                        pushStyle(SpanStyle(fontSize = MaterialTheme.textSize.medium))
-                                        append(PrettyTimeUtils.getFormatedTime(item.timestamp))
-                                    },
-                                    fontSize = MaterialTheme.textSize.medium,
-                                    modifier = Modifier.padding(MaterialTheme.padding.small)
-                                )
-                            }
-                        )
+                                .fillMaxSize()
+                                .padding(MaterialTheme.padding.verySmall)
+                        ) {
+                            PreferredSurface(
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                modifier = Modifier
+                                    .align(
+                                        if (item.userId == currentUserId!!) Alignment.TopEnd
+                                        else Alignment.TopStart
+                                    ),
+                                content = {
+                                    Text(
+                                        text = buildAnnotatedString {
+                                            pushStyle(SpanStyle(fontSize = MaterialTheme.textSize.large))
+                                            append(item.message)
+                                            pop()
+                                            append(MESSAGE_TIME_SPACING)
+                                            pushStyle(SpanStyle(fontSize = MaterialTheme.textSize.medium))
+                                            append(PrettyTimeUtils.getFormatedTime(item.timestamp))
+                                        },
+                                        fontSize = MaterialTheme.textSize.medium,
+                                        modifier = Modifier.padding(MaterialTheme.padding.small)
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -177,7 +189,8 @@ private fun Content(
 
 @Composable
 private fun UserDetail(
-    user: User
+    user: User,
+    openScreen: (Screen) -> Unit
 ) {
     ListItem(
         headlineContent = {
@@ -201,7 +214,10 @@ private fun UserDetail(
                 modifier = Modifier.size(MaterialTheme.profileSize.medium)
             )
         },
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        modifier = Modifier.clickable {
+            openScreen(Screen.ProfileScreen(userId = user.id))
+        }
     )
 }
 
@@ -211,7 +227,8 @@ private fun Preview() {
     Content(
         state = StateDetailChat(otherUser = User(firstName = "Hi", lastName = "Pa")),
         onEvent = {},
-        popScreen = {}
+        popScreen = {},
+        openScreen = {}
     )
 }
 

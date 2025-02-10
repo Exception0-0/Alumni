@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.data.remote.COVER_IMAGE
 import dev.than0s.aluminium.core.data.remote.PROFILE_IMAGE
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAddPicture
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
@@ -86,7 +87,9 @@ private fun UpdateProfileDialogContent(
         }
     }
 
-    PreferredSurface {
+    PreferredSurface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
+    ) {
         if (screenState.isLoading) {
             LoadingShimmerEffect()
         } else {
@@ -101,7 +104,7 @@ private fun UpdateProfileDialogContent(
                 PreferredAddPicture(
                     model = screenState.userProfile.coverImage.let { if (it == Uri.EMPTY) null else it },
                     contentDescription = "user cover image",
-                    shape = RoundedCornerShape(MaterialTheme.roundedCorners.default),
+                    shape = RoundedCornerShape(roundedCorners.default),
                     enabled = !screenState.isUpdating,
                     modifier = Modifier
                         .height(MaterialTheme.coverHeight.default)
@@ -138,6 +141,7 @@ private fun UpdateProfileDialogContent(
                             onValueChange = {
                                 onEvent(UpdateProfileDialogEvents.OnFirstNameChanged(it))
                             },
+                            maxChar = TextFieldLimits.MAX_NAME,
                             enable = !screenState.isUpdating,
                             supportingText = screenState.firstNameError?.message?.asString(),
                             placeholder = "First Name",
@@ -145,6 +149,7 @@ private fun UpdateProfileDialogContent(
                         PreferredTextField(
                             value = screenState.userProfile.lastName,
                             enable = !screenState.isUpdating,
+                            maxChar = TextFieldLimits.MAX_NAME,
                             onValueChange = {
                                 onEvent(UpdateProfileDialogEvents.OnLastNameChanged(it))
                             },
@@ -158,6 +163,7 @@ private fun UpdateProfileDialogContent(
                     onValueChange = {
                         onEvent(UpdateProfileDialogEvents.OnBioChanged(it))
                     },
+                    maxChar = TextFieldLimits.MAX_BIO,
                     enable = !screenState.isUpdating,
                     supportingText = screenState.bioError?.message?.asString(),
                     placeholder = "Bio",
@@ -173,7 +179,7 @@ private fun UpdateProfileDialogContent(
                     ) {
                         TextButton(
                             onClick = onSuccess,
-                            enabled = !screenState.isUpdating
+                            enabled = !screenState.isUpdating && !shouldSignOutShow
                         ) {
                             Text(text = "Cancel")
                         }

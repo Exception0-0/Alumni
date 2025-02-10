@@ -2,8 +2,10 @@ package dev.than0s.aluminium.features.chat.presentation.screens.group_list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,16 +25,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileImage
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
+import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
 import dev.than0s.aluminium.core.presentation.utils.UserProfile.getUser
+import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
@@ -57,36 +67,40 @@ private fun Content(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        val groupList = state.groupList.collectAsState(emptyList()).value
-        if (groupList.isEmpty()) {
-            PreferredNoData(
-                title = "No Chats",
-                description = "do some chatting with friends"
-            )
+        val groupList = state.groupList.collectAsState(null).value
+        if (groupList == null) {
+            ShimmerList()
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxSize()
-            ) {
-                items(groupList) { item ->
-                    if (!UserProfile.userMap.containsKey(item.receiverId)) {
-                        UserProfile.userMap.getUser(item.receiverId)
-                    }
-                    val user = UserProfile.userMap[item.receiverId] ?: User()
-                    GroupItem(
-                        user = user,
-                        messageId = item.messageId,
-                        state = state,
-                        onEvent = onEvent,
-                        onClick = {
-                            openScreen(
-                                Screen.ChatDetailScreen(
-                                    receiverId = item.receiverId
-                                )
-                            )
+            if (groupList.isEmpty()) {
+                PreferredNoData(
+                    title = "No Chats",
+                    description = "do some chatting with friends"
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxSize()
+                ) {
+                    items(groupList) { item ->
+                        if (!UserProfile.userMap.containsKey(item.receiverId)) {
+                            UserProfile.userMap.getUser(item.receiverId)
                         }
-                    )
+                        val user = UserProfile.userMap[item.receiverId] ?: User()
+                        GroupItem(
+                            user = user,
+                            messageId = item.messageId,
+                            state = state,
+                            onEvent = onEvent,
+                            onClick = {
+                                openScreen(
+                                    Screen.ChatDetailScreen(
+                                        receiverId = item.receiverId
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -213,6 +227,46 @@ private fun NewMessage(
             }
         }
     }
+}
+
+@Composable
+private fun ShimmerList() {
+    PreferredColumn(
+        verticalArrangement = Arrangement.Top
+    ) {
+        for (i in 1..10) {
+            ShimmerListItem()
+        }
+    }
+}
+
+@Composable
+private fun ShimmerListItem() {
+    ListItem(
+        headlineContent = {
+            ShimmerText(
+                width = ShimmerTextWidth.medium
+            )
+        },
+        supportingContent = {
+            PreferredColumn(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
+            ) {
+                VerticalDivider(
+                    thickness = 0.dp,
+                    modifier = Modifier.height(MaterialTheme.padding.extraSmall)
+                )
+                ShimmerText(
+                    width = ShimmerTextWidth.high
+                )
+            }
+        },
+        leadingContent = {
+            ShimmerProfileImage()
+        },
+        modifier = Modifier.shimmer()
+    )
 }
 
 @Preview(showSystemUi = true)

@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
+import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
@@ -45,7 +46,9 @@ private fun UpdateContactScreenContent(
     onEvent: (UpdateContactScreenEvents) -> Unit,
     popScreen: () -> Unit,
 ) {
-    PreferredSurface {
+    PreferredSurface(
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
+    ) {
         if (screenState.isLoading) {
             LoadingShimmerEffect()
         } else {
@@ -62,6 +65,7 @@ private fun UpdateContactScreenContent(
                     onValueChange = {
                         onEvent(UpdateContactScreenEvents.OnEmailChanged(it))
                     },
+                    maxChar = TextFieldLimits.MAX_EMAIL,
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.MailOutline,
@@ -83,6 +87,7 @@ private fun UpdateContactScreenContent(
                             contentDescription = null
                         )
                     },
+                    maxChar = TextFieldLimits.MAX_MOBILE,
                     enable = !screenState.isUpdating,
                     supportingText = screenState.mobileError?.message?.asString(),
                     placeholder = "Mobile"
@@ -92,6 +97,7 @@ private fun UpdateContactScreenContent(
                     onValueChange = {
                         onEvent(UpdateContactScreenEvents.OnSocialChanged(it))
                     },
+                    maxChar = TextFieldLimits.MAX_LINK,
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Link,

@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.ui
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
@@ -16,12 +15,12 @@ data class RoundedCorners(
     val medium: Dp = 8.dp,
     val large: Dp = 10.dp,
     val extraLarge: Dp = 12.dp,
-    val veryLarge: Dp = 14.dp
+    val veryLarge: Dp = 14.dp,
 )
 
 val LocalRoundCorners = compositionLocalOf { RoundedCorners() }
 
-val MaterialTheme.roundedCorners: RoundedCorners
+val roundedCorners: RoundedCorners
     @Composable
     @ReadOnlyComposable
     get() = LocalRoundCorners.current
