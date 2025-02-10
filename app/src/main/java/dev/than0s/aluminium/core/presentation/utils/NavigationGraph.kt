@@ -115,7 +115,8 @@ fun NavGraphHost(
         }
         composable<Screen.ChatDetailScreen> {
             ScreenDetailChat(
-                popScreen = navController::popScreen
+                popScreen = navController::popScreen,
+                openScreen = navController::openScreen
             )
         }
         composable<Screen.NotificationScreen> {

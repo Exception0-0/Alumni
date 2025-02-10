@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.chat.presentation.screens.detail_chat
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,6 +46,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoDa
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
+import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
 import dev.than0s.aluminium.ui.textSize
@@ -53,10 +55,12 @@ import dev.than0s.aluminium.ui.textSize
 fun ScreenDetailChat(
     viewModel: ViewModelDetailChat = hiltViewModel(),
     popScreen: () -> Unit,
+    openScreen: (Screen) -> Unit,
 ) {
     Content(
         state = viewModel.state,
         onEvent = viewModel::onEvent,
+        openScreen = openScreen,
         popScreen = popScreen
     )
 }
@@ -65,6 +69,7 @@ fun ScreenDetailChat(
 @Composable
 private fun Content(
     state: StateDetailChat,
+    openScreen: (Screen) -> Unit,
     onEvent: (EventsDetailChat) -> Unit,
     popScreen: () -> Unit,
 ) {
@@ -73,7 +78,8 @@ private fun Content(
             TopAppBar(
                 title = {
                     UserDetail(
-                        user = state.otherUser
+                        user = state.otherUser,
+                        openScreen = openScreen,
                     )
                 },
                 navigationIcon = {
@@ -131,7 +137,7 @@ private fun Content(
     ) {
         val chatList = state.chatFlow.collectAsState(null).value
         if (chatList == null) {
-                PreferredCircularProgressIndicator()
+            PreferredCircularProgressIndicator()
         } else {
             if (chatList.isEmpty()) {
                 PreferredNoData(
@@ -183,7 +189,8 @@ private fun Content(
 
 @Composable
 private fun UserDetail(
-    user: User
+    user: User,
+    openScreen: (Screen) -> Unit
 ) {
     ListItem(
         headlineContent = {
@@ -207,7 +214,10 @@ private fun UserDetail(
                 modifier = Modifier.size(MaterialTheme.profileSize.medium)
             )
         },
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        modifier = Modifier.clickable {
+            openScreen(Screen.ProfileScreen(userId = user.id))
+        }
     )
 }
 
@@ -217,7 +227,8 @@ private fun Preview() {
     Content(
         state = StateDetailChat(otherUser = User(firstName = "Hi", lastName = "Pa")),
         onEvent = {},
-        popScreen = {}
+        popScreen = {},
+        openScreen = {}
     )
 }
 
