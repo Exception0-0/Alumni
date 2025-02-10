@@ -1,6 +1,7 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -99,7 +100,7 @@ private fun PostsScreenContent(
     onEvent: (PostsEvents) -> Unit,
     openScreen: (Screen) -> Unit,
 ) {
-    if (screenState.deletePostId != null) {
+    AnimatedVisibility(screenState.deletePostId != null) {
         PreferredWarningDialog(
             title = stringResource(R.string.post_delete),
             description = stringResource(R.string.alert_message),
