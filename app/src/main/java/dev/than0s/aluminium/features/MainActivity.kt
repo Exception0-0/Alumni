@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -104,7 +107,11 @@ class MainActivity : ComponentActivity() {
                             verticalArrangement = Arrangement.Top
                         ) {
                             AluminiumBottomNavigationBar(navController)
-                            if (!isConnected) {
+                            AnimatedVisibility(
+                                visible = !isConnected,
+                                enter = expandVertically(),
+                                exit = shrinkVertically()
+                            ) {
                                 Text(
                                     text = stringResource(R.string.network_error),
                                     fontSize = MaterialTheme.textSize.medium,

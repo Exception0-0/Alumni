@@ -1,5 +1,13 @@
 package dev.than0s.aluminium.core.presentation.utils
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
@@ -26,8 +34,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.currentUserRole
-
-private var customNavbar by mutableStateOf<(@Composable (RowScope.() -> Unit))?>(null)
 
 private data class BottomNavigationItem(
     val screen: Screen,
@@ -99,10 +105,14 @@ fun AluminiumBottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreenClassName = getClassNameFromNavGraph(navBackStackEntry?.destination)
 
-    if (isGiveScreenHaveBottomBar(currentScreenClassName)) {
+    AnimatedVisibility(
+        visible = isGiveScreenHaveBottomBar(currentScreenClassName),
+        enter = expandVertically(),
+        exit = shrinkVertically()
+    ) {
         NavigationBar(
             modifier = Modifier.height(80.dp),
-            content = customNavbar ?: {
+            content = {
                 bottomNavItems.forEach { item ->
                     if (shouldShowOption(item.screen)) {
                         val isScreenSelected =
