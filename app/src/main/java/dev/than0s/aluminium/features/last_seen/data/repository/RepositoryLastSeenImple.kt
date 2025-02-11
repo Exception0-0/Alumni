@@ -4,24 +4,26 @@ import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SimpleResource
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.core.presentation.utils.UiText
-import dev.than0s.aluminium.features.last_seen.data.remote.RemoteLastSeen
+import dev.than0s.aluminium.features.last_seen.data.remote.RemoteUserStatus
+import dev.than0s.aluminium.features.last_seen.domain.data_class.UserStatus
 import dev.than0s.aluminium.features.last_seen.domain.repository.RepositoryLastSeen
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RepositoryLastSeenImple @Inject constructor(
-    private val remote: RemoteLastSeen
+    private val remote: RemoteUserStatus
 ) : RepositoryLastSeen {
-    override suspend fun updateLastSeen(): SimpleResource {
+    override suspend fun updateLastSeenOnDisconnect(): SimpleResource {
         return try {
-            Resource.Success(remote.updateLastSeen())
+            Resource.Success(remote.updateLastSeenOnDisconnect())
         } catch (e: ServerException) {
             Resource.Error(UiText.DynamicString(e.message))
         }
     }
 
-    override suspend fun getLastSeen(userId: String): Resource<Long?> {
+    override fun getUserStatus(userId: String): Resource<Flow<UserStatus>> {
         return try {
-            Resource.Success(remote.getLastSeen(userId))
+            Resource.Success(remote.getUserStatus(userId))
         } catch (e: ServerException) {
             Resource.Error(UiText.DynamicString(e.message))
         }

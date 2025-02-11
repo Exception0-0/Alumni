@@ -10,7 +10,7 @@ const val HISTORY = "history"
 const val REGISTRATION_REQUESTS = "registration_requests"
 const val COMMENTS = "comments"
 const val LIKES = "likes"
-const val LAST_SEEN = "last_seen"
+const val USER_STATUS = "user_status"
 
 // storage bucket
 const val PROFILE_IMAGE = "profile_images"
@@ -26,3 +26,7 @@ const val STATUS_ACCOUNT_GENERATED_STATUS = "status.accountGeneratedStatus"
 
 // chats fields
 const val USERS_ID = "usersId"
+
+const val TIMESTAMP = "timestamp"
+const val IS_ONLINE = "isOnline"
+const val LAST_SEEN = "lastSeen"

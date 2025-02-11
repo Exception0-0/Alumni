@@ -22,8 +22,8 @@ import dev.than0s.aluminium.features.chat.data.remote.RemoteChat
 import dev.than0s.aluminium.features.chat.data.remote.RemoteChatImple
 import dev.than0s.aluminium.features.chat.data.repository.RepositoryChatImple
 import dev.than0s.aluminium.features.chat.domain.repository.RepositoryChat
-import dev.than0s.aluminium.features.last_seen.data.remote.RemoteLastSeen
-import dev.than0s.aluminium.features.last_seen.data.remote.RemoteLastSeenImple
+import dev.than0s.aluminium.features.last_seen.data.remote.RemoteUserStatus
+import dev.than0s.aluminium.features.last_seen.data.remote.RemoteUserStatusImple
 import dev.than0s.aluminium.features.last_seen.data.repository.RepositoryLastSeenImple
 import dev.than0s.aluminium.features.last_seen.domain.repository.RepositoryLastSeen
 import dev.than0s.aluminium.features.post.data.remote.CommentRemote
@@ -120,7 +120,7 @@ abstract class AppModule {
 
     // last seen
     @Binds
-    abstract fun bindRemoteLastSeen(imple: RemoteLastSeenImple): RemoteLastSeen
+    abstract fun bindRemoteLastSeen(imple: RemoteUserStatusImple): RemoteUserStatus
 
     @Binds
     abstract fun bindRepositoryLastSeen(imple: RepositoryLastSeenImple): RepositoryLastSeen

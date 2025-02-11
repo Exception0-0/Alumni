@@ -73,7 +73,7 @@ private fun Content(
         AnimatedVisibility(groupList != null && groupList.isEmpty()) {
             PreferredNoData(
                 title = "No Chats",
-                description = "do some chatting with friends"
+                description = "click to new message button to chat with friends"
             )
         }
         AnimatedVisibility(!groupList.isNullOrEmpty()) {
@@ -142,7 +142,17 @@ private fun GroupItem(
             )
         )
     }
+    LaunchedEffect(state.lastSeenMap[user.id]) {
+        onEvent(
+            EventsGroupList.GetLastSeen(
+                userId = user.id
+            )
+        )
+    }
+
     val message = state.lastMessageMap[user.id]
+    val userStatus = state.lastSeenMap[user.id]?.collectAsState(null)?.value
+
     ListItem(
         headlineContent = {
             Text(
@@ -152,12 +162,27 @@ private fun GroupItem(
             )
         },
         leadingContent = {
-            PreferredAsyncImage(
-                model = user.profileImage,
-                contentDescription = "user profile image",
-                shape = CircleShape,
-                modifier = Modifier.size(MaterialTheme.profileSize.medium)
-            )
+            Box {
+                PreferredAsyncImage(
+                    model = user.profileImage,
+                    contentDescription = "user profile image",
+                    shape = CircleShape,
+                    modifier = Modifier.size(MaterialTheme.profileSize.medium)
+                )
+                AnimatedVisibility(userStatus != null) {
+                    val text = if (userStatus!!.isOnline) {
+                        "Online"
+                    } else {
+                        PrettyTimeUtils.getPrettyTime(userStatus.lastSeen)
+                    }
+
+                    Text(
+                        text = text,
+                        fontSize = MaterialTheme.textSize.medium,
+                        modifier = Modifier.align(Alignment.BottomEnd)
+                    )
+                }
+            }
         },
         supportingContent = {
             AnimatedVisibility(message != null) {
