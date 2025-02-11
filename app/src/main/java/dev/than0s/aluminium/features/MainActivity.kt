@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
@@ -31,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAnimatedVisibility
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
@@ -107,7 +107,7 @@ class MainActivity : ComponentActivity() {
                             verticalArrangement = Arrangement.Top
                         ) {
                             AluminiumBottomNavigationBar(navController)
-                            AnimatedVisibility(
+                            PreferredAnimatedVisibility(
                                 visible = !isConnected,
                                 enter = expandVertically(),
                                 exit = shrinkVertically()

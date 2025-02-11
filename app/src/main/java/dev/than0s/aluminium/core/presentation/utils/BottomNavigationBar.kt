@@ -1,14 +1,7 @@
 package dev.than0s.aluminium.core.presentation.utils
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
@@ -25,8 +18,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -34,6 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.currentUserRole
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAnimatedVisibility
 
 private data class BottomNavigationItem(
     val screen: Screen,
@@ -105,7 +97,7 @@ fun AluminiumBottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreenClassName = getClassNameFromNavGraph(navBackStackEntry?.destination)
 
-    AnimatedVisibility(
+    PreferredAnimatedVisibility(
         visible = isGiveScreenHaveBottomBar(currentScreenClassName),
         enter = expandVertically(),
         exit = shrinkVertically()

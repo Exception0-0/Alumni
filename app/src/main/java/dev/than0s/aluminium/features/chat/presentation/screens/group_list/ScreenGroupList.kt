@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.features.chat.presentation.screens.group_list
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAnimatedVisibility
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
@@ -67,16 +67,22 @@ private fun Content(
         modifier = Modifier.fillMaxSize()
     ) {
         val groupList = state.groupList.collectAsState(null).value
-        AnimatedVisibility(groupList == null) {
+        PreferredAnimatedVisibility(
+            visible = groupList == null,
+        ) {
             ShimmerList()
         }
-        AnimatedVisibility(groupList != null && groupList.isEmpty()) {
+        PreferredAnimatedVisibility(
+            visible = groupList != null && groupList.isEmpty(),
+        ) {
             PreferredNoData(
                 title = "No Chats",
                 description = "do some chatting with friends"
             )
         }
-        AnimatedVisibility(!groupList.isNullOrEmpty()) {
+        PreferredAnimatedVisibility(
+            visible = !groupList.isNullOrEmpty(),
+        ) {
             LazyColumn(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
@@ -160,7 +166,7 @@ private fun GroupItem(
             )
         },
         supportingContent = {
-            AnimatedVisibility(message != null) {
+            PreferredAnimatedVisibility(message != null) {
                 Text(
                     text = message!!.message,
                     fontSize = MaterialTheme.textSize.medium,
@@ -168,7 +174,7 @@ private fun GroupItem(
             }
         },
         trailingContent = {
-            AnimatedVisibility(message != null) {
+            PreferredAnimatedVisibility(message != null) {
                 Text(
                     text = PrettyTimeUtils.getPrettyTime(message!!.timestamp),
                     fontSize = MaterialTheme.textSize.medium

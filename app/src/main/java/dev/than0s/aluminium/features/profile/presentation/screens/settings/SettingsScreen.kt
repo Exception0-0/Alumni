@@ -1,6 +1,5 @@
 package dev.than0s.aluminium.features.profile.presentation.screens.settings
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +35,7 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAnimatedVisibility
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
@@ -152,7 +152,7 @@ private fun SettingScreenContent(
             },
         )
     }
-    AnimatedVisibility(
+    PreferredAnimatedVisibility(
         visible = screenState.isAboutDialogShown
     ) {
         AboutDialog(

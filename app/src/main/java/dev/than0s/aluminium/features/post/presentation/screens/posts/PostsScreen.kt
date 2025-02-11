@@ -1,7 +1,6 @@
 package dev.than0s.aluminium.features.post.presentation.screens.posts
 
 import android.net.Uri
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,6 +57,7 @@ import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.Like
 import dev.than0s.aluminium.core.domain.data_class.Post
 import dev.than0s.aluminium.core.domain.data_class.User
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAnimatedVisibility
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
@@ -100,7 +100,7 @@ private fun PostsScreenContent(
     onEvent: (PostsEvents) -> Unit,
     openScreen: (Screen) -> Unit,
 ) {
-    AnimatedVisibility(screenState.deletePostId != null) {
+    PreferredAnimatedVisibility(screenState.deletePostId != null) {
         PreferredWarningDialog(
             title = stringResource(R.string.post_delete),
             description = stringResource(R.string.alert_message),
@@ -137,9 +137,10 @@ private fun PostsScreenContent(
             onEvent(PostsEvents.LoadPosts)
         },
     ) {
-        if (screenState.isLoading) {
+        PreferredAnimatedVisibility(screenState.isLoading) {
             ShimmerPostList()
-        } else {
+        }
+        PreferredAnimatedVisibility(!screenState.isLoading) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
             ) {
