@@ -7,7 +7,7 @@ import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
-import dev.than0s.aluminium.core.domain.use_case.UseCaseUpdateUserStatus
+import dev.than0s.aluminium.core.domain.use_case.UseCaseUpdateUserStatusToOnline
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val getCurrentUser: GetCurrentUserUseCase,
     private val hasUserProfileCreatedUseCase: HasUserProfileCreatedUseCase,
-    private val useCaseUpdateUserStatus: UseCaseUpdateUserStatus
+    private val useCaseUpdateUserStatus: UseCaseUpdateUserStatusToOnline
 ) : ViewModel() {
     private fun loadScreen(
         replaceScreen: (Screen) -> Unit

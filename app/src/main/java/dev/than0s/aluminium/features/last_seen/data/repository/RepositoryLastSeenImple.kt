@@ -13,9 +13,9 @@ import javax.inject.Inject
 class RepositoryLastSeenImple @Inject constructor(
     private val remote: RemoteUserStatus
 ) : RepositoryLastSeen {
-    override suspend fun updateLastSeenOnDisconnect(): SimpleResource {
+    override suspend fun updateUserStatusToOnline(): SimpleResource {
         return try {
-            Resource.Success(remote.updateLastSeenOnDisconnect())
+            Resource.Success(remote.updateUserStatusToOnline())
         } catch (e: ServerException) {
             Resource.Error(UiText.DynamicString(e.message))
         }

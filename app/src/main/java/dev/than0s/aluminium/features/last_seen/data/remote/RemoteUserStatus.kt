@@ -4,8 +4,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.snapshots
-import dev.than0s.aluminium.core.data.remote.IS_ONLINE
-import dev.than0s.aluminium.core.data.remote.LAST_SEEN
 import dev.than0s.aluminium.core.data.remote.USER_STATUS
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.features.last_seen.domain.data_class.UserStatus
@@ -15,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface RemoteUserStatus {
-    suspend fun updateLastSeenOnDisconnect()
+    suspend fun updateUserStatusToOnline()
     fun getUserStatus(userId: String): Flow<UserStatus>
 }
 
@@ -24,26 +22,27 @@ class RemoteUserStatusImple @Inject constructor(
     private val database: FirebaseDatabase
 ) : RemoteUserStatus {
 
-    override suspend fun updateLastSeenOnDisconnect() {
+    override suspend fun updateUserStatusToOnline() {
         try {
             database.reference
                 .child(USER_STATUS)
                 .child(auth.currentUser!!.uid)
-                .setValue(
-                    mapOf(IS_ONLINE to true)
-                )
+                .setValue(-1) // -1 for online
                 .await()
-            println("here")
+
+            onDisconnect()
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    private suspend fun onDisconnect() {
+        try {
             database.reference
                 .child(USER_STATUS)
                 .child(auth.currentUser!!.uid)
                 .onDisconnect()
-                .setValue(
-                    mapOf(
-                        LAST_SEEN to ServerValue.TIMESTAMP,
-                        IS_ONLINE to false
-                    )
-                )
+                .setValue(ServerValue.TIMESTAMP)
                 .await()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
@@ -56,14 +55,13 @@ class RemoteUserStatusImple @Inject constructor(
                 .child(USER_STATUS)
                 .child(userId)
                 .snapshots.map { snapshot ->
-                    (snapshot.value as Map<*, *>).let {
+                    (snapshot.getValue(Long::class.java) ?: 0L).let {
                         UserStatus(
-                            isOnline = it[IS_ONLINE] as Boolean,
-                            lastSeen = it[LAST_SEEN] as Long? ?: 0L
+                            isOnline = it == -1L,
+                            lastSeen = if (it == -1L) System.currentTimeMillis() else it
                         )
                     }
                 }
-
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }

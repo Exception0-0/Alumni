@@ -6,6 +6,6 @@ import dev.than0s.aluminium.features.last_seen.domain.data_class.UserStatus
 import kotlinx.coroutines.flow.Flow
 
 interface RepositoryLastSeen {
-    suspend fun updateLastSeenOnDisconnect(): SimpleResource
+    suspend fun updateUserStatusToOnline(): SimpleResource
     fun getUserStatus(userId: String): Resource<Flow<UserStatus>>
 }
