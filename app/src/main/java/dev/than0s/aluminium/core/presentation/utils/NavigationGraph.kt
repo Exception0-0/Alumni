@@ -36,7 +36,7 @@ fun NavGraphHost(
     ) {
         composable<Screen.SplashScreen> {
             SplashScreen(
-                replaceScreen = navController::replace
+                replaceScreen = navController::clearAndOpen
             )
         }
         composable<Screen.SignInScreen> {
@@ -138,7 +138,9 @@ fun NavHostController.popAndOpen(screen: Screen) {
     navigate(screen)
 }
 
-fun NavHostController.replace(screen: Screen) {
+fun NavHostController.clearAndOpen(
+    screen: Screen,
+) {
     navigate(screen) {
         popUpTo(graph.findStartDestination().id) {
             saveState = true

@@ -202,6 +202,7 @@ private fun UpdateProfileDialogContent(
                         ) {
                             PreferredTextButton(
                                 text = "Sign out",
+                                enabled = !screenState.isUpdating,
                                 onClick = {
                                     onEvent(
                                         UpdateProfileDialogEvents.OnSignOutClick(
@@ -252,7 +253,7 @@ private fun UpdateProfileDialogPreview() {
         screenState = UpdateProfileDialogState(),
         onEvent = {},
         onSuccess = {},
-        shouldSignOutShow = false
+        shouldSignOutShow = true
     )
 //    LoadingShimmerEffect()
 }
