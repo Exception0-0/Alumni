@@ -120,7 +120,7 @@ fun AluminiumBottomNavigationBar(
                         NavigationBarItem(
                             selected = isScreenSelected,
                             onClick = {
-                                navController.replace(item.screen)
+                                navController.clearAndOpen(item.screen)
                             },
                             icon = {
                                 Icon(

@@ -47,7 +47,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFill
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.utils.Screen
-import dev.than0s.aluminium.core.presentation.utils.replace
+import dev.than0s.aluminium.core.presentation.utils.clearAndOpen
 import dev.than0s.aluminium.features.profile.presentation.screens.util.ProfileNavHost
 import dev.than0s.aluminium.ui.coverHeight
 import dev.than0s.aluminium.ui.padding
@@ -185,7 +185,7 @@ private fun ProfileTabRow(
             Tab(
                 selected = isSelected,
                 onClick = {
-                    navController.replace(tabItem.screen(screenState.user.id))
+                    navController.clearAndOpen(tabItem.screen(screenState.user.id))
                 },
                 text = {
                     Text(text = tabItem.title)
