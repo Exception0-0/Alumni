@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.snapshots
+import dev.than0s.aluminium.core.data.remote.LAST_SEEN
 import dev.than0s.aluminium.core.data.remote.USER_STATUS
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.features.last_seen.domain.data_class.UserStatus
@@ -27,7 +28,9 @@ class RemoteUserStatusImple @Inject constructor(
             database.reference
                 .child(USER_STATUS)
                 .child(auth.currentUser!!.uid)
-                .setValue(-1) // -1 for online
+                .setValue(
+                    mapOf(LAST_SEEN to -1) // -1 for online
+                )
                 .await()
 
             onDisconnect()
@@ -42,7 +45,9 @@ class RemoteUserStatusImple @Inject constructor(
                 .child(USER_STATUS)
                 .child(auth.currentUser!!.uid)
                 .onDisconnect()
-                .setValue(ServerValue.TIMESTAMP)
+                .setValue(
+                    mapOf(LAST_SEEN to ServerValue.TIMESTAMP)
+                )
                 .await()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
@@ -55,10 +60,11 @@ class RemoteUserStatusImple @Inject constructor(
                 .child(USER_STATUS)
                 .child(userId)
                 .snapshots.map { snapshot ->
-                    (snapshot.getValue(Long::class.java) ?: 0L).let {
+                    (snapshot.value as Map<*, *>?).let { map ->
+                        val lastSeen = (map?.get(LAST_SEEN) as Long?) ?: 0L
                         UserStatus(
-                            isOnline = it == -1L,
-                            lastSeen = if (it == -1L) System.currentTimeMillis() else it
+                            isOnline = lastSeen == -1L,
+                            lastSeen = if (lastSeen == -1L) System.currentTimeMillis() else lastSeen
                         )
                     }
                 }

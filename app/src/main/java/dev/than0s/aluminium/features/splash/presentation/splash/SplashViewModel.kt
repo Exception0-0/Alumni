@@ -9,6 +9,8 @@ import dev.than0s.aluminium.core.Role
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.currentUserRole
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
+import dev.than0s.aluminium.core.domain.use_case.UseCaseGetUserStatus
+import dev.than0s.aluminium.core.domain.use_case.UseCaseUpdateUserStatusToOnline
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
@@ -25,7 +27,9 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val getAboutInfoUseCase: GetAboutInfoUseCase,
     private val getUserUseCase: GetUserUseCase,
-    private val useCaseGetCurrentUserId: UseCaseGetCurrentUserId
+    private val useCaseGetCurrentUserId: UseCaseGetCurrentUserId,
+    private val useCaseGetUserStatus: UseCaseGetUserStatus,
+    private val useCaseUpdateUserStatusToOnline: UseCaseUpdateUserStatusToOnline
 ) : ViewModel() {
 
     private fun loadScreen(
@@ -107,6 +111,32 @@ class SplashViewModel @Inject constructor(
                     else -> {
                         replaceScreen(Screen.HomeScreen())
                         // add task here
+                        readUserStatus()
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun readUserStatus() {
+        when (val result = useCaseGetUserStatus(currentUserId!!)) {
+            is Resource.Error -> {
+                SnackbarEvent(
+                    message = result.uiText ?: UiText.unknownError(),
+                    action = SnackbarAction(
+                        name = UiText.StringResource(R.string.try_again),
+                        action = {
+                            readUserStatus()
+                        }
+                    )
+                )
+            }
+
+            is Resource.Success -> {
+                result.data!!.collect {
+                    println("readUserStatus:splash_screen")
+                    if (!it.isOnline) {
+                        useCaseUpdateUserStatusToOnline()
                     }
                 }
             }
