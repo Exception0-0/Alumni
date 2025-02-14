@@ -1,5 +1,6 @@
 package dev.than0s.aluminium.features.chat.presentation.screens.group_list
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddComment
+import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +24,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,7 +41,6 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoDa
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerProfileImage
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextWidth
-import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.UserProfile
 import dev.than0s.aluminium.core.presentation.utils.UserProfile.getUser
@@ -126,6 +129,7 @@ private fun Content(
         if (state.newMessageVisibility) {
             NewMessage(
                 openScreen = openScreen,
+                state = state,
                 onEvent = onEvent
             )
         }
@@ -168,27 +172,12 @@ private fun GroupItem(
             )
         },
         leadingContent = {
-            Box {
-                PreferredAsyncImage(
-                    model = user.profileImage,
-                    contentDescription = "user profile image",
-                    shape = CircleShape,
-                    modifier = Modifier.size(MaterialTheme.profileSize.medium)
-                )
-                PreferredAnimatedVisibility(userStatus != null) {
-                    val text = if (userStatus!!.isOnline) {
-                        "Online"
-                    } else {
-                        PrettyTimeUtils.getPrettyTime(userStatus.lastSeen)
-                    }
-
-                    Text(
-                        text = text,
-                        fontSize = MaterialTheme.textSize.medium,
-                        modifier = Modifier.align(Alignment.BottomEnd)
-                    )
-                }
-            }
+            PreferredAsyncImage(
+                model = user.profileImage,
+                contentDescription = "user profile image",
+                shape = CircleShape,
+                modifier = Modifier.size(MaterialTheme.profileSize.medium)
+            )
         },
         supportingContent = {
             PreferredAnimatedVisibility(message != null) {
@@ -199,10 +188,14 @@ private fun GroupItem(
             }
         },
         trailingContent = {
-            PreferredAnimatedVisibility(message != null) {
-                Text(
-                    text = PrettyTimeUtils.getPrettyTime(message!!.timestamp),
-                    fontSize = MaterialTheme.textSize.medium
+            PreferredAnimatedVisibility(userStatus != null) {
+                val color = if (userStatus!!.isOnline) Color.Green else Color.Red
+
+                Image(
+                    imageVector = Icons.Filled.Circle,
+                    contentDescription = "user status",
+                    colorFilter = ColorFilter.tint(color = color),
+                    modifier = Modifier.size(12.dp)
                 )
             }
         },
@@ -213,6 +206,7 @@ private fun GroupItem(
 @Composable
 private fun NewMessage(
     openScreen: (Screen) -> Unit,
+    state: StateGroupList,
     onEvent: (EventsGroupList) -> Unit,
 ) {
     PreferredFullScreen(
@@ -223,6 +217,7 @@ private fun NewMessage(
     ) {
         LazyColumn {
             items(UserProfile.userMap.values.toList()) {
+                val userStatus = state.lastSeenMap[it.id]?.collectAsState(null)?.value
                 ListItem(
                     headlineContent = {
                         Text(
@@ -244,6 +239,18 @@ private fun NewMessage(
                             text = it.bio,
                             fontSize = MaterialTheme.textSize.medium,
                         )
+                    },
+                    trailingContent = {
+                        PreferredAnimatedVisibility(userStatus != null) {
+                            val color = if (userStatus!!.isOnline) Color.Green else Color.Red
+
+                            Image(
+                                imageVector = Icons.Filled.Circle,
+                                contentDescription = "user status",
+                                colorFilter = ColorFilter.tint(color = color),
+                                modifier = Modifier.size(12.dp)
+                            )
+                        }
                     },
                     modifier = Modifier.clickable {
                         openScreen(

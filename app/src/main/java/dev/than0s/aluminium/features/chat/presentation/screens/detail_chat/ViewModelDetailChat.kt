@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.domain.use_case.GetUserUseCase
+import dev.than0s.aluminium.core.domain.use_case.UseCaseGetUserStatus
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
@@ -28,6 +29,7 @@ class ViewModelDetailChat @Inject constructor(
     private val useCaseGetMessages: UseCaseGetMessages,
     private val useCaseAddMessage: UseCaseAddMessage,
     private val getUserUseCase: GetUserUseCase,
+    private val useCaseGetUserStatus: UseCaseGetUserStatus
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<Screen.ChatDetailScreen>()
     var state by mutableStateOf(StateDetailChat())
@@ -35,6 +37,7 @@ class ViewModelDetailChat @Inject constructor(
     init {
         loadMessages()
         loadUser()
+        loadUserStatus()
     }
 
     private fun loadMessages() {
@@ -84,6 +87,32 @@ class ViewModelDetailChat @Inject constructor(
                 }
             }
             state = state.copy(isLoading = true)
+        }
+    }
+
+    private fun loadUserStatus() {
+        viewModelScope.launch {
+            when (val result = useCaseGetUserStatus(userId = args.receiverId)) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    loadUserStatus()
+                                }
+                            )
+                        )
+                    )
+                }
+
+                is Resource.Success -> {
+                    state = state.copy(
+                        userStatus = result.data!!
+                    )
+                }
+            }
         }
     }
 

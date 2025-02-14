@@ -39,6 +39,7 @@ import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.currentUserId
 import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.domain.util.TextFieldLimits
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAnimatedVisibility
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicator
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
@@ -79,6 +80,7 @@ private fun Content(
                 title = {
                     UserDetail(
                         user = state.otherUser,
+                        state = state,
                         openScreen = openScreen,
                     )
                 },
@@ -126,8 +128,7 @@ private fun Content(
                         onClick = {
                         },
                         icon = Icons.Outlined.AddPhotoAlternate,
-
-                        )
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -137,7 +138,7 @@ private fun Content(
     ) {
         val chatList = state.chatFlow.collectAsState(null).value
         if (chatList == null) {
-            PreferredCircularProgressIndicator()
+//            PreferredCircularProgressIndicator()
         } else {
             if (chatList.isEmpty()) {
                 PreferredNoData(
@@ -190,8 +191,10 @@ private fun Content(
 @Composable
 private fun UserDetail(
     user: User,
+    state: StateDetailChat,
     openScreen: (Screen) -> Unit
 ) {
+    val userStatus = state.userStatus.collectAsState(null).value
     ListItem(
         headlineContent = {
             Text(
@@ -201,10 +204,13 @@ private fun UserDetail(
             )
         },
         supportingContent = {
-            Text(
-                text = "Online",
-                fontSize = MaterialTheme.textSize.medium,
-            )
+            PreferredAnimatedVisibility(visible = userStatus != null) {
+                Text(
+                    text = if (userStatus!!.isOnline) "Online"
+                    else PrettyTimeUtils.getPrettyTime(userStatus.lastSeen),
+                    fontSize = MaterialTheme.textSize.medium,
+                )
+            }
         },
         leadingContent = {
             PreferredAsyncImage(
