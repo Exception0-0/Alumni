@@ -135,7 +135,7 @@ private fun Content(
                             )
                             DropdownMenuItem(
                                 text = {
-                                    Text("clear Chat")
+                                    Text("Clear")
                                 },
                                 leadingIcon = {
                                     Icon(
