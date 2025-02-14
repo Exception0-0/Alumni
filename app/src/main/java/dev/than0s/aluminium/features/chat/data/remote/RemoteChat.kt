@@ -2,19 +2,16 @@ package dev.than0s.aluminium.features.chat.data.remote
 
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.Query
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.snapshots
 import dev.than0s.aluminium.core.data.remote.CHATS
 import dev.than0s.aluminium.core.data.remote.HISTORY
+import dev.than0s.aluminium.core.data.remote.TIMESTAMP
 import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.features.chat.domain.data_class.ChatGroup
 import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -35,7 +32,12 @@ class RemoteChatImple @Inject constructor(
                 .child(CHATS)
                 .child(HISTORY)
                 .child(auth.currentUser!!.uid)
-                .asFlow<ChatGroup>()
+                .snapshots
+                .map { snapshot ->
+                    snapshot.children.mapNotNull {
+                        it.getValue(ChatGroup::class.java)
+                    }
+                }
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
@@ -84,8 +86,13 @@ class RemoteChatImple @Inject constructor(
             database.reference
                 .child(CHATS)
                 .child(getGroupId(receiverId))
-                .orderByChild("timestamp")
-                .asFlow()
+                .orderByChild(TIMESTAMP)
+                .snapshots
+                .map { snapshot ->
+                    snapshot.children.mapNotNull {
+                        it.getValue(ChatMessage::class.java)
+                    }
+                }
         } catch (e: FirebaseException) {
             throw ServerException(e.message.toString())
         }
@@ -105,29 +112,7 @@ class RemoteChatImple @Inject constructor(
         }
     }
 
-    // chat gpt thank to help me :)
-    private inline fun <reified T> Query.asFlow(): Flow<List<T>> = callbackFlow {
-        val listener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val items = mutableListOf<T>()
-                snapshot.children.forEach { child ->
-                    val item = child.getValue(T::class.java)
-                    if (item != null) {
-                        items.add(item)
-                    }
-                }
-                trySend(items)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                close(error.toException())
-            }
-        }
-        this@asFlow.addValueEventListener(listener)
-
-        awaitClose { this@asFlow.removeEventListener(listener) }
-    }
-
+    // below code is business logic it should present in domain layer not in data layer
     private fun getGroupId(receiverId: String): String {
         val sortedList = listOf(auth.currentUser!!.uid, receiverId)
             .sorted()

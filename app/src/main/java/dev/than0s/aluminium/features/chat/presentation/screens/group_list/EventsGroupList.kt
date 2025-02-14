@@ -7,4 +7,6 @@ sealed class EventsGroupList {
         val receiverId: String,
         val messageId: String,
     ) : EventsGroupList()
+
+    data class GetLastSeen(val userId: String) : EventsGroupList()
 }

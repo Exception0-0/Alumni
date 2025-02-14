@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.domain.use_case.UseCaseGetAllUserProfile
+import dev.than0s.aluminium.core.domain.use_case.UseCaseGetUserStatus
 import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
 import dev.than0s.aluminium.core.presentation.utils.SnackbarController
 import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
@@ -24,6 +25,7 @@ class ViewModelGroupList @Inject constructor(
     private val useCaseGetGroups: UseCaseGetGroups,
     private val useCaseGetAllUserProfile: UseCaseGetAllUserProfile,
     private val useCaseGetMessage: UseCaseGetMessage,
+    private val useCaseGetLastSeen: UseCaseGetUserStatus,
 ) : ViewModel() {
     var state by mutableStateOf(StateGroupList())
 
@@ -102,11 +104,21 @@ class ViewModelGroupList @Inject constructor(
         }
     }
 
+    private fun getLastSeen(userId: String) {
+        when (val result = useCaseGetLastSeen(userId)) {
+            is Resource.Error -> {}
+            is Resource.Success -> {
+                state.lastSeenMap[userId] = result.data!!
+            }
+        }
+    }
+
     fun onEvent(event: EventsGroupList) {
         when (event) {
             is EventsGroupList.LoadGroup -> loadChatGroup()
             is EventsGroupList.OnNewMessageClick -> changeNewMessageState()
             is EventsGroupList.GetChatMessage -> getMessage(event.receiverId, event.messageId)
+            is EventsGroupList.GetLastSeen -> getLastSeen(event.userId)
         }
     }
 }
