@@ -61,4 +61,13 @@ class RepositoryChatImple @Inject constructor(
             Resource.Error(UiText.DynamicString(e.message))
         }
     }
+
+    override suspend fun clearAll(receiverId: String): SimpleResource {
+        return try {
+            remote.clearAll(receiverId)
+            Resource.Success(Unit)
+        } catch (e: ServerException) {
+            Resource.Error(UiText.DynamicString(e.message))
+        }
+    }
 }

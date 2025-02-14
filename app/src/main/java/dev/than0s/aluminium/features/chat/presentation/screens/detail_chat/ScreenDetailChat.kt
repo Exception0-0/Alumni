@@ -13,8 +13,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.AddPhotoAlternate
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -97,10 +101,54 @@ private fun Content(
                     )
                 },
                 actions = {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = "more option"
-                    )
+                    Box {
+                        IconButton(
+                            onClick = {
+                                onEvent(EventsDetailChat.ChangeTopDropDownState)
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.Default.MoreVert,
+                                    contentDescription = "more"
+                                )
+                            }
+                        )
+                        DropdownMenu(
+                            expanded = state.topDropDownMenu,
+                            onDismissRequest = {
+                                onEvent(EventsDetailChat.ChangeTopDropDownState)
+                            }
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text("Profile")
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Person,
+                                        contentDescription = "Profile"
+                                    )
+                                },
+                                onClick = {
+                                    openScreen(Screen.ProfileScreen(userId = state.otherUser.id))
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text("clear Chat")
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Clear"
+                                    )
+                                },
+                                onClick = {
+                                    onEvent(EventsDetailChat.ShowClearAllChatDialog)
+                                }
+                            )
+                        }
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -200,6 +248,12 @@ private fun Content(
             onEvent = onEvent
         )
     }
+    PreferredAnimatedVisibility(visible = state.clearAllChatDialog) {
+        ClearAllChatDialog(
+            state = state,
+            onEvent = onEvent
+        )
+    }
 }
 
 @Composable
@@ -259,6 +313,24 @@ private fun MessageDeleteDialog(
             onEvent(
                 EventsDetailChat.DismissDeleteDialog
             )
+        }
+    )
+}
+
+@Composable
+private fun ClearAllChatDialog(
+    state: StateDetailChat,
+    onEvent: (EventsDetailChat) -> Unit
+) {
+    PreferredWarningDialog(
+        title = stringResource(R.string.clear_all_chat),
+        description = "really want to clear all chat",
+        isLoading = state.isDeleting,
+        onConfirmation = {
+            onEvent(EventsDetailChat.ClearAllChat)
+        },
+        onDismissRequest = {
+            onEvent(EventsDetailChat.DismissClearAllChatDialog)
         }
     )
 }

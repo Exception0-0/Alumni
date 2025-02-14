@@ -44,4 +44,5 @@
     <string name="short_year">field should contain 4 digits</string>
     <string name="message_deleted">message deleted successfully</string>
     <string name="delete_message">Delete Message</string>
+    <string name="clear_all_chat">chat history delete</string>
 </resources>

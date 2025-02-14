@@ -19,6 +19,7 @@ import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
 import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseAddMessage
+import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseClearAllChat
 import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseDeleteMessage
 import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseGetMessages
 import kotlinx.coroutines.launch
@@ -32,6 +33,7 @@ class ViewModelDetailChat @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val useCaseGetUserStatus: UseCaseGetUserStatus,
     private val useCaseDeleteMessage: UseCaseDeleteMessage,
+    private val useCaseClearAllChat: UseCaseClearAllChat
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<Screen.ChatDetailScreen>()
     var state by mutableStateOf(StateDetailChat())
@@ -198,14 +200,61 @@ class ViewModelDetailChat @Inject constructor(
         state = state.copy(deleteDialog = null)
     }
 
+    private fun clearAllChat() {
+        viewModelScope.launch {
+            state = state.copy(isDeleting = true)
+            when (val result = useCaseClearAllChat(receiverId = args.receiverId)) {
+                is Resource.Success -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.clear_all_chat)
+                        )
+                    )
+                }
+
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    clearAllChat()
+                                }
+                            )
+                        )
+                    )
+                }
+            }
+            state = state.copy(isDeleting = false)
+            dismissClearAllChatDialog()
+        }
+    }
+
+    private fun showClearAllChatDialog() {
+        state = state.copy(clearAllChatDialog = true)
+    }
+
+    private fun dismissClearAllChatDialog() {
+        state = state.copy(clearAllChatDialog = false)
+    }
+
+    private fun changeTopDropDownState() {
+        state = state.copy(topDropDownMenu = !state.topDropDownMenu)
+    }
+
     fun onEvent(event: EventsDetailChat) {
         when (event) {
             is EventsDetailChat.AddMessage -> addMessage()
             is EventsDetailChat.LoadMessages -> loadMessages()
             is EventsDetailChat.OnMessageChange -> onMessageChange(event.message)
             is EventsDetailChat.DeleteMessage -> deleteMessage()
-            EventsDetailChat.DismissDeleteDialog -> dismissDeleteDialog()
+            is EventsDetailChat.DismissDeleteDialog -> dismissDeleteDialog()
             is EventsDetailChat.ShowDeleteDialog -> showDeleteDialog(event.messageId)
+            is EventsDetailChat.DismissClearAllChatDialog -> dismissClearAllChatDialog()
+            is EventsDetailChat.ShowClearAllChatDialog -> showClearAllChatDialog()
+            is EventsDetailChat.ClearAllChat -> clearAllChat()
+            is EventsDetailChat.ChangeTopDropDownState -> changeTopDropDownState()
         }
     }
 }

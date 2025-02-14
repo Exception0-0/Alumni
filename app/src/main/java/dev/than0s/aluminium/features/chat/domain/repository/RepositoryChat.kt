@@ -12,4 +12,5 @@ interface RepositoryChat {
     fun getMessages(receiverId: String): Resource<Flow<List<ChatMessage>>>
     suspend fun getMessage(receiverId: String, messageId: String): Resource<ChatMessage>
     suspend fun deleteMessage(receiverId: String, messageId: String): SimpleResource
+    suspend fun clearAll(receiverId: String): SimpleResource
 }
