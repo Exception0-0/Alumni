@@ -149,6 +149,11 @@ private fun ThemeColumn(
                     contentDescription = "Dynamic theme"
                 )
             },
+            supportingContent = {
+                Text(
+                    text = "Available on only Android 12+"
+                )
+            },
             trailingContent = {
                 Switch(
                     checked = isDynamicTheme,
