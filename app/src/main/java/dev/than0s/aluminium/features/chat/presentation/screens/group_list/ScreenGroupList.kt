@@ -175,7 +175,7 @@ private fun GroupItem(
                     shape = CircleShape,
                     modifier = Modifier.size(MaterialTheme.profileSize.medium)
                 )
-                AnimatedVisibility(userStatus != null) {
+                PreferredAnimatedVisibility(userStatus != null) {
                     val text = if (userStatus!!.isOnline) {
                         "Online"
                     } else {
