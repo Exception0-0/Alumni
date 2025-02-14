@@ -42,4 +42,6 @@
     <string name="select_value">--select--</string>
     <string name="short_college_id">\"collage id should contain at least 7 digits\"</string>
     <string name="short_year">field should contain 4 digits</string>
+    <string name="message_deleted">message deleted successfully</string>
+    <string name="delete_message">Delete Message</string>
 </resources>

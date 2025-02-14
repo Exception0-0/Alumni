@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.emptyFlow
 data class StateDetailChat(
     val isLoading: Boolean = false,
     val isSending: Boolean = false,
+    val isDeleting: Boolean = false,
+    val deleteDialog: String? = null,
     val userStatus: Flow<UserStatus> = emptyFlow(),
     val chatMessage: String = "",
     val otherUser: User = User(),

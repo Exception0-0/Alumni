@@ -20,6 +20,7 @@ interface RemoteChat {
     suspend fun addMessage(receiverId: String, message: ChatMessage)
     fun getMessages(receiverId: String): Flow<List<ChatMessage>>
     suspend fun getMessage(receiverId: String, messageId: String): ChatMessage
+    suspend fun deleteMessage(receiverId: String, messageId: String)
 }
 
 class RemoteChatImple @Inject constructor(
@@ -107,6 +108,19 @@ class RemoteChatImple @Inject constructor(
                 .get()
                 .await()
                 .getValue(ChatMessage::class.java)!!
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun deleteMessage(receiverId: String, messageId: String) {
+        try {
+            database.reference
+                .child(CHATS)
+                .child(getGroupId(receiverId))
+                .child(messageId)
+                .removeValue()
+                .await()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }

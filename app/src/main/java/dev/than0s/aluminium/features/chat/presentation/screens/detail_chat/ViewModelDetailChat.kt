@@ -19,6 +19,7 @@ import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.chat.domain.data_class.ChatMessage
 import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseAddMessage
+import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseDeleteMessage
 import dev.than0s.aluminium.features.chat.domain.use_case.UseCaseGetMessages
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +30,8 @@ class ViewModelDetailChat @Inject constructor(
     private val useCaseGetMessages: UseCaseGetMessages,
     private val useCaseAddMessage: UseCaseAddMessage,
     private val getUserUseCase: GetUserUseCase,
-    private val useCaseGetUserStatus: UseCaseGetUserStatus
+    private val useCaseGetUserStatus: UseCaseGetUserStatus,
+    private val useCaseDeleteMessage: UseCaseDeleteMessage,
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<Screen.ChatDetailScreen>()
     var state by mutableStateOf(StateDetailChat())
@@ -155,11 +157,55 @@ class ViewModelDetailChat @Inject constructor(
         state = state.copy(chatMessage = message)
     }
 
+    private fun deleteMessage() {
+        viewModelScope.launch {
+            state = state.copy(isDeleting = true)
+            when (val result =
+                useCaseDeleteMessage(
+                    receiverId = args.receiverId,
+                    messageId = state.deleteDialog!!
+                )) {
+                is Resource.Error -> {
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = result.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    deleteMessage()
+                                }
+                            )
+                        )
+                    )
+                }
+
+                is Resource.Success -> {
+                    SnackbarEvent(
+                        message = UiText.StringResource(R.string.message_deleted)
+                    )
+                }
+            }
+            state = state.copy(isDeleting = false)
+            dismissDeleteDialog()
+        }
+    }
+
+    private fun showDeleteDialog(messageId: String) {
+        state = state.copy(deleteDialog = messageId)
+    }
+
+    private fun dismissDeleteDialog() {
+        state = state.copy(deleteDialog = null)
+    }
+
     fun onEvent(event: EventsDetailChat) {
         when (event) {
             is EventsDetailChat.AddMessage -> addMessage()
             is EventsDetailChat.LoadMessages -> loadMessages()
             is EventsDetailChat.OnMessageChange -> onMessageChange(event.message)
+            is EventsDetailChat.DeleteMessage -> deleteMessage()
+            EventsDetailChat.DismissDeleteDialog -> dismissDeleteDialog()
+            is EventsDetailChat.ShowDeleteDialog -> showDeleteDialog(event.messageId)
         }
     }
 }

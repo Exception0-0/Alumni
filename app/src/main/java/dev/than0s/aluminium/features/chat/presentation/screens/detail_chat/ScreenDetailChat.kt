@@ -46,6 +46,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIcon
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
 import dev.than0s.aluminium.ui.padding
@@ -138,7 +139,7 @@ private fun Content(
     ) {
         val chatList = state.chatFlow.collectAsState(null).value
         if (chatList == null) {
-//            PreferredCircularProgressIndicator()
+            PreferredCircularProgressIndicator()
         } else {
             if (chatList.isEmpty()) {
                 PreferredNoData(
@@ -164,7 +165,14 @@ private fun Content(
                                     .align(
                                         if (item.userId == currentUserId!!) Alignment.TopEnd
                                         else Alignment.TopStart
-                                    ),
+                                    )
+                                    .clickable {
+                                        onEvent(
+                                            EventsDetailChat.ShowDeleteDialog(
+                                                messageId = item.id
+                                            )
+                                        )
+                                    },
                                 content = {
                                     Text(
                                         text = buildAnnotatedString {
@@ -185,6 +193,12 @@ private fun Content(
                 }
             }
         }
+    }
+    PreferredAnimatedVisibility(visible = state.deleteDialog != null) {
+        MessageDeleteDialog(
+            state = state,
+            onEvent = onEvent
+        )
     }
 }
 
@@ -223,6 +237,28 @@ private fun UserDetail(
         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         modifier = Modifier.clickable {
             openScreen(Screen.ProfileScreen(userId = user.id))
+        }
+    )
+}
+
+@Composable
+private fun MessageDeleteDialog(
+    state: StateDetailChat,
+    onEvent: (EventsDetailChat) -> Unit
+) {
+    PreferredWarningDialog(
+        title = stringResource(R.string.delete_message),
+        description = "really want to delete message",
+        isLoading = state.isDeleting,
+        onConfirmation = {
+            onEvent(
+                EventsDetailChat.DeleteMessage
+            )
+        },
+        onDismissRequest = {
+            onEvent(
+                EventsDetailChat.DismissDeleteDialog
+            )
         }
     )
 }

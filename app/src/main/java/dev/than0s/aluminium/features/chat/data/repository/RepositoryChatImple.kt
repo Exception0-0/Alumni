@@ -38,14 +38,26 @@ class RepositoryChatImple @Inject constructor(
     }
 
     override suspend fun getMessage(receiverId: String, messageId: String): Resource<ChatMessage> {
-        return try{
+        return try {
             Resource.Success(
                 remote.getMessage(
                     receiverId = receiverId,
                     messageId = messageId
                 )
             )
-        } catch(e:ServerException){
+        } catch (e: ServerException) {
+            Resource.Error(UiText.DynamicString(e.message))
+        }
+    }
+
+    override suspend fun deleteMessage(receiverId: String, messageId: String): SimpleResource {
+        return try {
+            remote.deleteMessage(
+                receiverId = receiverId,
+                messageId = messageId
+            )
+            Resource.Success(Unit)
+        } catch (e: ServerException) {
             Resource.Error(UiText.DynamicString(e.message))
         }
     }
