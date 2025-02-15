@@ -224,7 +224,7 @@ private fun ThemeColumn(
             },
             supportingContent = {
                 Text(
-                    text = "Hold it to set reset"
+                    text = "Hold it to reset"
                 )
             },
             trailingContent = {
