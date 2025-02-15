@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -172,30 +173,33 @@ private fun GroupItem(
             )
         },
         leadingContent = {
-            PreferredAsyncImage(
-                model = user.profileImage,
-                contentDescription = "user profile image",
-                shape = CircleShape,
-                modifier = Modifier.size(MaterialTheme.profileSize.medium)
-            )
+            Box {
+                PreferredAsyncImage(
+                    model = user.profileImage,
+                    contentDescription = "user profile image",
+                    shape = CircleShape,
+                    modifier = Modifier.size(MaterialTheme.profileSize.medium)
+                )
+                PreferredAnimatedVisibility(
+                    visible = userStatus != null && userStatus.isOnline,
+                    modifier = Modifier.align(Alignment.BottomEnd)
+                ) {
+                    Image(
+                        imageVector = Icons.Filled.Circle,
+                        contentDescription = "user status",
+                        colorFilter = ColorFilter.tint(
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        modifier = Modifier.size(12.dp)
+                    )
+                }
+            }
         },
         supportingContent = {
             PreferredAnimatedVisibility(message != null) {
                 Text(
                     text = message!!.message,
                     fontSize = MaterialTheme.textSize.medium,
-                )
-            }
-        },
-        trailingContent = {
-            PreferredAnimatedVisibility(userStatus != null) {
-                val color = if (userStatus!!.isOnline) Color.Green else Color.Red
-
-                Image(
-                    imageVector = Icons.Filled.Circle,
-                    contentDescription = "user status",
-                    colorFilter = ColorFilter.tint(color = color),
-                    modifier = Modifier.size(12.dp)
                 )
             }
         },
@@ -290,8 +294,7 @@ private fun ShimmerListItem() {
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                VerticalDivider(
-                    thickness = 0.dp,
+                Spacer(
                     modifier = Modifier.height(MaterialTheme.padding.extraSmall)
                 )
                 ShimmerText(
