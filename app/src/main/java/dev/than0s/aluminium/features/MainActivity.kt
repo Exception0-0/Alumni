@@ -1,9 +1,11 @@
 package dev.than0s.aluminium.features
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
@@ -32,6 +34,7 @@ import dev.burnoo.compose.rememberpreference.rememberBooleanPreference
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAnimatedVisibility
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.utils.RequestNotificationPermission
 import dev.than0s.aluminium.core.presentation.ui.ColorTheme
 import dev.than0s.aluminium.core.presentation.ui.DYNAMIC_THEME
 import dev.than0s.aluminium.core.presentation.ui.PURE_BLACK
@@ -46,11 +49,12 @@ import dev.than0s.aluminium.core.presentation.utils.connectivityState
 import dev.than0s.aluminium.ui.textSize
 import dev.than0s.aluminium.ui.theme.AluminiumTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    
+
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +82,8 @@ class MainActivity : ComponentActivity() {
                 TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
             val connection by connectivityState()
             val isConnected = connection === ConnectionState.Available
+
+            RequestNotificationPermission()
 
             AluminiumTheme(
                 darkTheme = darkTheme,

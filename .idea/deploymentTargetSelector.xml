@@ -7,7 +7,7 @@
         <DropdownSelection timestamp="2025-02-14T04:57:05.900207382Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=RZ8M92VGYJW" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/than0s/.android/avd/Than0s_Android.avd" />
             </handle>
           </Target>
         </DropdownSelection>

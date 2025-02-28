@@ -79,6 +79,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.firebase.messaging)
 
     // hilt
     implementation(libs.hilt.android)
@@ -125,6 +126,12 @@ dependencies {
 
     // pretty time
     implementation (libs.prettytime)
+
+    // messaging
+    implementation(libs.firebase.messaging)
+
+    // accompanist
+    implementation(libs.accompanist.permissions)
 }
 
 // Allow references to generated code

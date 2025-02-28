@@ -26,6 +26,10 @@ import dev.than0s.aluminium.features.last_seen.data.remote.RemoteUserStatus
 import dev.than0s.aluminium.features.last_seen.data.remote.RemoteUserStatusImple
 import dev.than0s.aluminium.features.last_seen.data.repository.RepositoryLastSeenImple
 import dev.than0s.aluminium.features.last_seen.domain.repository.RepositoryLastSeen
+import dev.than0s.aluminium.features.notification.data.remote.RemoteMessaging
+import dev.than0s.aluminium.features.notification.data.remote.RemoteMessagingImple
+import dev.than0s.aluminium.features.notification.data.repository.RepositoryMessagingImple
+import dev.than0s.aluminium.features.notification.domain.repository.RepositoryMessaging
 import dev.than0s.aluminium.features.post.data.remote.CommentRemote
 import dev.than0s.aluminium.features.post.data.remote.CommentRemoteImple
 import dev.than0s.aluminium.features.post.data.remote.LikeDataSourceImple
@@ -124,6 +128,13 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindRepositoryLastSeen(imple: RepositoryLastSeenImple): RepositoryLastSeen
+
+    // notification
+    @Binds
+    abstract fun bindRemoteMessaging(imple: RemoteMessagingImple): RemoteMessaging
+
+    @Binds
+    abstract fun bindRepositoryMessaging(imple: RepositoryMessagingImple): RepositoryMessaging
 }
 
 @InstallIn(SingletonComponent::class)
@@ -140,4 +151,7 @@ object FirebaseModule {
 
     @Provides
     fun database(): FirebaseDatabase = Firebase.database
+
+    @Provides
+    fun messaging(): FirebaseMessaging = Firebase.messaging
 }

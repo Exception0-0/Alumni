@@ -45,4 +45,6 @@
     <string name="message_deleted">message deleted successfully</string>
     <string name="delete_message">Delete Message</string>
     <string name="clear_all_chat">chat history delete</string>
+    <string name="admin_channel_name">admin</string>
+    <string name="channel_description">nothing to say</string>
 </resources>
