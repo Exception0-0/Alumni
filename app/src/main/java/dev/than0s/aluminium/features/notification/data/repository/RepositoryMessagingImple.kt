@@ -28,4 +28,13 @@ class RepositoryMessagingImple @Inject constructor(
             Resource.Error(UiText.DynamicString(e.message))
         }
     }
+
+    override suspend fun setToken(token: String?): SimpleResource {
+        return try {
+            remoteMessaging.setToken(token)
+            Resource.Success(Unit)
+        } catch (e: ServerException) {
+            Resource.Error(UiText.DynamicString(e.message))
+        }
+    }
 }
