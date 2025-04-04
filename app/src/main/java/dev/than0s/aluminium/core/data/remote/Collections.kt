@@ -12,6 +12,7 @@ const val COMMENTS = "comments"
 const val LIKES = "likes"
 const val USER_STATUS = "user_status"
 const val FCM = "fcm"
+const val PUSH_NOTIFICATION = "push_notification"
 
 // storage bucket
 const val PROFILE_IMAGE = "profile_images"

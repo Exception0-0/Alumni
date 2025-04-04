@@ -5,7 +5,9 @@ import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import dev.than0s.aluminium.core.data.remote.FCM
+import dev.than0s.aluminium.core.data.remote.PUSH_NOTIFICATION
 import dev.than0s.aluminium.core.data.remote.error.ServerException
+import dev.than0s.aluminium.features.notification.domain.data_class.PushNotification
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -13,6 +15,7 @@ interface RemoteMessaging {
     suspend fun subscribeChannel(channel: String)
     suspend fun unSubscribeChannel(channel: String)
     suspend fun setToken(token: String?)
+    suspend fun pushNotification(notification: PushNotification)
 }
 
 class RemoteMessagingImple @Inject constructor(
@@ -45,6 +48,16 @@ class RemoteMessagingImple @Inject constructor(
                         token = token
                     )
                 )
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun pushNotification(notification: PushNotification) {
+        try {
+            store.collection(PUSH_NOTIFICATION)
+                .add(notification)
+                .await()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
