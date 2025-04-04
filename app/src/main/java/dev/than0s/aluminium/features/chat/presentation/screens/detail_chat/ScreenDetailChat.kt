@@ -172,13 +172,6 @@ private fun Content(
                         }
                     )
                 },
-                leadingIcon = {
-                    PreferredIconButton(
-                        onClick = {
-                        },
-                        icon = Icons.Outlined.AddPhotoAlternate,
-                    )
-                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = MaterialTheme.padding.medium)
