@@ -2,14 +2,14 @@ package dev.than0s.aluminium.features.notification.data.service
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import dev.than0s.aluminium.features.notification.domain.UseCaseSetToken
+import dev.than0s.aluminium.features.notification.domain.use_cases.UseCaseSetToken
 import dev.than0s.aluminium.features.notification.framework.notification.AdminNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CloudMessaging() : FirebaseMessagingService() {
+class CloudMessaging : FirebaseMessagingService() {
     private lateinit var notification: AdminNotification
 
     @Inject

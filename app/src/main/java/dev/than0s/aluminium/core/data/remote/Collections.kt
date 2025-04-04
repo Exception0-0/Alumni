@@ -11,8 +11,8 @@ const val REGISTRATION_REQUESTS = "registration_requests"
 const val COMMENTS = "comments"
 const val LIKES = "likes"
 const val USER_STATUS = "user_status"
-const val FCM = "fcm"
-const val PUSH_NOTIFICATION = "push_notification"
+const val CLOUD_NOTIFICATION = "cloud_notification"
+const val USERS = "users"
 
 // storage bucket
 const val PROFILE_IMAGE = "profile_images"
@@ -32,3 +32,5 @@ const val USERS_ID = "usersId"
 const val TIMESTAMP = "timestamp"
 const val IS_ONLINE = "isOnline"
 const val LAST_SEEN = "lastSeen"
+
+const val CLOUD_MESSAGING_TOKEN = "cloud_messaging_token"

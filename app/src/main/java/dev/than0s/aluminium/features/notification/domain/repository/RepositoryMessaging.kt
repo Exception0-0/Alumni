@@ -1,9 +1,11 @@
 package dev.than0s.aluminium.features.notification.domain.repository
 
+import dev.than0s.aluminium.core.Resource
 import dev.than0s.aluminium.core.SimpleResource
+import dev.than0s.aluminium.features.notification.domain.data_class.CloudNotification
 
 interface RepositoryMessaging {
-    suspend fun subscribeChannel(channel: String): SimpleResource
-    suspend fun unSubscribeChannel(channel: String): SimpleResource
-    suspend fun setToken(token:String?): SimpleResource
+    suspend fun setToken(token: String): SimpleResource
+    suspend fun remoteNotification(notification: CloudNotification): SimpleResource
+    suspend fun getNotifications(): Resource<List<CloudNotification>>
 }

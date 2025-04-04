@@ -1,71 +1,64 @@
 package dev.than0s.aluminium.features.notification.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.FirebaseMessaging
-import dev.than0s.aluminium.core.data.remote.FCM
-import dev.than0s.aluminium.core.data.remote.PUSH_NOTIFICATION
+import com.google.firebase.firestore.SetOptions
+import dev.than0s.aluminium.core.data.remote.CLOUD_MESSAGING_TOKEN
+import dev.than0s.aluminium.core.data.remote.CLOUD_NOTIFICATION
+import dev.than0s.aluminium.core.data.remote.USERS
 import dev.than0s.aluminium.core.data.remote.error.ServerException
-import dev.than0s.aluminium.features.notification.domain.data_class.PushNotification
+import dev.than0s.aluminium.features.notification.domain.data_class.CloudNotification
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 interface RemoteMessaging {
-    suspend fun subscribeChannel(channel: String)
-    suspend fun unSubscribeChannel(channel: String)
-    suspend fun setToken(token: String?)
-    suspend fun pushNotification(notification: PushNotification)
+    suspend fun setToken(token: String)
+    suspend fun removeNotification(notification: CloudNotification)
+    suspend fun getNotifications(): List<CloudNotification>
 }
 
 class RemoteMessagingImple @Inject constructor(
-    private val messaging: FirebaseMessaging,
     private val store: FirebaseFirestore,
     private val auth: FirebaseAuth,
 ) : RemoteMessaging {
-    override suspend fun subscribeChannel(channel: String) {
+    override suspend fun setToken(token: String) {
         try {
-            messaging.subscribeToTopic(channel).await()
-        } catch (e: Exception) {
-            throw ServerException(e.message.toString())
-        }
-    }
-
-    override suspend fun unSubscribeChannel(channel: String) {
-        try {
-            messaging.unsubscribeFromTopic(channel).await()
-        } catch (e: Exception) {
-            throw ServerException(e.message.toString())
-        }
-    }
-
-    override suspend fun setToken(token: String?) {
-        try {
-            store.collection(FCM)
-                .add(
-                    Token(
-                        userId = auth.currentUser!!.uid,
-                        token = token
-                    )
+            store.collection(USERS)
+                .document(auth.currentUser!!.uid)
+                .set(
+                    mapOf(
+                        CLOUD_MESSAGING_TOKEN to token
+                    ),
+                    SetOptions.merge()
                 )
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
 
-    override suspend fun pushNotification(notification: PushNotification) {
+    override suspend fun removeNotification(notification: CloudNotification) {
         try {
-            store.collection(PUSH_NOTIFICATION)
-                .add(notification)
+            store.collection(USERS)
+                .document(auth.currentUser!!.uid)
+                .collection(CLOUD_NOTIFICATION)
+                .document(notification.id)
+                .delete()
                 .await()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
-}
 
-private data class Token(
-    @DocumentId
-    val userId: String = "",
-    val token: String? = null,
-)
+    override suspend fun getNotifications(): List<CloudNotification> {
+        return try {
+            store.collection(USERS)
+                .document(auth.currentUser!!.uid)
+                .collection(CLOUD_NOTIFICATION)
+                .get()
+                .await()
+                .toObjects(CloudNotification::class.java)
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+}
