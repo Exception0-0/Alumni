@@ -172,13 +172,6 @@ private fun Content(
                         }
                     )
                 },
-                leadingIcon = {
-                    PreferredIconButton(
-                        onClick = {
-                        },
-                        icon = Icons.Outlined.AddPhotoAlternate,
-                    )
-                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = MaterialTheme.padding.medium)
@@ -324,7 +317,7 @@ private fun ClearAllChatDialog(
 ) {
     PreferredWarningDialog(
         title = stringResource(R.string.clear_all_chat),
-        description = "really want to clear all chat",
+        description = stringResource(R.string.clear_all_chat),
         isLoading = state.isDeleting,
         onConfirmation = {
             onEvent(EventsDetailChat.ClearAllChat)

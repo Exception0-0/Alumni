@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import dev.than0s.aluminium.ui.roundedCorners
 
@@ -32,7 +33,10 @@ fun PreferredWarningDialog(
             Text(text = title)
         },
         text = {
-            Text(text = description)
+            Text(
+                text = description,
+                textAlign = TextAlign.Center
+            )
         },
         shape = shape,
         onDismissRequest = {},
