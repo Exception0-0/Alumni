@@ -12,9 +12,18 @@ import javax.inject.Inject
 class RepositoryMessagingImple @Inject constructor(
     private val remoteMessaging: RemoteMessaging
 ) : RepositoryMessaging {
-    override suspend fun setToken(token: String): SimpleResource {
+    override suspend fun addToken(token: String): SimpleResource {
         return try {
-            remoteMessaging.setToken(token)
+            remoteMessaging.addToken(token)
+            Resource.Success(Unit)
+        } catch (e: ServerException) {
+            Resource.Error(UiText.DynamicString(e.message))
+        }
+    }
+
+    override suspend fun removeToken(token: String): SimpleResource {
+        return try {
+            remoteMessaging.removeToken(token)
             Resource.Success(Unit)
         } catch (e: ServerException) {
             Resource.Error(UiText.DynamicString(e.message))
