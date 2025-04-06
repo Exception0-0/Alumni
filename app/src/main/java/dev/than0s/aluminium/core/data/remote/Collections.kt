@@ -13,6 +13,7 @@ const val LIKES = "likes"
 const val USER_STATUS = "user_status"
 const val CLOUD_NOTIFICATION = "cloud_notification"
 const val USERS = "users"
+const val PUSH_NOTIFICATION = "push_notifications"
 
 // storage bucket
 const val PROFILE_IMAGE = "profile_images"

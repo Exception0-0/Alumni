@@ -6,6 +6,7 @@ import dev.than0s.aluminium.core.data.remote.error.ServerException
 import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.notification.data.remote.RemoteMessaging
 import dev.than0s.aluminium.features.notification.domain.data_class.CloudNotification
+import dev.than0s.aluminium.features.notification.domain.data_class.PushNotification
 import dev.than0s.aluminium.features.notification.domain.repository.RepositoryMessaging
 import javax.inject.Inject
 
@@ -42,6 +43,15 @@ class RepositoryMessagingImple @Inject constructor(
     override suspend fun getNotifications(): Resource<List<CloudNotification>> {
         return try {
             Resource.Success(remoteMessaging.getNotifications())
+        } catch (e: ServerException) {
+            Resource.Error(UiText.DynamicString(e.message))
+        }
+    }
+
+    override suspend fun pushNotification(notification: PushNotification): SimpleResource {
+        return try {
+            remoteMessaging.pushNotification(notification)
+            Resource.Success(Unit)
         } catch (e: ServerException) {
             Resource.Error(UiText.DynamicString(e.message))
         }
