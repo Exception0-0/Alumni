@@ -46,7 +46,9 @@ class ViewModelPushNotification @Inject constructor(
                         batch = state.studentBatch
                     )
                 } else {
-                    state.studentFilter
+                    state.studentFilter.copy(
+                        batch = null
+                    )
                 }
             }
             if (state.alumni) {
@@ -55,7 +57,9 @@ class ViewModelPushNotification @Inject constructor(
                         batch = state.alumniBatch
                     )
                 } else {
-                    state.alumniFilter
+                    state.alumniFilter.copy(
+                        batch = null
+                    )
                 }
             }
             pushNotification(
