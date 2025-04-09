@@ -5,12 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.than0s.aluminium.features.notification.domain.data_class.AlumniFilter
 import dev.than0s.aluminium.features.notification.domain.data_class.Filters
 import dev.than0s.aluminium.features.notification.domain.data_class.PushNotification
+import dev.than0s.aluminium.features.notification.domain.data_class.StudentFilter
 import dev.than0s.aluminium.features.notification.domain.use_cases.UseCasePushNotification
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class ViewModelPushNotification @Inject constructor(
     private val pushNotification: UseCasePushNotification
 ) : ViewModel() {
@@ -34,12 +38,32 @@ class ViewModelPushNotification @Inject constructor(
 
     private fun pushNotification() {
         viewModelScope.launch {
+            var student: StudentFilter? = null
+            var alumni: AlumniFilter? = null
+            if (state.student) {
+                student = if (state.isStudentBatch) {
+                    state.studentFilter.copy(
+                        batch = state.studentBatch
+                    )
+                } else {
+                    state.studentFilter
+                }
+            }
+            if (state.alumni) {
+                alumni = if (state.isAlumniBatch) {
+                    state.alumniFilter.copy(
+                        batch = state.alumniBatch
+                    )
+                } else {
+                    state.alumniFilter
+                }
+            }
             pushNotification(
                 PushNotification(
                     content = state.content,
                     filters = Filters(
-                        student = state.studentFilter,
-                        alumni = state.alumniFilter,
+                        student = student,
+                        alumni = alumni,
                         staff = state.staff
                     )
                 )
@@ -93,7 +117,7 @@ class ViewModelPushNotification @Inject constructor(
 
     private fun changeAlumniFilter() {
         state = state.copy(
-            student = !state.alumni
+            alumni = !state.alumni
         )
     }
 

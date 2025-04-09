@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
+import androidx.compose.material.icons.filled.AddAlert
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.AddAlert
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Settings
@@ -38,6 +40,11 @@ private val bottomNavItems = listOf(
         Screen.RegistrationRequestsScreen,
         Icons.Filled.Home,
         Icons.Outlined.Home,
+    ),
+    BottomNavigationItem(
+        Screen.PushNotificationScreen,
+        Icons.Filled.AddAlert,
+        Icons.Outlined.AddAlert,
     ),
     BottomNavigationItem(
         Screen.HomeScreen(),
@@ -78,6 +85,10 @@ private fun shouldShowOption(screen: Screen): Boolean {
         }
 
         is Screen.RegistrationRequestsScreen -> {
+            currentUserRole == Role.Admin
+        }
+
+        is Screen.PushNotificationScreen -> {
             currentUserRole == Role.Admin
         }
 

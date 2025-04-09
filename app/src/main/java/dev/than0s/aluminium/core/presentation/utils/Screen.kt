@@ -23,6 +23,9 @@ sealed class Screen(
     data object RegistrationRequestsScreen : Screen(name = "Admin Home")
 
     @Serializable
+    data object PushNotificationScreen : Screen(name = "Push Notification")
+
+    @Serializable
     data object PostUploadScreen : Screen(name = "Post Upload")
 
     @Serializable

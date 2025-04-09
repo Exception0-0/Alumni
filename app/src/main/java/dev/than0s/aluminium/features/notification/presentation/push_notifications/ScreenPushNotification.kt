@@ -18,7 +18,10 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredText
 fun ScreenPushNotification(
     viewModel: ViewModelPushNotification = hiltViewModel()
 ) {
-
+    Content(
+        state = viewModel.state,
+        onEvent = viewModel::onEvent
+    )
 }
 
 @Composable
@@ -38,7 +41,7 @@ private fun Content(
             value = state.content.content,
             placeholder = "Content",
             onValueChange = {
-                onEvent(EventsPushNotification.ChangeTitle(it))
+                onEvent(EventsPushNotification.ChangeContent(it))
             }
         )
         PreferredRow {
