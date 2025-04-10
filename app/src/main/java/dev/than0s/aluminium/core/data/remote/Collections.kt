@@ -11,7 +11,7 @@ const val REGISTRATION_REQUESTS = "registration_requests"
 const val COMMENTS = "comments"
 const val LIKES = "likes"
 const val USER_STATUS = "user_status"
-const val CLOUD_NOTIFICATION = "cloud_notification"
+const val CLOUD_NOTIFICATIONS = "cloud_notifications"
 const val USERS = "users"
 const val PUSH_NOTIFICATION = "push_notifications"
 
