@@ -17,9 +17,9 @@ import dev.than0s.aluminium.ui.roundedCorners
 fun PreferredWarningDialog(
     title: String,
     isLoading: Boolean,
-    description: String,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
+    description: String? = null,
     shape: Shape = RoundedCornerShape(roundedCorners.default)
 ) {
     AlertDialog(
@@ -32,12 +32,14 @@ fun PreferredWarningDialog(
         title = {
             Text(text = title)
         },
-        text = {
-            Text(
-                text = description,
-                textAlign = TextAlign.Center
-            )
-        },
+        text = if (description != null) {
+            {
+                Text(
+                    text = description,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else null,
         shape = shape,
         onDismissRequest = {},
         confirmButton = {
@@ -62,9 +64,9 @@ fun PreferredWarningDialog(
 @Composable
 fun PreferredWarningDialog(
     title: String,
-    description: String,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
+    description: String? = null,
     shape: Shape = RoundedCornerShape(roundedCorners.default)
 ) {
     AlertDialog(
@@ -77,9 +79,14 @@ fun PreferredWarningDialog(
         title = {
             Text(text = title)
         },
-        text = {
-            Text(text = description)
-        },
+        text = if (description != null) {
+            {
+                Text(
+                    text = description,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else null,
         shape = shape,
         onDismissRequest = {},
         confirmButton = {

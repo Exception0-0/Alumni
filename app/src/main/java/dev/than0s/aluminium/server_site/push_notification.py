@@ -27,7 +27,7 @@ def get_fcm_token(user_id: str) -> str | None:
 def push_in_user_collection(userId: str, notiId: str):
     try:
         db.collection("users").document(userId).update({
-            "cloud_notification": firestore.ArrayUnion([notiId])
+            "cloud_notifications": firestore.ArrayUnion([notiId])
         })
     except Exception as e:
         print(f"Error updating notifications for user {userId}: {e}")

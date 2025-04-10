@@ -12,6 +12,7 @@ import dev.than0s.aluminium.features.auth.presentation.screens.forget_password.F
 import dev.than0s.aluminium.features.auth.presentation.screens.sign_in.SignInScreen
 import dev.than0s.aluminium.features.chat.presentation.screens.detail_chat.ScreenDetailChat
 import dev.than0s.aluminium.features.chat.presentation.screens.group_list.ScreenGroupList
+import dev.than0s.aluminium.features.notification.presentation.notifications.ScreenNotification
 import dev.than0s.aluminium.features.notification.presentation.push_notifications.ScreenPushNotification
 import dev.than0s.aluminium.features.post.presentation.screens.comments.CommentScreen
 import dev.than0s.aluminium.features.post.presentation.screens.post_upload.PostUploadScreen
@@ -124,7 +125,7 @@ fun NavGraphHost(
             )
         }
         composable<Screen.NotificationScreen> {
-
+            ScreenNotification()
         }
     }
 }

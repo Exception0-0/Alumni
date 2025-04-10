@@ -8,5 +8,5 @@ class UseCaseRemoveNotification @Inject constructor(
     private val repository: RepositoryMessaging
 ) {
     suspend operator fun invoke(notification: CloudNotification) =
-        repository.remoteNotification(notification)
+        repository.removeNotification(notification)
 }

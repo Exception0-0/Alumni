@@ -31,20 +31,31 @@ class ViewModelNotification @Inject constructor(
 
     private fun getNotifications() {
         viewModelScope.launch {
+            state = state.copy(isLoading = true)
             when (val result = useCaseGetNotifications.invoke()) {
                 is Resource.Error -> {
-
+                    SnackbarEvent(
+                        message = result.uiText ?: UiText.unknownError(),
+                        action = SnackbarAction(
+                            name = UiText.StringResource(R.string.try_again),
+                            action = {
+                                getNotifications()
+                            }
+                        )
+                    )
                 }
 
                 is Resource.Success -> {
-                    state = state.copy(notifications = result.data)
+                    state = state.copy(notifications = result.data!!)
                 }
             }
+            state = state.copy(isLoading = false)
         }
     }
 
     private fun removeNotification(notification: CloudNotification) {
         viewModelScope.launch {
+            state = state.copy(isDeleting = true)
             when (val result = useCaseRemoveNotification.invoke(notification = notification)) {
                 is Resource.Error -> {
                     SnackbarController.sendEvent(
@@ -61,9 +72,14 @@ class ViewModelNotification @Inject constructor(
                 }
 
                 is Resource.Success -> {
-
+                    SnackbarController.sendEvent(
+                        SnackbarEvent(
+                            message = UiText.StringResource(R.string.notification_removed),
+                        )
+                    )
                 }
             }
+            state = state.copy(isDeleting = false)
         }
     }
 

@@ -47,4 +47,8 @@
     <string name="clear_all_chat">chat history delete</string>
     <string name="admin_channel_name">admin</string>
     <string name="channel_description">nothing to say</string>
+    <string name="delete_notification">Delete Notification</string>
+    <string name="delete_warning">this process can\'t undo,so be careful :)</string>
+    <string name="notification_removed">notification remove successfully</string>
+    <string name="no_notifications">No notification</string>
 </resources>

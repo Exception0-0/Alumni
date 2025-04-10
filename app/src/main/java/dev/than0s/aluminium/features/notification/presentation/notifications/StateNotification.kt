@@ -4,5 +4,6 @@ import dev.than0s.aluminium.features.notification.domain.data_class.CloudNotific
 
 data class StateNotification(
     val isLoading: Boolean = false,
-    val notifications: List<CloudNotification>? = null
+    val isDeleting: Boolean = false,
+    val notifications: List<CloudNotification> = emptyList()
 )

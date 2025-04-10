@@ -31,7 +31,7 @@ class RepositoryMessagingImple @Inject constructor(
         }
     }
 
-    override suspend fun remoteNotification(notification: CloudNotification): SimpleResource {
+    override suspend fun removeNotification(notification: CloudNotification): SimpleResource {
         return try {
             remoteMessaging.removeNotification(notification)
             Resource.Success(Unit)

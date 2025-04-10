@@ -100,6 +100,10 @@ private fun getDefaultTopAppBar(
             title = Screen.PushNotificationScreen.name
         )
 
+        destination.hasRoute<Screen.NotificationScreen>() -> TopAppBarItem(
+            title = Screen.NotificationScreen.name
+        )
+
         destination.hasRoute<Screen.ForgotPasswordScreen>() -> TopAppBarItem(
             title = Screen.ForgotPasswordScreen.name
         )

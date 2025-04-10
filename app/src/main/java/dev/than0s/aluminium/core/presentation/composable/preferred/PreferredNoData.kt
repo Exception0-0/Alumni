@@ -1,10 +1,6 @@
 package dev.than0s.aluminium.core.presentation.composable.preferred
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -12,7 +8,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -27,48 +22,44 @@ import dev.than0s.aluminium.ui.textSize
 @Composable
 fun PreferredNoData(
     title: String,
+    modifier: Modifier = Modifier,
     description: String? = null,
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
+    PreferredCard(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+        ),
+        modifier = modifier
     ) {
-        PreferredCard(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-            ),
+        PreferredColumn(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
             modifier = Modifier
-                .align(Alignment.Center)
+                .padding(MaterialTheme.padding.medium)
+                .width(180.dp)
         ) {
-            PreferredColumn(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
-                modifier = Modifier
-                    .padding(MaterialTheme.padding.medium)
-                    .width(180.dp)
-            ) {
+            Text(
+                text = title
+                    .lowercase()
+                    .replaceFirstChar {
+                        it.uppercase()
+                    },
+                fontWeight = FontWeight.Bold,
+                fontSize = MaterialTheme.textSize.large
+            )
+            description?.let {
                 Text(
-                    text = title
-                        .lowercase()
-                        .replaceFirstChar {
-                            it.uppercase()
-                        },
-                    fontWeight = FontWeight.Bold,
-                    fontSize = MaterialTheme.textSize.large
-                )
-                description?.let {
-                    Text(
-                        text = it,
-                        fontSize = MaterialTheme.textSize.medium,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                PreferredLottieAnimation(
-                    lottieAnimation = R.raw.emoji_animation,
-                    iteration = LottieConstants.IterateForever,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(128.dp)
+                    text = it,
+                    fontSize = MaterialTheme.textSize.medium,
+                    textAlign = TextAlign.Center
                 )
             }
+            PreferredLottieAnimation(
+                lottieAnimation = R.raw.emoji_animation,
+                iteration = LottieConstants.IterateForever,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(128.dp)
+            )
         }
     }
 }
