@@ -23,11 +23,12 @@ import dev.than0s.aluminium.ui.roundedCorners
 fun PreferredTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String,
     modifier: Modifier = Modifier,
+    placeholder: String? = null,
     enable: Boolean = true,
     readOnly: Boolean = false,
     singleLine: Boolean = true,
+    label: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     supportingText: String? = null,
@@ -43,9 +44,16 @@ fun PreferredTextField(
             }
         },
         enabled = enable,
-        label = {
-            Text(text = placeholder)
-        },
+        label = if (label != null) {
+            {
+                Text(text = label)
+            }
+        } else null,
+        placeholder = if (placeholder != null) {
+            {
+                Text(text = placeholder)
+            }
+        } else null,
         singleLine = singleLine,
         isError = supportingText != null,
         supportingText = supportingText?.let {
@@ -80,6 +88,7 @@ private fun PreferredTextFieldPreview() {
         value = "",
         onValueChange = {},
         placeholder = "Place",
+        label = "add here",
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Mail,

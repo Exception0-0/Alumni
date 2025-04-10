@@ -1,6 +1,8 @@
 package dev.than0s.aluminium.features.notification.data.remote
 
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -9,7 +11,10 @@ import dev.than0s.aluminium.core.data.remote.CLOUD_NOTIFICATION
 import dev.than0s.aluminium.core.data.remote.PUSH_NOTIFICATION
 import dev.than0s.aluminium.core.data.remote.USERS
 import dev.than0s.aluminium.core.data.remote.error.ServerException
+import dev.than0s.aluminium.core.data.remote.getFirebaseTimestamp
 import dev.than0s.aluminium.features.notification.domain.data_class.CloudNotification
+import dev.than0s.aluminium.features.notification.domain.data_class.Filters
+import dev.than0s.aluminium.features.notification.domain.data_class.NotificationContent
 import dev.than0s.aluminium.features.notification.domain.data_class.PushNotification
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -83,10 +88,27 @@ class RemoteMessagingImple @Inject constructor(
     override suspend fun pushNotification(notification: PushNotification) {
         try {
             store.collection(PUSH_NOTIFICATION)
-                .add(notification)
+                .add(notification.toRemote())
                 .await()
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
     }
 }
+
+data class RemotePushNotification(
+    @DocumentId
+    val id: String = "",
+    val content: NotificationContent = NotificationContent(),
+    val filters: Filters = Filters(),
+    val pushStatus: Boolean = false,
+    val timestamp: Timestamp
+)
+
+fun PushNotification.toRemote() = RemotePushNotification(
+    id = id,
+    content = content,
+    filters = filters,
+    pushStatus = pushStatus,
+    timestamp = getFirebaseTimestamp(timestamp)
+)

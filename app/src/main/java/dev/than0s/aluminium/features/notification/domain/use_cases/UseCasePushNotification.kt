@@ -11,7 +11,8 @@ class UseCasePushNotification @Inject constructor(
     suspend operator fun invoke(notification: PushNotification) =
         repository.pushNotification(
             notification.copy(
-                id = generateUniqueId()
+                id = generateUniqueId(),
+                timestamp = System.currentTimeMillis(),
             )
         )
 }

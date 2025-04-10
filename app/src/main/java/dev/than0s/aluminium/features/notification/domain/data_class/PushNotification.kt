@@ -9,6 +9,7 @@ data class PushNotification(
     val content: NotificationContent = NotificationContent(),
     val filters: Filters = Filters(),
     val pushStatus: Boolean = false,
+    val timestamp: Long = 0L
 )
 
 data class NotificationContent(

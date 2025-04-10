@@ -9,4 +9,5 @@ data class CloudNotification(
     val title: String = "",
     val content: String = "",
     val icon: Uri? = null,
+    val timestamp: Long = 0L,
 )

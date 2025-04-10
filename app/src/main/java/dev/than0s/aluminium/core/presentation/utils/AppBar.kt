@@ -9,6 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -43,7 +44,7 @@ fun AluminiumTopAppBar(
             stop = MaterialTheme.textSize.gigantic.value,
             fraction = 1f - collapsedFraction
         ).sp
-        LargeTopAppBar(
+        MediumTopAppBar(
             title = {
                 Text(
                     text = it.title,
@@ -93,6 +94,10 @@ private fun getDefaultTopAppBar(
                     }
                 )
             }
+        )
+
+        destination.hasRoute<Screen.PushNotificationScreen>() -> TopAppBarItem(
+            title = Screen.PushNotificationScreen.name
         )
 
         destination.hasRoute<Screen.ForgotPasswordScreen>() -> TopAppBarItem(
