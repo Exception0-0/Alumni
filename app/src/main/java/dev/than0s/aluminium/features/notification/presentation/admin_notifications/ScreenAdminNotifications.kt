@@ -1,12 +1,17 @@
 package dev.than0s.aluminium.features.notification.presentation.admin_notifications
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -30,17 +35,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.than0s.aluminium.R
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCard
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFloatingActionButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
+import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
+import dev.than0s.aluminium.core.presentation.utils.Screen
+import dev.than0s.aluminium.features.notification.domain.data_class.NotificationContent
 import dev.than0s.aluminium.features.notification.domain.data_class.PushNotification
+import dev.than0s.aluminium.ui.padding
 import dev.than0s.aluminium.ui.profileSize
 
 @Composable
 fun ScreenAdminNotifications(
+    openScreen: (Screen) -> Unit,
     viewModel: ViewModelAdminNotifications = hiltViewModel()
 ) {
     Content(
         state = viewModel.state,
+        openScreen = openScreen,
         onEvent = viewModel::onEvent
     )
 }
@@ -49,6 +61,7 @@ fun ScreenAdminNotifications(
 @Composable
 private fun Content(
     state: StateAdminNotifications,
+    openScreen: (Screen) -> Unit,
     onEvent: (EventsAdminNotifications) -> Unit
 ) {
     PullToRefreshBox(
@@ -66,7 +79,10 @@ private fun Content(
                 modifier = Modifier.align(Alignment.Center)
             )
         } else {
-            LazyColumn {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                contentPadding = PaddingValues(MaterialTheme.padding.small)
+            ) {
                 items(state.notificationList) { noty ->
                     var sheet by remember { mutableStateOf(false) }
 
@@ -115,6 +131,20 @@ private fun Content(
                 }
             }
         }
+        PreferredFloatingActionButton(
+            onClick = {
+                openScreen(Screen.PushNotificationScreen)
+            },
+            content = {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null
+                )
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(MaterialTheme.padding.medium)
+        )
     }
 }
 
@@ -127,10 +157,21 @@ private fun BottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
     ) {
-        Text(text = noty.content.title)
-        Text(text = noty.content.content)
-        Text(text = if (noty.pushStatus) "Completed" else "Pending")
-        Text(text = noty.timestamp.toString())
+        Text(
+            text = if (noty.pushStatus) "Completed" else "Pending",
+            style = MaterialTheme.typography.displaySmall
+        )
+        Text(
+            text = noty.content.title,
+            style = MaterialTheme.typography.titleLarge,
+        )
+        Text(
+            text = noty.content.content,
+            style = MaterialTheme.typography.bodySmall
+        )
+        Text(
+            text = PrettyTimeUtils.getPrettyTime(noty.timestamp)
+        )
     }
 }
 
@@ -156,7 +197,14 @@ private fun ShimmerNoty() {
 @Composable
 private fun Preview() {
     Content(
-        state = StateAdminNotifications(),
+        state = StateAdminNotifications(
+            notificationList = listOf(
+                PushNotification(
+                    content = NotificationContent(title = "hi", content = "bye")
+                )
+            )
+        ),
+        openScreen = {},
         onEvent = {}
     )
 }

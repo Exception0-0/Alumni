@@ -96,6 +96,10 @@ private fun getDefaultTopAppBar(
             }
         )
 
+        destination.hasRoute<Screen.AdminNotificationScreen>() -> TopAppBarItem(
+            title = Screen.AdminNotificationScreen.name
+        )
+
         destination.hasRoute<Screen.PushNotificationScreen>() -> TopAppBarItem(
             title = Screen.PushNotificationScreen.name
         )

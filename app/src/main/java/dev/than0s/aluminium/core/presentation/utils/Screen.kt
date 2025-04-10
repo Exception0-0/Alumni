@@ -50,6 +50,9 @@ sealed class Screen(
     data object NotificationScreen : Screen(name = "Notifications")
 
     @Serializable
+    data object AdminNotificationScreen : Screen(name = "Admin Notifications")
+
+    @Serializable
     data class HomeScreen(
         val userId: String? = null,
     ) : Screen("Home")

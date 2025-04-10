@@ -99,7 +99,8 @@ class RemoteMessagingImple @Inject constructor(
             store.collection(PUSH_NOTIFICATION)
                 .get()
                 .await()
-                .toObjects(PushNotification::class.java)
+                .toObjects(RemotePushNotification::class.java)
+                .map { it.toLocal() }
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
@@ -141,7 +142,7 @@ data class RemotePushNotification(
     val content: NotificationContent = NotificationContent(),
     val filters: Filters = Filters(),
     val pushStatus: Boolean = false,
-    val timestamp: Timestamp
+    val timestamp: Timestamp = Timestamp.now()
 )
 
 fun PushNotification.toRemote() = RemotePushNotification(
@@ -150,4 +151,12 @@ fun PushNotification.toRemote() = RemotePushNotification(
     filters = filters,
     pushStatus = pushStatus,
     timestamp = getFirebaseTimestamp(timestamp)
+)
+
+fun RemotePushNotification.toLocal() = PushNotification(
+    id = id,
+    content = content,
+    filters = filters,
+    pushStatus = pushStatus,
+    timestamp = timestamp.seconds
 )
