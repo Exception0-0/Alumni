@@ -11,4 +11,5 @@ interface RepositoryMessaging {
     suspend fun removeNotification(notification: CloudNotification): SimpleResource
     suspend fun getNotifications(): Resource<List<CloudNotification>>
     suspend fun pushNotification(notification: PushNotification): SimpleResource
+    suspend fun getPushNotifications(): Resource<List<PushNotification>>
 }

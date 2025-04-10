@@ -56,4 +56,12 @@ class RepositoryMessagingImple @Inject constructor(
             Resource.Error(UiText.DynamicString(e.message))
         }
     }
+
+    override suspend fun getPushNotifications(): Resource<List<PushNotification>> {
+        return try {
+            Resource.Success(remoteMessaging.getPushNotifications())
+        } catch (e: ServerException) {
+            Resource.Error(UiText.DynamicString(e.message))
+        }
+    }
 }

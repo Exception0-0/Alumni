@@ -43,13 +43,12 @@ fun PreferredNoData(
                     .replaceFirstChar {
                         it.uppercase()
                     },
-                fontWeight = FontWeight.Bold,
-                fontSize = MaterialTheme.textSize.large
+                style = MaterialTheme.typography.titleLarge
             )
             description?.let {
                 Text(
                     text = it,
-                    fontSize = MaterialTheme.textSize.medium,
+                    style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center
                 )
             }

@@ -24,6 +24,7 @@ interface RemoteMessaging {
     suspend fun removeToken(token: String)
     suspend fun removeNotification(notification: CloudNotification)
     suspend fun getNotifications(): List<CloudNotification>
+    suspend fun getPushNotifications(): List<PushNotification>
     suspend fun pushNotification(notification: PushNotification)
 }
 
@@ -88,6 +89,17 @@ class RemoteMessagingImple @Inject constructor(
             }
 
             notifications
+        } catch (e: Exception) {
+            throw ServerException(e.message.toString())
+        }
+    }
+
+    override suspend fun getPushNotifications(): List<PushNotification> {
+        return try {
+            store.collection(PUSH_NOTIFICATION)
+                .get()
+                .await()
+                .toObjects(PushNotification::class.java)
         } catch (e: Exception) {
             throw ServerException(e.message.toString())
         }
