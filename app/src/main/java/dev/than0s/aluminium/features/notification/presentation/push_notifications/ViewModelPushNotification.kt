@@ -6,9 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.than0s.aluminium.R
+import dev.than0s.aluminium.core.Resource
+import dev.than0s.aluminium.core.presentation.utils.SnackbarAction
+import dev.than0s.aluminium.core.presentation.utils.SnackbarEvent
+import dev.than0s.aluminium.core.presentation.utils.UiText
 import dev.than0s.aluminium.features.notification.domain.data_class.AlumniFilter
-import dev.than0s.aluminium.features.notification.domain.data_class.Filters
-import dev.than0s.aluminium.features.notification.domain.data_class.PushNotification
+import dev.than0s.aluminium.features.notification.domain.data_class.BatchFilter
 import dev.than0s.aluminium.features.notification.domain.data_class.StudentFilter
 import dev.than0s.aluminium.features.notification.domain.use_cases.UseCasePushNotification
 import kotlinx.coroutines.launch
@@ -22,152 +26,206 @@ class ViewModelPushNotification @Inject constructor(
 
     private fun changeTitle(title: String) {
         state = state.copy(
-            content = state.content.copy(
-                title = title
+            notification = state.notification.copy(
+                content = state.notification.content.copy(
+                    title = title
+                )
             )
         )
     }
 
     private fun changeContent(content: String) {
         state = state.copy(
-            content = state.content.copy(
-                content = content
+            notification = state.notification.copy(
+                content = state.notification.content.copy(
+                    content = content
+                )
             )
         )
     }
 
-    private fun pushNotification() {
+    private fun pushNotification(onSuccess: () -> Unit) {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
-            var student: StudentFilter? = null
-            var alumni: AlumniFilter? = null
-            if (state.student) {
-                student = if (state.isStudentBatch) {
-                    state.studentFilter.copy(
-                        batch = state.studentBatch
-                    )
-                } else {
-                    state.studentFilter.copy(
-                        batch = null
-                    )
-                }
-            }
-            if (state.alumni) {
-                alumni = if (state.isAlumniBatch) {
-                    state.alumniFilter.copy(
-                        batch = state.alumniBatch
-                    )
-                } else {
-                    state.alumniFilter.copy(
-                        batch = null
+            when (val result = pushNotification(state.notification)) {
+                is Resource.Error -> {
+                    SnackbarEvent(
+                        message = result.uiText ?: UiText.unknownError(),
+                        action = SnackbarAction(
+                            name = UiText.StringResource(R.string.try_again),
+                            action = {
+                                pushNotification(onSuccess)
+                            }
+                        )
                     )
                 }
-            }
-            pushNotification(
-                PushNotification(
-                    content = state.content,
-                    filters = Filters(
-                        student = student,
-                        alumni = alumni,
-                        staff = state.staff
+
+                is Resource.Success -> {
+                    SnackbarEvent(
+                        message = UiText.DynamicString("Notification push successfully")
                     )
-                )
-            )
+                    onSuccess()
+                }
+            }
             state = state.copy(isLoading = false)
         }
     }
 
     private fun changeStudentFilter() {
         state = state.copy(
-            student = !state.student
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    student = if (state.notification.filters.student == null) StudentFilter() else null
+                )
+            )
         )
     }
 
     private fun changeStudentMcaFilter() {
         state = state.copy(
-            studentFilter = state.studentFilter.copy(
-                mca = !state.studentFilter.mca
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    student = state.notification.filters.student!!.copy(
+                        mca = !state.notification.filters.student!!.mca
+                    )
+                )
             )
         )
     }
 
     private fun changeStudentMbaFilter() {
         state = state.copy(
-            studentFilter = state.studentFilter.copy(
-                mba = !state.studentFilter.mba
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    student = state.notification.filters.student!!.copy(
+                        mba = !state.notification.filters.student!!.mba
+                    )
+                )
             )
         )
     }
 
     private fun changeStudentBatch() {
         state = state.copy(
-            isStudentBatch = !state.isStudentBatch
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    student = state.notification.filters.student!!.copy(
+                        batch = if (state.notification.filters.student!!.batch == null) BatchFilter() else null
+                    )
+                )
+            )
         )
     }
 
     private fun changeStudentBatchFrom(year: String) {
         state = state.copy(
-            studentBatch = state.studentBatch.copy(
-                from = year
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    student = state.notification.filters.student!!.copy(
+                        batch = state.notification.filters.student!!.batch!!.copy(
+                            from = year
+                        )
+                    )
+                )
             )
         )
     }
 
     private fun changeStudentBatchTo(year: String) {
         state = state.copy(
-            studentBatch = state.studentBatch.copy(
-                to = year
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    student = state.notification.filters.student!!.copy(
+                        batch = state.notification.filters.student!!.batch!!.copy(
+                            to = year
+                        )
+                    )
+                )
             )
         )
     }
 
     private fun changeAlumniFilter() {
         state = state.copy(
-            alumni = !state.alumni
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    alumni = if (state.notification.filters.student == null) AlumniFilter() else null
+                )
+            )
         )
     }
 
     private fun changeAlumniMcaFilter() {
         state = state.copy(
-            alumniFilter = state.alumniFilter.copy(
-                mca = !state.alumniFilter.mca
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    alumni = state.notification.filters.alumni!!.copy(
+                        mca = !state.notification.filters.alumni!!.mca
+                    )
+                )
             )
         )
     }
 
     private fun changeAlumniMbaFilter() {
         state = state.copy(
-            alumniFilter = state.alumniFilter.copy(
-                mba = !state.alumniFilter.mba
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    alumni = state.notification.filters.alumni!!.copy(
+                        mba = !state.notification.filters.alumni!!.mba
+                    )
+                )
             )
         )
     }
 
     private fun changeAlumniBatch() {
         state = state.copy(
-            isAlumniBatch = !state.isAlumniBatch
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    alumni = state.notification.filters.alumni!!.copy(
+                        batch = if (state.notification.filters.alumni!!.batch == null) BatchFilter() else null
+                    )
+                )
+            )
         )
     }
 
     private fun changeAlumniBatchFrom(year: String) {
         state = state.copy(
-            alumniBatch = state.alumniBatch.copy(
-                from = year
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    alumni = state.notification.filters.alumni!!.copy(
+                        batch = state.notification.filters.alumni!!.batch!!.copy(
+                            from = year
+                        )
+                    )
+                )
             )
         )
     }
 
     private fun changeAlumniBatchTo(year: String) {
         state = state.copy(
-            alumniBatch = state.alumniBatch.copy(
-                to = year
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    alumni = state.notification.filters.alumni!!.copy(
+                        batch = state.notification.filters.alumni!!.batch!!.copy(
+                            to = year
+                        )
+                    )
+                )
             )
         )
     }
 
     private fun changeStaffFilter() {
         state = state.copy(
-            staff = !state.staff
+            notification = state.notification.copy(
+                filters = state.notification.filters.copy(
+                    staff = !state.notification.filters.staff
+                )
+            )
         )
     }
 
@@ -187,7 +245,7 @@ class ViewModelPushNotification @Inject constructor(
         when (event) {
             is EventsPushNotification.ChangeContent -> changeContent(event.content)
             is EventsPushNotification.ChangeTitle -> changeTitle(event.title)
-            is EventsPushNotification.PushNotification -> pushNotification()
+            is EventsPushNotification.PushNotification -> pushNotification(event.onSuccess)
             is EventsPushNotification.ChangeStudentFilter -> changeStudentFilter()
             is EventsPushNotification.ChangeStudentMcaFilter -> changeStudentMcaFilter()
             is EventsPushNotification.ChangeStudentMbaFilter -> changeStudentMbaFilter()

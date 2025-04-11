@@ -3,7 +3,7 @@ package dev.than0s.aluminium.features.notification.presentation.push_notificatio
 sealed class EventsPushNotification {
     data class ChangeTitle(val title: String) : EventsPushNotification()
     data class ChangeContent(val content: String) : EventsPushNotification()
-    data object PushNotification : EventsPushNotification()
+    data class PushNotification(val onSuccess: () -> Unit) : EventsPushNotification()
     data object ChangeStudentFilter : EventsPushNotification()
     data object ChangeAlumniFilter : EventsPushNotification()
     data object ChangeStaffFilter : EventsPushNotification()

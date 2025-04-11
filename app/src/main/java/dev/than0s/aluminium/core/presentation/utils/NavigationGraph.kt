@@ -63,7 +63,9 @@ fun NavGraphHost(
             RegistrationRequestsScreen()
         }
         composable<Screen.PushNotificationScreen> {
-            ScreenPushNotification()
+            ScreenPushNotification(
+                popScreen = navController::popScreen
+            )
         }
         composable<Screen.PostUploadScreen> {
             PostUploadScreen(

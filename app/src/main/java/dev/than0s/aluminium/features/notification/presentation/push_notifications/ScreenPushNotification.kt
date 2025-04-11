@@ -29,10 +29,12 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredText
 
 @Composable
 fun ScreenPushNotification(
+    popScreen: () -> Unit,
     viewModel: ViewModelPushNotification = hiltViewModel()
 ) {
     Content(
         state = viewModel.state,
+        popScreen = popScreen,
         onEvent = viewModel::onEvent
     )
 }
@@ -40,6 +42,7 @@ fun ScreenPushNotification(
 @Composable
 private fun Content(
     state: StatePushNotification,
+    popScreen: () -> Unit,
     onEvent: (EventsPushNotification) -> Unit,
 ) {
     val pages = getPages(state)
@@ -90,7 +93,7 @@ private fun Content(
                 visible = isLastIndex
             ) {
                 PreferredFilledButton(
-                    onClick = { onEvent(EventsPushNotification.PushNotification) },
+                    onClick = { onEvent(EventsPushNotification.PushNotification(popScreen)) },
                     modifier = Modifier.align(Alignment.End),
                     isLoading = state.isLoading,
                     content = {
@@ -170,7 +173,7 @@ private fun ComposeNotification(
 ) {
     PreferredColumn {
         PreferredTextField(
-            value = state.content.title,
+            value = state.notification.content.title,
             placeholder = "Title",
             onValueChange = {
                 onEvent(EventsPushNotification.ChangeTitle(it))
@@ -178,7 +181,7 @@ private fun ComposeNotification(
             label = "Notification Title"
         )
         PreferredTextField(
-            value = state.content.content,
+            value = state.notification.content.content,
             placeholder = "Message Content",
             onValueChange = {
                 onEvent(EventsPushNotification.ChangeContent(it))
@@ -196,21 +199,21 @@ private fun TargetAudience(
     PreferredRow {
         PreferredFilterChip(
             label = "Student",
-            selected = state.student,
+            selected = state.notification.filters.student != null,
             onClick = {
                 onEvent(EventsPushNotification.ChangeStudentFilter)
             }
         )
         PreferredFilterChip(
             label = "Alumni",
-            selected = state.alumni,
+            selected = state.notification.filters.alumni != null,
             onClick = {
                 onEvent(EventsPushNotification.ChangeAlumniFilter)
             }
         )
         PreferredFilterChip(
             label = "Staff",
-            selected = state.staff,
+            selected = state.notification.filters.staff,
             onClick = {
                 onEvent(EventsPushNotification.ChangeStaffFilter)
             }
@@ -223,18 +226,20 @@ private fun StudentFilter(
     state: StatePushNotification,
     onEvent: (EventsPushNotification) -> Unit
 ) {
-    TargetGroupCard(
-        mba = state.studentFilter.mba,
-        mca = state.studentFilter.mca,
-        showBatch = state.isStudentBatch,
-        from = state.studentBatch.from,
-        to = state.studentBatch.to,
-        onMbaClick = { onEvent(EventsPushNotification.ChangeStudentMbaFilter) },
-        onMcaClick = { onEvent(EventsPushNotification.ChangeStudentMcaFilter) },
-        onBatchClick = { onEvent(EventsPushNotification.ChangeStudentBatchFilter) },
-        onFromChange = { onEvent(EventsPushNotification.ChangeStudentBatchFrom(it)) },
-        onToChange = { onEvent(EventsPushNotification.ChangeStudentBatchTo(it)) },
-    )
+    state.notification.filters.student!!.let {
+        TargetGroupCard(
+            mba = it.mba,
+            mca = it.mca,
+            showBatch = it.batch != null,
+            from = it.batch?.from ?: "",
+            to = it.batch?.to ?: "",
+            onMbaClick = { onEvent(EventsPushNotification.ChangeStudentMbaFilter) },
+            onMcaClick = { onEvent(EventsPushNotification.ChangeStudentMcaFilter) },
+            onBatchClick = { onEvent(EventsPushNotification.ChangeStudentBatchFilter) },
+            onFromChange = { onEvent(EventsPushNotification.ChangeStudentBatchFrom(it)) },
+            onToChange = { onEvent(EventsPushNotification.ChangeStudentBatchTo(it)) },
+        )
+    }
 }
 
 @Composable
@@ -242,18 +247,20 @@ private fun AlumniFilter(
     state: StatePushNotification,
     onEvent: (EventsPushNotification) -> Unit
 ) {
-    TargetGroupCard(
-        mba = state.alumniFilter.mba,
-        mca = state.alumniFilter.mca,
-        showBatch = state.isAlumniBatch,
-        from = state.alumniBatch.from,
-        to = state.alumniBatch.to,
-        onMbaClick = { onEvent(EventsPushNotification.ChangeAlumniMbaFilter) },
-        onMcaClick = { onEvent(EventsPushNotification.ChangeAlumniMcaFilter) },
-        onBatchClick = { onEvent(EventsPushNotification.ChangeAlumniBatchFilter) },
-        onFromChange = { onEvent(EventsPushNotification.ChangeAlumniBatchFrom(it)) },
-        onToChange = { onEvent(EventsPushNotification.ChangeAlumniBatchTo(it)) }
-    )
+    state.notification.filters.alumni!!.let {
+        TargetGroupCard(
+            mba = it.mba,
+            mca = it.mca,
+            showBatch = it.batch != null,
+            from = it.batch?.from ?: "",
+            to = it.batch?.to ?: "",
+            onMbaClick = { onEvent(EventsPushNotification.ChangeAlumniMbaFilter) },
+            onMcaClick = { onEvent(EventsPushNotification.ChangeAlumniMcaFilter) },
+            onBatchClick = { onEvent(EventsPushNotification.ChangeAlumniBatchFilter) },
+            onFromChange = { onEvent(EventsPushNotification.ChangeAlumniBatchFrom(it)) },
+            onToChange = { onEvent(EventsPushNotification.ChangeAlumniBatchTo(it)) }
+        )
+    }
 }
 
 private data class ComposeNotificationPage(
@@ -287,7 +294,7 @@ private fun getPages(
             }
         )
     )
-    if (screenState.alumni) {
+    if (screenState.notification.filters.alumni != null) {
         pages.add(
             ComposeNotificationPage(
                 name = "Alumni Filters",
@@ -300,7 +307,7 @@ private fun getPages(
             )
         )
     }
-    if (screenState.student) {
+    if (screenState.notification.filters.student != null) {
         pages.add(
             ComposeNotificationPage(
                 name = "Student Filters",
@@ -320,6 +327,7 @@ private fun getPages(
 @Composable
 private fun Preview() {
     Content(
+        popScreen = {},
         state = StatePushNotification(),
         onEvent = {}
     )

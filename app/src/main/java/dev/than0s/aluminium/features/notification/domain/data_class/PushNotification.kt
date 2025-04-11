@@ -27,13 +27,13 @@ data class Filters(
 data class StudentFilter(
     val mca: Boolean = true,
     val mba: Boolean = true,
-    val batch: BatchFilter? = BatchFilter(),
+    val batch: BatchFilter? = null,
 )
 
 data class AlumniFilter(
     val mca: Boolean = true,
     val mba: Boolean = true,
-    val batch: BatchFilter? = BatchFilter(),
+    val batch: BatchFilter? = null,
 )
 
 data class BatchFilter(
