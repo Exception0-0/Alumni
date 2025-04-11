@@ -6,6 +6,7 @@ import dev.than0s.aluminium.features.notification.domain.data_class.Notification
 import dev.than0s.aluminium.features.notification.domain.data_class.StudentFilter
 
 data class StatePushNotification(
+    val isLoading: Boolean = false,
     val content: NotificationContent = NotificationContent(),
     val studentFilter: StudentFilter = StudentFilter(),
     val alumniFilter: AlumniFilter = AlumniFilter(),
@@ -16,4 +17,5 @@ data class StatePushNotification(
     val student: Boolean = true,
     val alumni: Boolean = true,
     val staff: Boolean = true,
+    val pageIndex: Int = 0,
 )

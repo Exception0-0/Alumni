@@ -17,4 +17,6 @@ sealed class EventsPushNotification {
     data class ChangeStudentBatchTo(val year: String) : EventsPushNotification()
     data class ChangeAlumniBatchFrom(val year: String) : EventsPushNotification()
     data class ChangeAlumniBatchTo(val year: String) : EventsPushNotification()
+    data object OnPreviousClick : EventsPushNotification()
+    data object OnNextClick : EventsPushNotification()
 }

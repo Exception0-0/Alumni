@@ -38,6 +38,7 @@ class ViewModelPushNotification @Inject constructor(
 
     private fun pushNotification() {
         viewModelScope.launch {
+            state = state.copy(isLoading = true)
             var student: StudentFilter? = null
             var alumni: AlumniFilter? = null
             if (state.student) {
@@ -72,6 +73,7 @@ class ViewModelPushNotification @Inject constructor(
                     )
                 )
             )
+            state = state.copy(isLoading = false)
         }
     }
 
@@ -169,6 +171,18 @@ class ViewModelPushNotification @Inject constructor(
         )
     }
 
+    private fun increasePageIndex() {
+        state = state.copy(
+            pageIndex = state.pageIndex + 1
+        )
+    }
+
+    private fun decreasePageIndex() {
+        state = state.copy(
+            pageIndex = state.pageIndex - 1
+        )
+    }
+
     fun onEvent(event: EventsPushNotification) {
         when (event) {
             is EventsPushNotification.ChangeContent -> changeContent(event.content)
@@ -187,6 +201,8 @@ class ViewModelPushNotification @Inject constructor(
             is EventsPushNotification.ChangeStaffFilter -> changeStaffFilter()
             is EventsPushNotification.ChangeAlumniBatchFilter -> changeAlumniBatch()
             is EventsPushNotification.ChangeStudentBatchFilter -> changeStudentBatch()
+            is EventsPushNotification.OnNextClick -> increasePageIndex()
+            is EventsPushNotification.OnPreviousClick -> decreasePageIndex()
         }
     }
 }
