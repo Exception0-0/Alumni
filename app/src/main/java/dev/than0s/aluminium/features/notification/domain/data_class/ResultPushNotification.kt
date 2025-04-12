@@ -1,11 +1,9 @@
-package dev.than0s.aluminium.features.notification.presentation.push_notifications
+package dev.than0s.aluminium.features.notification.domain.data_class
 
+import dev.than0s.aluminium.core.SimpleResource
 import dev.than0s.aluminium.core.domain.error.PreferredError
-import dev.than0s.aluminium.features.notification.domain.data_class.PushNotification
 
-data class StatePushNotification(
-    val isLoading: Boolean = false,
-    val notification: PushNotification = PushNotification(),
+data class ResultPushNotification(
     val titleError: PreferredError? = null,
     val bodyError: PreferredError? = null,
     val targetError: PreferredError? = null,
@@ -13,5 +11,5 @@ data class StatePushNotification(
     val alumniBatchError: PreferredError? = null,
     val studentFilterError: PreferredError? = null,
     val studentBatchError: PreferredError? = null,
-    val pageIndex: Int = 0,
+    val result: SimpleResource? = null
 )

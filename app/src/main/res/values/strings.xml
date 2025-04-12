@@ -51,4 +51,6 @@
     <string name="delete_warning">this process can\'t undo,so be careful :)</string>
     <string name="notification_removed">notification remove successfully</string>
     <string name="no_notifications">No notification</string>
+    <string name="least_one_target_selected">least must one target selected</string>
+    <string name="least_one_filter_selected">least one filter must selected</string>
 </resources>

@@ -1,7 +1,9 @@
 package dev.than0s.aluminium.features.notification.presentation.push_notifications
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,15 +19,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.than0s.aluminium.core.domain.error.SimpleError
 import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAnimatedVisibility
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilledButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilterChip
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
+import dev.than0s.aluminium.core.presentation.utils.UiText
+import dev.than0s.aluminium.core.presentation.utils.asString
+import dev.than0s.aluminium.ui.padding
 
 @Composable
 fun ScreenPushNotification(
@@ -100,6 +108,51 @@ private fun Content(
                         Text("Push Notification")
                     }
                 )
+            }
+            val errorList = mutableSetOf<UiText>()
+            if (state.titleError != null) {
+                errorList.add(state.titleError.message!!)
+            }
+            if (state.bodyError != null) {
+                errorList.add(state.bodyError.message!!)
+            }
+            if (state.targetError != null) {
+                errorList.add(state.targetError.message!!)
+            }
+            if (state.alumniFilterError != null) {
+                errorList.add(state.alumniFilterError.message!!)
+            }
+            if (state.alumniBatchError != null) {
+                errorList.add(state.alumniBatchError.message!!)
+            }
+            if (state.studentFilterError != null) {
+                errorList.add(state.studentFilterError.message!!)
+            }
+            if (state.studentBatchError != null) {
+                errorList.add(state.studentBatchError.message!!)
+            }
+
+            PreferredAnimatedVisibility(
+                visible = errorList.isNotEmpty()
+            ) {
+                PreferredSurface(
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    modifier = Modifier.width(TextFieldDefaults.MinWidth)
+                ) {
+                    PreferredColumn(
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small),
+                        modifier = Modifier.padding(MaterialTheme.padding.medium)
+                    ) {
+                        for (error in errorList) {
+                            Text(
+                                text = error.asString(),
+                                color = MaterialTheme.colorScheme.onErrorContainer,
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -328,7 +381,10 @@ private fun getPages(
 private fun Preview() {
     Content(
         popScreen = {},
-        state = StatePushNotification(),
+        state = StatePushNotification(
+            titleError = SimpleError(UiText.DynamicString("lots of error")),
+            bodyError = SimpleError(UiText.DynamicString("lots of error"))
+        ),
         onEvent = {}
     )
 }

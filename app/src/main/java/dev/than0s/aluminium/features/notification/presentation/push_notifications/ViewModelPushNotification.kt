@@ -47,24 +47,38 @@ class ViewModelPushNotification @Inject constructor(
     private fun pushNotification(onSuccess: () -> Unit) {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
-            when (val result = pushNotification(state.notification)) {
-                is Resource.Error -> {
-                    SnackbarEvent(
-                        message = result.uiText ?: UiText.unknownError(),
-                        action = SnackbarAction(
-                            name = UiText.StringResource(R.string.try_again),
-                            action = {
-                                pushNotification(onSuccess)
-                            }
+            val result = pushNotification(state.notification)
+            result.let{
+                state = state.copy(
+                    titleError = it.titleError,
+                    bodyError = it.bodyError,
+                    targetError = it.targetError,
+                    alumniFilterError = it.alumniFilterError,
+                    alumniBatchError = it.alumniBatchError,
+                    studentFilterError = it.studentFilterError,
+                    studentBatchError = it.studentBatchError
+                )
+            }
+            result.result?.let {
+                when (it) {
+                    is Resource.Error -> {
+                        SnackbarEvent(
+                            message = it.uiText ?: UiText.unknownError(),
+                            action = SnackbarAction(
+                                name = UiText.StringResource(R.string.try_again),
+                                action = {
+                                    pushNotification(onSuccess)
+                                }
+                            )
                         )
-                    )
-                }
+                    }
 
-                is Resource.Success -> {
-                    SnackbarEvent(
-                        message = UiText.DynamicString("Notification push successfully")
-                    )
-                    onSuccess()
+                    is Resource.Success -> {
+                        SnackbarEvent(
+                            message = UiText.DynamicString("Notification push successfully")
+                        )
+                        onSuccess()
+                    }
                 }
             }
             state = state.copy(isLoading = false)
