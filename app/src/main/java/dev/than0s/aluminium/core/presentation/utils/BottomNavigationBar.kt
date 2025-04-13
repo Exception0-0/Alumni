@@ -112,7 +112,6 @@ fun AluminiumBottomNavigationBar(
         exit = shrinkVertically()
     ) {
         NavigationBar(
-            modifier = Modifier.height(80.dp),
             content = {
                 bottomNavItems.forEach { item ->
                     if (shouldShowOption(item.screen)) {

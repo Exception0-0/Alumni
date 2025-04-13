@@ -2,6 +2,8 @@ package dev.than0s.aluminium.features.post.presentation.screens.comments
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,6 +51,7 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoDa
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerListItem
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
@@ -95,100 +99,101 @@ private fun CommentScreenContent(
         isRefreshing = screenState.isLoading,
         onRefresh = {
             onEvent(CommentEvents.LoadComments)
-        }
+        },
+        modifier = Modifier.fillMaxSize()
     ) {
         if (screenState.isLoading) {
             ShimmerList()
+        } else if (screenState.commentList.isEmpty()) {
+            PreferredNoData(
+                title = "No comments",
+                modifier = Modifier.align(Alignment.Center)
+            )
         } else {
-            if (screenState.commentList.isEmpty()) {
-                PreferredNoData(title = "No comments")
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    items(screenState.commentList) { comment ->
-                        if (!userMap.containsKey(comment.userId)) {
-                            onEvent(CommentEvents.GetUser(comment.userId))
-                        }
-                        val userProfile = userMap[comment.userId]
-                        ListItem(
-                            leadingContent = {
-                                PreferredAsyncImage(
-                                    model = userProfile?.profileImage,
-                                    shape = CircleShape,
-                                    contentDescription = "Profile Image",
-                                    modifier = Modifier
-                                        .size(20.dp)
-                                )
-                            },
-                            headlineContent = {
-                                PreferredRow(
-                                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)
-                                ) {
-                                    userProfile?.let {
-                                        Text(
-                                            text = "${it.firstName} ${it.lastName}",
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = MaterialTheme.textSize.medium,
-                                        )
-                                    }
+            LazyColumn(
+                contentPadding = PaddingValues(bottom = TextFieldDefaults.MinHeight),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.TopCenter)
+            ) {
+                items(screenState.commentList) { comment ->
+                    if (!userMap.containsKey(comment.userId)) {
+                        onEvent(CommentEvents.GetUser(comment.userId))
+                    }
+                    val userProfile = userMap[comment.userId]
+                    ListItem(
+                        leadingContent = {
+                            PreferredAsyncImage(
+                                model = userProfile?.profileImage,
+                                shape = CircleShape,
+                                contentDescription = "Profile Image",
+                                modifier = Modifier
+                                    .size(20.dp)
+                            )
+                        },
+                        headlineContent = {
+                            PreferredRow(
+                                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.padding.small)
+                            ) {
+                                userProfile?.let {
                                     Text(
-                                        text = PrettyTimeUtils.getPrettyTime(comment.timestamp),
-                                        fontSize = MaterialTheme.textSize.small
+                                        text = "${it.firstName} ${it.lastName}",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = MaterialTheme.textSize.medium,
                                     )
                                 }
-                            },
-                            supportingContent = {
                                 Text(
-                                    text = comment.message,
-                                    fontSize = MaterialTheme.textSize.medium
-                                )
-                            },
-                            trailingContent = {
-                                CommentMenu(
-                                    comment = comment,
-                                    onProfileClick = {
-                                        openScreen(Screen.ProfileScreen(comment.userId))
-                                    },
-                                    onDeleteClick = {
-                                        onEvent(CommentEvents.ShowCommentDeleteDialog(comment.id))
-                                    }
+                                    text = PrettyTimeUtils.getPrettyTime(comment.timestamp),
+                                    fontSize = MaterialTheme.textSize.small
                                 )
                             }
-                        )
-                    }
+                        },
+                        supportingContent = {
+                            Text(
+                                text = comment.message,
+                                fontSize = MaterialTheme.textSize.medium
+                            )
+                        },
+                        trailingContent = {
+                            CommentMenu(
+                                comment = comment,
+                                onProfileClick = {
+                                    openScreen(Screen.ProfileScreen(comment.userId))
+                                },
+                                onDeleteClick = {
+                                    onEvent(CommentEvents.ShowCommentDeleteDialog(comment.id))
+                                }
+                            )
+                        }
+                    )
                 }
             }
-            PreferredSurface(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-            ) {
-                PreferredOutlinedTextField(
-                    value = screenState.comment.message,
-                    placeholder = "comment message...",
-                    onValueChange = {
-                        onEvent(CommentEvents.OnCommentChanged(it))
-                    },
-                    maxChar = TextFieldLimits.MAX_MESSAGE,
-                    enabled = !screenState.isCommentAdding,
-                    singleLine = false,
-                    supportingText = screenState.commentError?.message?.asString(),
-                    trailingIcon = {
-                        PreferredIconButton(
-                            icon = Icons.AutoMirrored.Filled.Send,
-                            isLoading = screenState.isCommentAdding,
-                            onClick = {
-                                onEvent(CommentEvents.OnAddCommentClick)
-                            },
-                        )
-                    },
-                    modifier = Modifier
-                        .padding(vertical = MaterialTheme.padding.medium)
-                        .fillMaxWidth()
-                )
-            }
         }
+
+        PreferredTextField(
+            value = screenState.comment.message,
+            placeholder = "comment message...",
+            onValueChange = {
+                onEvent(CommentEvents.OnCommentChanged(it))
+            },
+            maxChar = TextFieldLimits.MAX_MESSAGE,
+            enable = !screenState.isCommentAdding,
+            singleLine = false,
+            supportingText = screenState.commentError?.message?.asString(),
+            trailingIcon = {
+                PreferredIconButton(
+                    icon = Icons.AutoMirrored.Filled.Send,
+                    isLoading = screenState.isCommentAdding,
+                    onClick = {
+                        onEvent(CommentEvents.OnAddCommentClick)
+                    },
+                )
+            },
+            modifier = Modifier
+                .padding(MaterialTheme.padding.medium)
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+        )
     }
 }
 
@@ -270,10 +275,10 @@ private fun ShimmerList() {
 @Preview(showSystemUi = true)
 @Composable
 private fun CommentScreenPreview() {
-//    CommentScreenContent(
-//        screenState = CommentState(),
-//        userMap = emptyMap(),
-//        onEvent = {},
-//        openScreen = {}
-//    )
+    CommentScreenContent(
+        screenState = CommentState(),
+        userMap = emptyMap(),
+        onEvent = {},
+        openScreen = {}
+    )
 }

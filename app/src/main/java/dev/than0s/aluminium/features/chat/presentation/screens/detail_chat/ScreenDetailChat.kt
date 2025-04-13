@@ -3,6 +3,7 @@ package dev.than0s.aluminium.features.chat.presentation.screens.detail_chat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +17,6 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,8 +25,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -45,11 +45,10 @@ import dev.than0s.aluminium.core.domain.data_class.User
 import dev.than0s.aluminium.core.domain.util.TextFieldLimits
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAnimatedVisibility
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredCircularProgressIndicator
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredIconButton
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredSurface
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.utils.PrettyTimeUtils
 import dev.than0s.aluminium.core.presentation.utils.Screen
@@ -79,120 +78,101 @@ private fun Content(
     onEvent: (EventsDetailChat) -> Unit,
     popScreen: () -> Unit,
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    UserDetail(
-                        user = state.otherUser,
-                        state = state,
-                        openScreen = openScreen,
-                    )
-                },
-                navigationIcon = {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        TopAppBar(
+            title = {
+                UserDetail(
+                    user = state.otherUser,
+                    state = state,
+                    openScreen = openScreen,
+                )
+            },
+            navigationIcon = {
+                IconButton(
+                    content = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "back button"
+                        )
+                    },
+                    onClick = popScreen
+                )
+            },
+            actions = {
+                Box {
                     IconButton(
+                        onClick = {
+                            onEvent(EventsDetailChat.ChangeTopDropDownState)
+                        },
                         content = {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "back button"
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "more"
                             )
-                        },
-                        onClick = popScreen
+                        }
                     )
-                },
-                actions = {
-                    Box {
-                        IconButton(
-                            onClick = {
-                                onEvent(EventsDetailChat.ChangeTopDropDownState)
+                    DropdownMenu(
+                        expanded = state.topDropDownMenu,
+                        onDismissRequest = {
+                            onEvent(EventsDetailChat.ChangeTopDropDownState)
+                        }
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text("Profile")
                             },
-                            content = {
+                            leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.Default.MoreVert,
-                                    contentDescription = "more"
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Profile"
                                 )
+                            },
+                            onClick = {
+                                openScreen(Screen.ProfileScreen(userId = state.otherUser.id))
                             }
                         )
-                        DropdownMenu(
-                            expanded = state.topDropDownMenu,
-                            onDismissRequest = {
-                                onEvent(EventsDetailChat.ChangeTopDropDownState)
+                        DropdownMenuItem(
+                            text = {
+                                Text("Clear")
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Clear"
+                                )
+                            },
+                            onClick = {
+                                onEvent(EventsDetailChat.ShowClearAllChatDialog)
                             }
-                        ) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text("Profile")
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.Person,
-                                        contentDescription = "Profile"
-                                    )
-                                },
-                                onClick = {
-                                    openScreen(Screen.ProfileScreen(userId = state.otherUser.id))
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = {
-                                    Text("Clear")
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = "Clear"
-                                    )
-                                },
-                                onClick = {
-                                    onEvent(EventsDetailChat.ShowClearAllChatDialog)
-                                }
-                            )
-                        }
+                        )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                ),
-            )
-        },
-        bottomBar = {
-            PreferredOutlinedTextField(
-                placeholder = "message",
-                value = state.chatMessage,
-                onValueChange = {
-                    onEvent(EventsDetailChat.OnMessageChange(it))
-                },
-                maxChar = TextFieldLimits.MAX_MESSAGE,
-                trailingIcon = {
-                    PreferredIconButton(
-                        icon = Icons.AutoMirrored.Filled.Send,
-                        isLoading = state.isSending,
-                        onClick = {
-                            onEvent(EventsDetailChat.AddMessage)
-                        }
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = MaterialTheme.padding.medium)
-            )
-        },
-    ) {
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            ),
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
+
         val chatList = state.chatFlow.collectAsState(null).value
-        if (chatList == null) {
-            PreferredCircularProgressIndicator()
-        } else {
+        if (chatList != null) {
             if (chatList.isEmpty()) {
                 PreferredNoData(
                     title = stringResource(R.string.empty_chat),
-                    description = "Say hi to \"${state.otherUser.firstName} ${state.otherUser.lastName}\""
+                    description = "Say hi to \"${state.otherUser.firstName} ${state.otherUser.lastName}\"",
+                    modifier = Modifier.align(Alignment.Center)
                 )
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.Bottom,
+                    contentPadding = PaddingValues(
+                        bottom = TextFieldDefaults.MinHeight,
+                        top = TopAppBarDefaults.TopAppBarExpandedHeight
+                    ),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(it)
                 ) {
                     items(chatList) { item ->
                         Box(
@@ -234,6 +214,28 @@ private fun Content(
                 }
             }
         }
+
+        PreferredTextField(
+            placeholder = "message",
+            value = state.chatMessage,
+            onValueChange = {
+                onEvent(EventsDetailChat.OnMessageChange(it))
+            },
+            maxChar = TextFieldLimits.MAX_MESSAGE,
+            trailingIcon = {
+                PreferredIconButton(
+                    icon = Icons.AutoMirrored.Filled.Send,
+                    isLoading = state.isSending,
+                    onClick = {
+                        onEvent(EventsDetailChat.AddMessage)
+                    }
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = MaterialTheme.padding.medium)
+                .align(Alignment.BottomCenter)
+        )
     }
     PreferredAnimatedVisibility(visible = state.deleteDialog != null) {
         MessageDeleteDialog(

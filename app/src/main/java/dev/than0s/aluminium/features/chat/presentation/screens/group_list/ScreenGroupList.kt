@@ -81,7 +81,8 @@ private fun Content(
         ) {
             PreferredNoData(
                 title = "No Chats",
-                description = "click to new message button to chat with friends"
+                description = "click to new message button to chat with friends",
+                modifier = Modifier.align(Alignment.Center)
             )
         }
         PreferredAnimatedVisibility(

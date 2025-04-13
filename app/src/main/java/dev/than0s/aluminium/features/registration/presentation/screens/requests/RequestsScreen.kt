@@ -4,6 +4,8 @@ import android.net.Uri
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import dev.than0s.aluminium.R
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredAsyncImage
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredClickableText
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredColumn
@@ -38,10 +40,11 @@ import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFill
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFilterChip
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredFullScreen
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredGroupTitle
-import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredOutlinedTextField
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredNoData
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredPinchZoom
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredRow
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextButton
+import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredTextField
 import dev.than0s.aluminium.core.presentation.composable.preferred.PreferredWarningDialog
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerText
 import dev.than0s.aluminium.core.presentation.composable.shimmer.ShimmerTextHeight
@@ -110,75 +113,75 @@ private fun RegistrationRequestsContent(
         isRefreshing = screenState.isLoading,
         onRefresh = {
             onEvent(RequestScreenEvents.LoadRequest)
-        }
+        },
+        modifier = Modifier.fillMaxSize()
     ) {
         if (screenState.isLoading) {
             ShimmerList()
         } else {
-            PreferredColumn(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
-            ) {
-                PreferredOutlinedTextField(
-                    placeholder = "Search...",
-                    value = screenState.searchText,
-                    onValueChange = {
-                        onEvent(RequestScreenEvents.OnSearchTextChanged(it))
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = "Search"
-                        )
-                    },
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                onEvent(RequestScreenEvents.ShowBottomSheet)
+            PreferredTextField(
+                placeholder = "Search...",
+                value = screenState.searchText,
+                onValueChange = {
+                    onEvent(RequestScreenEvents.OnSearchTextChanged(it))
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search"
+                    )
+                },
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            onEvent(RequestScreenEvents.ShowBottomSheet)
+                        },
+                        content = {
+                            Icon(
+                                imageVector = Icons.Filled.FilterList,
+                                contentDescription = "filter list"
+                            )
+                        }
+                    )
+                },
+                modifier = Modifier
+                    .padding(MaterialTheme.padding.small)
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+            )
+            if (screenState.filteredList.isEmpty()) {
+                PreferredNoData(
+                    title = "No request found",
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(top = TextFieldDefaults.MinHeight)
+                ) {
+                    items(items = screenState.filteredList) { request ->
+                        RequestItem(
+                            request = request,
+                            onIdCardClick = { uri ->
+                                onEvent(RequestScreenEvents.ShowIdCard(uri))
                             },
-                            content = {
-                                Icon(
-                                    imageVector = Icons.Filled.FilterList,
-                                    contentDescription = "filter list"
+                            onAcceptClick = {
+                                onEvent(
+                                    RequestScreenEvents.ShowWarningDialog(
+                                        formId = request.id,
+                                        accepted = true
+                                    )
+                                )
+                            },
+                            onRejectClick = {
+                                onEvent(
+                                    RequestScreenEvents.ShowWarningDialog(
+                                        formId = request.id,
+                                        accepted = false,
+                                    )
                                 )
                             }
                         )
-                    },
-                    modifier = Modifier
-                        .padding(MaterialTheme.padding.small)
-                        .fillMaxWidth()
-                )
-                if (screenState.filteredList.isEmpty()) {
-                    PreferredNoData(
-                        title = "No request found"
-                    )
-                } else {
-                    LazyColumn {
-                        items(items = screenState.filteredList) { request ->
-                            RequestItem(
-                                request = request,
-                                onIdCardClick = { uri ->
-                                    onEvent(RequestScreenEvents.ShowIdCard(uri))
-                                },
-                                onAcceptClick = {
-                                    onEvent(
-                                        RequestScreenEvents.ShowWarningDialog(
-                                            formId = request.id,
-                                            accepted = true
-                                        )
-                                    )
-                                },
-                                onRejectClick = {
-                                    onEvent(
-                                        RequestScreenEvents.ShowWarningDialog(
-                                            formId = request.id,
-                                            accepted = false,
-                                        )
-                                    )
-                                }
-                            )
-                            HorizontalDivider()
-                        }
+                        HorizontalDivider()
                     }
                 }
             }
